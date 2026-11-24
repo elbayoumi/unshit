@@ -1,70 +1,146 @@
+<div align="center">
+
 # `unshit`
 
-> Open-source codebase detox CLI: deterministic dead-code, clone, CSS, i18n, and AI-slop scanner + gated AI fixer (`opencode` / `claude`).
+**Codebase detox CLI: deterministic dead-code, clone, CSS, i18n, and AI-slop scanner + gated AI fixer.**
 
-Inspired by **knip** (reachability), **jscpd** (token-window clones), **biome** & **oxc** (AST diagnostics & fix applicability), and **deslop** (AI-slop heuristics) — unified under one contract with `pin` / `guard` regression gates and an MCP server.
+[![npm version](https://img.shields.io/npm/v/unshit?color=cb3837&label=npm)](https://www.npmjs.com/package/unshit)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![node](https://img.shields.io/badge/node-%3E%3D22.0.0-339933.svg)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8%2B-3178c6.svg)](https://www.typescriptlang.org)
+
+```bash
+npx unshit score .
+npx unshit scan .
+```
+
+</div>
 
 ---
 
-## Install & Quick Start
+## Why `unshit`?
 
-```bash
-npx unshit scan .
-npx unshit score .
-```
+AI coding assistants ship features fast—and silently leave behind **AI slop**: 1,000-line God hooks, hundreds of CSS `!important` overrides, copy-pasted logic blocks, inline `isAr ? ... : ...` i18n leaks, `catch (e: any)` type escapes, and unused exports.
 
-Or install globally / locally:
+Existing tools each solve one slice of the problem. **`unshit`** synthesizes the strongest architectural ideas from the open-source ecosystem into a single, deterministic detox pipeline:
 
-```bash
-npm install -D unshit
-```
-
-### Commands
-
-| Command | Purpose |
+| Inspiration | What `unshit` Adopts |
 |---|---|
-| `unshit scan [path]` | Read-only AST/CSS/clone/slop scan (`--format human\|json\|sarif\|markdown`, `--fail-on error\|warn\|info`) |
-| `unshit score [path]` | Compute deterministic 0–100 health score (`Grade A–F`) |
-| `unshit pin [path]` | Capture `unshit.baseline.json` characterization snapshot |
-| `unshit guard [path]` | Fail CI/pre-commit on new unwaived findings or score regressions vs. baseline |
-| `unshit fix [path]` | Dry-run by default; pass `--apply` for deterministic safe fixes (`+ --ai` for OpenCode/Claude with rollback) |
-| `unshit mcp` | Start stdio MCP server (`unshit_scan`, `unshit_score`, `unshit_guard`) |
+| **[knip](https://github.com/webpro-nl/knip)** | Cross-file export reachability (`ts/unused-export`) |
+| **[jscpd](https://github.com/kucherenko/jscpd)** | Rolling token-window clone detection (`code/duplicate-block`) |
+| **[biome](https://github.com/biomejs/biome) & [oxc](https://github.com/oxc-project/oxc)** | TypeScript AST diagnostics, safe/unsafe/AI fix classification, SARIF output |
+| **[deslop](https://github.com/agent-sh/deslop)** | AI-slop heuristics (`slop/redundant-catch`, `slop/magic-timer`) |
+| **Built-in Governance** | **CSS `!important` & scoped duplicate detection** (ignores `@keyframes`), **i18n ternary enforcement**, **God-file metrics**, **`pin`/`guard` CI gates**, **snapshot-protected AI fixes**, and a native **MCP Server** |
+
+---
+
+## Example Output
+
+```text
+$ npx unshit score ./apps/web
+unshit score: 84/100 (Grade B) — 1411 findings across 801 files (118664 lines)
+By category: {"css":395,"types":0,"i18n":38,"architecture":49,"slop":57,"duplication":568,"dead-code":304}
+```
+
+---
+
+## Quick Start
+
+### 1. Audit & Score (Read-Only)
+
+```bash
+# Compute a deterministic 0–100 health score (Grade A–F)
+npx unshit score .
+
+# Scan and print findings
+npx unshit scan .
+
+# Fail CI if any error-level findings exist
+npx unshit scan . --fail-on error
+
+# Export JSON, Markdown, or SARIF for GitHub Code Scanning
+npx unshit scan . --format sarif > unshit.sarif
+```
+
+### 2. Pin & Guard (Zero-Regression CI Gate)
+
+Adopt `unshit` on an existing messy repo without fixing everything on day one:
+
+```bash
+# 1. Capture line-shift-resilient baseline in unshit.baseline.json
+npx unshit pin .
+
+# 2. Run in CI / pre-commit — fails ONLY on newly introduced slop or score drops
+npx unshit guard .
+```
+
+### 3. Fix Safely (Dry-Run by Default)
+
+```bash
+# Preview deterministic patches without touching disk
+npx unshit fix .
+
+# Apply deterministic safe patches (e.g. catch (err: any) -> catch (err: unknown))
+npx unshit fix . --apply
+
+# Optional: run gated AI fixes per file (OpenCode or Claude) with automatic snapshot rollback on verify failure
+npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
+```
+
+---
+
+## CLI Reference
+
+| Command | Description | Key Options |
+|---|---|---|
+| `unshit scan [path]` | Read-only AST, CSS, clone, and slop scan | `--format human\|json\|sarif\|markdown`, `--fail-on error\|warn\|info` |
+| `unshit score [path]` | Compute deterministic 0–100 health score (`Grade A–F`) | `--format human\|json` |
+| `unshit pin [path]` | Write `unshit.baseline.json` snapshot | — |
+| `unshit guard [path]` | Compare current scan against `unshit.baseline.json` | Exits `1` on new findings or score regression |
+| `unshit fix [path]` | Preview or apply deterministic + gated AI fixes | `--apply`, `--ai`, `--runner opencode\|claude`, `--model <id>` |
+| `unshit mcp` | Start stdio MCP server (`unshit_scan`, `unshit_score`, `unshit_guard`) | — |
 
 ---
 
 ## Built-in Rules
 
-| Rule ID | Tier | Severity | Description |
-|---|---|---|---|
-| `css/no-important` | structural | warn | Flags `!important` overrides (ignoring comments) |
-| `css/duplicate-selector` | structural | info | Flags repeated selectors in the same `@media` / scope (skips `@keyframes`) |
-| `ts/no-explicit-any` | structural | warn | Flags explicit `any` annotations and casts |
-| `ts/no-double-cast` | structural | warn | Flags `as unknown as T` type-system bypasses |
-| `i18n/no-inline-ternary` | structural | error | Flags inline `isAr` / `language === 'ar'` ternaries outside dictionaries |
-| `react/god-file` | heuristic | warn | Flags modules exceeding `godFileMaxLines` (350) or `godFileMaxHooks` (15) |
-| `slop/magic-timer` | structural | info | Flags raw numeric `setTimeout` / `setInterval` delays |
-| `slop/redundant-catch` | structural | warn | Flags empty `catch {}` or `catch (e) { throw e; }` |
-| `code/duplicate-block` | structural | info | Detects copy-pasted token blocks across files |
-| `ts/unused-export` | structural | info | Flags exported symbols with zero cross-file references |
+| Rule ID | Tier | Severity | Fixability | What It Catches |
+|---|---|---|---|---|
+| `css/no-important` | structural | `warn` | `ai` | `!important` overrides in `.css`/`.scss` (ignores comments) |
+| `css/duplicate-selector` | structural | `info` | `ai` | Duplicate selectors in the same `@media` / scope (skips `@keyframes`) |
+| `ts/no-explicit-any` | structural | `warn` | `safe` / `ai` | Explicit `: any` and `as any` (skips `.d.ts` and test files) |
+| `ts/no-double-cast` | structural | `warn` | `ai` | `as unknown as T` type-system bypasses |
+| `i18n/no-inline-ternary` | structural | `error` | `ai` | Inline `isAr` / `language === 'ar'` ternaries outside dictionaries |
+| `react/god-file` | heuristic | `warn` | `ai` | Modules exceeding `godFileMaxLines` (350) or `godFileMaxHooks` (15) |
+| `slop/magic-timer` | structural | `info` | `ai` | Raw numeric delays in `setTimeout` / `window.setTimeout` / `setInterval` |
+| `slop/redundant-catch` | structural | `warn` | `ai` | Empty `catch {}` blocks or `catch (e) { throw e; }` |
+| `code/duplicate-block` | structural | `info` | `ai` | Copy-pasted token blocks across files (`cloneMinTokens`: 45) |
+| `ts/unused-export` | structural | `info` | `unsafe` | Exported symbols with zero cross-file references |
 
 ---
 
 ## Inline Waivers & Configuration
 
-Suppress a specific line with a documented reason:
+### Suppressing a Finding (`// unshit-ignore`)
+
+Document why an exception is intentional on the line itself or the line immediately above:
 
 ```ts
 // unshit-ignore: ts/no-double-cast — legacy IPC bridge payload
 const data = raw as unknown as BridgePayload;
 ```
 
-Optional `unshit.config.json` in your project root:
+### `unshit.config.json`
+
+Create `unshit.config.json` in your project root to customize thresholds, excluded paths, or AI verification:
 
 ```json
 {
   "disabledRules": ["slop/magic-timer"],
+  "exclude": ["node_modules", "dist", "coverage"],
   "godFileMaxLines": 400,
   "godFileMaxHooks": 15,
+  "cloneMinTokens": 45,
   "aiRunner": "opencode",
   "aiModel": "opencode/big-pickle",
   "verifyCommand": "npm run typecheck && npm test"
@@ -73,22 +149,50 @@ Optional `unshit.config.json` in your project root:
 
 ---
 
-## Crewloom & AI Agent Integration
+## CI & AI Agent Integration
 
-- **Crewloom Skill:** `.agent/skills/crewloom-unshit/SKILL.md`
-- **MCP Server (Claude Code / Cursor / Antigravity):**
-  ```json
-  {
-    "mcpServers": {
-      "unshit": {
-        "command": "npx",
-        "args": ["-y", "unshit", "mcp"]
-      }
+### GitHub Actions (`unshit guard`)
+
+```yaml
+name: Codebase Detox Guard
+on: [pull_request]
+jobs:
+  unshit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npx unshit guard .
+```
+
+### MCP Server (Claude Code / Cursor / Antigravity)
+
+Expose `unshit_scan`, `unshit_score`, and `unshit_guard` as read-only MCP tools:
+
+```json
+{
+  "mcpServers": {
+    "unshit": {
+      "command": "npx",
+      "args": ["-y", "unshit", "mcp"]
     }
   }
-  ```
-- **CI / Pre-commit Guard:**
-  ```bash
-  npx unshit pin .
-  npx unshit guard .
-  ```
+}
+```
+
+---
+
+## Development & Architecture
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full design and safety invariants.
+
+```bash
+npm run typecheck
+npm test
+```
+
+## License
+
+[MIT](./LICENSE) © Mohamed Ashraf (Crewloom)
