@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import type { UnshitConfig } from './contracts.js';
 
 export const DEFAULT_CONFIG: UnshitConfig = {
-  include: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.css', '.scss'],
+  include: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.css', '.scss', '.rs', '.dart', '.py'],
   exclude: [
     'node_modules',
     'dist',

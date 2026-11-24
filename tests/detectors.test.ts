@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { DEFAULT_CONFIG } from '../src/config.js';
 import { runFix } from '../src/core/fixer.js';
+import { scanSingleContent } from '../src/core/hook.js';
 import { createBaseline, evaluateGuard } from '../src/core/pinner.js';
 import { runScan } from '../src/core/scanner.js';
 import { computeScore } from '../src/core/scorer.js';
@@ -101,6 +102,21 @@ test('dry-run does not mutate, and --apply fixes catch(err: any) deterministical
   );
 });
 
+test('slop/redundant-catch unwraps try/catch that only rethrows when no finally exists', async () => {
+  await withTempProject(
+    {
+      'rethrow.ts': `export function unwrap() { try { return 42; } catch (e) { throw e; } }\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const applied = await runFix(scan, { apply: true, ai: false });
+      assert.equal(applied.appliedCount, 1);
+      const updated = await readFile(join(dir, 'rethrow.ts'), 'utf8');
+      assert.equal(updated.trim(), 'export function unwrap() { return 42; }');
+    },
+  );
+});
+
 test('pin and guard tolerate line shifts and fail only on newly introduced findings', async () => {
   await withTempProject(
     {
@@ -120,6 +136,32 @@ test('pin and guard tolerate line shifts and fail only on newly introduced findi
       const failGuard = evaluateGuard(dirtyScan, baseline);
       assert.equal(failGuard.passed, false);
       assert.equal(failGuard.newFindings.length, 1);
+
+      const scopedPass = evaluateGuard(dirtyScan, baseline, new Set(['a.ts']));
+      assert.equal(scopedPass.passed, true);
     },
   );
+});
+
+test('polyglot detectors catch Rust unwrap, Dart dynamic/print, and Python bare except', async () => {
+  await withTempProject(
+    {
+      'lib.rs': `pub fn load() -> String { std::fs::read_to_string("a").unwrap() }\n`,
+      'widget.dart': `void logVal(dynamic x) { print(x); }\n`,
+      'worker.py': `def run():\n    try:\n        pass\n    except:\n        pass\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const rules = new Set(scan.findings.map((f) => f.ruleId));
+      assert.ok(rules.has('rust/no-unwrap'));
+      assert.ok(rules.has('dart/no-dynamic-or-print'));
+      assert.ok(rules.has('python/no-bare-except'));
+    },
+  );
+});
+
+test('scanSingleContent catches slop immediately for Live AI Guardrail Hook', () => {
+  const hits = scanSingleContent('/tmp', 'src/App.css', '.btn { color: red !important; }\n', DEFAULT_CONFIG);
+  assert.equal(hits.length, 1);
+  assert.equal(hits[0]?.ruleId, 'css/no-important');
 });

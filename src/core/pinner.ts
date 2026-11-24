@@ -1,9 +1,13 @@
+import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { promisify } from 'node:util';
 import type { BaselineSnapshot, Finding } from '../contracts.js';
 import { findingFingerprint, type ScanResult } from './scanner.js';
 import { computeScore } from './scorer.js';
+
+const execFileAsync = promisify(execFile);
 
 export const BASELINE_FILENAME = 'unshit.baseline.json';
 
@@ -49,19 +53,72 @@ export interface GuardResult {
 }
 
 /**
- * Compares current scan against pinned baseline; fails on any new unwaived findings.
+ * Lists relative paths changed vs `baseRef` plus uncommitted working-tree changes.
  */
-export function evaluateGuard(scan: ScanResult, baseline: BaselineSnapshot): GuardResult {
+export async function getChangedFiles(rootDir: string, baseRef = 'HEAD'): Promise<Set<string>> {
+  const changed = new Set<string>();
+  const addLines = (stdout: string): void => {
+    for (const line of stdout.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (trimmed) changed.add(trimmed.replaceAll('\\', '/'));
+    }
+  };
+
+  try {
+    const { stdout } = await execFileAsync('git', ['diff', '--name-only', `${baseRef}...HEAD`], { cwd: rootDir });
+    addLines(stdout);
+  } catch {
+    /* Detached or single-commit repo without baseRef...HEAD */
+  }
+  try {
+    const { stdout } = await execFileAsync('git', ['status', '--porcelain'], { cwd: rootDir });
+    for (const line of stdout.split(/\r?\n/)) {
+      if (line.length > 3) {
+        const file = line.slice(3).replace(/^.* -> /, '').trim();
+        if (file) changed.add(file.replaceAll('\\', '/'));
+      }
+    }
+  } catch {
+    /* Not a git repo */
+  }
+  return changed;
+}
+
+/**
+ * Compares current scan against pinned baseline; fails on any new unwaived findings.
+ * When `changedFiles` is provided, only findings in those files are evaluated.
+ */
+export function evaluateGuard(
+  scan: ScanResult,
+  baseline: BaselineSnapshot | null,
+  changedFiles?: Set<string>,
+): GuardResult {
+  const scopedFindings = changedFiles
+    ? scan.findings.filter((f) => changedFiles.has(f.file))
+    : scan.findings;
+  const currentScore = computeScore(scan.files, scan.findings).score;
+
+  if (!baseline) {
+    const blocking = scopedFindings.filter((f) => f.severity === 'error' || f.severity === 'warn');
+    return {
+      passed: blocking.length === 0,
+      baselineScore: currentScore,
+      currentScore,
+      newFindings: blocking,
+      resolvedCount: 0,
+    };
+  }
+
   const pinnedSet = new Set(baseline.fingerprints);
   const currentSet = new Set(scan.findings.map(findingFingerprint));
-  const newFindings = scan.findings.filter((f) => !pinnedSet.has(findingFingerprint(f)));
+  const newFindings = scopedFindings.filter((f) => !pinnedSet.has(findingFingerprint(f)));
   let resolvedCount = 0;
   for (const fp of pinnedSet) {
     if (!currentSet.has(fp)) resolvedCount += 1;
   }
-  const currentScore = computeScore(scan.files, scan.findings).score;
+  const scoreOk = changedFiles ? true : currentScore >= baseline.score.score;
   return {
-    passed: newFindings.length === 0 && currentScore >= baseline.score.score,
+    passed: newFindings.length === 0 && scoreOk,
     baselineScore: baseline.score.score,
     currentScore,
     newFindings,

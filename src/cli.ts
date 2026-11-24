@@ -2,13 +2,14 @@ import { resolve } from 'node:path';
 import { loadConfig } from './config.js';
 import type { Severity } from './contracts.js';
 import { runFix } from './core/fixer.js';
-import { createBaseline, evaluateGuard, loadBaseline } from './core/pinner.js';
+import { runHook } from './core/hook.js';
+import { createBaseline, evaluateGuard, getChangedFiles, loadBaseline } from './core/pinner.js';
 import { formatScanOutput, type OutputFormat } from './core/reporters.js';
 import { runScan } from './core/scanner.js';
 import { computeScore } from './core/scorer.js';
 import { runMcpServer } from './mcp/server.js';
 
-const VALID_COMMANDS = new Set(['scan', 'score', 'pin', 'guard', 'fix', 'mcp', 'help', '--help', '-h']);
+const VALID_COMMANDS = new Set(['scan', 'score', 'pin', 'guard', 'fix', 'hook', 'mcp', 'help', '--help', '-h']);
 const VALID_FORMATS = new Set<OutputFormat>(['human', 'json', 'sarif', 'markdown']);
 const SEV_RANK: Record<Severity, number> = { info: 1, warn: 2, error: 3 };
 
@@ -24,7 +25,7 @@ function getOpt(args: string[], name: string): string | undefined {
 function getTargetPath(args: string[]): string {
   for (let i = 0; i < args.length; i++) {
     const a = args[i]!;
-    if (a === '--format' || a === '--runner' || a === '--model' || a === '--fail-on') {
+    if (a === '--format' || a === '--runner' || a === '--model' || a === '--fail-on' || a === '--base') {
       i += 1;
       continue;
     }
@@ -46,6 +47,10 @@ export async function main(argv: string[]): Promise<number> {
     return runMcpServer();
   }
 
+  if (cmd === 'hook') {
+    return runHook(rest);
+  }
+
   if (cmd === 'help' || cmd === '--help' || cmd === '-h') {
     console.log([
       'unshit <command> [path] [options]',
@@ -54,8 +59,9 @@ export async function main(argv: string[]): Promise<number> {
       '  scan [path]    Read-only AST/CSS/clone/slop scan (--format human|json|sarif|markdown, --fail-on error|warn|info)',
       '  score [path]   Compute 0-100 codebase health score',
       '  pin [path]     Capture unshit.baseline.json characterization snapshot',
-      '  guard [path]   Fail CI/pre-commit if new findings or score regression vs baseline',
+      '  guard [path]   Fail CI/pre-commit on regressions (--changed [baseRef] for diff-only PRs)',
       '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude)',
+      '  hook [file]    Live AI Guardrail Hook (--stdin for Claude Code PreToolUse/PostToolUse, exits 2 on slop)',
       '  mcp            Start stdio MCP server (unshit_scan, unshit_score, unshit_guard)',
     ].join('\n'));
     return 0;
@@ -102,14 +108,18 @@ export async function main(argv: string[]): Promise<number> {
   }
 
   if (cmd === 'guard') {
+    const changed = getFlag(rest, '--changed');
+    const baseRef = getOpt(rest, '--base') ?? 'HEAD';
     const baseline = await loadBaseline(targetDir);
-    if (!baseline) {
-      console.error('unshit guard: missing unshit.baseline.json. Run `unshit pin` first.');
+    if (!baseline && !changed) {
+      console.error('unshit guard: missing unshit.baseline.json. Run `unshit pin` first (or pass --changed).');
       return 2;
     }
-    const res = evaluateGuard(scan, baseline);
+    const changedFiles = changed ? await getChangedFiles(targetDir, baseRef) : undefined;
+    const res = evaluateGuard(scan, baseline, changedFiles);
+    const scopeLabel = changed ? ` (changed: ${changedFiles?.size ?? 0} files)` : '';
     console.log(
-      `unshit guard: ${res.passed ? 'PASS' : 'FAIL'} | score ${res.baselineScore} -> ${res.currentScore} | new: ${res.newFindings.length} | resolved: ${res.resolvedCount}`,
+      `unshit guard${scopeLabel}: ${res.passed ? 'PASS' : 'FAIL'} | score ${res.baselineScore} -> ${res.currentScore} | new: ${res.newFindings.length} | resolved: ${res.resolvedCount}`,
     );
     if (!res.passed) {
       for (const f of res.newFindings.slice(0, 20)) {

@@ -136,9 +136,9 @@ function isUiLayoutOrToggleTernary(node: ts.ConditionalExpression, sf: ts.Source
   if (whenTrue === "'auto'" || whenFalse === "'auto'") return true;
   if (ts.isBinaryExpression(node.whenTrue) && ts.isBinaryExpression(node.whenFalse)) return true;
   if (
-    (ts.isPropertyAccessExpression(node.whenTrue) || ts.isBinaryExpression(node.whenTrue))
-    && (ts.isPropertyAccessExpression(node.whenFalse) || ts.isBinaryExpression(node.whenFalse))
-    && /\b(left|right|top|bottom|width|height|Margin|rect)\b/i.test(`${whenTrue} ${whenFalse}`)
+    (ts.isPropertyAccessExpression(node.whenTrue) || ts.isBinaryExpression(node.whenTrue) || ts.isCallExpression(node.whenTrue))
+    && (ts.isPropertyAccessExpression(node.whenFalse) || ts.isBinaryExpression(node.whenFalse) || ts.isCallExpression(node.whenFalse))
+    && /\b(left|right|top|bottom|width|height|Margin|innerWidth|rect)\b/i.test(`${whenTrue} ${whenFalse}`)
   ) {
     return true;
   }
@@ -260,15 +260,17 @@ export const redundantCatchDetector: Detector = {
             ts.isIdentifier(stmts[0].expression) &&
             stmts[0].expression.text === node.variableDeclaration.name.text
           ) {
+            const tryStmt = node.parent;
+            const canUnwrap = Boolean(tryStmt && ts.isTryStatement(tryStmt) && !tryStmt.finallyBlock);
             findings.push({
               ruleId: this.id,
               category: this.category,
               tier: this.tier,
               severity: this.severity,
-              fixability: 'ai',
+              fixability: canUnwrap ? 'safe' : 'ai',
               confidence: 0.97,
               file: file.relPath,
-              span: spanOf(sf, node),
+              span: canUnwrap && tryStmt ? spanOf(sf, tryStmt) : spanOf(sf, node),
               message: 'Redundant catch block immediately rethrows the caught error.',
               evidence: snippet(sf, node),
             });
@@ -279,5 +281,28 @@ export const redundantCatchDetector: Detector = {
       visit(sf);
     }
     return findings;
+  },
+  fix(file: FileEntry, finding: Finding): Patch | null {
+    if (
+      finding.fixability !== 'safe'
+      || !file.sourceFile
+      || finding.span.startOffset === undefined
+      || finding.span.endOffset === undefined
+    ) {
+      return null;
+    }
+    const snippetText = file.content.slice(finding.span.startOffset, finding.span.endOffset);
+    const openBrace = snippetText.indexOf('{');
+    const catchIdx = snippetText.lastIndexOf('catch');
+    if (openBrace === -1 || catchIdx === -1) return null;
+    const closeBrace = snippetText.lastIndexOf('}', catchIdx);
+    if (closeBrace <= openBrace) return null;
+    const inner = snippetText.slice(openBrace + 1, closeBrace).trim();
+    return {
+      file: file.relPath,
+      ruleId: this.id,
+      description: 'Unwrap try/catch that only rethrows the caught error',
+      edits: [{ startOffset: finding.span.startOffset, endOffset: finding.span.endOffset, replacement: inner }],
+    };
   },
 };
