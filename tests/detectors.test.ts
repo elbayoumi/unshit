@@ -25,11 +25,13 @@ test('detects TS any, double-cast, i18n ternary forms, window.setTimeout, redund
   await withTempProject(
     {
       'useLocale.ts': `
-export function Demo({ isAr, lang }: { isAr: boolean; lang: string }) {
+export function Demo({ isAr, lang, isRtl, vw, clamped, rect }: { isAr: boolean; lang: string; isRtl: boolean; vw: number; clamped: number; rect: { left: number; right: number } }) {
   const a = isAr ? 'مرحبا' : 'Hello';
   const b = lang === 'ar' ? 'نعم' : 'Yes';
+  const c = isRtl ? 'auto' : clamped;
+  const d = isRtl ? vw - rect.right : rect.left;
   const raw = ({} as unknown as { id: string }).id;
-  window.setTimeout(() => console.log(a, b, raw), 250);
+  window.setTimeout(() => console.log(a, b, c, d, raw), 250);
   try {
     throw new Error('x');
   } catch (err: any) {

@@ -73,7 +73,7 @@ export const duplicateBlockDetector: Detector = {
       for (let i = 1; i < occurrences.length; i++) {
         const dup = occurrences[i]!;
         if (dup.file === first.file) continue;
-        const key = `${dup.file}:${Math.floor(dup.startLine / 10)}`;
+        const key = `${first.file}::${dup.file}:${Math.floor(dup.startLine / 60)}`;
         if (reported.has(key)) continue;
         reported.add(key);
         findings.push({

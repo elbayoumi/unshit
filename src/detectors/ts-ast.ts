@@ -23,7 +23,7 @@ function isTestFile(relPath: string): boolean {
 }
 
 function isDictionaryFile(relPath: string): boolean {
-  return /(^|\/)(i18n|dictionary|translations)(\.[cm]?[jt]sx?)?$|(^|\/)locales?\//i.test(relPath);
+  return /(^|\/)(i18n|dictionary|translations|text-direction)(\.[cm]?[jt]sx?)?$|(^|\/)locales?\//i.test(relPath);
 }
 
 function isTimerCall(expr: ts.LeftHandSideExpression): string | null {
@@ -126,7 +126,24 @@ export const noDoubleCastDetector: Detector = {
   },
 };
 
-const I18N_COND_RE = /\b(?:isAr|isArabic|isRtl)\b|\b(?:language|lang|locale)\s*===\s*['"]ar['"]/;
+const I18N_COND_RE = /^(?:!?\s*(?:isAr|isArabic|isRtl)|(?:[a-zA-Z_$][\w$.]*\.)?(?:language|lang|locale)\s*===\s*['"]ar['"])$/;
+
+function isUiLayoutOrToggleTernary(node: ts.ConditionalExpression, sf: ts.SourceFile): boolean {
+  const whenTrue = node.whenTrue.getText(sf).trim();
+  const whenFalse = node.whenFalse.getText(sf).trim();
+  if (/^<Chevron|^<Arrow/.test(whenTrue) || /^<Chevron|^<Arrow/.test(whenFalse)) return true;
+  if (/^['"](is-active|active|ar|en)['"]$/.test(whenTrue) && /^['"](|is-active|active|ar|en)['"]$/.test(whenFalse)) return true;
+  if (whenTrue === "'auto'" || whenFalse === "'auto'") return true;
+  if (ts.isBinaryExpression(node.whenTrue) && ts.isBinaryExpression(node.whenFalse)) return true;
+  if (
+    (ts.isPropertyAccessExpression(node.whenTrue) || ts.isBinaryExpression(node.whenTrue))
+    && (ts.isPropertyAccessExpression(node.whenFalse) || ts.isBinaryExpression(node.whenFalse))
+    && /\b(left|right|top|bottom|width|height|Margin|rect)\b/i.test(`${whenTrue} ${whenFalse}`)
+  ) {
+    return true;
+  }
+  return false;
+}
 
 export const noInlineI18nTernaryDetector: Detector = {
   id: 'i18n/no-inline-ternary',
@@ -141,8 +158,8 @@ export const noInlineI18nTernaryDetector: Detector = {
       const sf = file.sourceFile;
       const visit = (node: ts.Node): void => {
         if (ts.isConditionalExpression(node)) {
-          const condText = node.condition.getText(sf);
-          if (I18N_COND_RE.test(condText)) {
+          const condText = node.condition.getText(sf).trim();
+          if (I18N_COND_RE.test(condText) && !isUiLayoutOrToggleTernary(node, sf)) {
             findings.push({
               ruleId: this.id,
               category: this.category,
