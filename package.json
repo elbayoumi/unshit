@@ -1,6 +1,6 @@
 {
   "name": "unshit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Open-source codebase detox CLI: deterministic dead-code, clone, CSS, i18n, and AI-slop scanner + gated AI fixer.",
   "type": "module",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "url": "https://github.com/crewloom/unshit/issues"
   },
   "bin": {
-    "unshit": "./bin/unshit.js"
+    "unshit": "bin/unshit.js"
   },
   "exports": {
     ".": {
