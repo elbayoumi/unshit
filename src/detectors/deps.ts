@@ -41,6 +41,14 @@ function readJson(rootDir: string, rel: string): Record<string, unknown> | null 
   }
 }
 
+function safeReadText(path: string): string {
+  try {
+    return readFileSync(path, 'utf8');
+  } catch {
+    return '';
+  }
+}
+
 function safeReaddirNames(rootDir: string): string[] {
   try {
     return readdirSync(rootDir).filter((name) => name !== 'node_modules');
@@ -133,7 +141,15 @@ function collectModuleSpecs(file: FileEntry): SpecLoc[] {
 
 function collectModuleSpecsFromContext(ctx: DetectorContext): SpecLoc[] {
   const out: SpecLoc[] = [];
-  for (const file of ctx.files) out.push(...collectModuleSpecs(file));
+  for (const file of ctx.files) {
+    out.push(...collectModuleSpecs(file));
+    if (/\.(css|scss|sass|less)$/i.test(file.relPath)) {
+      for (const m of file.content.matchAll(/@(?:plugin|import|config|use|require)\s+["']([^"']+)["']/g)) {
+        const text = (m[1] ?? '').replace(/^~/, '');
+        if (text) out.push({ text, line: 1, column: 1 } as SpecLoc);
+      }
+    }
+  }
   return out;
 }
 
@@ -208,14 +224,18 @@ export const unusedDependencyDetector: Detector = {
       ? pkg.scripts as Record<string, unknown>
       : undefined;
     const rootFiles = safeReaddirNames(ctx.rootDir);
+    const configTexts = rootFiles
+      .filter((file) => /(config|rc)(\.|$)/i.test(file) && !file.endsWith('.lock'))
+      .map((file) => safeReadText(join(ctx.rootDir, file)));
 
     const findings: Finding[] = [];
     for (const name of deps.keys()) {
-      if (isCommonTooling(name)) continue;
+      if (isCommonTooling(name) || name.startsWith('@types/')) continue;
       const usedName = name.startsWith('@types/') ? name.slice('@types/'.length) : name;
       if (used.has(name) || used.has(usedName)) continue;
       if (scriptsReference(scripts, name)) continue;
       if (rootFiles.some((file) => isConfigFileNamed(file, name))) continue;
+      if (configTexts.some((text) => text.includes(name))) continue;
       const pos = keyLine(text, name);
       if (!pos) continue;
       findings.push({
@@ -238,6 +258,17 @@ export const unusedDependencyDetector: Detector = {
 /* ------------------------------------------------------------------ *
  * deps/unlisted-dependency
  * ------------------------------------------------------------------ */
+
+function declaredNames(pkg: Record<string, unknown>): Set<string> {
+  const names = new Set<string>();
+  for (const section of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'] as const) {
+    const value = pkg[section];
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      for (const name of Object.keys(value as Record<string, unknown>)) names.add(name);
+    }
+  }
+  return names;
+}
 
 function tsconfigAliasKeys(rootDir: string): Set<string> {
   const pkg = readJson(rootDir, 'tsconfig.json');
@@ -283,14 +314,30 @@ export const unlistedDependencyDetector: Detector = {
     const pkg = readJson(ctx.rootDir, 'package.json');
     if (!pkg) return [];
 
-    const declared = new Set<string>();
-    for (const section of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'] as const) {
-      const value = pkg[section];
-      if (value && typeof value === 'object' && !Array.isArray(value)) {
-        for (const name of Object.keys(value as Record<string, unknown>)) declared.add(name);
+    const rootDeclared = declaredNames(pkg);
+    const workspaceNames = new Set<string>();
+    const nearestCache = new Map<string, Set<string>>();
+    const declaredFor = (relPath: string): Set<string> => {
+      const parts = relPath.split('/').slice(0, -1);
+      for (let i = parts.length; i > 0; i--) {
+        const dir = parts.slice(0, i).join('/');
+        let cached = nearestCache.get(dir);
+        if (!cached) {
+          const sub = readJson(ctx.rootDir, `${dir}/package.json`);
+          cached = new Set<string>();
+          if (sub) {
+            if (typeof sub.name === 'string') workspaceNames.add(sub.name);
+            for (const n of declaredNames(sub)) cached.add(n);
+            cached.add('\0pkg');
+          }
+          nearestCache.set(dir, cached);
+        }
+        if (cached.has('\0pkg')) return cached;
       }
-    }
+      return rootDeclared;
+    };
     const projectName = typeof pkg.name === 'string' ? pkg.name : null;
+    for (const file of ctx.files) declaredFor(file.relPath);
     const aliases = tsconfigAliasKeys(ctx.rootDir);
 
     const findings: Finding[] = [];
@@ -299,7 +346,9 @@ export const unlistedDependencyDetector: Detector = {
       for (const spec of collectModuleSpecs(file)) {
         if (!isBareImportSpec(spec.text, aliases)) continue;
         const name = packageName(spec.text);
-        if (!name || declared.has(name) || (projectName && name === projectName)) continue;
+        if (!name || rootDeclared.has(name) || declaredFor(file.relPath).has(name)) continue;
+        if (workspaceNames.has(name) || (projectName && name === projectName)) continue;
+        if (name.startsWith('@types/') || declaredFor(file.relPath).has(`@types/${name}`) || rootDeclared.has(`@types/${name}`)) continue;
         const key = `${file.relPath}|${name}`;
         if (seen.has(key)) continue;
         seen.add(key);

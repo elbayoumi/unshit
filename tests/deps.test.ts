@@ -153,3 +153,39 @@ test('deps/unlisted-dependency ignores bare Node builtins like fs and path/posix
     assert.equal(findingsFor(scan, 'deps/unlisted-dependency').length, 0);
   });
 });
+
+test('deps/unlisted-dependency respects workspace package.json files and workspace package names', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'mono', private: true }),
+    'apps/web/package.json': JSON.stringify({ name: '@m/web', dependencies: { react: '^18.0.0', '@m/core': '*' } }),
+    'apps/web/src/a.ts': "import React from 'react';\nimport { c } from '@m/core';\nimport z from 'zod';\nexport const x = [React, c, z];\n",
+    'packages/core/package.json': JSON.stringify({ name: '@m/core' }),
+    'packages/core/src/index.ts': 'export const c = 1;\n',
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    const names = findingsFor(scan, 'deps/unlisted-dependency').map((f) => f.evidence);
+    assert.deepEqual(names, ["import 'zod'"]);
+  });
+});
+
+test('deps/unused-dependency spares @types packages and deps named in root config file contents', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'demo', devDependencies: { autoprefixer: '^10.0.0', '@types/node': '^22.0.0', 'really-unused': '^1.0.0' } }, null, 2),
+    'postcss.config.js': "module.exports = { plugins: { autoprefixer: {} } };\n",
+    'src/a.ts': 'export const a = 1;\n',
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    assert.deepEqual(findingsFor(scan, 'deps/unused-dependency').map((f) => f.evidence), ['really-unused']);
+  });
+});
+
+test('deps/unused-dependency counts CSS @plugin and @import references as usage', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'demo', dependencies: { '@tw/typography': '^1.0.0' } }, null, 2),
+    'src/index.css': '@plugin "@tw/typography";\n',
+    'src/a.ts': 'export const a = 1;\n',
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    assert.deepEqual(findingsFor(scan, 'deps/unused-dependency').map((f) => f.evidence), []);
+  });
+});
