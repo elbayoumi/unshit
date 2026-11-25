@@ -360,6 +360,24 @@ function isBareImportSpec(spec: string, aliases: Set<string>): boolean {
   return !isTsconfigAlias(spec, aliases);
 }
 
+function unlistedSpecName(
+  specText: string,
+  aliases: Set<string>,
+  rootDeclared: Set<string>,
+  fileDeclared: Set<string>,
+  workspaceNames: Set<string>,
+  projectName: string | null,
+): string | null {
+  if (!isBareImportSpec(specText, aliases)) return null;
+  const name = packageName(specText);
+  if (!name) return null;
+  if (rootDeclared.has(name) || fileDeclared.has(name)) return null;
+  if (workspaceNames.has(name) || (projectName && name === projectName)) return null;
+  if (name.startsWith('@types/')) return null;
+  if (fileDeclared.has(`@types/${name}`) || rootDeclared.has(`@types/${name}`)) return null;
+  return name;
+}
+
 /**
  * Flags bare import specifiers whose package name is not declared in the root
  * package.json (dependencies, devDependencies, peerDependencies, optionalDependencies).
@@ -408,23 +426,14 @@ export const unlistedDependencyDetector: Detector = {
     for (const file of ctx.files) {
       if (/(^|\/)(docs|fixtures|__fixtures__)\//.test(file.relPath)) continue;
       for (const spec of collectModuleSpecs(file)) {
-        if (!isBareImportSpec(spec.text, aliases)) continue;
-        const name = packageName(spec.text);
-        if (!name || rootDeclared.has(name) || declaredFor(file.relPath).has(name)) continue;
-        if (workspaceNames.has(name) || (projectName && name === projectName)) continue;
-        if (name.startsWith('@types/') || declaredFor(file.relPath).has(`@types/${name}`) || rootDeclared.has(`@types/${name}`)) continue;
+        const name = unlistedSpecName(spec.text, aliases, rootDeclared, declaredFor(file.relPath), workspaceNames, projectName);
+        if (!name) continue;
         const key = `${file.relPath}|${name}`;
         if (seen.has(key)) continue;
         seen.add(key);
         findings.push({
-          ruleId: this.id,
-          category: 'dead-code',
-          tier: 'structural',
-          severity: 'warn',
-          fixability: 'manual',
-          confidence: 0.85,
-          file: file.relPath,
-          span: { line: spec.line, column: spec.column },
+          ruleId: this.id, category: 'dead-code', tier: 'structural', severity: 'warn', fixability: 'manual',
+          confidence: 0.85, file: file.relPath, span: { line: spec.line, column: spec.column },
           message: `Import of unlisted package \`${name}\` — add it to package.json dependencies/devDependencies.`,
           evidence: `import '${spec.text}'`,
         });
