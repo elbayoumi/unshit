@@ -48,51 +48,60 @@ function mentionsName(text: string, name: string): boolean {
   return new RegExp(`\\b${escapeRegExp(name)}\\b`).test(text);
 }
 
+type AddSpec = (node: ts.StringLiteralLike) => void;
+
+function collectNodeSpecs(node: ts.Node, add: AddSpec): void {
+  if (ts.isCallExpression(node)) {
+    const arg0 = node.arguments[0];
+    const isImport = node.expression.kind === ts.SyntaxKind.ImportKeyword;
+    const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
+    if ((isImport || isRequire) && arg0 && ts.isStringLiteralLike(arg0)) add(arg0);
+  } else if (
+    ts.isImportTypeNode(node)
+    && ts.isLiteralTypeNode(node.argument)
+    && ts.isStringLiteral(node.argument.literal)
+  ) {
+    add(node.argument.literal);
+  }
+  ts.forEachChild(node, (child) => collectNodeSpecs(child, add));
+}
+
+function collectStatementSpecs(stmt: ts.Statement, add: AddSpec): void {
+  if (ts.isImportDeclaration(stmt) && ts.isStringLiteral(stmt.moduleSpecifier)) {
+    add(stmt.moduleSpecifier);
+  } else if (ts.isExportDeclaration(stmt) && stmt.moduleSpecifier && ts.isStringLiteral(stmt.moduleSpecifier)) {
+    add(stmt.moduleSpecifier);
+  } else if (
+    ts.isImportEqualsDeclaration(stmt)
+    && ts.isExternalModuleReference(stmt.moduleReference)
+    && ts.isStringLiteral(stmt.moduleReference.expression)
+  ) {
+    add(stmt.moduleReference.expression);
+  }
+}
+
+function collectRegexSpecs(content: string, out: string[]): void {
+  const patterns = [
+    /\bimport\s+["']([^"'\n]+)["']/g,
+    /\bfrom\s+["']([^"'\n]+)["']/g,
+    /\bimport\s*\(\s*["']([^"'\n]+)["']/g,
+    /\brequire\s*\(\s*["']([^"'\n]+)["']/g,
+  ];
+  for (const re of patterns) {
+    for (const m of content.matchAll(re)) if (m[1]) out.push(m[1]);
+  }
+}
+
 function specTexts(file: FileEntry): string[] {
   const out: string[] = [];
-  const add = (node: ts.StringLiteralLike): void => {
+  const add: AddSpec = (node) => {
     if (node.text) out.push(node.text);
   };
-  const visit = (node: ts.Node): void => {
-    if (ts.isCallExpression(node)) {
-      const arg0 = node.arguments[0];
-      const isImport = node.expression.kind === ts.SyntaxKind.ImportKeyword;
-      const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
-      if ((isImport || isRequire) && arg0 && ts.isStringLiteralLike(arg0)) add(arg0);
-    } else if (
-      ts.isImportTypeNode(node)
-      && ts.isLiteralTypeNode(node.argument)
-      && ts.isStringLiteral(node.argument.literal)
-    ) {
-      add(node.argument.literal);
-    }
-    ts.forEachChild(node, visit);
-  };
   if (file.sourceFile) {
-    for (const stmt of file.sourceFile.statements) {
-      if (ts.isImportDeclaration(stmt) && ts.isStringLiteral(stmt.moduleSpecifier)) {
-        add(stmt.moduleSpecifier);
-      } else if (ts.isExportDeclaration(stmt) && stmt.moduleSpecifier && ts.isStringLiteral(stmt.moduleSpecifier)) {
-        add(stmt.moduleSpecifier);
-      } else if (
-        ts.isImportEqualsDeclaration(stmt)
-        && ts.isExternalModuleReference(stmt.moduleReference)
-        && ts.isStringLiteral(stmt.moduleReference.expression)
-      ) {
-        add(stmt.moduleReference.expression);
-      }
-    }
-    visit(file.sourceFile);
+    for (const stmt of file.sourceFile.statements) collectStatementSpecs(stmt, add);
+    collectNodeSpecs(file.sourceFile, add);
   } else {
-    const patterns = [
-      /\bimport\s+["']([^"'\n]+)["']/g,
-      /\bfrom\s+["']([^"'\n]+)["']/g,
-      /\bimport\s*\(\s*["']([^"'\n]+)["']/g,
-      /\brequire\s*\(\s*["']([^"'\n]+)["']/g,
-    ];
-    for (const re of patterns) {
-      for (const m of file.content.matchAll(re)) if (m[1]) out.push(m[1]);
-    }
+    collectRegexSpecs(file.content, out);
   }
   return out;
 }
