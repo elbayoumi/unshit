@@ -749,116 +749,118 @@ function parseRustImports(
   return state.results;
 }
 
-function computeGraph(ctx: DetectorContext): ImportGraph {
-  const rootDir = ctx.rootDir;
-  const filesSorted = [...ctx.files].sort((a, b) => a.relPath.localeCompare(b.relPath));
-  const fileSet = new Set(ctx.files.map((f) => f.relPath));
-  const absToRel = new Map(ctx.files.map((f) => [path.resolve(f.absPath), f.relPath]));
+interface EdgeDetails {
+  line?: number;
+  spec?: string;
+}
 
-  const outgoing = new Map<string, Set<string>>();
-  for (const f of ctx.files) outgoing.set(f.relPath, new Set());
+interface GraphState {
+  ctx: DetectorContext;
+  rootDir: string;
+  fileSet: Set<string>;
+  absToRel: Map<string, string>;
+  outgoing: Map<string, Set<string>>;
+  edgeDetails: Map<string, EdgeDetails>;
+  internalSpecs: number;
+  resolved: number;
+  tsconfigCache: Map<string, TsConfigInfo>;
+  resolutionCaches: Map<string, ts.ModuleResolutionCache>;
+  pubspecCache: Map<string, PubspecInfo | null>;
+  packageNames: string[];
+}
 
-  const edgeDetails = new Map<string, { line?: number; spec?: string }>();
-  let internalSpecs = 0;
-  let resolved = 0;
+function emitEdge(
+  state: GraphState,
+  from: string,
+  spec: string,
+  target: string | null,
+  line: number | undefined,
+  internal: boolean,
+): void {
+  if (!internal) return;
+  state.internalSpecs++;
+  if (!target || !state.fileSet.has(target)) return;
+  state.resolved++;
+  if (target === from) return;
+  state.outgoing.get(from)!.add(target);
+  const key = `${from}\u0000${target}`;
+  if (!state.edgeDetails.has(key)) state.edgeDetails.set(key, { line, spec });
+}
 
-  const emit: Emit = (from, spec, target, line, internal) => {
-    if (!internal) return;
-    internalSpecs++;
-    if (!target || !fileSet.has(target)) return;
-    resolved++;
-    if (target === from) return;
-    outgoing.get(from)!.add(target);
-    const key = `${from}\u0000${target}`;
-    if (!edgeDetails.has(key)) edgeDetails.set(key, { line, spec });
+function processTsSource(
+  state: GraphState,
+  fromRel: string,
+  containingAbs: string,
+  sf: ts.SourceFile,
+  lineOffset: number,
+): void {
+  const { rootDir, tsconfigCache, resolutionCaches, packageNames, fileSet, absToRel } = state;
+  const info = loadTsConfigInfo(path.dirname(containingAbs), rootDir, tsconfigCache);
+  const resolutionCache = getResolutionCache(info, rootDir, resolutionCaches);
+
+  const emitSpec = (spec: string, line: number): void => {
+    const clean = spec.split('?')[0] ?? spec;
+    if (!clean) return;
+    const isComponentSpec = COMPONENT_EXTS.has(path.posix.extname(clean).toLowerCase());
+    if (NON_GRAPHABLE_RE.test(clean) && !isComponentSpec) return;
+    if (!isInternalTsSpec(clean, info, rootDir, packageNames, fileSet)) return;
+    let target = tryResolveTs(clean, containingAbs, info, resolutionCache, absToRel, fileSet, rootDir);
+    if (!target || !fileSet.has(target)) {
+      target = resolveRelativeTs(clean, fromRel, fileSet) ?? resolveAliasFallback(clean, fileSet);
+    }
+    // A component that is not a scanned file is an asset, not a broken import.
+    if (isComponentSpec && !target) return;
+    emitEdge(state, fromRel, clean, target, line, true);
   };
 
-  const tsconfigCache = new Map<string, TsConfigInfo>();
-  const resolutionCaches = new Map<string, ts.ModuleResolutionCache>();
-  const pubspecCache = new Map<string, PubspecInfo | null>();
-  const packageNames = loadPackageNames(ctx, rootDir);
+  collectTsJsEdges(sf, emitSpec, lineOffset);
+}
 
-  const processTsSource = (
-    fromRel: string,
-    containingAbs: string,
-    sf: ts.SourceFile,
-    lineOffset: number,
-  ): void => {
-    const info = loadTsConfigInfo(path.dirname(containingAbs), rootDir, tsconfigCache);
-    const resolutionCache = getResolutionCache(info, rootDir, resolutionCaches);
-
-    const emitSpec = (spec: string, line: number): void => {
-      const clean = spec.split('?')[0] ?? spec;
-      if (!clean) return;
-      const isComponentSpec = COMPONENT_EXTS.has(path.posix.extname(clean).toLowerCase());
-      if (NON_GRAPHABLE_RE.test(clean) && !isComponentSpec) return;
-      if (!isInternalTsSpec(clean, info, rootDir, packageNames, fileSet)) return;
-      let target = tryResolveTs(
-        clean, containingAbs, info, resolutionCache, absToRel, fileSet, rootDir,
-      );
-      if (!target || !fileSet.has(target)) {
-        target = resolveRelativeTs(clean, fromRel, fileSet)
-          ?? resolveAliasFallback(clean, fileSet);
-      }
-      // A component that is not a scanned file is an asset, not a broken import.
-      if (isComponentSpec && !target) return;
-      emit(fromRel, clean, target, line, true);
-    };
-
-    collectTsJsEdges(sf, emitSpec, lineOffset);
-  };
-
-  // TS/JS edges
+function collectEdges(state: GraphState): void {
+  const { ctx, rootDir, fileSet } = state;
   for (const file of ctx.files) {
     if (!TS_EXTS.has(file.ext) || !file.sourceFile) continue;
-    processTsSource(file.relPath, file.absPath, file.sourceFile, 0);
+    processTsSource(state, file.relPath, file.absPath, file.sourceFile, 0);
   }
-
-  // Vue/Svelte <script> edges
   for (const file of ctx.files) {
     if (!COMPONENT_EXTS.has(file.ext)) continue;
     for (const block of extractScriptBlocks(file)) {
-      processTsSource(file.relPath, file.absPath, block.sourceFile, block.lineOffset);
+      processTsSource(state, file.relPath, file.absPath, block.sourceFile, block.lineOffset);
     }
   }
-
-  // Rust edges
   const rustRoots = rustCrateSrcRoots(ctx, fileSet);
   for (const file of ctx.files) {
     if (file.ext !== '.rs') continue;
     for (const imp of parseRustImports(file, fileSet, rustRoots)) {
-      emit(file.relPath, imp.spec, imp.target, imp.line, imp.internal);
+      emitEdge(state, file.relPath, imp.spec, imp.target, imp.line, imp.internal);
     }
   }
-
-  // Dart edges
   for (const file of ctx.files) {
     if (file.ext !== '.dart') continue;
-    const pubspec = loadPubspecInfo(path.dirname(file.absPath), rootDir, pubspecCache);
+    const pubspec = loadPubspecInfo(path.dirname(file.absPath), rootDir, state.pubspecCache);
     for (const imp of parseDartImports(file, pubspec, fileSet)) {
-      emit(file.relPath, imp.spec, imp.target, imp.line, imp.internal);
+      emitEdge(state, file.relPath, imp.spec, imp.target, imp.line, imp.internal);
     }
   }
-
-  // Python edges
   const pyRoots = pythonPackageRoots(fileSet);
   for (const file of ctx.files) {
     if (file.ext !== '.py') continue;
     for (const imp of parsePythonImports(file, fileSet, pyRoots)) {
-      emit(file.relPath, imp.spec, imp.target, imp.line, imp.internal);
+      emitEdge(state, file.relPath, imp.spec, imp.target, imp.line, imp.internal);
     }
   }
+}
 
-  const sortedNodes = filesSorted.map((f) => f.relPath);
+function finalizeGraph(state: GraphState, sortedNodes: string[]): ImportGraph {
   const graph = new Map<string, string[]>() as ImportGraph;
   for (const node of sortedNodes) {
-    graph.set(node, [...outgoing.get(node)!].sort());
+    graph.set(node, [...state.outgoing.get(node)!].sort());
   }
 
   const edges: ImportEdge[] = [];
   for (const from of sortedNodes) {
     for (const to of graph.get(from)!) {
-      const details = edgeDetails.get(`${from}\u0000${to}`);
+      const details = state.edgeDetails.get(`${from}\u0000${to}`);
       edges.push({
         from,
         to,
@@ -891,7 +893,6 @@ function computeGraph(ctx: DetectorContext): ImportGraph {
   }
 
   const mapGet = graph.get.bind(graph);
-
   graph.nodes = sortedNodes;
   graph.files = sortedNodes;
   graph.vertices = sortedNodes;
@@ -903,7 +904,7 @@ function computeGraph(ctx: DetectorContext): ImportGraph {
   graph.imports = importsRecord;
   graph.dependencies = importsRecord;
   graph.dependents = dependentsRecord;
-  graph.stats = { internalSpecs, resolved, graphedFiles: sortedNodes.length };
+  graph.stats = { internalSpecs: state.internalSpecs, resolved: state.resolved, graphedFiles: sortedNodes.length };
   graph.get = (file: string): string[] => {
     const value = mapGet(file);
     return value ? [...value] : [];
@@ -914,8 +915,34 @@ function computeGraph(ctx: DetectorContext): ImportGraph {
     const value = mapGet(file);
     return value ? [...value] : [];
   };
-
   return graph;
+}
+
+function computeGraph(ctx: DetectorContext): ImportGraph {
+  const fileSet = new Set(ctx.files.map((f) => f.relPath));
+  const outgoing = new Map<string, Set<string>>();
+  for (const file of ctx.files) outgoing.set(file.relPath, new Set());
+
+  const state: GraphState = {
+    ctx,
+    rootDir: ctx.rootDir,
+    fileSet,
+    absToRel: new Map(ctx.files.map((f) => [path.resolve(f.absPath), f.relPath])),
+    outgoing,
+    edgeDetails: new Map<string, EdgeDetails>(),
+    internalSpecs: 0,
+    resolved: 0,
+    tsconfigCache: new Map<string, TsConfigInfo>(),
+    resolutionCaches: new Map<string, ts.ModuleResolutionCache>(),
+    pubspecCache: new Map<string, PubspecInfo | null>(),
+    packageNames: loadPackageNames(ctx, ctx.rootDir),
+  };
+
+  collectEdges(state);
+  const sortedNodes = [...ctx.files]
+    .sort((a, b) => a.relPath.localeCompare(b.relPath))
+    .map((file) => file.relPath);
+  return finalizeGraph(state, sortedNodes);
 }
 
 export function buildImportGraph(ctx: DetectorContext): ImportGraph {
