@@ -86,8 +86,55 @@ async function warnIfShallow(rootDir: string): Promise<void> {
   }
 }
 
+interface NumstatState {
+  churn: Map<string, Churn>;
+  touchedInCommit: Set<string>;
+  prefix: string;
+  inCommit: boolean;
+}
+
+function recordNumstatLine(line: string, state: NumstatState): void {
+  if (line.startsWith('__COMMIT__')) {
+    state.inCommit = true;
+    state.touchedInCommit.clear();
+    return;
+  }
+  if (!state.inCommit || !line.trim()) return;
+  const columns = line.split('\t');
+  if (columns.length < 3) return;
+  const added = columns[0] === '-' ? 0 : Number(columns[0]);
+  const deleted = columns[1] === '-' ? 0 : Number(columns[1]);
+  if (!Number.isSafeInteger(added) || !Number.isSafeInteger(deleted)) return;
+  let file = normalizeLogPath(columns.slice(2).join('\t'));
+  if (!file) return;
+  if (state.prefix) {
+    const p = state.prefix + '/';
+    if (file.startsWith(p)) file = file.slice(p.length);
+  }
+  let entry = state.churn.get(file);
+  if (!entry) {
+    entry = { commits: 0, lines: 0 };
+    state.churn.set(file, entry);
+  }
+  entry.lines += added + deleted;
+  if (!state.touchedInCommit.has(file)) {
+    entry.commits += 1;
+    state.touchedInCommit.add(file);
+  }
+}
+
+function parseNumstat(stdout: string, prefix: string): Map<string, Churn> {
+  const state: NumstatState = {
+    churn: new Map<string, Churn>(),
+    touchedInCommit: new Set<string>(),
+    prefix,
+    inCommit: false,
+  };
+  for (const line of stdout.split(/\r?\n/)) recordNumstatLine(line, state);
+  return state.churn;
+}
+
 async function collectChurn(rootDir: string, since: string): Promise<Map<string, Churn>> {
-  const churn = new Map<string, Churn>();
   let stdout: string;
   try {
     ({ stdout } = await execFileAsync(
@@ -106,42 +153,9 @@ async function collectChurn(rootDir: string, since: string): Promise<Map<string,
     ));
   } catch {
     /* Not a git repo or invalid --since value */
-    return churn;
+    return new Map<string, Churn>();
   }
-
-  const prefix = await getPathPrefix(rootDir);
-  let inCommit = false;
-  const touchedInCommit = new Set<string>();
-  for (const line of stdout.split(/\r?\n/)) {
-    if (line.startsWith('__COMMIT__')) {
-      inCommit = true;
-      touchedInCommit.clear();
-      continue;
-    }
-    if (!inCommit || !line.trim()) continue;
-    const columns = line.split('\t');
-    if (columns.length < 3) continue;
-    const added = columns[0] === '-' ? 0 : Number(columns[0]);
-    const deleted = columns[1] === '-' ? 0 : Number(columns[1]);
-    if (!Number.isSafeInteger(added) || !Number.isSafeInteger(deleted)) continue;
-    let file = normalizeLogPath(columns.slice(2).join('\t'));
-    if (!file) continue;
-    if (prefix) {
-      const p = prefix + '/';
-      if (file.startsWith(p)) file = file.slice(p.length);
-    }
-    let entry = churn.get(file);
-    if (!entry) {
-      entry = { commits: 0, lines: 0 };
-      churn.set(file, entry);
-    }
-    entry.lines += added + deleted;
-    if (!touchedInCommit.has(file)) {
-      entry.commits += 1;
-      touchedInCommit.add(file);
-    }
-  }
-  return churn;
+  return parseNumstat(stdout, await getPathPrefix(rootDir));
 }
 
 /**

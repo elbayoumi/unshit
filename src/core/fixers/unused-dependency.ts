@@ -1,8 +1,9 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import ts from 'typescript';
-import type { FileEntry, Finding, Patch, TextEdit } from '../../contracts.js';
+import type { FileEntry, Finding, Patch } from '../../contracts.js';
 import type { ScanResult } from '../scanner.js';
+import { applyEdits, escapeRegExp, expectedManifest, removalEdits } from './manifest-json.js';
 
 const RULE = 'deps/unused-dependency';
 const DEP_SECTIONS = ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'] as const;
@@ -11,20 +12,16 @@ export function isUnusedDependencyRule(ruleId: string): boolean {
   return ruleId === RULE;
 }
 
-export interface UnusedDependencySkip {
+interface UnusedDependencySkip {
   file: string;
   ruleId: string;
   line: number;
   reason: string;
 }
 
-export interface UnusedDependencyPlan {
+interface UnusedDependencyPlan {
   patches: Patch[];
   skipped: UnusedDependencySkip[];
-}
-
-function escapeRegExp(text: string): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function posixDirname(relPath: string): string {
@@ -48,51 +45,60 @@ function mentionsName(text: string, name: string): boolean {
   return new RegExp(`\\b${escapeRegExp(name)}\\b`).test(text);
 }
 
+type AddSpec = (node: ts.StringLiteralLike) => void;
+
+function collectNodeSpecs(node: ts.Node, add: AddSpec): void {
+  if (ts.isCallExpression(node)) {
+    const arg0 = node.arguments[0];
+    const isImport = node.expression.kind === ts.SyntaxKind.ImportKeyword;
+    const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
+    if ((isImport || isRequire) && arg0 && ts.isStringLiteralLike(arg0)) add(arg0);
+  } else if (
+    ts.isImportTypeNode(node)
+    && ts.isLiteralTypeNode(node.argument)
+    && ts.isStringLiteral(node.argument.literal)
+  ) {
+    add(node.argument.literal);
+  }
+  ts.forEachChild(node, (child) => collectNodeSpecs(child, add));
+}
+
+function collectStatementSpecs(stmt: ts.Statement, add: AddSpec): void {
+  if (ts.isImportDeclaration(stmt) && ts.isStringLiteral(stmt.moduleSpecifier)) {
+    add(stmt.moduleSpecifier);
+  } else if (ts.isExportDeclaration(stmt) && stmt.moduleSpecifier && ts.isStringLiteral(stmt.moduleSpecifier)) {
+    add(stmt.moduleSpecifier);
+  } else if (
+    ts.isImportEqualsDeclaration(stmt)
+    && ts.isExternalModuleReference(stmt.moduleReference)
+    && ts.isStringLiteral(stmt.moduleReference.expression)
+  ) {
+    add(stmt.moduleReference.expression);
+  }
+}
+
+function collectRegexSpecs(content: string, out: string[]): void {
+  const patterns = [
+    /\bimport\s+["']([^"'\n]+)["']/g,
+    /\bfrom\s+["']([^"'\n]+)["']/g,
+    /\bimport\s*\(\s*["']([^"'\n]+)["']/g,
+    /\brequire\s*\(\s*["']([^"'\n]+)["']/g,
+  ];
+  for (const re of patterns) {
+    for (const m of content.matchAll(re)) if (m[1]) out.push(m[1]);
+  }
+}
+
 function specTexts(file: FileEntry): string[] {
   const out: string[] = [];
-  const add = (node: ts.StringLiteralLike): void => {
+  const add: AddSpec = (node) => {
     if (node.text) out.push(node.text);
   };
-  const visit = (node: ts.Node): void => {
-    if (ts.isCallExpression(node)) {
-      const arg0 = node.arguments[0];
-      const isImport = node.expression.kind === ts.SyntaxKind.ImportKeyword;
-      const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
-      if ((isImport || isRequire) && arg0 && ts.isStringLiteralLike(arg0)) add(arg0);
-    } else if (
-      ts.isImportTypeNode(node)
-      && ts.isLiteralTypeNode(node.argument)
-      && ts.isStringLiteral(node.argument.literal)
-    ) {
-      add(node.argument.literal);
-    }
-    ts.forEachChild(node, visit);
-  };
   if (file.sourceFile) {
-    for (const stmt of file.sourceFile.statements) {
-      if (ts.isImportDeclaration(stmt) && ts.isStringLiteral(stmt.moduleSpecifier)) {
-        add(stmt.moduleSpecifier);
-      } else if (ts.isExportDeclaration(stmt) && stmt.moduleSpecifier && ts.isStringLiteral(stmt.moduleSpecifier)) {
-        add(stmt.moduleSpecifier);
-      } else if (
-        ts.isImportEqualsDeclaration(stmt)
-        && ts.isExternalModuleReference(stmt.moduleReference)
-        && ts.isStringLiteral(stmt.moduleReference.expression)
-      ) {
-        add(stmt.moduleReference.expression);
-      }
-    }
-    visit(file.sourceFile);
+    for (const stmt of file.sourceFile.statements) collectStatementSpecs(stmt, add);
+    collectNodeSpecs(file.sourceFile, add);
   } else {
-    const patterns = [
-      /\bimport\s+["']([^"'\n]+)["']/g,
-      /\bfrom\s+["']([^"'\n]+)["']/g,
-      /\bimport\s*\(\s*["']([^"'\n]+)["']/g,
-      /\brequire\s*\(\s*["']([^"'\n]+)["']/g,
-    ];
-    for (const re of patterns) {
-      for (const m of file.content.matchAll(re)) if (m[1]) out.push(m[1]);
-    }
+    collectRegexSpecs(file.content, out);
   }
   return out;
 }
@@ -179,86 +185,117 @@ function externalReference(scan: ScanResult, ownerRel: string, name: string): st
   return null;
 }
 
-interface LineRemoval {
-  name: string;
-  start: number;
-  end: number;
-  hasComma: boolean;
+type SkipFn = (finding: Finding, reason: string) => void;
+
+function skipAll(findings: Finding[], reason: string, skip: SkipFn): void {
+  for (const finding of findings) skip(finding, reason);
 }
 
-/** Locates the dependency key lines and the edits that remove them without breaking JSON. */
-function removalEdits(content: string, names: string[]): Map<string, TextEdit[]> | null {
-  const removals: LineRemoval[] = [];
-  for (const name of names) {
-    const re = new RegExp(`^[ \\t]*"${escapeRegExp(name)}"[ \\t]*:`, 'm');
-    const match = re.exec(content);
-    if (!match) return null;
-    const start = match.index;
-    let end = content.indexOf('\n', start);
-    if (end === -1) end = content.length;
-    if (removals.some((r) => start < r.end && r.start < end)) return null;
-    removals.push({ name, start, end, hasComma: content.slice(start, end).trimEnd().endsWith(',') });
+function groupFindingsByFile(findings: Finding[]): Map<string, Finding[]> {
+  const byFile = new Map<string, Finding[]>();
+  for (const finding of findings) {
+    const list = byFile.get(finding.file) ?? [];
+    list.push(finding);
+    byFile.set(finding.file, list);
   }
-  removals.sort((a, b) => a.start - b.start);
+  return byFile;
+}
 
-  const removed = new Set(removals.map((r) => r.start));
-  const editsByName = new Map<string, TextEdit[]>(
-    removals.map(({ name, start, end }) => [name, [{
-      startOffset: start,
-      endOffset: end < content.length ? end + 1 : end,
-      replacement: '',
-    }]]),
-  );
-  const commaEdits = new Set<number>();
-  for (const removal of removals) {
-    if (removal.hasComma) continue;
-    // Last property of its object: drop the trailing comma of the previous
-    // surviving property line, if it is another property (not a closing brace).
-    let searchEnd = removal.start - 1;
-    while (searchEnd >= 0) {
-      const searchStart = content.lastIndexOf('\n', searchEnd - 1) + 1;
-      if (!removed.has(searchStart)) {
-        const prev = content.slice(searchStart, searchEnd);
-        const comma = prev.lastIndexOf(',');
-        if (comma >= 0
-          && prev.slice(comma + 1).trim() === ''
-          && /^\s*"[^"]+"\s*:/.test(prev)
-          && !commaEdits.has(searchStart + comma)) {
-          commaEdits.add(searchStart + comma);
-          editsByName.get(removal.name)!.push({
-            startOffset: searchStart + comma,
-            endOffset: searchStart + comma + 1,
-            replacement: '',
-          });
-        }
-        break;
-      }
-      searchEnd = searchStart - 1;
+function readDeclared(raw: string): Record<string, unknown> | null {
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+    return parsed as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
+
+function isDeclaredKey(declared: Record<string, unknown>, name: string): boolean {
+  for (const section of ['dependencies', 'devDependencies'] as const) {
+    const value = declared[section];
+    if (value && typeof value === 'object' && !Array.isArray(value)
+      && Object.prototype.hasOwnProperty.call(value, name)) {
+      return true;
     }
   }
-  for (const edits of editsByName.values()) edits.sort((a, b) => a.startOffset - b.startOffset);
-  return editsByName;
+  return false;
 }
 
-function applyEdits(content: string, edits: TextEdit[]): string {
-  let next = content;
-  for (const edit of [...edits].sort((a, b) => b.startOffset - a.startOffset)) {
-    next = next.slice(0, edit.startOffset) + edit.replacement + next.slice(edit.endOffset);
+function selectRemovable(
+  scan: ScanResult,
+  relPath: string,
+  list: Finding[],
+  declared: Record<string, unknown>,
+  used: Set<string>,
+  skip: SkipFn,
+): Finding[] {
+  const owners = list.map((f) => f.evidence.trim());
+  const removable: Finding[] = [];
+  for (const finding of list) {
+    const name = finding.evidence.trim();
+    if (!owners.includes(name) || !isDeclaredKey(declared, name)) {
+      skip(finding, 'dependency key is no longer declared in package.json');
+    } else if (used.has(name)) {
+      skip(finding, `\`${name}\` still imported (or required) by a scanned file anywhere in the project`);
+    } else {
+      const external = externalReference(scan, relPath, name);
+      if (external) skip(finding, external);
+      else removable.push(finding);
+    }
   }
-  return next;
+  return removable;
 }
 
-function expectedManifest(raw: string, names: string[]): unknown {
-  const parsed: unknown = JSON.parse(raw);
-  const copy: Record<string, unknown> = { ...(parsed as Record<string, unknown>) };
-  for (const section of ['dependencies', 'devDependencies'] as const) {
-    const value = copy[section];
-    if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
-    const deps = { ...(value as Record<string, unknown>) };
-    for (const name of names) delete deps[name];
-    copy[section] = deps;
+interface ManifestPlanContext {
+  scan: ScanResult;
+  manifests: Set<string>;
+  used: Set<string>;
+  skip: SkipFn;
+}
+
+function planForManifest(relPath: string, list: Finding[], ctx: ManifestPlanContext): Patch[] {
+  if (!ctx.manifests.has(relPath) || !relPath.endsWith('package.json') || relPath.includes('..')) {
+    skipAll(list, 'finding does not point at a scanned package.json', ctx.skip);
+    return [];
   }
-  return copy;
+  const raw = readText(join(ctx.scan.rootDir, relPath));
+  if (!raw) {
+    skipAll(list, 'could not read the owning package.json', ctx.skip);
+    return [];
+  }
+  const declared = readDeclared(raw);
+  if (!declared) {
+    skipAll(list, 'owning package.json is not valid JSON', ctx.skip);
+    return [];
+  }
+
+  const removable = selectRemovable(ctx.scan, relPath, list, declared, ctx.used, ctx.skip);
+  if (removable.length === 0) return [];
+
+  const names = [...new Set(removable.map((f) => f.evidence.trim()))];
+  const editsByName = removalEdits(raw, names);
+  if (!editsByName || editsByName.size === 0) {
+    skipAll(removable, 'could not locate the dependency key in package.json', ctx.skip);
+    return [];
+  }
+  const updated = applyEdits(raw, [...editsByName.values()].flat());
+  try {
+    const after = JSON.parse(updated);
+    if (JSON.stringify(after) !== JSON.stringify(expectedManifest(raw, names))) {
+      throw new Error('unexpected manifest change');
+    }
+  } catch {
+    skipAll(removable, 'removing this key would change package.json unexpectedly', ctx.skip);
+    return [];
+  }
+
+  return [...editsByName].map(([name, edits]) => ({
+    file: relPath,
+    ruleId: RULE,
+    description: `Remove unused dependency key \`${name}\` from ${relPath}`,
+    edits,
+  }));
 }
 
 /**
@@ -269,94 +306,20 @@ function expectedManifest(raw: string, names: string[]): unknown {
  */
 export function planUnusedDependencyFixes(scan: ScanResult, findings: Finding[]): UnusedDependencyPlan {
   const skipped: UnusedDependencySkip[] = [];
-  const patches: Patch[] = [];
-  if (findings.length === 0) return { patches, skipped };
+  if (findings.length === 0) return { patches: [], skipped };
 
-  const skip = (finding: Finding, reason: string): void => {
+  const skip: SkipFn = (finding, reason) => {
     skipped.push({ file: finding.file, ruleId: finding.ruleId, line: finding.span.line, reason });
   };
-  const manifests = new Set(scan.manifests ?? []);
-  const used = usedPackageNames(scan);
-  const byManifest = new Map<string, Finding[]>();
-  for (const finding of findings) {
-    const list = byManifest.get(finding.file) ?? [];
-    list.push(finding);
-    byManifest.set(finding.file, list);
+  const ctx: ManifestPlanContext = {
+    scan,
+    manifests: new Set(scan.manifests ?? []),
+    used: usedPackageNames(scan),
+    skip,
+  };
+  const patches: Patch[] = [];
+  for (const [relPath, list] of groupFindingsByFile(findings)) {
+    patches.push(...planForManifest(relPath, list, ctx));
   }
-
-  for (const [relPath, list] of byManifest) {
-    const owners = list.map((f) => f.evidence.trim());
-    if (!manifests.has(relPath) || !relPath.endsWith('package.json') || relPath.includes('..')) {
-      for (const finding of list) skip(finding, 'finding does not point at a scanned package.json');
-      continue;
-    }
-    const absPath = join(scan.rootDir, relPath);
-    const raw = readText(absPath);
-    if (!raw) {
-      for (const finding of list) skip(finding, 'could not read the owning package.json');
-      continue;
-    }
-    let declared: Record<string, unknown>;
-    try {
-      const parsed: unknown = JSON.parse(raw);
-      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('not an object');
-      declared = parsed as Record<string, unknown>;
-    } catch {
-      for (const finding of list) skip(finding, 'owning package.json is not valid JSON');
-      continue;
-    }
-
-    const removable: Finding[] = [];
-    for (const finding of list) {
-      const name = finding.evidence.trim();
-      let isDeclared = false;
-      for (const section of ['dependencies', 'devDependencies'] as const) {
-        const value = declared[section];
-        if (value && typeof value === 'object' && !Array.isArray(value)
-          && Object.prototype.hasOwnProperty.call(value, name)) {
-          isDeclared = true;
-          break;
-        }
-      }
-      if (!owners.includes(name) || !isDeclared) {
-        skip(finding, 'dependency key is no longer declared in package.json');
-      } else if (used.has(name)) {
-        skip(finding, `\`${name}\` still imported (or required) by a scanned file anywhere in the project`);
-      } else {
-        const external = externalReference(scan, relPath, name);
-        if (external) skip(finding, external);
-        else removable.push(finding);
-      }
-    }
-    if (removable.length === 0) continue;
-
-    const names = [...new Set(removable.map((f) => f.evidence.trim()))];
-    const editsByName = removalEdits(raw, names);
-    if (!editsByName || editsByName.size === 0) {
-      for (const finding of removable) skip(finding, 'could not locate the dependency key in package.json');
-      continue;
-    }
-    const allEdits = [...editsByName.values()].flat();
-    const updated = applyEdits(raw, allEdits);
-    try {
-      const after = JSON.parse(updated);
-      if (JSON.stringify(after) !== JSON.stringify(expectedManifest(raw, names))) {
-        throw new Error('unexpected manifest change');
-      }
-    } catch {
-      for (const finding of removable) skip(finding, 'removing this key would change package.json unexpectedly');
-      continue;
-    }
-
-    for (const [name, edits] of editsByName) {
-      patches.push({
-        file: relPath,
-        ruleId: RULE,
-        description: `Remove unused dependency key \`${name}\` from ${relPath}`,
-        edits,
-      });
-    }
-  }
-
   return { patches, skipped };
 }

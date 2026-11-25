@@ -23,14 +23,14 @@ export interface UnusedFileDeletion {
   line: number;
 }
 
-export interface UnusedFileSkip {
+interface UnusedFileSkip {
   file: string;
   ruleId: string;
   line: number;
   reason: string;
 }
 
-export interface UnusedFilePlan {
+interface UnusedFilePlan {
   deletions: UnusedFileDeletion[];
   skipped: UnusedFileSkip[];
 }
@@ -141,6 +141,19 @@ export async function gitDirtyFiles(rootDir: string): Promise<Set<string>> {
   return dirty;
 }
 
+function liveFileReason(
+  file: FileEntry,
+  entries: Set<string>,
+  refs: Set<string>,
+  dirtyFiles: Set<string>,
+): string | null {
+  if (entries.has(file.relPath)) return 'entry point, config, script or test file';
+  if (PROTECTED_PATH_RE.test(file.relPath)) return 'protected path (config, test, docs or script directory)';
+  if (refs.has(file.relPath)) return 'still referenced by a scanned file (import, require, re-export or dynamic import)';
+  if (dirtyFiles.has(file.relPath)) return 'git working tree is dirty for this file';
+  return null;
+}
+
 /**
  * Plans deletions for files the detector flagged, re-checking every reason a
  * file might still be alive at fix time. No file is removed here.
@@ -178,33 +191,30 @@ export function planUnusedFileDeletions(
     const file = fileMap.get(finding.file);
     if (!file) {
       skip(finding, 'file is no longer part of the scanned file set');
-    } else if (entries.has(file.relPath)) {
-      skip(finding, 'entry point, config, script or test file');
-    } else if (PROTECTED_PATH_RE.test(file.relPath)) {
-      skip(finding, 'protected path (config, test, docs or script directory)');
-    } else if (refs.has(file.relPath)) {
-      skip(finding, 'still referenced by a scanned file (import, require, re-export or dynamic import)');
-    } else if (dirtyFiles.has(file.relPath)) {
-      skip(finding, 'git working tree is dirty for this file');
+      continue;
+    }
+    const reason = liveFileReason(file, entries, refs, dirtyFiles);
+    if (reason) {
+      skip(finding, reason);
+      continue;
+    }
+    let current: string;
+    try {
+      current = readFileSync(file.absPath, 'utf8');
+    } catch {
+      skip(finding, 'file could not be read from disk');
+      continue;
+    }
+    if (current !== file.content) {
+      skip(finding, 'file changed on disk since the scan');
     } else {
-      let current: string;
-      try {
-        current = readFileSync(file.absPath, 'utf8');
-      } catch {
-        skip(finding, 'file could not be read from disk');
-        continue;
-      }
-      if (current !== file.content) {
-        skip(finding, 'file changed on disk since the scan');
-      } else {
-        deletions.push({
-          relPath: file.relPath,
-          absPath: file.absPath,
-          content: file.content,
-          ruleId: finding.ruleId,
-          line: finding.span.line,
-        });
-      }
+      deletions.push({
+        relPath: file.relPath,
+        absPath: file.absPath,
+        content: file.content,
+        ruleId: finding.ruleId,
+        line: finding.span.line,
+      });
     }
   }
   return { deletions, skipped };

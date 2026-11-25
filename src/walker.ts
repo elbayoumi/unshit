@@ -1,3 +1,4 @@
+import type { Dirent } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
 import { extname, join, relative } from 'node:path';
 import ts from 'typescript';
@@ -143,6 +144,51 @@ function isExcludedByConfig(rel: string, name: string, excludes: string[]): bool
     : name === exclude);
 }
 
+interface WalkState {
+  rootDir: string;
+  config: UnshitConfig;
+  includeSet: Set<string>;
+  paths: string[];
+  manifests: string[];
+  ignoreScopes: IgnoreScope[];
+}
+
+async function visitEntry(entry: Dirent, dir: string, state: WalkState): Promise<void> {
+  if (entry.name.startsWith('.') && entry.name !== '.agent') return;
+  const fullPath = join(dir, entry.name);
+  const rel = relative(state.rootDir, fullPath).replaceAll('\\', '/');
+  if (isExcludedByConfig(rel, entry.name, state.config.exclude)) return;
+  if (isIgnored(fullPath, entry.isDirectory(), state.ignoreScopes)) return;
+
+  if (entry.isDirectory()) {
+    await walkDirectory(fullPath, state);
+  } else if (entry.isFile()) {
+    if (GENERATED_FILE_RE.test(entry.name)) return;
+    if (isManifest(entry.name)) state.manifests.push(rel);
+    const ext = extname(entry.name).toLowerCase();
+    if (state.includeSet.has(ext)) state.paths.push(fullPath);
+  }
+}
+
+async function walkDirectory(dir: string, state: WalkState): Promise<void> {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const gitignore = entries.find((entry) => entry.name === '.gitignore' && entry.isFile());
+  let scope: IgnoreScope | undefined;
+  if (gitignore) {
+    const content = await readFile(join(dir, '.gitignore'), 'utf8');
+    scope = { baseDir: dir, rules: parseGitignore(content) };
+    state.ignoreScopes.push(scope);
+  }
+
+  try {
+    for (const entry of entries) {
+      await visitEntry(entry, dir, state);
+    }
+  } finally {
+    if (scope) state.ignoreScopes.pop();
+  }
+}
+
 /**
  * Walks `rootDir` respecting `config.exclude`, `config.include`, and root/nested
  * `.gitignore` files, parsing TS/JS ASTs lazily.
@@ -152,48 +198,17 @@ export async function collectWorkspace(
   rootDir: string,
   config: UnshitConfig,
 ): Promise<{ files: FileEntry[]; manifests: string[] }> {
-  const includeSet = new Set(config.include);
-  const paths: string[] = [];
-  const manifests: string[] = [];
-  const ignoreScopes: IgnoreScope[] = [];
+  const state: WalkState = {
+    rootDir,
+    config,
+    includeSet: new Set(config.include),
+    paths: [],
+    manifests: [],
+    ignoreScopes: [],
+  };
 
-  async function walk(dir: string): Promise<void> {
-    const entries = await readdir(dir, { withFileTypes: true });
-    const gitignore = entries.find((entry) => entry.name === '.gitignore' && entry.isFile());
-    let scope: IgnoreScope | undefined;
-    if (gitignore) {
-      const content = await readFile(join(dir, '.gitignore'), 'utf8');
-      scope = { baseDir: dir, rules: parseGitignore(content) };
-      ignoreScopes.push(scope);
-    }
-
-    try {
-      for (const entry of entries) {
-        if (entry.name.startsWith('.') && entry.name !== '.agent') continue;
-        const fullPath = join(dir, entry.name);
-        const rel = relative(rootDir, fullPath).replaceAll('\\', '/');
-        if (isExcludedByConfig(rel, entry.name, config.exclude)) continue;
-        if (isIgnored(fullPath, entry.isDirectory(), ignoreScopes)) continue;
-
-        if (entry.isDirectory()) {
-          await walk(fullPath);
-        } else if (entry.isFile()) {
-          if (GENERATED_FILE_RE.test(entry.name)) continue;
-          if (isManifest(entry.name)) {
-            manifests.push(rel);
-          }
-          const ext = extname(entry.name).toLowerCase();
-          if (includeSet.has(ext)) {
-            paths.push(fullPath);
-          }
-        }
-      }
-    } finally {
-      if (scope) ignoreScopes.pop();
-    }
-  }
-
-  await walk(rootDir);
+  await walkDirectory(rootDir, state);
+  const { paths, manifests } = state;
   paths.sort();
   manifests.sort();
 

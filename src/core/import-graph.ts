@@ -399,89 +399,106 @@ function splitPyNames(raw: string): string[] {
     .filter((name) => name !== '' && name !== '*');
 }
 
-function parsePythonImports(file: FileEntry, fileSet: Set<string>, roots: string[]): ResolvedImport[] {
-  const results: ResolvedImport[] = [];
-  let skipIndent: number | null = null;
+interface PythonParseState {
+  results: ResolvedImport[];
+  skipIndent: number | null;
+  file: FileEntry;
+  fileSet: Set<string>;
+  roots: string[];
+}
 
-  const push = (spec: string, target: string | null, line: number, internal: boolean): void => {
-    results.push({ spec, target, line, internal });
-  };
-  const packageBase = (moduleFile: string): string =>
-    moduleFile.replace(/\/__init__\.py$/, '').replace(/\.py$/, '');
+function pushPyImport(
+  state: PythonParseState,
+  spec: string,
+  target: string | null,
+  line: number,
+  internal: boolean,
+): void {
+  state.results.push({ spec, target, line, internal });
+}
 
-  for (let i = 0; i < file.lines.length; i++) {
-    const raw = file.lines[i] ?? '';
-    const trimmed = raw.trim();
-    const indent = raw.length - raw.trimStart().length;
+function pyPackageBase(moduleFile: string): string {
+  return moduleFile.replace(/\/__init__\.py$/, '').replace(/\.py$/, '');
+}
 
-    if (skipIndent !== null) {
-      if (trimmed === '') continue;
-      if (indent > skipIndent) continue;
-      skipIndent = null;
-    }
-    if (/^if\s+(?:[\w.]+\.)?TYPE_CHECKING\s*:/.test(trimmed)) {
-      skipIndent = indent;
-      continue;
-    }
-
-    const line = i + 1;
-
-    // from .x import y / from ..x import y / from . import y
-    let match = /^from\s+(\.+)([^\s]*)\s+import\s+(.+)$/.exec(trimmed);
-    if (match) {
-      const level = match[1].length;
-      const mod = (match[2] ?? '').replace(/^\.+/, '');
-      const spec = '.'.repeat(level) + mod;
-      const baseTarget = resolvePyModule(file.relPath, mod, level, roots, fileSet);
-      const base = baseTarget ? packageBase(baseTarget) : relativePyBase(file.relPath, level, mod);
-      let resolvedNames = 0;
-      for (const name of splitPyNames(match[3] ?? '')) {
-        const hit = tryPyPath(path.posix.join(base, name), fileSet);
-        if (hit) {
-          push(`${spec}.${name}`, hit, line, true);
-          resolvedNames++;
-        }
-      }
-      // `from . import sibling` depends on the sibling modules, not on the package __init__ itself.
-      if (mod !== '' || resolvedNames === 0) push(spec, baseTarget, line, level > 0 || baseTarget !== null);
-      continue;
-    }
-
-    // from module import y
-    match = /^from\s+([A-Za-z_][\w.]*)\s+import\s+(.+)$/.exec(trimmed);
-    if (match) {
-      const mod = match[1]!;
-      if (mod === '__future__') continue;
-      const baseTarget = resolvePyModule(file.relPath, mod, 0, roots, fileSet);
-      push(mod, baseTarget, line, baseTarget !== null);
-      if (baseTarget) {
-        const base = packageBase(baseTarget);
-        for (const name of splitPyNames(match[2] ?? '')) {
-          const hit = tryPyPath(path.posix.join(base, name), fileSet);
-          if (hit) push(`${mod}.${name}`, hit, line, true);
-        }
-      }
-      continue;
-    }
-
-    // import a, b / import a.b
-    match = /^import\s+(.+)$/.exec(trimmed);
-    if (match) {
-      for (const rawMod of (match[1] ?? '').split(',')) {
-        let mod = rawMod.trim().split(/\s+as\s+/)[0]?.trim() ?? '';
-        if (!mod) continue;
-        let level = 0;
-        if (mod.startsWith('.')) {
-          level = mod.match(/^\.+/)?.[0].length ?? 1;
-          mod = mod.slice(level);
-        }
-        const target = resolvePyModule(file.relPath, mod, level, roots, fileSet);
-        push(level ? '.'.repeat(level) + mod : mod, target, line, level > 0 || target !== null);
-      }
+function parseRelativePyImport(state: PythonParseState, trimmed: string, line: number): boolean {
+  const match = /^from\s+(\.+)([^\s]*)\s+import\s+(.+)$/.exec(trimmed);
+  if (!match) return false;
+  const level = match[1].length;
+  const mod = (match[2] ?? '').replace(/^\.+/, '');
+  const spec = '.'.repeat(level) + mod;
+  const baseTarget = resolvePyModule(state.file.relPath, mod, level, state.roots, state.fileSet);
+  const base = baseTarget ? pyPackageBase(baseTarget) : relativePyBase(state.file.relPath, level, mod);
+  let resolvedNames = 0;
+  for (const name of splitPyNames(match[3] ?? '')) {
+    const hit = tryPyPath(path.posix.join(base, name), state.fileSet);
+    if (hit) {
+      pushPyImport(state, `${spec}.${name}`, hit, line, true);
+      resolvedNames++;
     }
   }
+  // `from . import sibling` depends on the sibling modules, not on the package __init__ itself.
+  if (mod !== '' || resolvedNames === 0) {
+    pushPyImport(state, spec, baseTarget, line, level > 0 || baseTarget !== null);
+  }
+  return true;
+}
 
-  return results;
+function parseFromPyImport(state: PythonParseState, trimmed: string, line: number): boolean {
+  const match = /^from\s+([A-Za-z_][\w.]*)\s+import\s+(.+)$/.exec(trimmed);
+  if (!match) return false;
+  const mod = match[1]!;
+  if (mod === '__future__') return true;
+  const baseTarget = resolvePyModule(state.file.relPath, mod, 0, state.roots, state.fileSet);
+  pushPyImport(state, mod, baseTarget, line, baseTarget !== null);
+  if (baseTarget) {
+    const base = pyPackageBase(baseTarget);
+    for (const name of splitPyNames(match[2] ?? '')) {
+      const hit = tryPyPath(path.posix.join(base, name), state.fileSet);
+      if (hit) pushPyImport(state, `${mod}.${name}`, hit, line, true);
+    }
+  }
+  return true;
+}
+
+function parsePlainPyImport(state: PythonParseState, trimmed: string, line: number): void {
+  const match = /^import\s+(.+)$/.exec(trimmed);
+  if (!match) return;
+  for (const rawMod of (match[1] ?? '').split(',')) {
+    let mod = rawMod.trim().split(/\s+as\s+/)[0]?.trim() ?? '';
+    if (!mod) continue;
+    let level = 0;
+    if (mod.startsWith('.')) {
+      level = mod.match(/^\.+/)?.[0].length ?? 1;
+      mod = mod.slice(level);
+    }
+    const target = resolvePyModule(state.file.relPath, mod, level, state.roots, state.fileSet);
+    pushPyImport(state, level ? '.'.repeat(level) + mod : mod, target, line, level > 0 || target !== null);
+  }
+}
+
+function parsePythonLine(state: PythonParseState, raw: string, indent: number, line: number): void {
+  const trimmed = raw.trim();
+  if (state.skipIndent !== null) {
+    if (trimmed === '' || indent > state.skipIndent) return;
+    state.skipIndent = null;
+  }
+  if (/^if\s+(?:[\w.]+\.)?TYPE_CHECKING\s*:/.test(trimmed)) {
+    state.skipIndent = indent;
+    return;
+  }
+  if (parseRelativePyImport(state, trimmed, line)) return;
+  if (parseFromPyImport(state, trimmed, line)) return;
+  parsePlainPyImport(state, trimmed, line);
+}
+
+function parsePythonImports(file: FileEntry, fileSet: Set<string>, roots: string[]): ResolvedImport[] {
+  const state: PythonParseState = { results: [], skipIndent: null, file, fileSet, roots };
+  for (let i = 0; i < file.lines.length; i++) {
+    const raw = file.lines[i] ?? '';
+    parsePythonLine(state, raw, raw.length - raw.trimStart().length, i + 1);
+  }
+  return state.results;
 }
 
 function getScriptKindFromLang(lang: string | undefined): ts.ScriptKind {
@@ -635,176 +652,215 @@ function expandRustUseTree(text: string): string[] {
   return expanded;
 }
 
+interface RustParseState {
+  results: ResolvedImport[];
+  lines: string[];
+  fileSet: Set<string>;
+  crateRoot: string;
+  childDir: string;
+  containingDir: string;
+}
+
+function parseRustModLine(state: RustParseState, trimmed: string, line: number): boolean {
+  const modMatch = RUST_MOD_RE.exec(trimmed);
+  if (!modMatch) return false;
+  const name = modMatch[1]!;
+  const target = tryRustPath(path.posix.join(state.childDir, name), state.fileSet)
+    ?? tryRustPath(path.posix.join(state.containingDir, name), state.fileSet)
+    ?? tryRustPath(path.posix.join(state.crateRoot, name), state.fileSet);
+  state.results.push({ spec: `mod ${name}`, target, line, internal: true });
+  return true;
+}
+
+interface RustUseStatement {
+  statement: string;
+  endLine: number;
+}
+
+function readRustUseStatement(lines: string[], index: number): RustUseStatement | null {
+  const useMatch = RUST_USE_RE.exec((lines[index] ?? '').trim());
+  if (!useMatch) return null;
+  let body = useMatch[1] ?? '';
+  let endLine = index;
+  while (!body.includes(';') && endLine + 1 < lines.length) {
+    endLine += 1;
+    body += ` ${lines[endLine]?.trim() ?? ''}`;
+  }
+  const semi = body.indexOf(';');
+  return { statement: (semi === -1 ? body : body.slice(0, semi)).trim(), endLine };
+}
+
+/** Resolves the crate/super/self prefix of a `use` statement. */
+function rustUsePrefix(
+  parts: string[],
+  crateRoot: string,
+  childDir: string,
+): { baseDir: string; prefixLen: number } | null {
+  const first = parts[0];
+  if (!first || !RUST_USE_PREFIXES.has(first)) return null;
+  let baseDir = first === 'crate' ? crateRoot : childDir;
+  let prefixLen = first === 'crate' ? 1 : 0;
+  while (parts[prefixLen] === 'super' || parts[prefixLen] === 'self') {
+    if (parts[prefixLen] === 'super') baseDir = path.posix.dirname(baseDir);
+    prefixLen += 1;
+  }
+  return { baseDir, prefixLen };
+}
+
+function parseRustUseLine(
+  state: RustParseState,
+  statement: string,
+  line: number,
+): void {
+  const parts = statement.split('::').map((part) => part.trim()).filter(Boolean);
+  const prefix = rustUsePrefix(parts, state.crateRoot, state.childDir);
+  if (!prefix) return;
+  const rest = expandRustUseTree(parts.slice(prefix.prefixLen).join('::'));
+  for (const expanded of rest) {
+    const moduleParts = expanded.split('::').map((part) => part.trim()).filter(Boolean);
+    if (moduleParts.length === 0) continue;
+    const target = resolveRustPathParts(prefix.baseDir, moduleParts, state.fileSet);
+    state.results.push({ spec: statement, target, line, internal: true });
+  }
+}
+
 function parseRustImports(
   file: FileEntry,
   fileSet: Set<string>,
   crateRoots: string[],
 ): ResolvedImport[] {
-  const results: ResolvedImport[] = [];
-  const crateRoot = nearestRustCrateRoot(file.relPath, crateRoots);
-  const childDir = rustChildModuleDir(file.relPath);
-  const containingDir = path.posix.dirname(file.relPath);
+  const state: RustParseState = {
+    results: [],
+    lines: file.lines,
+    fileSet,
+    crateRoot: nearestRustCrateRoot(file.relPath, crateRoots),
+    childDir: rustChildModuleDir(file.relPath),
+    containingDir: path.posix.dirname(file.relPath),
+  };
 
-  for (let i = 0; i < file.lines.length; i++) {
-    const trimmed = (file.lines[i] ?? '').trim();
-    const line = i + 1;
-
-    const modMatch = RUST_MOD_RE.exec(trimmed);
-    if (modMatch) {
-      const name = modMatch[1]!;
-      const target = tryRustPath(path.posix.join(childDir, name), fileSet)
-        ?? tryRustPath(path.posix.join(containingDir, name), fileSet)
-        ?? tryRustPath(path.posix.join(crateRoot, name), fileSet);
-      results.push({ spec: `mod ${name}`, target, line, internal: true });
-      continue;
-    }
-
-    const useMatch = RUST_USE_RE.exec(trimmed);
-    if (!useMatch) continue;
-    let body = useMatch[1] ?? '';
-    let endLine = i;
-    while (!body.includes(';') && endLine + 1 < file.lines.length) {
-      endLine += 1;
-      body += ` ${file.lines[endLine]?.trim() ?? ''}`;
-    }
-    const semi = body.indexOf(';');
-    const statement = (semi === -1 ? body : body.slice(0, semi)).trim();
-    const parts = statement.split('::').map((part) => part.trim()).filter(Boolean);
-    const first = parts[0];
-    if (!first || !RUST_USE_PREFIXES.has(first)) {
-      i = endLine;
-      continue;
-    }
-
-    let baseDir = first === 'crate' ? crateRoot : childDir;
-    let prefixLen = first === 'crate' ? 1 : 0;
-    while (parts[prefixLen] === 'super' || parts[prefixLen] === 'self') {
-      if (parts[prefixLen] === 'super') baseDir = path.posix.dirname(baseDir);
-      prefixLen += 1;
-    }
-    const rest = expandRustUseTree(parts.slice(prefixLen).join('::'));
-    for (const expanded of rest) {
-      const moduleParts = expanded.split('::').map((part) => part.trim()).filter(Boolean);
-      if (moduleParts.length === 0) continue;
-      const target = resolveRustPathParts(baseDir, moduleParts, fileSet);
-      results.push({ spec: statement, target, line, internal: true });
-    }
-    i = endLine;
+  for (let i = 0; i < state.lines.length; i++) {
+    const trimmed = (state.lines[i] ?? '').trim();
+    if (parseRustModLine(state, trimmed, i + 1)) continue;
+    const use = readRustUseStatement(state.lines, i);
+    if (!use) continue;
+    parseRustUseLine(state, use.statement, i + 1);
+    i = use.endLine;
   }
-
-  return results;
+  return state.results;
 }
 
-function computeGraph(ctx: DetectorContext): ImportGraph {
-  const rootDir = ctx.rootDir;
-  const filesSorted = [...ctx.files].sort((a, b) => a.relPath.localeCompare(b.relPath));
-  const fileSet = new Set(ctx.files.map((f) => f.relPath));
-  const absToRel = new Map(ctx.files.map((f) => [path.resolve(f.absPath), f.relPath]));
+interface EdgeDetails {
+  line?: number;
+  spec?: string;
+}
 
-  const outgoing = new Map<string, Set<string>>();
-  for (const f of ctx.files) outgoing.set(f.relPath, new Set());
+interface GraphState {
+  ctx: DetectorContext;
+  rootDir: string;
+  fileSet: Set<string>;
+  absToRel: Map<string, string>;
+  outgoing: Map<string, Set<string>>;
+  edgeDetails: Map<string, EdgeDetails>;
+  internalSpecs: number;
+  resolved: number;
+  tsconfigCache: Map<string, TsConfigInfo>;
+  resolutionCaches: Map<string, ts.ModuleResolutionCache>;
+  pubspecCache: Map<string, PubspecInfo | null>;
+  packageNames: string[];
+}
 
-  const edgeDetails = new Map<string, { line?: number; spec?: string }>();
-  let internalSpecs = 0;
-  let resolved = 0;
+function emitEdge(
+  state: GraphState,
+  from: string,
+  spec: string,
+  target: string | null,
+  line: number | undefined,
+  internal: boolean,
+): void {
+  if (!internal) return;
+  state.internalSpecs++;
+  if (!target || !state.fileSet.has(target)) return;
+  state.resolved++;
+  if (target === from) return;
+  state.outgoing.get(from)!.add(target);
+  const key = `${from}\u0000${target}`;
+  if (!state.edgeDetails.has(key)) state.edgeDetails.set(key, { line, spec });
+}
 
-  const emit: Emit = (from, spec, target, line, internal) => {
-    if (!internal) return;
-    internalSpecs++;
-    if (!target || !fileSet.has(target)) return;
-    resolved++;
-    if (target === from) return;
-    outgoing.get(from)!.add(target);
-    const key = `${from}\u0000${target}`;
-    if (!edgeDetails.has(key)) edgeDetails.set(key, { line, spec });
+function processTsSource(
+  state: GraphState,
+  fromRel: string,
+  containingAbs: string,
+  sf: ts.SourceFile,
+  lineOffset: number,
+): void {
+  const { rootDir, tsconfigCache, resolutionCaches, packageNames, fileSet, absToRel } = state;
+  const info = loadTsConfigInfo(path.dirname(containingAbs), rootDir, tsconfigCache);
+  const resolutionCache = getResolutionCache(info, rootDir, resolutionCaches);
+
+  const emitSpec = (spec: string, line: number): void => {
+    const clean = spec.split('?')[0] ?? spec;
+    if (!clean) return;
+    const isComponentSpec = COMPONENT_EXTS.has(path.posix.extname(clean).toLowerCase());
+    if (NON_GRAPHABLE_RE.test(clean) && !isComponentSpec) return;
+    if (!isInternalTsSpec(clean, info, rootDir, packageNames, fileSet)) return;
+    let target = tryResolveTs(clean, containingAbs, info, resolutionCache, absToRel, fileSet, rootDir);
+    if (!target || !fileSet.has(target)) {
+      target = resolveRelativeTs(clean, fromRel, fileSet) ?? resolveAliasFallback(clean, fileSet);
+    }
+    // A component that is not a scanned file is an asset, not a broken import.
+    if (isComponentSpec && !target) return;
+    emitEdge(state, fromRel, clean, target, line, true);
   };
 
-  const tsconfigCache = new Map<string, TsConfigInfo>();
-  const resolutionCaches = new Map<string, ts.ModuleResolutionCache>();
-  const pubspecCache = new Map<string, PubspecInfo | null>();
-  const packageNames = loadPackageNames(ctx, rootDir);
+  collectTsJsEdges(sf, emitSpec, lineOffset);
+}
 
-  const processTsSource = (
-    fromRel: string,
-    containingAbs: string,
-    sf: ts.SourceFile,
-    lineOffset: number,
-  ): void => {
-    const info = loadTsConfigInfo(path.dirname(containingAbs), rootDir, tsconfigCache);
-    const resolutionCache = getResolutionCache(info, rootDir, resolutionCaches);
-
-    const emitSpec = (spec: string, line: number): void => {
-      const clean = spec.split('?')[0] ?? spec;
-      if (!clean) return;
-      const isComponentSpec = COMPONENT_EXTS.has(path.posix.extname(clean).toLowerCase());
-      if (NON_GRAPHABLE_RE.test(clean) && !isComponentSpec) return;
-      if (!isInternalTsSpec(clean, info, rootDir, packageNames, fileSet)) return;
-      let target = tryResolveTs(
-        clean, containingAbs, info, resolutionCache, absToRel, fileSet, rootDir,
-      );
-      if (!target || !fileSet.has(target)) {
-        target = resolveRelativeTs(clean, fromRel, fileSet)
-          ?? resolveAliasFallback(clean, fileSet);
-      }
-      // A component that is not a scanned file is an asset, not a broken import.
-      if (isComponentSpec && !target) return;
-      emit(fromRel, clean, target, line, true);
-    };
-
-    collectTsJsEdges(sf, emitSpec, lineOffset);
-  };
-
-  // TS/JS edges
+function collectEdges(state: GraphState): void {
+  const { ctx, rootDir, fileSet } = state;
   for (const file of ctx.files) {
     if (!TS_EXTS.has(file.ext) || !file.sourceFile) continue;
-    processTsSource(file.relPath, file.absPath, file.sourceFile, 0);
+    processTsSource(state, file.relPath, file.absPath, file.sourceFile, 0);
   }
-
-  // Vue/Svelte <script> edges
   for (const file of ctx.files) {
     if (!COMPONENT_EXTS.has(file.ext)) continue;
     for (const block of extractScriptBlocks(file)) {
-      processTsSource(file.relPath, file.absPath, block.sourceFile, block.lineOffset);
+      processTsSource(state, file.relPath, file.absPath, block.sourceFile, block.lineOffset);
     }
   }
-
-  // Rust edges
   const rustRoots = rustCrateSrcRoots(ctx, fileSet);
   for (const file of ctx.files) {
     if (file.ext !== '.rs') continue;
     for (const imp of parseRustImports(file, fileSet, rustRoots)) {
-      emit(file.relPath, imp.spec, imp.target, imp.line, imp.internal);
+      emitEdge(state, file.relPath, imp.spec, imp.target, imp.line, imp.internal);
     }
   }
-
-  // Dart edges
   for (const file of ctx.files) {
     if (file.ext !== '.dart') continue;
-    const pubspec = loadPubspecInfo(path.dirname(file.absPath), rootDir, pubspecCache);
+    const pubspec = loadPubspecInfo(path.dirname(file.absPath), rootDir, state.pubspecCache);
     for (const imp of parseDartImports(file, pubspec, fileSet)) {
-      emit(file.relPath, imp.spec, imp.target, imp.line, imp.internal);
+      emitEdge(state, file.relPath, imp.spec, imp.target, imp.line, imp.internal);
     }
   }
-
-  // Python edges
   const pyRoots = pythonPackageRoots(fileSet);
   for (const file of ctx.files) {
     if (file.ext !== '.py') continue;
     for (const imp of parsePythonImports(file, fileSet, pyRoots)) {
-      emit(file.relPath, imp.spec, imp.target, imp.line, imp.internal);
+      emitEdge(state, file.relPath, imp.spec, imp.target, imp.line, imp.internal);
     }
   }
+}
 
-  const sortedNodes = filesSorted.map((f) => f.relPath);
+function finalizeGraph(state: GraphState, sortedNodes: string[]): ImportGraph {
   const graph = new Map<string, string[]>() as ImportGraph;
   for (const node of sortedNodes) {
-    graph.set(node, [...outgoing.get(node)!].sort());
+    graph.set(node, [...state.outgoing.get(node)!].sort());
   }
 
   const edges: ImportEdge[] = [];
   for (const from of sortedNodes) {
     for (const to of graph.get(from)!) {
-      const details = edgeDetails.get(`${from}\u0000${to}`);
+      const details = state.edgeDetails.get(`${from}\u0000${to}`);
       edges.push({
         from,
         to,
@@ -837,7 +893,6 @@ function computeGraph(ctx: DetectorContext): ImportGraph {
   }
 
   const mapGet = graph.get.bind(graph);
-
   graph.nodes = sortedNodes;
   graph.files = sortedNodes;
   graph.vertices = sortedNodes;
@@ -849,7 +904,7 @@ function computeGraph(ctx: DetectorContext): ImportGraph {
   graph.imports = importsRecord;
   graph.dependencies = importsRecord;
   graph.dependents = dependentsRecord;
-  graph.stats = { internalSpecs, resolved, graphedFiles: sortedNodes.length };
+  graph.stats = { internalSpecs: state.internalSpecs, resolved: state.resolved, graphedFiles: sortedNodes.length };
   graph.get = (file: string): string[] => {
     const value = mapGet(file);
     return value ? [...value] : [];
@@ -860,8 +915,34 @@ function computeGraph(ctx: DetectorContext): ImportGraph {
     const value = mapGet(file);
     return value ? [...value] : [];
   };
-
   return graph;
+}
+
+function computeGraph(ctx: DetectorContext): ImportGraph {
+  const fileSet = new Set(ctx.files.map((f) => f.relPath));
+  const outgoing = new Map<string, Set<string>>();
+  for (const file of ctx.files) outgoing.set(file.relPath, new Set());
+
+  const state: GraphState = {
+    ctx,
+    rootDir: ctx.rootDir,
+    fileSet,
+    absToRel: new Map(ctx.files.map((f) => [path.resolve(f.absPath), f.relPath])),
+    outgoing,
+    edgeDetails: new Map<string, EdgeDetails>(),
+    internalSpecs: 0,
+    resolved: 0,
+    tsconfigCache: new Map<string, TsConfigInfo>(),
+    resolutionCaches: new Map<string, ts.ModuleResolutionCache>(),
+    pubspecCache: new Map<string, PubspecInfo | null>(),
+    packageNames: loadPackageNames(ctx, ctx.rootDir),
+  };
+
+  collectEdges(state);
+  const sortedNodes = [...ctx.files]
+    .sort((a, b) => a.relPath.localeCompare(b.relPath))
+    .map((file) => file.relPath);
+  return finalizeGraph(state, sortedNodes);
 }
 
 export function buildImportGraph(ctx: DetectorContext): ImportGraph {

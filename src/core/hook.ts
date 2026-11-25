@@ -6,7 +6,10 @@ import { loadConfig } from '../config.js';
 import type { FileEntry, Finding, UnshitConfig } from '../contracts.js';
 import { BUILTIN_DETECTORS } from '../detectors/index.js';
 import { FindingCache, hashContent } from './cache.js';
+import { normalizePayload, type NormalizedHookPayload } from './hook-payload.js';
 import { isWaived } from './scanner.js';
+
+export { normalizePayload } from './hook-payload.js';
 
 const SINGLE_FILE_SKIP = new Set(['ts/unused-export', 'code/duplicate-block']);
 
@@ -19,155 +22,7 @@ function getScriptKind(ext: string): ts.ScriptKind {
   return ts.ScriptKind.TS;
 }
 
-interface NormalizedHookEdit {
-  oldString?: string;
-  newString?: string;
-  replaceAll?: boolean;
-  old_string?: string;
-  new_string?: string;
-  replace_all?: boolean;
-}
-
-interface NormalizedHookPayload {
-  filePath?: string;
-  targetPath?: string;
-  oldString?: string;
-  newString?: string;
-  replaceAll?: boolean;
-  edits?: NormalizedHookEdit[];
-  content?: string;
-  cwd?: string;
-  rootDir?: string;
-  sessionId?: string;
-  toolName?: string;
-  file_path?: string;
-  target_path?: string;
-  old_string?: string;
-  new_string?: string;
-  replace_all?: boolean;
-  session_id?: string;
-  tool_name?: string;
-  path?: string;
-  file?: string;
-}
-
-function pickString(objs: Array<Record<string, unknown> | null | undefined>, keys: string[]): string | undefined {
-  for (const obj of objs) {
-    if (!obj) continue;
-    for (const key of keys) {
-      const value = obj[key];
-      if (typeof value === 'string') return value;
-    }
-  }
-  return undefined;
-}
-
-function pickBool(objs: Array<Record<string, unknown> | null | undefined>, keys: string[]): boolean | undefined {
-  for (const obj of objs) {
-    if (!obj) continue;
-    for (const key of keys) {
-      const value = obj[key];
-      if (typeof value === 'boolean') return value;
-    }
-  }
-  return undefined;
-}
-
-function normalizeEdit(raw: unknown): NormalizedHookEdit {
-  const r = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
-  const oldString = pickString([r], ['old_string', 'oldString', 'old']);
-  const newString = pickString([r], ['new_string', 'newString', 'new']);
-  const replaceAll = pickBool([r], ['replace_all', 'replaceAll', 'replaceAllOccurrences']);
-  const edit: NormalizedHookEdit = {};
-  if (oldString !== undefined) {
-    edit.oldString = oldString;
-    edit.old_string = oldString;
-  }
-  if (newString !== undefined) {
-    edit.newString = newString;
-    edit.new_string = newString;
-  }
-  if (replaceAll !== undefined) {
-    edit.replaceAll = replaceAll;
-    edit.replace_all = replaceAll;
-  }
-  return edit;
-}
-
-export function normalizePayload(raw: unknown): NormalizedHookPayload {
-  let base: unknown = raw;
-  if (typeof raw === 'string') {
-    try {
-      base = JSON.parse(raw);
-    } catch {
-      base = {};
-    }
-  }
-  const root = base && typeof base === 'object' ? (base as Record<string, unknown>) : {};
-  const toolInput =
-    root.tool_input && typeof root.tool_input === 'object'
-      ? (root.tool_input as Record<string, unknown>)
-      : root.toolInput && typeof root.toolInput === 'object'
-        ? (root.toolInput as Record<string, unknown>)
-        : root;
-
-  const objs = [toolInput, root];
-
-  const filePath = pickString(objs, ['file_path', 'filePath', 'path', 'file', 'targetPath', 'target_path']);
-  const oldString = pickString(objs, ['old_string', 'oldString', 'old']);
-  const newString = pickString(objs, ['new_string', 'newString', 'new']);
-  const replaceAll = pickBool(objs, ['replace_all', 'replaceAll', 'replaceAllOccurrences']);
-  const content = pickString(objs, ['content', 'newContent', 'new_content']);
-  const cwd = pickString(objs, ['cwd', 'rootDir', 'root_dir', 'workingDirectory', 'working_directory']);
-  const sessionId = pickString(objs, ['session_id', 'sessionId']);
-  const toolName = pickString(objs, ['tool_name', 'toolName', 'tool']);
-
-  const rawEdits = toolInput.edits ?? root.edits;
-  const edits = Array.isArray(rawEdits) ? rawEdits.map(normalizeEdit) : undefined;
-
-  const result: NormalizedHookPayload = {};
-  if (filePath !== undefined) {
-    result.filePath = filePath;
-    result.file_path = filePath;
-    result.path = filePath;
-    result.targetPath = filePath;
-    result.target_path = filePath;
-    result.file = filePath;
-  }
-  if (oldString !== undefined) {
-    result.oldString = oldString;
-    result.old_string = oldString;
-  }
-  if (newString !== undefined) {
-    result.newString = newString;
-    result.new_string = newString;
-  }
-  if (replaceAll !== undefined) {
-    result.replaceAll = replaceAll;
-    result.replace_all = replaceAll;
-  }
-  if (edits !== undefined) {
-    result.edits = edits;
-  }
-  if (content !== undefined) {
-    result.content = content;
-  }
-  if (cwd !== undefined) {
-    result.cwd = cwd;
-    result.rootDir = cwd;
-  }
-  if (sessionId !== undefined) {
-    result.sessionId = sessionId;
-    result.session_id = sessionId;
-  }
-  if (toolName !== undefined) {
-    result.toolName = toolName;
-    result.tool_name = toolName;
-  }
-  return result;
-}
-
-export interface ScanSingleOptions {
+interface ScanSingleOptions {
   noCache?: boolean;
   cache?: FindingCache;
 }
@@ -301,24 +156,28 @@ function multisetNewFindings(after: Finding[], before: Finding[]): Finding[] {
   return result;
 }
 
-/**
- * Live AI Guardrail Hook: exits 2 (blocking) when error/warn slop is newly introduced in an edited file.
- */
-export async function runHook(args: string[]): Promise<number> {
+interface HookInvocation {
+  rootDir: string;
+  targetPath: string;
+  overrideContent?: string;
+  normalized: NormalizedHookPayload;
+}
+
+/** Resolves the edited path and optional in-memory content from CLI args or hook stdin. */
+async function readHookInvocation(args: string[]): Promise<HookInvocation | null> {
   const useStdin = args.includes('--stdin');
   let rootDir = process.cwd();
   let targetPath = args.find((a) => !a.startsWith('-'));
   let overrideContent: string | undefined;
-
   let normalized: NormalizedHookPayload = {};
 
   if (useStdin) {
     const raw = await readStdin();
-    if (!raw.trim()) return 0;
+    if (!raw.trim()) return null;
     try {
       normalized = normalizePayload(raw);
     } catch {
-      return 0;
+      return null;
     }
     if (normalized.cwd || normalized.rootDir) rootDir = (normalized.cwd ?? normalized.rootDir)!;
     targetPath = normalized.filePath ?? normalized.file_path ?? normalized.path ?? targetPath;
@@ -330,8 +189,73 @@ export async function runHook(args: string[]): Promise<number> {
       overrideContent = normalized.new_string;
     }
   }
+  if (!targetPath) return null;
+  return { rootDir, targetPath, overrideContent, normalized };
+}
 
-  if (!targetPath) return 0;
+/** Applies the payload's edits to the on-disk content; null means "ignore this hook event". */
+function computeAfterContent(
+  beforeContent: string,
+  normalized: NormalizedHookPayload,
+  overrideContent: string | undefined,
+): string | null {
+  const edits = normalized.edits ?? [];
+  const oldString = normalized.oldString ?? normalized.old_string;
+  const newString = normalized.newString ?? normalized.new_string;
+  const replaceAll = normalized.replaceAll ?? normalized.replace_all ?? false;
+  const content = normalized.content ?? overrideContent;
+
+  if (edits.length > 0) {
+    let afterContent = beforeContent;
+    for (const edit of edits) {
+      const os = edit.oldString ?? edit.old_string;
+      if (os === undefined) continue;
+      const ns = edit.newString ?? edit.new_string ?? '';
+      const ra = edit.replaceAll ?? edit.replace_all ?? false;
+      const res = applyReplacement(afterContent, os, ns, ra);
+      if (res === null) return null;
+      afterContent = res;
+    }
+    return afterContent;
+  }
+  if (oldString !== undefined) {
+    const res = applyReplacement(beforeContent, oldString, newString ?? '', replaceAll);
+    return res === null ? null : res;
+  }
+  if (content !== undefined) return content;
+  if (overrideContent !== undefined) return overrideContent;
+  return beforeContent;
+}
+
+/** Loop-breaker: after three advisories for the same rule, stop blocking. */
+async function breakerAllowsBlock(
+  blocking: Finding[],
+  normalized: NormalizedHookPayload,
+  relPath: string,
+): Promise<boolean> {
+  const sessionId = normalized.sessionId ?? normalized.session_id ?? '';
+  const ruleIds = Array.from(new Set(blocking.map((f) => f.ruleId)));
+  const counts = await readBreaker();
+  const shouldBreak = ruleIds.some((rid) => (counts[`${sessionId}::${relPath}::${rid}`] ?? 0) >= 3);
+  if (shouldBreak) {
+    console.error(`[unshit hook] Advisory: loop-breaker triggered for ${relPath}; skipping block.`);
+    return false;
+  }
+  for (const rid of ruleIds) {
+    const key = `${sessionId}::${relPath}::${rid}`;
+    counts[key] = (counts[key] ?? 0) + 1;
+  }
+  await writeBreaker(counts);
+  return true;
+}
+
+/**
+ * Live AI Guardrail Hook: exits 2 (blocking) when error/warn slop is newly introduced in an edited file.
+ */
+export async function runHook(args: string[]): Promise<number> {
+  const invocation = await readHookInvocation(args);
+  if (!invocation) return 0;
+  const { rootDir, targetPath, overrideContent, normalized } = invocation;
   const absPath = resolve(rootDir, targetPath);
   const relPath = relative(rootDir, absPath).replaceAll('\\', '/');
 
@@ -351,34 +275,9 @@ export async function runHook(args: string[]): Promise<number> {
 
   let afterContent: string;
   try {
-    const edits = normalized.edits ?? [];
-    const oldString = normalized.oldString ?? normalized.old_string;
-    const newString = normalized.newString ?? normalized.new_string;
-    const replaceAll = normalized.replaceAll ?? normalized.replace_all ?? false;
-    const content = normalized.content ?? overrideContent;
-
-    if (edits.length > 0) {
-      afterContent = beforeContent;
-      for (const edit of edits) {
-        const os = edit.oldString ?? edit.old_string;
-        if (os === undefined) continue;
-        const ns = edit.newString ?? edit.new_string ?? '';
-        const ra = edit.replaceAll ?? edit.replace_all ?? false;
-        const res = applyReplacement(afterContent, os, ns, ra);
-        if (res === null) return 0;
-        afterContent = res;
-      }
-    } else if (oldString !== undefined) {
-      const res = applyReplacement(beforeContent, oldString, newString ?? '', replaceAll);
-      if (res === null) return 0;
-      afterContent = res;
-    } else if (content !== undefined) {
-      afterContent = content;
-    } else if (overrideContent !== undefined) {
-      afterContent = overrideContent;
-    } else {
-      afterContent = beforeContent;
-    }
+    const computed = computeAfterContent(beforeContent, normalized, overrideContent);
+    if (computed === null) return 0;
+    afterContent = computed;
   } catch {
     return 0;
   }
@@ -394,20 +293,7 @@ export async function runHook(args: string[]): Promise<number> {
   );
 
   if (blocking.length === 0) return 0;
-
-  const sessionId = normalized.sessionId ?? normalized.session_id ?? '';
-  const ruleIds = Array.from(new Set(blocking.map((f) => f.ruleId)));
-  const counts = await readBreaker();
-  const shouldBreak = ruleIds.some((rid) => (counts[`${sessionId}::${relPath}::${rid}`] ?? 0) >= 3);
-  if (shouldBreak) {
-    console.error(`[unshit hook] Advisory: loop-breaker triggered for ${relPath}; skipping block.`);
-    return 0;
-  }
-  for (const rid of ruleIds) {
-    const key = `${sessionId}::${relPath}::${rid}`;
-    counts[key] = (counts[key] ?? 0) + 1;
-  }
-  await writeBreaker(counts);
+  if (!(await breakerAllowsBlock(blocking, normalized, relPath))) return 0;
 
   console.error(`[unshit hook] Blocked ${blocking.length} slop finding(s) in ${relPath}:`);
   for (const f of blocking.slice(0, 10)) {
