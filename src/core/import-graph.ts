@@ -399,89 +399,106 @@ function splitPyNames(raw: string): string[] {
     .filter((name) => name !== '' && name !== '*');
 }
 
-function parsePythonImports(file: FileEntry, fileSet: Set<string>, roots: string[]): ResolvedImport[] {
-  const results: ResolvedImport[] = [];
-  let skipIndent: number | null = null;
+interface PythonParseState {
+  results: ResolvedImport[];
+  skipIndent: number | null;
+  file: FileEntry;
+  fileSet: Set<string>;
+  roots: string[];
+}
 
-  const push = (spec: string, target: string | null, line: number, internal: boolean): void => {
-    results.push({ spec, target, line, internal });
-  };
-  const packageBase = (moduleFile: string): string =>
-    moduleFile.replace(/\/__init__\.py$/, '').replace(/\.py$/, '');
+function pushPyImport(
+  state: PythonParseState,
+  spec: string,
+  target: string | null,
+  line: number,
+  internal: boolean,
+): void {
+  state.results.push({ spec, target, line, internal });
+}
 
-  for (let i = 0; i < file.lines.length; i++) {
-    const raw = file.lines[i] ?? '';
-    const trimmed = raw.trim();
-    const indent = raw.length - raw.trimStart().length;
+function pyPackageBase(moduleFile: string): string {
+  return moduleFile.replace(/\/__init__\.py$/, '').replace(/\.py$/, '');
+}
 
-    if (skipIndent !== null) {
-      if (trimmed === '') continue;
-      if (indent > skipIndent) continue;
-      skipIndent = null;
-    }
-    if (/^if\s+(?:[\w.]+\.)?TYPE_CHECKING\s*:/.test(trimmed)) {
-      skipIndent = indent;
-      continue;
-    }
-
-    const line = i + 1;
-
-    // from .x import y / from ..x import y / from . import y
-    let match = /^from\s+(\.+)([^\s]*)\s+import\s+(.+)$/.exec(trimmed);
-    if (match) {
-      const level = match[1].length;
-      const mod = (match[2] ?? '').replace(/^\.+/, '');
-      const spec = '.'.repeat(level) + mod;
-      const baseTarget = resolvePyModule(file.relPath, mod, level, roots, fileSet);
-      const base = baseTarget ? packageBase(baseTarget) : relativePyBase(file.relPath, level, mod);
-      let resolvedNames = 0;
-      for (const name of splitPyNames(match[3] ?? '')) {
-        const hit = tryPyPath(path.posix.join(base, name), fileSet);
-        if (hit) {
-          push(`${spec}.${name}`, hit, line, true);
-          resolvedNames++;
-        }
-      }
-      // `from . import sibling` depends on the sibling modules, not on the package __init__ itself.
-      if (mod !== '' || resolvedNames === 0) push(spec, baseTarget, line, level > 0 || baseTarget !== null);
-      continue;
-    }
-
-    // from module import y
-    match = /^from\s+([A-Za-z_][\w.]*)\s+import\s+(.+)$/.exec(trimmed);
-    if (match) {
-      const mod = match[1]!;
-      if (mod === '__future__') continue;
-      const baseTarget = resolvePyModule(file.relPath, mod, 0, roots, fileSet);
-      push(mod, baseTarget, line, baseTarget !== null);
-      if (baseTarget) {
-        const base = packageBase(baseTarget);
-        for (const name of splitPyNames(match[2] ?? '')) {
-          const hit = tryPyPath(path.posix.join(base, name), fileSet);
-          if (hit) push(`${mod}.${name}`, hit, line, true);
-        }
-      }
-      continue;
-    }
-
-    // import a, b / import a.b
-    match = /^import\s+(.+)$/.exec(trimmed);
-    if (match) {
-      for (const rawMod of (match[1] ?? '').split(',')) {
-        let mod = rawMod.trim().split(/\s+as\s+/)[0]?.trim() ?? '';
-        if (!mod) continue;
-        let level = 0;
-        if (mod.startsWith('.')) {
-          level = mod.match(/^\.+/)?.[0].length ?? 1;
-          mod = mod.slice(level);
-        }
-        const target = resolvePyModule(file.relPath, mod, level, roots, fileSet);
-        push(level ? '.'.repeat(level) + mod : mod, target, line, level > 0 || target !== null);
-      }
+function parseRelativePyImport(state: PythonParseState, trimmed: string, line: number): boolean {
+  const match = /^from\s+(\.+)([^\s]*)\s+import\s+(.+)$/.exec(trimmed);
+  if (!match) return false;
+  const level = match[1].length;
+  const mod = (match[2] ?? '').replace(/^\.+/, '');
+  const spec = '.'.repeat(level) + mod;
+  const baseTarget = resolvePyModule(state.file.relPath, mod, level, state.roots, state.fileSet);
+  const base = baseTarget ? pyPackageBase(baseTarget) : relativePyBase(state.file.relPath, level, mod);
+  let resolvedNames = 0;
+  for (const name of splitPyNames(match[3] ?? '')) {
+    const hit = tryPyPath(path.posix.join(base, name), state.fileSet);
+    if (hit) {
+      pushPyImport(state, `${spec}.${name}`, hit, line, true);
+      resolvedNames++;
     }
   }
+  // `from . import sibling` depends on the sibling modules, not on the package __init__ itself.
+  if (mod !== '' || resolvedNames === 0) {
+    pushPyImport(state, spec, baseTarget, line, level > 0 || baseTarget !== null);
+  }
+  return true;
+}
 
-  return results;
+function parseFromPyImport(state: PythonParseState, trimmed: string, line: number): boolean {
+  const match = /^from\s+([A-Za-z_][\w.]*)\s+import\s+(.+)$/.exec(trimmed);
+  if (!match) return false;
+  const mod = match[1]!;
+  if (mod === '__future__') return true;
+  const baseTarget = resolvePyModule(state.file.relPath, mod, 0, state.roots, state.fileSet);
+  pushPyImport(state, mod, baseTarget, line, baseTarget !== null);
+  if (baseTarget) {
+    const base = pyPackageBase(baseTarget);
+    for (const name of splitPyNames(match[2] ?? '')) {
+      const hit = tryPyPath(path.posix.join(base, name), state.fileSet);
+      if (hit) pushPyImport(state, `${mod}.${name}`, hit, line, true);
+    }
+  }
+  return true;
+}
+
+function parsePlainPyImport(state: PythonParseState, trimmed: string, line: number): void {
+  const match = /^import\s+(.+)$/.exec(trimmed);
+  if (!match) return;
+  for (const rawMod of (match[1] ?? '').split(',')) {
+    let mod = rawMod.trim().split(/\s+as\s+/)[0]?.trim() ?? '';
+    if (!mod) continue;
+    let level = 0;
+    if (mod.startsWith('.')) {
+      level = mod.match(/^\.+/)?.[0].length ?? 1;
+      mod = mod.slice(level);
+    }
+    const target = resolvePyModule(state.file.relPath, mod, level, state.roots, state.fileSet);
+    pushPyImport(state, level ? '.'.repeat(level) + mod : mod, target, line, level > 0 || target !== null);
+  }
+}
+
+function parsePythonLine(state: PythonParseState, raw: string, indent: number, line: number): void {
+  const trimmed = raw.trim();
+  if (state.skipIndent !== null) {
+    if (trimmed === '' || indent > state.skipIndent) return;
+    state.skipIndent = null;
+  }
+  if (/^if\s+(?:[\w.]+\.)?TYPE_CHECKING\s*:/.test(trimmed)) {
+    state.skipIndent = indent;
+    return;
+  }
+  if (parseRelativePyImport(state, trimmed, line)) return;
+  if (parseFromPyImport(state, trimmed, line)) return;
+  parsePlainPyImport(state, trimmed, line);
+}
+
+function parsePythonImports(file: FileEntry, fileSet: Set<string>, roots: string[]): ResolvedImport[] {
+  const state: PythonParseState = { results: [], skipIndent: null, file, fileSet, roots };
+  for (let i = 0; i < file.lines.length; i++) {
+    const raw = file.lines[i] ?? '';
+    parsePythonLine(state, raw, raw.length - raw.trimStart().length, i + 1);
+  }
+  return state.results;
 }
 
 function getScriptKindFromLang(lang: string | undefined): ts.ScriptKind {
