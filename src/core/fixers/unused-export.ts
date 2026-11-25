@@ -83,125 +83,127 @@ function displayName(declarations: Declaration[], stmt: ts.Statement): string {
   return named?.name ?? 'another exported declaration';
 }
 
-/**
- * Plans modifier-only fixes: `export const x` becomes `const x`, never a
- * deletion. A declaration is left alone while any other declaration that
- * stays exported references its name in an emitted signature.
- */
-export function planUnusedExportFixes(file: FileEntry, findings: Finding[]): UnusedExportPlan {
-  const skipped: UnusedExportSkip[] = [];
-  if (findings.length === 0) return { patches: [], skipped };
-
-  const skip = (finding: Finding, reason: string): void => {
-    skipped.push({ file: file.relPath, ruleId: finding.ruleId, line: finding.span.line, reason });
+function declarationsForStatement(stmt: ts.Statement, add: (decl: Declaration) => void): void {
+  const mods = ts.canHaveModifiers(stmt) ? ts.getModifiers(stmt) : undefined;
+  const exportModifier = mods?.find((m) => m.kind === ts.SyntaxKind.ExportKeyword);
+  const isDefault = mods?.some((m) => m.kind === ts.SyntaxKind.DefaultKeyword) ?? false;
+  const isDeclare = mods?.some((m) => m.kind === ts.SyntaxKind.DeclareKeyword) ?? false;
+  const base: Omit<Declaration, 'name' | 'nameNode'> = {
+    stmt,
+    hasExport: exportModifier !== undefined,
+    exportModifier,
+    isDefault,
+    isDeclare,
+    isExportClause: false,
+    isDefaultAssignment: false,
   };
-  const sf = file.sourceFile;
-  const isDeclarationFile = /\.d\.[cm]?ts$/.test(file.relPath);
-  if (!sf || isDeclarationFile || !/\.[cm]?[jt]sx?$/.test(file.relPath)) {
-    const reason = !sf
-      ? 'no TypeScript AST available for this file'
-      : isDeclarationFile
-        ? 'declaration file: removing `export` changes the public API'
-        : 'not a TypeScript/JavaScript source file';
-    for (const finding of findings) skip(finding, reason);
-    return { patches: [], skipped };
-  }
+  const addNamed = (name: string, nameNode: ts.Node, extra: Partial<Declaration> = {}): void => {
+    add({ ...base, name, nameNode, ...extra });
+  };
 
+  if (ts.isExportDeclaration(stmt)) {
+    // `export { … }` has no modifier node: the keyword is part of the syntax kind.
+    if (!stmt.moduleSpecifier && stmt.exportClause && ts.isNamedExports(stmt.exportClause)) {
+      for (const el of stmt.exportClause.elements) {
+        addNamed(el.name.text, el.name, { isExportClause: true, hasExport: true });
+      }
+    }
+    return;
+  }
+  if (ts.isExportAssignment(stmt)) {
+    addNamed('default', stmt, { isDefaultAssignment: true, hasExport: true });
+    return;
+  }
+  if (isDefault) {
+    // The detector anchors a default export finding on the whole statement.
+    addNamed('default', stmt);
+    return;
+  }
+  if (ts.isVariableStatement(stmt)) {
+    for (const decl of stmt.declarationList.declarations) {
+      if (ts.isIdentifier(decl.name)) addNamed(decl.name.text, decl.name);
+    }
+  } else if (ts.isFunctionDeclaration(stmt) || ts.isClassDeclaration(stmt)
+    || ts.isInterfaceDeclaration(stmt) || ts.isTypeAliasDeclaration(stmt)
+    || ts.isEnumDeclaration(stmt)) {
+    if (stmt.name) addNamed(stmt.name.text, stmt.name);
+  }
+}
+
+function declarationsOf(sf: ts.SourceFile): Declaration[] {
   const declarations: Declaration[] = [];
   for (const stmt of sf.statements) {
-    const mods = ts.canHaveModifiers(stmt) ? ts.getModifiers(stmt) : undefined;
-    const exportModifier = mods?.find((m) => m.kind === ts.SyntaxKind.ExportKeyword);
-    const isDefault = mods?.some((m) => m.kind === ts.SyntaxKind.DefaultKeyword) ?? false;
-    const isDeclare = mods?.some((m) => m.kind === ts.SyntaxKind.DeclareKeyword) ?? false;
-    const base: Omit<Declaration, 'name' | 'nameNode'> = {
-      stmt,
-      hasExport: exportModifier !== undefined,
-      exportModifier,
-      isDefault,
-      isDeclare,
-      isExportClause: false,
-      isDefaultAssignment: false,
-    };
-    const add = (name: string, nameNode: ts.Node, extra: Partial<Declaration> = {}): void => {
-      declarations.push({ ...base, name, nameNode, ...extra });
-    };
-
-    if (ts.isExportDeclaration(stmt)) {
-      // `export { … }` has no modifier node: the keyword is part of the syntax kind.
-      if (!stmt.moduleSpecifier && stmt.exportClause && ts.isNamedExports(stmt.exportClause)) {
-        for (const el of stmt.exportClause.elements) {
-          add(el.name.text, el.name, { isExportClause: true, hasExport: true });
-        }
-      }
-      continue;
-    }
-    if (ts.isExportAssignment(stmt)) {
-      add('default', stmt, { isDefaultAssignment: true, hasExport: true });
-      continue;
-    }
-    if (isDefault) {
-      // The detector anchors a default export finding on the whole statement.
-      add('default', stmt);
-      continue;
-    }
-    if (ts.isVariableStatement(stmt)) {
-      for (const decl of stmt.declarationList.declarations) {
-        if (ts.isIdentifier(decl.name)) add(decl.name.text, decl.name);
-      }
-    } else if (ts.isFunctionDeclaration(stmt) || ts.isClassDeclaration(stmt)
-      || ts.isInterfaceDeclaration(stmt) || ts.isTypeAliasDeclaration(stmt)
-      || ts.isEnumDeclaration(stmt)) {
-      if (stmt.name) add(stmt.name.text, stmt.name);
-    }
+    declarationsForStatement(stmt, (decl) => declarations.push(decl));
   }
+  return declarations;
+}
 
+type CandidateResult = { candidate: Candidate } | { reason: string };
+
+function candidateForFinding(
+  file: FileEntry,
+  sf: ts.SourceFile,
+  finding: Finding,
+  declarations: Declaration[],
+): CandidateResult {
+  const offset = positionOfFinding(sf, finding);
+  const decl = offset === undefined
+    ? undefined
+    : declarations.find((d) => d.nameNode.getStart(sf) === offset);
+  if (!decl) return { reason: 'could not locate the declared name in the TypeScript AST' };
+  if (!decl.hasExport) return { reason: 'declaration is no longer exported' };
+  if (decl.isExportClause) {
+    return { reason: 'listed export clause: removing only `export` would delete the re-export' };
+  }
+  if (decl.isDefault || decl.isDefaultAssignment) {
+    return { reason: 'default export: removing only `export` would leave an invalid declaration' };
+  }
+  if (decl.isDeclare) {
+    return { reason: 'ambient (`declare`) declaration: removing `export` may change declaration emit' };
+  }
+  const modifier = decl.exportModifier;
+  if (!modifier) return { reason: 'no `export` modifier found on the declaration' };
+  const startOffset = modifier.getStart(sf);
+  if (file.content.slice(startOffset, modifier.end) !== 'export') {
+    return { reason: 'unexpected `export` modifier text' };
+  }
+  let endOffset = modifier.end;
+  while (endOffset < file.content.length
+    && (file.content[endOffset] === ' ' || file.content[endOffset] === '\t')) {
+    endOffset += 1;
+  }
+  return { candidate: { finding, decl, edit: { startOffset, endOffset, replacement: '' } } };
+}
+
+function collectCandidates(
+  file: FileEntry,
+  sf: ts.SourceFile,
+  findings: Finding[],
+  declarations: Declaration[],
+  skip: (finding: Finding, reason: string) => void,
+): Map<ts.Statement, Candidate> {
   const candidates = new Map<ts.Statement, Candidate>();
   for (const finding of findings) {
-    const offset = positionOfFinding(sf, finding);
-    const decl = offset === undefined
-      ? undefined
-      : declarations.find((d) => d.nameNode.getStart(sf) === offset);
-    if (!decl) {
-      skip(finding, 'could not locate the declared name in the TypeScript AST');
+    const result = candidateForFinding(file, sf, finding, declarations);
+    if ('reason' in result) {
+      skip(finding, result.reason);
       continue;
     }
-    if (!decl.hasExport) {
-      skip(finding, 'declaration is no longer exported');
-      continue;
-    }
-    if (decl.isExportClause) {
-      skip(finding, 'listed export clause: removing only `export` would delete the re-export');
-      continue;
-    }
-    if (decl.isDefault || decl.isDefaultAssignment) {
-      skip(finding, 'default export: removing only `export` would leave an invalid declaration');
-      continue;
-    }
-    if (decl.isDeclare) {
-      skip(finding, 'ambient (`declare`) declaration: removing `export` may change declaration emit');
-      continue;
-    }
-    const modifier = decl.exportModifier;
-    if (!modifier) {
-      skip(finding, 'no `export` modifier found on the declaration');
-      continue;
-    }
-    const startOffset = modifier.getStart(sf);
-    if (file.content.slice(startOffset, modifier.end) !== 'export') {
-      skip(finding, 'unexpected `export` modifier text');
-      continue;
-    }
-    let endOffset = modifier.end;
-    while (endOffset < file.content.length
-      && (file.content[endOffset] === ' ' || file.content[endOffset] === '\t')) {
-      endOffset += 1;
-    }
-    const edit: TextEdit = { startOffset, endOffset, replacement: '' };
-    if (!candidates.has(decl.stmt)) candidates.set(decl.stmt, { finding, decl, edit });
+    const { candidate } = result;
+    if (!candidates.has(candidate.decl.stmt)) candidates.set(candidate.decl.stmt, candidate);
   }
+  return candidates;
+}
 
-  // Fixed point: a declaration skipped below stays exported, so it may in turn
-  // protect declarations that reference it from being un-exported.
+/**
+ * Fixed point: a declaration skipped below stays exported, so it may in turn
+ * protect declarations that reference it from being un-exported.
+ */
+function pruneProtectedCandidates(
+  declarations: Declaration[],
+  candidates: Map<ts.Statement, Candidate>,
+  skip: (finding: Finding, reason: string) => void,
+): Map<ts.Statement, Candidate> {
   const removable = new Map(candidates);
   let changed = true;
   while (changed) {
@@ -226,7 +228,36 @@ export function planUnusedExportFixes(file: FileEntry, findings: Finding[]): Unu
       }
     }
   }
+  return removable;
+}
 
+/**
+ * Plans modifier-only fixes: `export const x` becomes `const x`, never a
+ * deletion. A declaration is left alone while any other declaration that
+ * stays exported references its name in an emitted signature.
+ */
+export function planUnusedExportFixes(file: FileEntry, findings: Finding[]): UnusedExportPlan {
+  const skipped: UnusedExportSkip[] = [];
+  if (findings.length === 0) return { patches: [], skipped };
+
+  const skip = (finding: Finding, reason: string): void => {
+    skipped.push({ file: file.relPath, ruleId: finding.ruleId, line: finding.span.line, reason });
+  };
+  const sf = file.sourceFile;
+  const isDeclarationFile = /\.d\.[cm]?ts$/.test(file.relPath);
+  if (!sf || isDeclarationFile || !/\.[cm]?[jt]sx?$/.test(file.relPath)) {
+    const reason = !sf
+      ? 'no TypeScript AST available for this file'
+      : isDeclarationFile
+        ? 'declaration file: removing `export` changes the public API'
+        : 'not a TypeScript/JavaScript source file';
+    for (const finding of findings) skip(finding, reason);
+    return { patches: [], skipped };
+  }
+
+  const declarations = declarationsOf(sf);
+  const candidates = collectCandidates(file, sf, findings, declarations, skip);
+  const removable = pruneProtectedCandidates(declarations, candidates, skip);
   const patches: Patch[] = [...removable.values()]
     .sort((a, b) => a.edit.startOffset - b.edit.startOffset)
     .map(({ finding, decl, edit }) => ({
