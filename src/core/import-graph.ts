@@ -877,3 +877,36 @@ export function buildImportGraph(ctx: DetectorContext): ImportGraph {
   filesCache.set(ctx.files, graph);
   return graph;
 }
+
+export interface TsSpecResolution {
+  /** True when the specifier points at project code (relative, alias, workspace package), false for npm/node builtins. */
+  internal: boolean;
+  /** Project file the specifier resolves to, when it could be resolved. */
+  target: string | null;
+}
+
+/**
+ * Resolver for TS/JS module specifiers using the same rules as the import graph
+ * (tsconfig paths, workspace packages, relative and `@/` fallbacks).
+ */
+export function createTsSpecResolver(ctx: DetectorContext): (spec: string, from: FileEntry) => TsSpecResolution {
+  const rootDir = ctx.rootDir;
+  const fileSet = new Set(ctx.files.map((f) => f.relPath));
+  const absToRel = new Map(ctx.files.map((f) => [path.resolve(f.absPath), f.relPath]));
+  const tsconfigCache = new Map<string, TsConfigInfo>();
+  const resolutionCaches = new Map<string, ts.ModuleResolutionCache>();
+  const packageNames = loadPackageNames(ctx, rootDir);
+
+  return (rawSpec, from) => {
+    const clean = rawSpec.split('?')[0] ?? rawSpec;
+    if (!clean) return { internal: false, target: null };
+    const info = loadTsConfigInfo(path.dirname(from.absPath), rootDir, tsconfigCache);
+    if (!isInternalTsSpec(clean, info, rootDir, packageNames, fileSet)) return { internal: false, target: null };
+    const resolutionCache = getResolutionCache(info, rootDir, resolutionCaches);
+    let target = tryResolveTs(clean, from.absPath, info, resolutionCache, absToRel, fileSet, rootDir);
+    if (!target || !fileSet.has(target)) {
+      target = resolveRelativeTs(clean, from.relPath, fileSet) ?? resolveAliasFallback(clean, fileSet);
+    }
+    return { internal: true, target: target && fileSet.has(target) ? target : null };
+  };
+}
