@@ -3,7 +3,7 @@ import { extname, resolve } from 'node:path';
 import ts from 'typescript';
 import { loadConfig } from '../config.js';
 import type { DetectorContext, FileEntry, Finding, UnshitConfig } from '../contracts.js';
-import { findingFingerprint, isWaived } from '../core/scanner.js';
+import { findingFingerprint, isWaived } from '../core/finding-utils.js';
 import { BUILTIN_DETECTORS } from '../detectors/index.js';
 import { collectWorkspace } from '../walker.js';
 

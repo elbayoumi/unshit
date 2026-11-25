@@ -1,7 +1,11 @@
-import ts from 'typescript';
+import { createRequire } from 'node:module';
+import type * as TS from 'typescript';
+const _require = createRequire(import.meta.url);
+let _ts: typeof TS | undefined;
+const ts: typeof TS = new Proxy({} as typeof TS, { get(_, p) { const mod = _ts ??= _require('typescript') as typeof TS; return (mod as Record<PropertyKey, unknown>)[p]; } });
 import type { Detector, DetectorContext, FileEntry, Finding, Patch, Span } from '../contracts.js';
 
-function spanOf(sf: ts.SourceFile, node: ts.Node): Span {
+function spanOf(sf: TS.SourceFile, node: TS.Node): Span {
   const start = sf.getLineAndCharacterOfPosition(node.getStart(sf));
   const end = sf.getLineAndCharacterOfPosition(node.getEnd());
   return {
@@ -14,7 +18,7 @@ function spanOf(sf: ts.SourceFile, node: ts.Node): Span {
   };
 }
 
-function snippet(sf: ts.SourceFile, node: ts.Node): string {
+function snippet(sf: TS.SourceFile, node: TS.Node): string {
   return node.getText(sf).replace(/\s+/g, ' ').slice(0, 100);
 }
 
@@ -29,7 +33,7 @@ function isDictionaryFile(relPath: string): boolean {
 function walkSourceFiles(
   ctx: DetectorContext,
   opts: { skipDts?: boolean; skipDictionary?: boolean },
-  fn: (file: FileEntry, sf: ts.SourceFile) => void,
+  fn: (file: FileEntry, sf: TS.SourceFile) => void,
 ): void {
   for (const file of ctx.files) {
     if (!file.sourceFile || isTestFile(file.relPath)) continue;
@@ -39,7 +43,7 @@ function walkSourceFiles(
   }
 }
 
-function isTimerCall(expr: ts.LeftHandSideExpression): string | null {
+function isTimerCall(expr: TS.LeftHandSideExpression): string | null {
   if (ts.isIdentifier(expr) && (expr.text === 'setTimeout' || expr.text === 'setInterval')) {
     return expr.text;
   }
@@ -63,7 +67,7 @@ export const noExplicitAnyDetector: Detector = {
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
     walkSourceFiles(ctx, { skipDts: true }, (file, sf) => {
-      const visit = (node: ts.Node): void => {
+      const visit = (node: TS.Node): void => {
         if (node.kind === ts.SyntaxKind.AnyKeyword) {
           const parent = node.parent;
           const isCatch = Boolean(
@@ -110,7 +114,7 @@ export const noDoubleCastDetector: Detector = {
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
     walkSourceFiles(ctx, {}, (file, sf) => {
-      const visit = (node: ts.Node): void => {
+      const visit = (node: TS.Node): void => {
         if (ts.isAsExpression(node) && ts.isAsExpression(node.expression)) {
           if (node.expression.type.kind === ts.SyntaxKind.UnknownKeyword) {
             findings.push({
@@ -137,7 +141,7 @@ export const noDoubleCastDetector: Detector = {
 
 const I18N_COND_RE = /^(?:!?\s*(?:isAr|isArabic|isEn|isEnglish|isRtl)|(?:[a-zA-Z_$][\w$.]*\.)?(?:language|lang|locale)\s*(?:===|!==)\s*['"](?:ar|en)['"])$/;
 
-function isUiLayoutOrToggleTernary(node: ts.ConditionalExpression, sf: ts.SourceFile): boolean {
+function isUiLayoutOrToggleTernary(node: TS.ConditionalExpression, sf: TS.SourceFile): boolean {
   const whenTrue = node.whenTrue.getText(sf).trim();
   const whenFalse = node.whenFalse.getText(sf).trim();
   if (/^<Chevron|^<Arrow/.test(whenTrue) || /^<Chevron|^<Arrow/.test(whenFalse)) return true;
@@ -174,7 +178,7 @@ export const noInlineI18nTernaryDetector: Detector = {
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
     walkSourceFiles(ctx, { skipDictionary: true }, (file, sf) => {
-      const visit = (node: ts.Node): void => {
+      const visit = (node: TS.Node): void => {
         if (ts.isConditionalExpression(node)) {
           const condText = node.condition.getText(sf).trim();
           if (I18N_COND_RE.test(condText) && !isUiLayoutOrToggleTernary(node, sf)) {
@@ -209,7 +213,7 @@ export const magicTimerDetector: Detector = {
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
     walkSourceFiles(ctx, {}, (file, sf) => {
-      const visit = (node: ts.Node): void => {
+      const visit = (node: TS.Node): void => {
         if (ts.isCallExpression(node) && node.arguments.length >= 2) {
           const fn = isTimerCall(node.expression);
           if (fn) {
@@ -247,7 +251,7 @@ export const redundantCatchDetector: Detector = {
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
     walkSourceFiles(ctx, {}, (file, sf) => {
-      const visit = (node: ts.Node): void => {
+      const visit = (node: TS.Node): void => {
         if (ts.isCatchClause(node)) {
           const stmts = node.block.statements;
           const blockText = node.block.getText(sf);

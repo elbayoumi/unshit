@@ -1,18 +1,8 @@
 import { resolve } from 'node:path';
-import { loadConfig } from './config.js';
 import type { ScoreBreakdown, Severity } from './contracts.js';
-import { abortSwarmFix, runSwarmFix } from './core/swarm-fixer.js';
-import { runFix } from './core/fixer.js';
-import { runHook } from './core/hook.js';
-import { addFeedback, isFeedbackKind, readFeedback, summarizeFeedback, FEEDBACK_KINDS } from './core/feedback.js';
-import { runInit } from './core/init.js';
-import { computeHotspots } from './core/hotspots.js';
-import { createBaseline, evaluateGuard, getChangedFiles, getChangedLineRanges, loadBaseline, type LineRange } from './core/pinner.js';
-import { formatScanOutput, type OutputFormat } from './core/reporters.js';
-import { runScan, type ScanResult } from './core/scanner.js';
-import { computeScore } from './core/scorer.js';
-import { computeStructureVerdict } from './core/structure-verdict.js';
-import { runMcpServer } from './mcp/server.js';
+import type { OutputFormat } from './core/reporters.js';
+import type { ScanResult } from './core/scanner.js';
+import type { LineRange } from './core/pinner.js';
 
 const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'structure', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'note', 'notes', 'help', '--help', '-h']);
 const VALID_FORMATS = new Set<OutputFormat>(['human', 'json', 'sarif', 'markdown']);
@@ -61,6 +51,7 @@ function printHelp(): number {
 }
 
 async function runNoteCommand(rest: string[]): Promise<number> {
+  const { addFeedback, isFeedbackKind, FEEDBACK_KINDS } = await import('./core/feedback.js');
   const positional = rest.filter((a, i) => !a.startsWith('-') && !['--kind', '--file'].includes(rest[i - 1] ?? ''));
   const [rule, ...noteParts] = positional;
   const kind = getOpt(rest, '--kind') ?? 'false-positive';
@@ -74,6 +65,7 @@ async function runNoteCommand(rest: string[]): Promise<number> {
 }
 
 async function runNotesCommand(rest: string[]): Promise<number> {
+  const { readFeedback, summarizeFeedback } = await import('./core/feedback.js');
   const entries = await readFeedback(getTargetPath(rest));
   console.log(getFlag(rest, '--json') ? JSON.stringify(entries, null, 2) : summarizeFeedback(entries));
   return 0;
@@ -81,6 +73,7 @@ async function runNotesCommand(rest: string[]): Promise<number> {
 
 async function runAbortCommand(targetDir: string): Promise<number> {
   try {
+    const { abortSwarmFix } = await import('./core/swarm-fixer.js');
     const removed = await abortSwarmFix(targetDir);
     console.log(`unshit fix --abort: removed ${removed} stale worktree(s), pruned, lock cleared.`);
     return 0;
@@ -90,9 +83,11 @@ async function runAbortCommand(targetDir: string): Promise<number> {
   }
 }
 
-function runScanCommand(rest: string[], scan: ScanResult, score: ScoreBreakdown, format: OutputFormat): number {
+async function runScanCommand(rest: string[], scan: ScanResult, score: ScoreBreakdown, format: OutputFormat): Promise<number> {
+  const { formatScanOutput } = await import('./core/reporters.js');
   console.log(formatScanOutput(scan.findings, score, format));
   if (format === 'human') {
+    const { computeStructureVerdict } = await import('./core/structure-verdict.js');
     const sv = computeStructureVerdict(
       { rootDir: scan.rootDir, config: scan.config, files: scan.files, manifests: scan.manifests },
       scan.findings,
@@ -127,6 +122,7 @@ async function runHotspotsCommand(
   const topRaw = getOpt(rest, '--top');
   const top = topRaw === undefined ? 10 : Number.parseInt(topRaw, 10);
   try {
+    const { computeHotspots } = await import('./core/hotspots.js');
     const hotspots = await computeHotspots(targetDir, scan, {
       since,
       top: Number.isFinite(top) ? top : 10,
@@ -148,13 +144,14 @@ async function runHotspotsCommand(
   }
 }
 
-function runStructureCommand(rest: string[], scan: ScanResult, format: OutputFormat): number {
+async function runStructureCommand(rest: string[], scan: ScanResult, format: OutputFormat): Promise<number> {
   const failOnRaw = getOpt(rest, '--fail-on');
   if (failOnRaw !== undefined && !SEV_RANK[failOnRaw as Severity]) {
     console.error(`Invalid --fail-on: ${failOnRaw}. Expected error|warn|info.`);
     return 2;
   }
   const failOn = failOnRaw as Severity | undefined;
+  const { computeStructureVerdict } = await import('./core/structure-verdict.js');
   const sv = computeStructureVerdict(
     { rootDir: scan.rootDir, config: scan.config, files: scan.files, manifests: scan.manifests },
     scan.findings,
@@ -185,6 +182,7 @@ function runStructureCommand(rest: string[], scan: ScanResult, format: OutputFor
 }
 
 async function runPinCommand(scan: ScanResult): Promise<number> {
+  const { createBaseline } = await import('./core/pinner.js');
   const snap = await createBaseline(scan);
   console.log(`Pinned baseline: ${snap.score.score}/100 (${snap.fingerprints.length} findings, ${Object.keys(snap.fileHashes).length} files) -> unshit.baseline.json`);
   return 0;
@@ -194,6 +192,7 @@ async function runGuardCommand(targetDir: string, scan: ScanResult, rest: string
   const changed = getFlag(rest, '--changed');
   const lines = getFlag(rest, '--lines');
   const baseRef = getOpt(rest, '--base') ?? 'HEAD';
+  const { loadBaseline, getChangedFiles, getChangedLineRanges, evaluateGuard } = await import('./core/pinner.js');
   let baseline: Awaited<ReturnType<typeof loadBaseline>>;
   try {
     baseline = await loadBaseline(targetDir);
@@ -243,6 +242,7 @@ async function runSwarmCommand(scan: ScanResult, rest: string[], apply: boolean)
     const concurrency = concurrencyRaw ? Number.parseInt(concurrencyRaw, 10) : undefined;
     const maxFiles = maxFilesRaw ? Number.parseInt(maxFilesRaw, 10) : undefined;
     const maxDiffLines = maxDiffLinesRaw ? Number.parseInt(maxDiffLinesRaw, 10) : undefined;
+    const { runSwarmFix } = await import('./core/swarm-fixer.js');
     const summary = await runSwarmFix(scan, {
       apply,
       concurrency: Number.isFinite(concurrency) ? concurrency : undefined,
@@ -261,6 +261,7 @@ async function runSwarmCommand(scan: ScanResult, rest: string[], apply: boolean)
 }
 
 async function runFixCommand(scan: ScanResult, rest: string[], apply: boolean, ai: boolean): Promise<number> {
+  const { runFix } = await import('./core/fixer.js');
   const summary = await runFix(scan, { apply, ai });
   if (summary.dryRun) {
     if (summary.diff) process.stdout.write(summary.diff);
@@ -285,9 +286,18 @@ export async function main(argv: string[]): Promise<number> {
     console.error(`Unknown command: ${cmd}. Run \`unshit help\`.`);
     return 2;
   }
-  if (cmd === 'mcp') return runMcpServer();
-  if (cmd === 'hook') return runHook(rest);
-  if (cmd === 'init') return runInit(getTargetPath(rest), { force: getFlag(rest, '--force') });
+  if (cmd === 'mcp') {
+    const { runMcpServer } = await import('./mcp/server.js');
+    return runMcpServer();
+  }
+  if (cmd === 'hook') {
+    const { runHook } = await import('./core/hook.js');
+    return runHook(rest);
+  }
+  if (cmd === 'init') {
+    const { runInit } = await import('./core/init.js');
+    return runInit(getTargetPath(rest), { force: getFlag(rest, '--force') });
+  }
   if (cmd === 'note') return runNoteCommand(rest);
   if (cmd === 'notes') return runNotesCommand(rest);
   if (cmd === 'help' || cmd === '--help' || cmd === '-h') return printHelp();
@@ -300,11 +310,14 @@ export async function main(argv: string[]): Promise<number> {
   const format = rawFormat as OutputFormat;
   const noCache = getFlag(rest, '--no-cache');
   const targetDir = getTargetPath(rest);
+  const { loadConfig } = await import('./config.js');
   const config = await loadConfig(targetDir);
 
   if (getFlag(rest, '--abort')) return runAbortCommand(targetDir);
 
+  const { runScan } = await import('./core/scanner.js');
   const scan = await runScan(targetDir, config, [], { noCache });
+  const { computeScore } = await import('./core/scorer.js');
   const score = computeScore(scan.files, scan.findings);
 
   if (cmd === 'scan') return runScanCommand(rest, scan, score, format);
