@@ -89,6 +89,41 @@ function groupHunks(ops: Op[], context: number): Array<{ start: number; end: num
   return hunks;
 }
 
+interface LineOffsets {
+  oldLine: number[];
+  newLine: number[];
+}
+
+function lineOffsets(ops: Op[]): LineOffsets {
+  const oldLine = [1];
+  const newLine = [1];
+  for (const op of ops) {
+    oldLine.push(oldLine[oldLine.length - 1]! + (op.kind === 'add' ? 0 : 1));
+    newLine.push(newLine[newLine.length - 1]! + (op.kind === 'remove' ? 0 : 1));
+  }
+  return { oldLine, newLine };
+}
+
+function renderHunks(
+  out: string[],
+  ops: Op[],
+  hunks: Array<{ start: number; end: number }>,
+  offsets: LineOffsets,
+): void {
+  for (const hunk of hunks) {
+    let oldStart = offsets.oldLine[hunk.start]!;
+    let newStart = offsets.newLine[hunk.start]!;
+    const oldCount = offsets.oldLine[hunk.end]! - offsets.oldLine[hunk.start]!;
+    const newCount = offsets.newLine[hunk.end]! - offsets.newLine[hunk.start]!;
+    if (oldCount === 0) oldStart -= 1;
+    if (newCount === 0) newStart -= 1;
+    out.push(`@@ -${oldStart},${oldCount} +${newStart},${newCount} @@`);
+    for (const op of ops.slice(hunk.start, hunk.end)) {
+      out.push(`${op.kind === 'add' ? '+' : op.kind === 'remove' ? '-' : ' '}${op.text}`);
+    }
+  }
+}
+
 /** Dependency-free unified diff (three lines of context by default). */
 export function formatUnifiedDiff(files: FileDiff[], context = 3): string {
   const out: string[] = [];
@@ -97,26 +132,8 @@ export function formatUnifiedDiff(files: FileDiff[], context = 3): string {
     const hunks = groupHunks(ops, context);
     if (hunks.length === 0) continue;
 
-    const oldLine = [1];
-    const newLine = [1];
-    for (const op of ops) {
-      oldLine.push(oldLine[oldLine.length - 1]! + (op.kind === 'add' ? 0 : 1));
-      newLine.push(newLine[newLine.length - 1]! + (op.kind === 'remove' ? 0 : 1));
-    }
-
     out.push(`--- a/${file}`, `+++ b/${file}`);
-    for (const hunk of hunks) {
-      let oldStart = oldLine[hunk.start]!;
-      let newStart = newLine[hunk.start]!;
-      const oldCount = oldLine[hunk.end]! - oldLine[hunk.start]!;
-      const newCount = newLine[hunk.end]! - newLine[hunk.start]!;
-      if (oldCount === 0) oldStart -= 1;
-      if (newCount === 0) newStart -= 1;
-      out.push(`@@ -${oldStart},${oldCount} +${newStart},${newCount} @@`);
-      for (const op of ops.slice(hunk.start, hunk.end)) {
-        out.push(`${op.kind === 'add' ? '+' : op.kind === 'remove' ? '-' : ' '}${op.text}`);
-      }
-    }
+    renderHunks(out, ops, hunks, lineOffsets(ops));
   }
   return out.length === 0 ? '' : `${out.join('\n')}\n`;
 }
