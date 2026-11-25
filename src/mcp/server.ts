@@ -5,6 +5,8 @@ import { evaluateGuard, loadBaseline } from '../core/pinner.js';
 import { runScan } from '../core/scanner.js';
 import { computeScore } from '../core/scorer.js';
 import { VERSION } from '../version.js';
+import { explainArchitecture } from './architecture-explain.js';
+import { previewFixes } from './fix-preview.js';
 import { checkPatch } from './patch-check.js';
 
 interface JsonRpcReq {
@@ -52,6 +54,31 @@ function sendToolsList(req: JsonRpcReq): void {
             },
           },
         },
+        {
+          name: 'unshit_explain_architecture',
+          description: 'Read-only layer map (config layers/structure, project shape and structure verdict); with a path, the file\'s layer, allowed imports, importers and architecture findings.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              root: { type: 'string', description: 'Scan root (default: server working directory).' },
+              path: { type: 'string', description: 'Optional root-relative file to explain.' },
+            },
+            required: ['root'],
+          },
+        },
+        {
+          name: 'unshit_fix_preview',
+          description: 'Read-only dry run: unified diffs of the deterministic safe fixes that would be applied to a file, without writing anything to disk.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              root: { type: 'string', description: 'Scan root (default: server working directory).' },
+              path: { type: 'string', description: 'Root-relative file to preview fixes for.' },
+              ruleId: { type: 'string', description: 'Optional rule id to restrict the preview.' },
+            },
+            required: ['root', 'path'],
+          },
+        },
       ],
     },
   });
@@ -59,14 +86,18 @@ function sendToolsList(req: JsonRpcReq): void {
 
 async function toolPayload(req: JsonRpcReq, rootDir: string): Promise<unknown> {
   const name = String(req.params?.name ?? '');
+  const args = (req.params?.arguments ?? {}) as { path?: string; ruleId?: string };
+  const fresh = name === 'unshit_explain_architecture' || name === 'unshit_fix_preview';
   const config = await loadConfig(rootDir);
-  const scan = await runScan(rootDir, config);
+  const scan = await runScan(rootDir, config, [], { noCache: fresh });
   const score = computeScore(scan.files, scan.findings);
   if (name === 'unshit_score') return score;
   if (name === 'unshit_guard') {
     const baseline = await loadBaseline(rootDir);
     return baseline ? evaluateGuard(scan, baseline) : { error: 'Missing unshit.baseline.json. Run unshit pin first.' };
   }
+  if (name === 'unshit_explain_architecture') return explainArchitecture(scan, args.path);
+  if (name === 'unshit_fix_preview') return previewFixes(scan, args.path ?? '', args.ruleId);
   return { score, findings: scan.findings.slice(0, 100), totalFindings: scan.findings.length };
 }
 
@@ -75,8 +106,8 @@ async function handleRequest(req: JsonRpcReq): Promise<void> {
   if (req.method === 'tools/list') return sendToolsList(req);
   if (req.method !== 'tools/call') return;
   if (String(req.params?.name ?? '') === 'unshit_check_patch') return sendCheckPatchResult(req);
-  const args = (req.params?.arguments ?? {}) as { path?: string };
-  const rootDir = resolve(args.path ?? process.cwd());
+  const args = (req.params?.arguments ?? {}) as { path?: string; root?: string };
+  const rootDir = resolve(typeof args.root === 'string' ? args.root : (args.path ?? process.cwd()));
   const payload = await toolPayload(req, rootDir);
   send({
     jsonrpc: '2.0',
@@ -102,8 +133,8 @@ async function sendCheckPatchResult(req: JsonRpcReq): Promise<void> {
 }
 
 /**
- * Minimal stdio MCP server exposing read-only `unshit_scan`, `unshit_score`, `unshit_guard`
- * and `unshit_check_patch`.
+ * Minimal stdio MCP server exposing read-only `unshit_scan`, `unshit_score`, `unshit_guard`,
+ * `unshit_check_patch`, `unshit_explain_architecture` and `unshit_fix_preview`.
  */
 export async function runMcpServer(): Promise<number> {
   const rl = createInterface({ input: process.stdin, crlfDelay: Infinity });
