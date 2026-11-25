@@ -26,6 +26,7 @@ const SCAN_HANDLERS: Record<string, ScanHandler> = {
   pin: async (ctx) => (await import('./cli/guard.js')).runPinCommand(ctx),
   guard: async (ctx) => (await import('./cli/guard.js')).runGuardCommand(ctx),
   fix: async (ctx) => (await import('./cli/fix.js')).runFixDispatch(ctx),
+  pr: async (ctx) => (await import('./cli/pr.js')).runPrCommand(ctx),
 };
 
 const VALID_COMMANDS = new Set([...Object.keys(EARLY_HANDLERS), ...Object.keys(SCAN_HANDLERS)]);
@@ -42,6 +43,7 @@ function printHelp(): number {
     '  structure [path] Diagnose project directory/module health (archetype, layout, cycles, boundary leaks, verdict, --fail-on error|warn|info, --no-cache)',
     '  pin [path]     Capture unshit.baseline.json characterization snapshot (--no-cache)',
     '  guard [path]   Fail CI/pre-commit on regressions (--changed [baseRef] for diff-only PRs, --lines for changed-line scope, --no-cache)',
+    '  pr [path]      PR review: report findings introduced on branch changes vs base (--base <ref>, --format human|markdown|json)',
     '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude; --swarm for parallel worktree AI fixer; --abort to clean stale worktrees, --no-cache)',
     '  init [path]    Bootstrap config, baseline, and Claude Code PreToolUse hook (--force to overwrite)',
     '  hook [file]    Live AI Guardrail Hook (--stdin for Claude Code PreToolUse/PostToolUse, exits 2 on slop, --no-cache)',

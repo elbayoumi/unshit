@@ -116,6 +116,7 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 | `unshit hotspots [path]` | Rank files by churn and finding density | `--since 90.days`, `--top 10`, `--json` |
 | `unshit pin [path]` | Write `unshit.baseline.json` snapshot | — |
 | `unshit guard [path]` | Compare current scan against `unshit.baseline.json` | `--changed` (diff-only PR mode), `--lines` (changed lines only), `--base <ref>` |
+| `unshit pr [path]` | PR review: report only findings introduced on branch changes vs base, with fix suggestions | `--base <ref>`, `--format human\|markdown\|json` |
 | `unshit fix [path]` | Preview or apply deterministic + gated AI fixes | `--apply`, `--ai`, `--swarm`, `--abort`, `--runner opencode\|claude` |
 | `unshit hook [file]` | **Live AI Guardrail Hook** — blocks AI slop in real time (exits `2`) | `--stdin` (Claude Code `PreToolUse` / `PostToolUse` JSON) |
 | `unshit mcp` | Start stdio MCP server (`unshit_scan`, `unshit_score`, `unshit_guard`, `unshit_check_patch`, `unshit_explain_architecture`, `unshit_fix_preview`) | — |
