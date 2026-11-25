@@ -38,8 +38,9 @@ export const cssNoImportantDetector: Detector = {
       const strippedLines = stripCssCommentsPreserveLines(file.content).split(/\r?\n/);
       for (let i = 0; i < strippedLines.length; i++) {
         const line = strippedLines[i] ?? '';
-        const idx = line.indexOf('!important');
-        if (idx !== -1) {
+        const importantRe = /!\s*important\b/gi;
+        for (const match of line.matchAll(importantRe)) {
+          const idx = match.index ?? 0;
           findings.push({
             ruleId: this.id,
             category: this.category,
@@ -74,9 +75,22 @@ export const cssDuplicateSelectorDetector: Detector = {
       const offsets = buildLineOffsets(clean);
       const scopeStack: string[] = [];
       let headerStart = 0;
+      let quote: '"' | "'" | null = null;
 
       for (let i = 0; i < clean.length; i++) {
         const ch = clean[i];
+        if (quote) {
+          if (ch === '\\') {
+            i++;
+          } else if (ch === quote) {
+            quote = null;
+          }
+          continue;
+        }
+        if (ch === '"' || ch === "'") {
+          quote = ch;
+          continue;
+        }
         if (ch === '{') {
           const header = clean.slice(headerStart, i).trim().replace(/\s+/g, ' ');
           if (header.startsWith('@')) {

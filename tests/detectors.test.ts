@@ -275,3 +275,100 @@ test('runSwarmFix refuses non-git/dirty tree safely and abortSwarmFix cleans up'
     },
   );
 });
+
+test('i18n/no-inline-ternary exempts BCP-47 locale tags and dictionary object selectors', async () => {
+  await withTempProject(
+    {
+      'locale.ts': `
+const dictAr = { ok: 'نعم' };
+const dictEn = { ok: 'Yes' };
+export function fmt(language: string) {
+  const bcp = language === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US';
+  const dict = language === 'ar' ? dictAr : dictEn;
+  const bad = language === 'ar' ? 'مرحبا' : 'Hello';
+  return { bcp, dict, bad };
+}
+`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const hits = scan.findings.filter((f) => f.ruleId === 'i18n/no-inline-ternary');
+      assert.equal(hits.length, 1);
+      assert.match(hits[0]?.evidence ?? '', /مرحبا/);
+    },
+  );
+});
+
+test('css/no-important catches multiple !important declarations on the same line', async () => {
+  await withTempProject(
+    {
+      'multi.css': `.btn { margin: 0 !important; padding: 4px !important; }\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const hits = scan.findings.filter((f) => f.ruleId === 'css/no-important');
+      assert.equal(hits.length, 2);
+    },
+  );
+});
+
+test('CLI supports --json shorthand for scan and score', async () => {
+  const { execFile } = await import('node:child_process');
+  const { promisify } = await import('node:util');
+  const execFileAsync = promisify(execFile);
+  await withTempProject(
+    {
+      'ok.ts': `export const ok = 1;\n`,
+    },
+    async (dir) => {
+      const { stdout } = await execFileAsync('node', ['/Volumes/data/projects/unshit/bin/unshit.js', 'score', dir, '--json']);
+      const parsed = JSON.parse(stdout) as { score: number; grade: string };
+      assert.equal(typeof parsed.score, 'number');
+      assert.equal(parsed.grade, 'A');
+    },
+  );
+});
+
+test('i18n/no-inline-ternary catches en/!== conditions and exempts En/Ar dict pairs', async () => {
+  await withTempProject(
+    {
+      'en-check.ts': `
+const dictAr = { ok: 'نعم' };
+const dictEn = { ok: 'Yes' };
+export function render(language: string, isEn: boolean) {
+  const dict = language === 'en' ? dictEn : dictAr;
+  const bad1 = language === 'en' ? 'Yes' : 'نعم';
+  const bad2 = language !== 'ar' ? 'Close' : 'إغلاق';
+  const bad3 = isEn ? 'Save' : 'حفظ';
+  return { dict, bad1, bad2, bad3 };
+}
+`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const hits = scan.findings.filter((f) => f.ruleId === 'i18n/no-inline-ternary');
+      assert.equal(hits.length, 3);
+    },
+  );
+});
+
+test('css/no-important catches spaced/uppercase !important and css/duplicate-selector ignores braces in strings', async () => {
+  await withTempProject(
+    {
+      'tricky.css': `
+.icon::before { content: "{foo};"; }
+.btn { margin: 0 ! important; padding: 4px !IMPORTANT; }
+`,
+      'other.css': `
+.other { color: red; }
+`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const imp = scan.findings.filter((f) => f.ruleId === 'css/no-important');
+      const dup = scan.findings.filter((f) => f.ruleId === 'css/duplicate-selector');
+      assert.equal(imp.length, 2);
+      assert.equal(dup.length, 0);
+    },
+  );
+});

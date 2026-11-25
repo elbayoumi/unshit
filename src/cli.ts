@@ -74,7 +74,7 @@ export async function main(argv: string[]): Promise<number> {
     return 0;
   }
 
-  const rawFormat = getOpt(rest, '--format') ?? 'human';
+  const rawFormat = getOpt(rest, '--format') ?? (getFlag(rest, '--json') ? 'json' : 'human');
   if (!VALID_FORMATS.has(rawFormat as OutputFormat)) {
     console.error(`Invalid --format: ${rawFormat}. Expected human|json|sarif|markdown.`);
     return 2;

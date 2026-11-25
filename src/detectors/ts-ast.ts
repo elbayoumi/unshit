@@ -126,13 +126,24 @@ export const noDoubleCastDetector: Detector = {
   },
 };
 
-const I18N_COND_RE = /^(?:!?\s*(?:isAr|isArabic|isRtl)|(?:[a-zA-Z_$][\w$.]*\.)?(?:language|lang|locale)\s*===\s*['"]ar['"])$/;
+const I18N_COND_RE = /^(?:!?\s*(?:isAr|isArabic|isEn|isEnglish|isRtl)|(?:[a-zA-Z_$][\w$.]*\.)?(?:language|lang|locale)\s*(?:===|!==)\s*['"](?:ar|en)['"])$/;
 
 function isUiLayoutOrToggleTernary(node: ts.ConditionalExpression, sf: ts.SourceFile): boolean {
   const whenTrue = node.whenTrue.getText(sf).trim();
   const whenFalse = node.whenFalse.getText(sf).trim();
   if (/^<Chevron|^<Arrow/.test(whenTrue) || /^<Chevron|^<Arrow/.test(whenFalse)) return true;
   if (/^['"](is-active|active|ar|en)['"]$/.test(whenTrue) && /^['"](|is-active|active|ar|en)['"]$/.test(whenFalse)) return true;
+  if (/^['"][a-z]{2,3}(?:-[A-Za-z0-9]{1,8})+['"]$/.test(whenTrue) && /^['"][a-z]{2,3}(?:-[A-Za-z0-9]{1,8})+['"]$/.test(whenFalse)) return true;
+  if (
+    ts.isIdentifier(node.whenTrue)
+    && ts.isIdentifier(node.whenFalse)
+    && (
+      (/(?:Ar|AR|Arabic)$/.test(whenTrue) && /(?:En|EN|English)$/.test(whenFalse))
+      || (/(?:En|EN|English)$/.test(whenTrue) && /(?:Ar|AR|Arabic)$/.test(whenFalse))
+    )
+  ) {
+    return true;
+  }
   if (whenTrue === "'auto'" || whenFalse === "'auto'") return true;
   if (ts.isBinaryExpression(node.whenTrue) && ts.isBinaryExpression(node.whenFalse)) return true;
   if (
