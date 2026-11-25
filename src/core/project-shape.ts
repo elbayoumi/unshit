@@ -309,6 +309,79 @@ function manifestInfo(ctx: DetectorContext): { packages: string[]; names: Set<st
   return { packages, names };
 }
 
+interface LanguageSignals {
+  webCount: number;
+  dartCount: number;
+  rustCount: number;
+  pythonCount: number;
+  nextSignals: number;
+  viteSignals: number;
+}
+
+function countSignalsForFile(file: FileEntry, signals: LanguageSignals): void {
+  const lower = normalizeRelPath(file.relPath).toLowerCase();
+  const base = basenameOf(lower);
+  const ext = file.ext.toLowerCase();
+
+  if (ext === '.ts' || ext === '.tsx' || ext === '.js' || ext === '.jsx' || ext === '.mjs' || ext === '.cjs') {
+    signals.webCount += 1;
+    if (REACT_IMPORT_RE.test(file.content?.slice(0, 4000) ?? '')) signals.viteSignals += 1;
+  } else if (ext === '.dart') {
+    signals.dartCount += 1;
+  } else if (ext === '.rs') {
+    signals.rustCount += 1;
+  } else if (ext === '.py') {
+    signals.pythonCount += 1;
+  }
+
+  if (NEXT_CONFIG_RE.test(lower) || NEXT_ROUTE_RE.test(lower)) signals.nextSignals += 1;
+  if (
+    VITE_CONFIG_RE.test(lower)
+    || base === 'main.tsx'
+    || base === 'app.tsx'
+    || base === 'index.html'
+  ) {
+    signals.viteSignals += 1;
+  }
+}
+
+function collectLanguageSignals(files: FileEntry[]): LanguageSignals {
+  const signals: LanguageSignals = {
+    webCount: 0,
+    dartCount: 0,
+    rustCount: 0,
+    pythonCount: 0,
+    nextSignals: 0,
+    viteSignals: 0,
+  };
+  for (const file of files) countSignalsForFile(file, signals);
+  return signals;
+}
+
+function bestLanguageArchetype(
+  signals: LanguageSignals,
+  manifestNames: Set<string>,
+): { archetype: ProjectArchetype; score: number } | null {
+  const languageScores: { archetype: ProjectArchetype; score: number }[] = [
+    {
+      archetype: 'flutter',
+      score: signals.dartCount + (manifestNames.has('pubspec.yaml') ? 50 : 0),
+    },
+    { archetype: 'rust', score: signals.rustCount + (manifestNames.has('cargo.toml') ? 50 : 0) },
+    {
+      archetype: 'python',
+      score: signals.pythonCount
+        + (manifestNames.has('pyproject.toml') || manifestNames.has('requirements.txt') ? 50 : 0),
+    },
+  ];
+
+  let best: { archetype: ProjectArchetype; score: number } | null = null;
+  for (const candidate of languageScores) {
+    if (best === null || candidate.score > best.score) best = candidate;
+  }
+  return best && best.score > 0 ? best : null;
+}
+
 function inferArchetype(
   files: FileEntry[],
   packageCount: number,
@@ -316,67 +389,13 @@ function inferArchetype(
 ): ProjectArchetype {
   if (packageCount > 0) return 'monorepo';
 
-  let webCount = 0;
-  let dartCount = 0;
-  let rustCount = 0;
-  let pythonCount = 0;
-  let nextSignals = 0;
-  let viteSignals = 0;
+  const signals = collectLanguageSignals(files);
+  const best = bestLanguageArchetype(signals, manifestNames);
+  if (best && (signals.webCount === 0 || best.score >= signals.webCount / 2)) return best.archetype;
 
-  for (const file of files) {
-    const normalized = normalizeRelPath(file.relPath);
-    const lower = normalized.toLowerCase();
-    const base = basenameOf(lower);
-    const ext = file.ext.toLowerCase();
-
-    if (ext === '.ts' || ext === '.tsx' || ext === '.js' || ext === '.jsx' || ext === '.mjs' || ext === '.cjs') {
-      webCount += 1;
-      if (REACT_IMPORT_RE.test(file.content?.slice(0, 4000) ?? '')) viteSignals += 1;
-    } else if (ext === '.dart') {
-      dartCount += 1;
-    } else if (ext === '.rs') {
-      rustCount += 1;
-    } else if (ext === '.py') {
-      pythonCount += 1;
-    }
-
-    if (NEXT_CONFIG_RE.test(lower) || NEXT_ROUTE_RE.test(lower)) nextSignals += 1;
-    if (
-      VITE_CONFIG_RE.test(lower)
-      || base === 'main.tsx'
-      || base === 'app.tsx'
-      || base === 'index.html'
-    ) {
-      viteSignals += 1;
-    }
-  }
-
-  const languageScores: { archetype: ProjectArchetype; score: number }[] = [
-    {
-      archetype: 'flutter',
-      score: dartCount + (manifestNames.has('pubspec.yaml') ? 50 : 0),
-    },
-    { archetype: 'rust', score: rustCount + (manifestNames.has('cargo.toml') ? 50 : 0) },
-    {
-      archetype: 'python',
-      score: pythonCount
-        + (manifestNames.has('pyproject.toml') || manifestNames.has('requirements.txt') ? 50 : 0),
-    },
-  ];
-
-  let bestArchetype: ProjectArchetype | null = null;
-  let bestScore = 0;
-  for (const candidate of languageScores) {
-    if (candidate.score > bestScore) {
-      bestScore = candidate.score;
-      bestArchetype = candidate.archetype;
-    }
-  }
-  if (bestArchetype && (webCount === 0 || bestScore >= webCount / 2)) return bestArchetype;
-
-  if (nextSignals > 0) return 'next-app';
-  if (viteSignals > 0) return 'vite-react';
-  if (webCount > 0 || manifestNames.has('package.json')) return 'node-lib';
+  if (signals.nextSignals > 0) return 'next-app';
+  if (signals.viteSignals > 0) return 'vite-react';
+  if (signals.webCount > 0 || manifestNames.has('package.json')) return 'node-lib';
   return 'unknown';
 }
 
