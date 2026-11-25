@@ -23,6 +23,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 
 - `unshit note <rule> "text" --kind false-positive|improvement|scope-gap` and `unshit notes`: record local feedback in `.unshit/feedback.jsonl` (git-ignored) and print it as a markdown backlog grouped by rule, so false positives and gaps found while using the tool feed the next fix.
+- `fix --ai` now uses the same isolated git-worktree pipeline as `fix --swarm`: each AI edit runs in a temporary detached worktree, must pass the configured verify command there, and is only landed into the working tree through an allowlist-checked, compare-and-swap patch — a failed AI run, a diff outside the target file, or a failed verify leaves the tree untouched. Dry runs still invoke no AI; without a git repo the AI phase is skipped with a clear message.
 
 ### Fixed
 

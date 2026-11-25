@@ -1,8 +1,7 @@
-import { execFile } from 'node:child_process';
 import { readFile, unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { promisify } from 'node:util';
 import type { Finding, Patch } from '../contracts.js';
+import { runAiFixesInWorktrees } from './ai-worktree.js';
 import { formatUnifiedDiff, type FileDiff } from './fixers/diff.js';
 import {
   isUnusedDependencyRule,
@@ -16,8 +15,6 @@ import {
 } from './fixers/unused-file.js';
 import { isUnusedExportRule, planUnusedExportFixes } from './fixers/unused-export.js';
 import type { ScanResult } from './scanner.js';
-
-const execFileAsync = promisify(execFile);
 
 interface FixOptions {
   apply: boolean;
@@ -38,6 +35,8 @@ interface FixSummary {
   appliedCount: number;
   aiAttempted: string[];
   aiReverted: string[];
+  /** Warnings from the AI phase, e.g. when worktree isolation is unavailable. */
+  aiMessages: string[];
   dryRun: boolean;
   /** Unified diff of all deterministic patches; always computed, printed by the CLI on dry runs. */
   diff: string;
@@ -55,47 +54,6 @@ function applyEdits(content: string, patches: Patch[]): string {
     next = next.slice(0, e.startOffset) + e.replacement + next.slice(e.endOffset);
   }
   return next;
-}
-
-async function runVerify(rootDir: string, verifyCommand?: string): Promise<boolean> {
-  if (!verifyCommand) return true;
-  try {
-    await execFileAsync('sh', ['-c', verifyCommand], { cwd: rootDir, timeout: 120_000 });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function runAiFixForFile(
-  rootDir: string,
-  relPath: string,
-  findings: Finding[],
-  runner: 'opencode' | 'claude',
-  model?: string,
-): Promise<boolean> {
-  const summary = findings
-    .slice(0, 12)
-    .map((f) => `- [${f.ruleId}] line ${f.span.line}: ${f.message}`)
-    .join('\n');
-  const prompt = [
-    `Fix ONLY the following unshit findings in ${relPath}. Keep behavior identical and do not add 'any', '@ts-ignore', or inline i18n ternaries.`,
-    summary,
-  ].join('\n');
-
-  try {
-    if (runner === 'claude') {
-      await execFileAsync('claude', ['-p', prompt, '--allowedTools', 'Edit', 'Read'], { cwd: rootDir, timeout: 180_000 });
-    } else {
-      const args = ['run'];
-      if (model) args.push('-m', model);
-      args.push('--auto', prompt);
-      await execFileAsync('opencode', args, { cwd: rootDir, timeout: 180_000 });
-    }
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 type FilePatches = Map<string, Patch[]>;
@@ -249,44 +207,6 @@ async function applyDeterministicPatches(
   return { appliedCount, deletedCount };
 }
 
-async function runAiFixes(
-  scan: ScanResult,
-  fileMap: Map<string, ScanResult['files'][number]>,
-  opts: FixOptions,
-): Promise<{ attempted: string[]; reverted: string[] }> {
-  const attempted: string[] = [];
-  const reverted: string[] = [];
-  const aiByFile = new Map<string, Finding[]>();
-  for (const finding of scan.findings) {
-    // These rules have deterministic fixes and must never be handed to an AI runner.
-    if (isUnusedFileRule(finding.ruleId) || isUnusedDependencyRule(finding.ruleId)) continue;
-    if (finding.fixability !== 'ai') continue;
-    const list = aiByFile.get(finding.file) ?? [];
-    list.push(finding);
-    aiByFile.set(finding.file, list);
-  }
-  const maxFiles = opts.maxAiFiles ?? 5;
-  for (const [relPath, findings] of [...aiByFile.entries()].slice(0, maxFiles)) {
-    const target = fileMap.get(relPath);
-    if (!target) continue;
-    const snapshot = await readFile(target.absPath, 'utf8');
-    attempted.push(relPath);
-    const ok = await runAiFixForFile(
-      scan.rootDir,
-      relPath,
-      findings,
-      scan.config.aiRunner,
-      scan.config.aiModel,
-    );
-    const verified = ok && (await runVerify(scan.rootDir, scan.config.verifyCommand));
-    if (!verified) {
-      reverted.push(relPath);
-      await writeFile(target.absPath, snapshot, 'utf8');
-    }
-  }
-  return { attempted, reverted };
-}
-
 /**
  * Applies deterministic safe patches first (including unused dependency keys
  * and provably unreferenced files), then optionally runs gated AI fixes.
@@ -311,10 +231,13 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
 
   const aiAttempted: string[] = [];
   const aiReverted: string[] = [];
+  const aiMessages: string[] = [];
   if (opts.apply && opts.ai) {
-    const ai = await runAiFixes(scan, fileMap, opts);
+    const ai = await runAiFixesInWorktrees(scan, fileMap, opts.maxAiFiles ?? 5);
     aiAttempted.push(...ai.attempted);
     aiReverted.push(...ai.reverted);
+    aiMessages.push(...ai.messages);
+    for (const message of aiMessages) console.warn(message);
   }
 
   return {
@@ -322,6 +245,7 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
     appliedCount,
     aiAttempted,
     aiReverted,
+    aiMessages,
     dryRun: !opts.apply,
     diff,
     skipped,

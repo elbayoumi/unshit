@@ -5,13 +5,13 @@ import type { ScanResult } from './scanner.js';
 import {
   cleanupWorktrees,
   countLines,
+  createWorktree,
   fillPatchHash,
   git,
   runAiRunner,
   runVerify,
   runWithInput,
   sha256,
-  symlinkNodeModules,
   type SwarmFixSummary,
   type SwarmWorkerResult,
 } from './swarm-runtime.js';
@@ -51,11 +51,8 @@ async function runSwarmWorker(
     ok: false,
   };
   try {
-    await rm(wtPath, { recursive: true, force: true }).catch(() => {});
-    await git(['worktree', 'remove', '--force', wtPath], rootDir).catch(() => {});
-    await git(['worktree', 'add', '--detach', wtPath, baseSha], rootDir);
+    await createWorktree(rootDir, wtPath, baseSha);
     worktrees.push(wtPath);
-    await symlinkNodeModules(rootDir, wtPath);
 
     const aiOk = await runAiRunner(config, wtPath, relPath, findings);
     if (!aiOk) {
@@ -162,11 +159,8 @@ async function applyApprovedPatches(
   if (nonEmptyGated.length === 0) return [];
 
   const stagingPath = join(rootDir, '.unshit', 'wt', `${runId}-staging`);
-  await rm(stagingPath, { recursive: true, force: true }).catch(() => {});
-  await git(['worktree', 'remove', '--force', stagingPath], rootDir).catch(() => {});
-  await git(['worktree', 'add', '--detach', stagingPath, baseSha], rootDir);
+  await createWorktree(rootDir, stagingPath, baseSha);
   worktrees.push(stagingPath);
-  await symlinkNodeModules(rootDir, stagingPath);
 
   const applied = await applyPatchBatch(stagingPath, patches, nonEmptyGated);
   return landPatches(rootDir, stagingPath, baseSha, applied);

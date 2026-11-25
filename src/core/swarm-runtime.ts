@@ -93,7 +93,7 @@ export async function runVerify(cwd: string, verifyCommand?: string): Promise<bo
   }
 }
 
-export async function symlinkNodeModules(rootDir: string, wtPath: string): Promise<void> {
+async function symlinkNodeModules(rootDir: string, wtPath: string): Promise<void> {
   const src = join(rootDir, 'node_modules');
   const dest = join(wtPath, 'node_modules');
   try {
@@ -112,6 +112,14 @@ export async function symlinkNodeModules(rootDir: string, wtPath: string): Promi
   } catch {
     /* ignore */
   }
+}
+
+/** Create a clean detached worktree at `wtPath`, with node_modules linked when available. */
+export async function createWorktree(rootDir: string, wtPath: string, baseSha: string): Promise<void> {
+  await rm(wtPath, { recursive: true, force: true }).catch(() => {});
+  await git(['worktree', 'remove', '--force', wtPath], rootDir).catch(() => {});
+  await git(['worktree', 'add', '--detach', wtPath, baseSha], rootDir);
+  await symlinkNodeModules(rootDir, wtPath);
 }
 
 export async function runAiRunner(
