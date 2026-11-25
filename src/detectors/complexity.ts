@@ -30,44 +30,43 @@ function isLogicalBinary(node: ts.Node): node is ts.BinaryExpression {
  * construct (plus +1 per nesting level), +1 per logical-operator sequence
  * (&&/||/??). Nested functions are not part of this score.
  */
+function nestingIncrement(node: ts.Node, nesting: number): number {
+  return 1 + nesting;
+}
+
+function isNestingConstruct(node: ts.Node): boolean {
+  return ts.isIfStatement(node)
+    || ts.isForStatement(node)
+    || ts.isForOfStatement(node)
+    || ts.isForInStatement(node)
+    || ts.isWhileStatement(node)
+    || ts.isDoStatement(node)
+    || ts.isSwitchStatement(node)
+    || ts.isCatchClause(node)
+    || ts.isConditionalExpression(node);
+}
+
+function logicalSequenceIncrement(node: ts.BinaryExpression): number {
+  const parent = node.parent;
+  if (!parent || !ts.isBinaryExpression(parent)) return 1;
+  return parent.operatorToken.kind !== node.operatorToken.kind ? 1 : 0;
+}
+
 function complexityOfBody(root: ts.Node): number {
   let score = 0;
   const walk = (node: ts.Node, nesting: number): void => {
     let increment = 0;
     let childNesting = nesting;
-    if (ts.isIfStatement(node)) {
-      increment = 1 + nesting;
-      childNesting = nesting + 1;
-    } else if (
-      ts.isForStatement(node)
-      || ts.isForOfStatement(node)
-      || ts.isForInStatement(node)
-      || ts.isWhileStatement(node)
-      || ts.isDoStatement(node)
-    ) {
-      increment = 1 + nesting;
-      childNesting = nesting + 1;
-    } else if (ts.isSwitchStatement(node)) {
-      increment = 1 + nesting;
+    if (isNestingConstruct(node)) {
+      increment = nestingIncrement(node, nesting);
       childNesting = nesting + 1;
     } else if (ts.isCaseClause(node) || ts.isDefaultClause(node)) {
       increment = 1;
-    } else if (ts.isCatchClause(node)) {
-      increment = 1 + nesting;
-      childNesting = nesting + 1;
-    } else if (ts.isConditionalExpression(node)) {
-      increment = 1 + nesting;
-      childNesting = nesting + 1;
     } else if (isLogicalBinary(node)) {
-      // Count a run of &&/||/?? as one +1; a new run starts when the operator
-      // changes or there is no binary parent (e.g. the condition itself).
-      const parent = node.parent;
-      increment = !parent || !ts.isBinaryExpression(parent) || parent.operatorToken.kind !== node.operatorToken.kind ? 1 : 0;
+      increment = logicalSequenceIncrement(node);
     }
     score += increment;
     ts.forEachChild(node, (child) => {
-      // Nested functions/arrows are scored separately by collectFunctions;
-      // they do not add to this function's complexity.
       if (ts.isFunctionLike(child)) return;
       walk(child, childNesting);
     });
