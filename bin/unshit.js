@@ -1,5 +1,13 @@
 #!/usr/bin/env node
-import { main } from '../dist/src/cli.js';
+import { enableCompileCache } from 'node:module';
+
+try {
+  enableCompileCache();
+} catch {
+  /* Node < 22.8 or unsupported environment; ignore. */
+}
+
+const { main } = await import('../dist/src/cli.js');
 
 main(process.argv.slice(2)).then(
   (code) => process.exit(code),

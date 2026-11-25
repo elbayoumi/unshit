@@ -1,13 +1,48 @@
 import { readFile, writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { extname, isAbsolute, join, relative, resolve } from 'node:path';
-import ts from 'typescript';
+import type TS from 'typescript';
 import { loadConfig } from '../config.js';
-import type { FileEntry, Finding, UnshitConfig } from '../contracts.js';
-import { BUILTIN_DETECTORS } from '../detectors/index.js';
+import type { Detector, FileEntry, Finding, UnshitConfig } from '../contracts.js';
+import { highComplexityDetector } from '../detectors/complexity.js';
+import { cssDesignDriftDetector, cssDuplicateSelectorDetector, cssNoImportantDetector } from '../detectors/css.js';
+import { godFileDetector } from '../detectors/god-file.js';
+import { dartHygieneDetector, pythonBareExceptDetector, rustNoUnwrapDetector } from '../detectors/polyglot.js';
+import {
+  magicTimerDetector,
+  noDoubleCastDetector,
+  noExplicitAnyDetector,
+  noInlineI18nTernaryDetector,
+  redundantCatchDetector,
+} from '../detectors/ts-ast.js';
 import { FindingCache, hashContent } from './cache.js';
+import { findingFingerprint, isWaived } from './finding-utils.js';
 import { normalizePayload, type NormalizedHookPayload } from './hook-payload.js';
-import { isWaived } from './scanner.js';
+
+// Hook-eligible detectors: non-project scope, not in SINGLE_FILE_SKIP.
+// Keep in sync with BUILTIN_DETECTORS in detectors/index.ts.
+const HOOK_DETECTORS: Detector[] = [
+  noExplicitAnyDetector,
+  noDoubleCastDetector,
+  noInlineI18nTernaryDetector,
+  magicTimerDetector,
+  redundantCatchDetector,
+  highComplexityDetector,
+  cssNoImportantDetector,
+  cssDuplicateSelectorDetector,
+  cssDesignDriftDetector,
+  godFileDetector,
+  rustNoUnwrapDetector,
+  dartHygieneDetector,
+  pythonBareExceptDetector,
+];
+
+const _require = createRequire(import.meta.url);
+let _ts: typeof TS | undefined;
+function getTs(): typeof TS {
+  return (_ts ??= _require('typescript') as typeof TS);
+}
 
 export { normalizePayload } from './hook-payload.js';
 
@@ -15,7 +50,8 @@ const SINGLE_FILE_SKIP = new Set(['ts/unused-export', 'code/duplicate-block']);
 
 const BREAKER_PATH = join(tmpdir(), 'unshit-hook-breaker.json');
 
-function getScriptKind(ext: string): ts.ScriptKind {
+function getScriptKind(ext: string): TS.ScriptKind {
+  const ts = getTs();
   if (ext === '.tsx') return ts.ScriptKind.TSX;
   if (ext === '.jsx') return ts.ScriptKind.JSX;
   if (ext === '.js' || ext === '.mjs' || ext === '.cjs') return ts.ScriptKind.JS;
@@ -59,14 +95,14 @@ export function scanSingleContent(
     content,
     lines,
     sourceFile: isTs
-      ? ts.createSourceFile(relPath, content, ts.ScriptTarget.Latest, true, getScriptKind(ext))
+      ? getTs().createSourceFile(relPath, content, getTs().ScriptTarget.Latest, true, getScriptKind(ext))
       : undefined,
   };
 
   const disabled = new Set(config.disabledRules);
   const ctx = { rootDir, config, files: [file] };
   const findings: Finding[] = [];
-  for (const detector of BUILTIN_DETECTORS) {
+  for (const detector of HOOK_DETECTORS) {
     if (disabled.has(detector.id) || SINGLE_FILE_SKIP.has(detector.id)) continue;
     if (detector.scope === 'project') continue;
     findings.push(...detector.detect(ctx));
@@ -84,10 +120,7 @@ async function readStdin(): Promise<string> {
   return Buffer.concat(chunks).toString('utf8');
 }
 
-function findingFingerprint(f: Finding): string {
-  const normEvidence = f.evidence.replace(/\s+/g, ' ').trim();
-  return `${f.ruleId}::${f.file}::${normEvidence}`;
-}
+
 
 function applyReplacement(text: string, oldStr: string, newStr: string, replaceAll: boolean): string | null {
   if (oldStr === '') {

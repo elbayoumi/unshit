@@ -1,14 +1,18 @@
-import ts from 'typescript';
+import { createRequire } from 'node:module';
+import type * as TS from 'typescript';
+const _require = createRequire(import.meta.url);
+let _ts: typeof TS | undefined;
+const ts: typeof TS = new Proxy({} as typeof TS, { get(_, p) { const mod = _ts ??= _require('typescript') as typeof TS; return (mod as Record<PropertyKey, unknown>)[p]; } });
 import type { Detector, DetectorContext, Finding, Span } from '../contracts.js';
 import { isTestFile } from './ts-ast.js';
 
-const LOGICAL_BINARY_KINDS = new Set<ts.SyntaxKind>([
+const LOGICAL_BINARY_KINDS = new Set<TS.SyntaxKind>([
   ts.SyntaxKind.AmpersandAmpersandToken,
   ts.SyntaxKind.BarBarToken,
   ts.SyntaxKind.QuestionQuestionToken,
 ]);
 
-function spanOf(sf: ts.SourceFile, node: ts.Node): Span {
+function spanOf(sf: TS.SourceFile, node: TS.Node): Span {
   const start = sf.getLineAndCharacterOfPosition(node.getStart(sf));
   const end = sf.getLineAndCharacterOfPosition(node.getEnd());
   return {
@@ -21,7 +25,7 @@ function spanOf(sf: ts.SourceFile, node: ts.Node): Span {
   };
 }
 
-function isLogicalBinary(node: ts.Node): node is ts.BinaryExpression {
+function isLogicalBinary(node: TS.Node): node is TS.BinaryExpression {
   return ts.isBinaryExpression(node) && LOGICAL_BINARY_KINDS.has(node.operatorToken.kind);
 }
 
@@ -30,11 +34,11 @@ function isLogicalBinary(node: ts.Node): node is ts.BinaryExpression {
  * construct (plus +1 per nesting level), +1 per logical-operator sequence
  * (&&/||/??). Nested functions are not part of this score.
  */
-function nestingIncrement(node: ts.Node, nesting: number): number {
+function nestingIncrement(node: TS.Node, nesting: number): number {
   return 1 + nesting;
 }
 
-function isNestingConstruct(node: ts.Node): boolean {
+function isNestingConstruct(node: TS.Node): boolean {
   return ts.isIfStatement(node)
     || ts.isForStatement(node)
     || ts.isForOfStatement(node)
@@ -46,15 +50,15 @@ function isNestingConstruct(node: ts.Node): boolean {
     || ts.isConditionalExpression(node);
 }
 
-function logicalSequenceIncrement(node: ts.BinaryExpression): number {
+function logicalSequenceIncrement(node: TS.BinaryExpression): number {
   const parent = node.parent;
   if (!parent || !ts.isBinaryExpression(parent)) return 1;
   return parent.operatorToken.kind !== node.operatorToken.kind ? 1 : 0;
 }
 
-function complexityOfBody(root: ts.Node): number {
+function complexityOfBody(root: TS.Node): number {
   let score = 0;
-  const walk = (node: ts.Node, nesting: number): void => {
+  const walk = (node: TS.Node, nesting: number): void => {
     let increment = 0;
     let childNesting = nesting;
     if (isNestingConstruct(node)) {
@@ -75,22 +79,22 @@ function complexityOfBody(root: ts.Node): number {
   return score;
 }
 
-function functionName(node: ts.Node): string {
-  const named = node as ts.SignatureDeclaration;
+function functionName(node: TS.Node): string {
+  const named = node as TS.SignatureDeclaration;
   if (named.name && ts.isIdentifier(named.name)) return named.name.text;
   const parent = node.parent;
   if (parent && ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name)) return parent.name.text;
   return 'anonymous';
 }
 
-function nameSpan(sf: ts.SourceFile, node: ts.Node): Span {
-  const named = node as ts.SignatureDeclaration;
+function nameSpan(sf: TS.SourceFile, node: TS.Node): Span {
+  const named = node as TS.SignatureDeclaration;
   return spanOf(sf, named.name ?? node);
 }
 
-function collectFunctions(root: ts.Node): Array<{ name: string; node: ts.Node; score: number }> {
-  const fns: Array<{ name: string; node: ts.Node; score: number }> = [];
-  const walk = (node: ts.Node): void => {
+function collectFunctions(root: TS.Node): Array<{ name: string; node: TS.Node; score: number }> {
+  const fns: Array<{ name: string; node: TS.Node; score: number }> = [];
+  const walk = (node: TS.Node): void => {
     if (ts.isFunctionLike(node)) {
       fns.push({ name: functionName(node), node, score: complexityOfBody(node) });
     }
