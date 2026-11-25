@@ -457,6 +457,66 @@ export async function handleB(values: number[]) {
   );
 });
 
+test('code/duplicate-block catches cross-file JSX-heavy clones with few logic tokens', async () => {
+  await withTempProject(
+    {
+      'a.tsx': `export function Panel(p: { heading: string; note: string; items: string[] }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      {p.items.length === 0 ? (
+        <EmptyState icon="📊" title="No data yet" description="Run the export to see results here." />
+      ) : (
+        <div style={{ padding: '40px', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+          {p.note}
+          <h3 style={{ fontWeight: 700, margin: '16px 0' }}>{p.heading}</h3>
+        </div>
+      )}
+    </div>
+  );
+}
+`,
+      'b.tsx': `export function Panel(p: { heading: string; note: string; items: string[] }) {
+const pad1 = 1;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      {p.items.length === 0 ? (
+        <EmptyState icon="📊" title="No data yet" description="Run the export to see results here." />
+      ) : (
+        <div style={{ padding: '40px', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+          {p.note}
+          <h3 style={{ fontWeight: 700, margin: '16px 0' }}>{p.heading}</h3>
+        </div>
+      )}
+    </div>
+  );
+}
+`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const clones = scan.findings.filter((f) => f.ruleId === 'code/duplicate-block');
+      assert.ok(clones.length >= 1, 'expected the JSX-heavy cross-file clone to be caught');
+      assert.ok(clones.some((f) => f.file === 'b.tsx'), 'expected a finding on the second file');
+    },
+  );
+});
+
+test('code/duplicate-block stays quiet on trivial boilerplate', async () => {
+  await withTempProject(
+    {
+      'a.ts': `import { alpha, beta, gamma } from 'pkg';\nexport type Pair = [string, number];\nexport type Status = 'ok' | 'err';\nexport const first = 1;\nexport const second = 2;\n`,
+      'b.ts': `import { alpha, beta, gamma } from 'pkg';\nexport type Pair = [string, number];\nexport type Status = 'ok' | 'err';\nexport const first = 3;\nexport const second = 4;\n`,
+      'c.ts': `const same = 1;\nconst same = 1;\n`,
+      'd.ts': `const same = 1;\nconst same = 1;\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const clones = scan.findings.filter((f) => f.ruleId === 'code/duplicate-block');
+      assert.equal(clones.length, 0);
+    },
+  );
+});
+
 test('css/design-drift flags hardcoded colors when tokens exist and suggests matching var(--token)', async () => {
   await withTempProject(
     {

@@ -200,7 +200,11 @@ export const duplicateBlockDetector: Detector = {
   description: 'Detects copy-pasted structural token blocks across source files.',
   detect(ctx: DetectorContext): Finding[] {
     const windowSize = Math.max(1, Math.floor(ctx.config.cloneMinTokens));
-    const step = Math.max(1, Math.floor(windowSize / 3));
+    // Windows start at every token position (step 1) so that two identical token
+    // regions living at different offsets in two files still produce matching
+    // signatures: with a larger step the windows starting at the region offsets
+    // can all fall between window starts, and an exact-signature match is missed.
+    const step = 1;
     const buckets = new Map<string, CloneWindow[]>();
 
     for (const file of ctx.files) {
