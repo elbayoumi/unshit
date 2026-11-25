@@ -110,7 +110,7 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 | Command | Description | Key Options |
 |---|---|---|
 | `unshit init [path]` | One-command setup: `unshit.config.json`, Claude hook, and baseline pin | `--force` |
-| `unshit scan [path]` | Read-only AST, CSS, clone, and slop scan | `--format human\|json\|sarif\|markdown`, `--fail-on error\|warn\|info` |
+| `unshit scan [path]` | Read-only AST, CSS, clone, and slop scan | `--format human\|json\|sarif\|markdown`, `--fail-on error\|warn\|info`, `--deep` |
 | `unshit context [path]` | Print (or `--write` into `AGENTS.md`) the deterministic project-rules block: archetype, layout, source roots, verify commands, unshit rule thresholds | `--write` |
 | `unshit score [path]` | Compute deterministic 0–100 health score (`Grade A–F`) | `--format human\|json` |
 | `unshit hotspots [path]` | Rank files by churn and finding density | `--since 90.days`, `--top 10`, `--json` |
