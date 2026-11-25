@@ -6,9 +6,11 @@ import { test } from 'node:test';
 import { DEFAULT_CONFIG } from '../src/config.js';
 import { runFix } from '../src/core/fixer.js';
 import { normalizePayload, scanSingleContent } from '../src/core/hook.js';
+import { runInit } from '../src/core/init.js';
 import { createBaseline, evaluateGuard } from '../src/core/pinner.js';
 import { runScan } from '../src/core/scanner.js';
 import { computeScore } from '../src/core/scorer.js';
+import { abortSwarmFix, runSwarmFix } from '../src/core/swarm-fixer.js';
 
 async function withTempProject(files: Record<string, string>, fn: (dir: string) => Promise<void>): Promise<void> {
   const dir = await mkdtemp(join(tmpdir(), 'unshit-test-'));
@@ -209,6 +211,67 @@ test('multiset evaluateGuard detects second identical finding in the same file',
       const guard = evaluateGuard(s2, base);
       assert.equal(guard.passed, false);
       assert.equal(guard.newFindings.length, 1);
+    },
+  );
+});
+
+test('arch/import-cycle and arch/layer-violation detect cycles and layer breaches (skipping type-only)', async () => {
+  await withTempProject(
+    {
+      'a.ts': `import { b } from './b.js';\nexport const a = 1 + b;\n`,
+      'b.ts': `import { a } from './a.js';\nexport const b = 2 + a;\n`,
+      'types_only.ts': `import type { a } from './a.js';\nexport type T = typeof a;\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, {
+        ...DEFAULT_CONFIG,
+        layers: [
+          { name: 'core', include: ['a.ts'], allowImportsFrom: [] },
+          { name: 'ui', include: ['b.ts'], allowImportsFrom: ['core'] },
+        ],
+      });
+      const cycles = scan.findings.filter((f) => f.ruleId === 'arch/import-cycle');
+      const violations = scan.findings.filter((f) => f.ruleId === 'arch/layer-violation');
+      assert.equal(cycles.length, 1);
+      assert.equal(violations.length, 1);
+      assert.equal(violations[0]?.file, 'a.ts');
+    },
+  );
+});
+
+test('runInit creates config, merges .claude/settings.json idempotently, and pins baseline', async () => {
+  await withTempProject(
+    {
+      'ok.ts': `export const ok = 1;\n`,
+    },
+    async (dir) => {
+      const code1 = await runInit(dir);
+      assert.equal(code1, 0);
+      const settings1 = JSON.parse(await readFile(join(dir, '.claude', 'settings.json'), 'utf8')) as {
+        hooks?: { PreToolUse?: unknown[] };
+      };
+      assert.equal(settings1.hooks?.PreToolUse?.length, 1);
+
+      const code2 = await runInit(dir);
+      assert.equal(code2, 0);
+      const settings2 = JSON.parse(await readFile(join(dir, '.claude', 'settings.json'), 'utf8')) as {
+        hooks?: { PreToolUse?: unknown[] };
+      };
+      assert.equal(settings2.hooks?.PreToolUse?.length, 1);
+    },
+  );
+});
+
+test('runSwarmFix refuses non-git/dirty tree safely and abortSwarmFix cleans up', async () => {
+  await withTempProject(
+    {
+      'a.ts': `export const x = ({} as unknown as number);\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      await assert.rejects(() => runSwarmFix(scan, { apply: false }));
+      const code = await abortSwarmFix(dir);
+      assert.equal(code, 0);
     },
   );
 });

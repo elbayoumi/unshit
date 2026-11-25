@@ -93,11 +93,12 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 
 | Command | Description | Key Options |
 |---|---|---|
+| `unshit init [path]` | One-command setup: `unshit.config.json`, Claude hook, and baseline pin | `--force` |
 | `unshit scan [path]` | Read-only AST, CSS, clone, and slop scan | `--format human\|json\|sarif\|markdown`, `--fail-on error\|warn\|info` |
 | `unshit score [path]` | Compute deterministic 0–100 health score (`Grade A–F`) | `--format human\|json` |
 | `unshit pin [path]` | Write `unshit.baseline.json` snapshot | — |
 | `unshit guard [path]` | Compare current scan against `unshit.baseline.json` | `--changed` (diff-only PR mode), `--base <ref>` |
-| `unshit fix [path]` | Preview or apply deterministic + gated AI fixes | `--apply`, `--ai`, `--runner opencode\|claude`, `--model <id>` |
+| `unshit fix [path]` | Preview or apply deterministic + gated AI fixes | `--apply`, `--ai`, `--swarm`, `--abort`, `--runner opencode\|claude` |
 | `unshit hook [file]` | **Live AI Guardrail Hook** — blocks AI slop in real time (exits `2`) | `--stdin` (Claude Code `PreToolUse` / `PostToolUse` JSON) |
 | `unshit mcp` | Start stdio MCP server (`unshit_scan`, `unshit_score`, `unshit_guard`) | — |
 
@@ -120,6 +121,8 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 | `rust/no-unwrap` | structural | `warn` | `ai` | `.unwrap()` in non-test `.rs` files (skips `#[cfg(test)]`) |
 | `dart/no-dynamic-or-print` | structural | `warn` | `ai` | `dynamic` type escapes & `print()` calls in non-test `.dart` files |
 | `python/no-bare-except` | structural | `warn` | `ai` | Bare `except:` clauses in non-test `.py` files |
+| `arch/import-cycle` | structural | `warn` | `manual` | Circular import cycles (TS/JS + Python via iterative Tarjan SCC) |
+| `arch/layer-violation` | structural | `error` | `manual` | Cross-layer imports violating `layers[]` rules in `unshit.config.json` |
 
 ---
 

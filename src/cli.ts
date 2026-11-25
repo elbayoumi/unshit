@@ -1,15 +1,17 @@
 import { resolve } from 'node:path';
 import { loadConfig } from './config.js';
 import type { Severity } from './contracts.js';
+import { abortSwarmFix, runSwarmFix } from './core/swarm-fixer.js';
 import { runFix } from './core/fixer.js';
 import { runHook } from './core/hook.js';
+import { runInit } from './core/init.js';
 import { createBaseline, evaluateGuard, getChangedFiles, loadBaseline } from './core/pinner.js';
 import { formatScanOutput, type OutputFormat } from './core/reporters.js';
 import { runScan } from './core/scanner.js';
 import { computeScore } from './core/scorer.js';
 import { runMcpServer } from './mcp/server.js';
 
-const VALID_COMMANDS = new Set(['scan', 'score', 'pin', 'guard', 'fix', 'hook', 'mcp', 'help', '--help', '-h']);
+const VALID_COMMANDS = new Set(['scan', 'score', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'help', '--help', '-h']);
 const VALID_FORMATS = new Set<OutputFormat>(['human', 'json', 'sarif', 'markdown']);
 const SEV_RANK: Record<Severity, number> = { info: 1, warn: 2, error: 3 };
 
@@ -25,7 +27,7 @@ function getOpt(args: string[], name: string): string | undefined {
 function getTargetPath(args: string[]): string {
   for (let i = 0; i < args.length; i++) {
     const a = args[i]!;
-    if (a === '--format' || a === '--runner' || a === '--model' || a === '--fail-on' || a === '--base') {
+    if (a === '--format' || a === '--runner' || a === '--model' || a === '--fail-on' || a === '--base' || a === '--concurrency' || a === '--max-files' || a === '--max-diff-lines') {
       i += 1;
       continue;
     }
@@ -51,6 +53,10 @@ export async function main(argv: string[]): Promise<number> {
     return runHook(rest);
   }
 
+  if (cmd === 'init') {
+    return runInit(getTargetPath(rest), { force: getFlag(rest, '--force') });
+  }
+
   if (cmd === 'help' || cmd === '--help' || cmd === '-h') {
     console.log([
       'unshit <command> [path] [options]',
@@ -60,7 +66,8 @@ export async function main(argv: string[]): Promise<number> {
       '  score [path]   Compute 0-100 codebase health score',
       '  pin [path]     Capture unshit.baseline.json characterization snapshot',
       '  guard [path]   Fail CI/pre-commit on regressions (--changed [baseRef] for diff-only PRs)',
-      '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude)',
+      '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude; --swarm for parallel worktree AI fixer; --abort to clean stale worktrees)',
+      '  init [path]    Bootstrap config, baseline, and Claude Code PreToolUse hook (--force to overwrite)',
       '  hook [file]    Live AI Guardrail Hook (--stdin for Claude Code PreToolUse/PostToolUse, exits 2 on slop)',
       '  mcp            Start stdio MCP server (unshit_scan, unshit_score, unshit_guard)',
     ].join('\n'));
@@ -76,6 +83,18 @@ export async function main(argv: string[]): Promise<number> {
 
   const targetDir = getTargetPath(rest);
   const config = await loadConfig(targetDir);
+
+  if (getFlag(rest, '--abort')) {
+    try {
+      const removed = await abortSwarmFix(targetDir);
+      console.log(`unshit fix --abort: removed ${removed} stale worktree(s), pruned, lock cleared.`);
+      return 0;
+    } catch (err) {
+      console.error(`unshit fix --abort: ${err instanceof Error ? err.message : String(err)}`);
+      return 2;
+    }
+  }
+
   const scan = await runScan(targetDir, config);
   const score = computeScore(scan.files, scan.findings);
 
@@ -150,6 +169,31 @@ export async function main(argv: string[]): Promise<number> {
   if (runner === 'claude' || runner === 'opencode') config.aiRunner = runner;
   const model = getOpt(rest, '--model');
   if (model) config.aiModel = model;
+
+  if (getFlag(rest, '--swarm')) {
+    try {
+      const concurrencyRaw = getOpt(rest, '--concurrency');
+      const maxFilesRaw = getOpt(rest, '--max-files');
+      const maxDiffLinesRaw = getOpt(rest, '--max-diff-lines');
+      const concurrency = concurrencyRaw ? Number.parseInt(concurrencyRaw, 10) : undefined;
+      const maxFiles = maxFilesRaw ? Number.parseInt(maxFilesRaw, 10) : undefined;
+      const maxDiffLines = maxDiffLinesRaw ? Number.parseInt(maxDiffLinesRaw, 10) : undefined;
+      const summary = await runSwarmFix(scan, {
+        apply,
+        concurrency: Number.isFinite(concurrency) ? concurrency : undefined,
+        maxFiles: Number.isFinite(maxFiles) ? maxFiles : undefined,
+        maxDiffLines: Number.isFinite(maxDiffLines) ? maxDiffLines : undefined,
+      });
+      console.log(
+        `unshit fix --swarm (${summary.dryRun ? 'dry-run' : 'applied'}): ${summary.workers.length} workers, ${summary.appliedCount} applied`,
+      );
+      const failed = summary.workers.some((w) => !w.ok);
+      return failed ? 1 : 0;
+    } catch (err) {
+      console.error(`unshit fix --swarm: ${err instanceof Error ? err.message : String(err)}`);
+      return 2;
+    }
+  }
 
   const summary = await runFix(scan, { apply, ai });
   console.log(

@@ -53,6 +53,12 @@ export interface FileEntry {
   sourceFile?: ts.SourceFile;
 }
 
+export interface LayerRule {
+  name: string;
+  include: string[];
+  allowImportsFrom: string[];
+}
+
 export interface UnshitConfig {
   include: string[];
   exclude: string[];
@@ -63,6 +69,8 @@ export interface UnshitConfig {
   aiRunner: 'opencode' | 'claude';
   aiModel?: string;
   verifyCommand?: string;
+  layers?: LayerRule[];
+  unassignedLayer?: 'ignore' | 'warn';
 }
 
 export interface DetectorContext {

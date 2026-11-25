@@ -3,6 +3,7 @@ import { duplicateBlockDetector } from './clones.js';
 import { cssDuplicateSelectorDetector, cssNoImportantDetector } from './css.js';
 import { unusedExportDetector } from './dead-exports.js';
 import { godFileDetector } from './god-file.js';
+import { importCycleDetector, layerViolationDetector } from './arch.js';
 import { dartHygieneDetector, pythonBareExceptDetector, rustNoUnwrapDetector } from './polyglot.js';
 import {
   magicTimerDetector,
@@ -13,6 +14,8 @@ import {
 } from './ts-ast.js';
 
 export const BUILTIN_DETECTORS: Detector[] = [
+  importCycleDetector,
+  layerViolationDetector,
   noExplicitAnyDetector,
   noDoubleCastDetector,
   noInlineI18nTernaryDetector,
