@@ -23,7 +23,7 @@ export interface UnusedFileDeletion {
   line: number;
 }
 
-export interface UnusedFileSkip {
+interface UnusedFileSkip {
   file: string;
   ruleId: string;
   line: number;
