@@ -4,7 +4,7 @@ import type { OutputFormat } from './core/reporters.js';
 import type { ScanResult } from './core/scanner.js';
 import type { LineRange } from './core/pinner.js';
 
-const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'structure', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'note', 'notes', 'context', 'help', '--help', '-h']);
+const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'structure', 'pin', 'guard', 'fix', 'pr', 'init', 'hook', 'mcp', 'note', 'notes', 'context', 'help', '--help', '-h']);
 const VALID_FORMATS = new Set<OutputFormat>(['human', 'json', 'sarif', 'markdown']);
 const SEV_RANK: Record<Severity, number> = { info: 1, warn: 2, error: 3 };
 
@@ -40,6 +40,7 @@ function printHelp(): number {
     '  structure [path] Diagnose project directory/module health (archetype, layout, cycles, boundary leaks, verdict, --fail-on error|warn|info, --no-cache)',
     '  pin [path]     Capture unshit.baseline.json characterization snapshot (--no-cache)',
     '  guard [path]   Fail CI/pre-commit on regressions (--changed [baseRef] for diff-only PRs, --lines for changed-line scope, --no-cache)',
+    '  pr [path]      PR review: report findings introduced on branch changes vs base (--base <ref>, --format human|markdown|json)',
     '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude; --swarm for parallel worktree AI fixer; --abort to clean stale worktrees, --no-cache)',
     '  init [path]    Bootstrap config, baseline, and Claude Code PreToolUse hook (--force to overwrite)',
     '  hook [file]    Live AI Guardrail Hook (--stdin for Claude Code PreToolUse/PostToolUse, exits 2 on slop, --no-cache)',
@@ -243,6 +244,31 @@ async function runGuardCommand(targetDir: string, scan: ScanResult, rest: string
   return 0;
 }
 
+async function runPrCommand(targetDir: string, scan: ScanResult, rest: string[]): Promise<number> {
+  const { reviewPullRequest, isGitWorkTree, resolvePrBaseRef, formatPrHuman, formatPrMarkdown, formatPrJson } = await import('./core/pr-review.js');
+  const format = getOpt(rest, '--format') ?? 'human';
+  if (!['human', 'markdown', 'json'].includes(format)) {
+    console.error(`Invalid --format: ${format}. Expected human|markdown|json.`);
+    return 2;
+  }
+  if (!(await isGitWorkTree(targetDir))) {
+    console.error(`unshit pr: not a git work tree at ${targetDir}`);
+    return 2;
+  }
+  const baseRef = await resolvePrBaseRef(targetDir, getOpt(rest, '--base'));
+  let report: Awaited<ReturnType<typeof reviewPullRequest>>;
+  try {
+    report = await reviewPullRequest(targetDir, scan, { baseRef });
+  } catch (err) {
+    console.error(`unshit pr: ${err instanceof Error ? err.message : String(err)}`);
+    return 2;
+  }
+  if (format === 'json') console.log(formatPrJson(report));
+  else if (format === 'markdown') console.log(formatPrMarkdown(report));
+  else console.log(formatPrHuman(report));
+  return report.errorCount > 0 ? 1 : 0;
+}
+
 async function runSwarmCommand(scan: ScanResult, rest: string[], apply: boolean): Promise<number> {
   try {
     const concurrencyRaw = getOpt(rest, '--concurrency');
@@ -287,6 +313,15 @@ async function runFixCommand(scan: ScanResult, rest: string[], apply: boolean, a
   return summary.aiReverted.length > 0 ? 1 : 0;
 }
 
+function parseFormatArg(rest: string[]): OutputFormat | null {
+  const rawFormat = getOpt(rest, '--format') ?? (getFlag(rest, '--json') ? 'json' : 'human');
+  if (!VALID_FORMATS.has(rawFormat as OutputFormat)) {
+    console.error(`Invalid --format: ${rawFormat}. Expected human|json|sarif|markdown.`);
+    return null;
+  }
+  return rawFormat as OutputFormat;
+}
+
 export async function main(argv: string[]): Promise<number> {
   const cmd = argv[0] ?? 'help';
   const rest = argv.slice(1);
@@ -311,12 +346,8 @@ export async function main(argv: string[]): Promise<number> {
   if (cmd === 'notes') return runNotesCommand(rest);
   if (cmd === 'help' || cmd === '--help' || cmd === '-h') return printHelp();
 
-  const rawFormat = getOpt(rest, '--format') ?? (getFlag(rest, '--json') ? 'json' : 'human');
-  if (!VALID_FORMATS.has(rawFormat as OutputFormat)) {
-    console.error(`Invalid --format: ${rawFormat}. Expected human|json|sarif|markdown.`);
-    return 2;
-  }
-  const format = rawFormat as OutputFormat;
+  const format = parseFormatArg(rest);
+  if (!format) return 2;
   const noCache = getFlag(rest, '--no-cache');
   const targetDir = getTargetPath(rest);
   const { loadConfig } = await import('./config.js');
@@ -337,6 +368,7 @@ export async function main(argv: string[]): Promise<number> {
   if (cmd === 'structure') return runStructureCommand(rest, scan, format);
   if (cmd === 'pin') return runPinCommand(scan);
   if (cmd === 'guard') return runGuardCommand(targetDir, scan, rest);
+  if (cmd === 'pr') return runPrCommand(targetDir, scan, rest);
 
   const apply = getFlag(rest, '--apply');
   const ai = getFlag(rest, '--ai');
