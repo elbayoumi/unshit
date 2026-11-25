@@ -234,7 +234,7 @@ function classify(relPath: string, resolve: FeatureResolver, shape: ProjectShape
 }
 
 /** A relative import between two non-root workspace packages. */
-export const crossPackageImportDetector: Detector = {
+const crossPackageImportDetector: Detector = {
   id: STRUCTURE_RULES.crossPackage,
   category: 'architecture',
   tier: 'structural',
@@ -270,7 +270,7 @@ export const crossPackageImportDetector: Detector = {
 };
 
 /** A feature reaching into another feature's internal files instead of its public index. */
-export const featureDeepImportDetector: Detector = {
+const featureDeepImportDetector: Detector = {
   id: STRUCTURE_RULES.deepImport,
   category: 'architecture',
   tier: 'structural',
@@ -308,7 +308,7 @@ export const featureDeepImportDetector: Detector = {
 };
 
 /** Shared/UI buckets importing upwards into features or app code. */
-export const sharedImportsFeatureDetector: Detector = {
+const sharedImportsFeatureDetector: Detector = {
   id: STRUCTURE_RULES.sharedImportsFeature,
   category: 'architecture',
   tier: 'structural',
@@ -344,7 +344,7 @@ export const sharedImportsFeatureDetector: Detector = {
 };
 
 /** Strongly connected groups of features in the feature-level import graph. */
-export const featureCycleDetector: Detector = {
+const featureCycleDetector: Detector = {
   id: STRUCTURE_RULES.featureCycle,
   category: 'architecture',
   tier: 'structural',
@@ -391,7 +391,7 @@ export const featureCycleDetector: Detector = {
 };
 
 /** Two or more synonymous utility folders competing in one directory. */
-export const junkDrawerDetector: Detector = {
+const junkDrawerDetector: Detector = {
   id: STRUCTURE_RULES.junkDrawer,
   category: 'architecture',
   tier: 'structural',
@@ -443,4 +443,4 @@ export const STRUCTURE_DETECTORS: Detector[] = [
   junkDrawerDetector,
 ];
 
-export const structureDetectors = STRUCTURE_DETECTORS;
+const structureDetectors = STRUCTURE_DETECTORS;

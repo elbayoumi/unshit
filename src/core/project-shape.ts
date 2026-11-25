@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { isAbsolute, join, relative } from 'node:path';
 import type { DetectorContext, FileEntry } from '../contracts.js';
 
-export type ProjectArchetype =
+type ProjectArchetype =
   | 'next-app'
   | 'vite-react'
   | 'node-lib'
@@ -12,20 +12,20 @@ export type ProjectArchetype =
   | 'monorepo'
   | 'unknown';
 
-export type ProjectLayout = 'feature-first' | 'layer-first' | 'unknown';
+type ProjectLayout = 'feature-first' | 'layer-first' | 'unknown';
 
-export interface FeatureLocation {
+interface FeatureLocation {
   root: string;
   feature: string;
   subPath: string;
 }
 
-export interface BucketLocation {
+interface BucketLocation {
   root: string;
   bucket: string;
 }
 
-export interface FlatDirMetric {
+interface FlatDirMetric {
   dir: string;
   count: number;
 }
@@ -493,7 +493,7 @@ const shapeCache = new WeakMap<DetectorContext, ProjectShape>();
  * Infers the project's structural shape from the already-collected context.
  * Results are memoised per context object; no disk reads are performed.
  */
-export function inferShape(ctx: DetectorContext): ProjectShape {
+function inferShape(ctx: DetectorContext): ProjectShape {
   const cached = shapeCache.get(ctx);
   if (cached) return cached;
 

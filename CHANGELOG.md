@@ -25,6 +25,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `arch/import-cycle`: Python `from . import sibling` no longer adds a package `__init__` edge that produced false cycles.
 - `css/duplicate-selector` only compares within one file and ignores `:root`/`:host`/`html`/`body`/`*`.
 - Default excludes add `.dart_tool`, and `static/lib` / `static/vendor` directories are skipped at any depth; generated `.g.dart`, `.freezed.dart` and `_pb2.py` files are skipped. `cloneMinTokens` default raised from 45 to 80 to cut `code/duplicate-block` noise.
+- Default excludes now also skip `docs/`, `research/`, `fixtures/` and `__fixtures__/` at any depth, so docs/research benchmark fixtures produce no findings.
 
 ### Changed
 - `code/duplicate-block`: duplicate-window signatures now start at every token position (was every third), so identical regions at different offsets in two files are no longer missed. On the auctions and bidshop frontends this goes from 0 to 3 cross-file clones, against 2 from jscpd. The logic-density floor stays at 3 to avoid JSX boilerplate noise.
@@ -33,6 +34,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `ts/unused-export` / `ts/unused-type-export` now also treat more files as entry points, matching knip: HTML files with `<script type="module" src>` (their targets, read from disk), `package.json` `scripts` that run files (`node x.js`, `tsx x.ts`, `ts-node`, `vite-node`) and `bin` maps in root and workspace manifests, `*.stories.*`/`__mocks__`/`e2e`/`cypress`/`playwright` files, and framework routing dirs (Next `pages/`, Nuxt `pages/`/`layouts/`/`middleware/`/`plugins/`/`server/`, SvelteKit `src/routes/+*`, Remix `app/routes/`, Astro `pages/`).
 
 - README, ROADMAP and ARCHITECTURE corrected to match the code: unproven benchmarks are labelled targets, unimplemented items are marked planned, and the rule/layout/command lists are current.
+- Dropped the `export` keyword from 32 locally-used or zero-reference symbols in `src/` reported by `ts/unused-export` and `ts/unused-type-export`. Every symbol was checked for outside importers (including default exports) first; runtime behaviour is unchanged.
 
 ## [0.7.0] - 2026-11-25
 

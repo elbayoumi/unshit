@@ -26,7 +26,7 @@ export interface ImportEdge {
   spec?: string;
 }
 
-export type ImportGraph = Map<string, string[]> & {
+type ImportGraph = Map<string, string[]> & {
   nodes: string[];
   files: string[];
   vertices: string[];
@@ -878,7 +878,7 @@ export function buildImportGraph(ctx: DetectorContext): ImportGraph {
   return graph;
 }
 
-export interface TsSpecResolution {
+interface TsSpecResolution {
   /** True when the specifier points at project code (relative, alias, workspace package), false for npm/node builtins. */
   internal: boolean;
   /** Project file the specifier resolves to, when it could be resolved. */

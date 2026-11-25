@@ -9,7 +9,7 @@ import { computeScore } from './scorer.js';
 
 const execFileAsync = promisify(execFile);
 
-export const BASELINE_FILENAME = 'unshit.baseline.json';
+const BASELINE_FILENAME = 'unshit.baseline.json';
 
 /** Inclusive line range (1-based) of a change in a file. */
 export interface LineRange {
@@ -195,7 +195,7 @@ export async function loadBaseline(rootDir: string): Promise<BaselineSnapshot | 
   return parsed;
 }
 
-export interface GuardResult {
+interface GuardResult {
   passed: boolean;
   baselineScore: number;
   currentScore: number;

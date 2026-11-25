@@ -18,7 +18,7 @@ function getScriptKind(ext: string): ts.ScriptKind {
   return ts.ScriptKind.TS;
 }
 
-export interface NormalizedHookEdit {
+interface NormalizedHookEdit {
   oldString?: string;
   newString?: string;
   replaceAll?: boolean;
@@ -27,7 +27,7 @@ export interface NormalizedHookEdit {
   replace_all?: boolean;
 }
 
-export interface NormalizedHookPayload {
+interface NormalizedHookPayload {
   filePath?: string;
   targetPath?: string;
   oldString?: string;

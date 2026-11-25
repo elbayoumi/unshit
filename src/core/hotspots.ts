@@ -13,12 +13,12 @@ const SEVERITY_WEIGHT: Record<Severity, number> = {
   info: 0.5,
 };
 
-export interface HotspotOptions {
+interface HotspotOptions {
   since?: string;
   top?: number;
 }
 
-export interface Hotspot {
+interface Hotspot {
   file: string;
   score: number;
   churnCommits: number;

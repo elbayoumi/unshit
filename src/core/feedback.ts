@@ -3,9 +3,9 @@ import { dirname, join } from 'node:path';
 import { VERSION } from '../version.js';
 
 export const FEEDBACK_KINDS = ['false-positive', 'improvement', 'scope-gap'] as const;
-export type FeedbackKind = (typeof FEEDBACK_KINDS)[number];
+type FeedbackKind = (typeof FEEDBACK_KINDS)[number];
 
-export interface FeedbackEntry {
+interface FeedbackEntry {
   at: string;
   version: string;
   kind: FeedbackKind;
@@ -14,7 +14,7 @@ export interface FeedbackEntry {
   note: string;
 }
 
-export function feedbackPath(rootDir: string): string {
+function feedbackPath(rootDir: string): string {
   return join(rootDir, '.unshit', 'feedback.jsonl');
 }
 
