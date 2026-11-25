@@ -32,7 +32,7 @@ export function hashContent(content: string): string {
   return createHash('sha256').update(content).digest('hex');
 }
 
-export function hashConfig(config: UnshitConfig): string {
+function hashConfig(config: UnshitConfig): string {
   // Only fields that affect per-file detector output. Keep stable key order.
   const relevant = {
     include: config.include,
