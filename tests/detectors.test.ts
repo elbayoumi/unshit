@@ -3,6 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 import { DEFAULT_CONFIG } from '../src/config.js';
 import { runFix } from '../src/core/fixer.js';
 import { normalizePayload, scanSingleContent } from '../src/core/hook.js';
@@ -321,7 +322,7 @@ test('CLI supports --json shorthand for scan and score', async () => {
       'ok.ts': `export const ok = 1;\n`,
     },
     async (dir) => {
-      const { stdout } = await execFileAsync('node', ['/Volumes/data/projects/unshit/bin/unshit.js', 'score', dir, '--json']);
+      const { stdout } = await execFileAsync('node', [fileURLToPath(new URL('../../bin/unshit.js', import.meta.url)), 'score', dir, '--json']);
       const parsed = JSON.parse(stdout) as { score: number; grade: string };
       assert.equal(typeof parsed.score, 'number');
       assert.equal(parsed.grade, 'A');
