@@ -1,0 +1,18 @@
+{
+  "description": "Deep subpaths of declared packages are fine; deep subpaths of undeclared packages are not.",
+  "groundTruth": "`@scope/known/sub` resolves to declared `@scope/known`; the other two specifiers resolve to undeclared packages.",
+  "expected": [
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "file": "src/index.ts",
+      "symbol": "@other/unknown",
+      "reason": "`@other/unknown` is the package behind `@other/unknown/sub` and is not declared."
+    },
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "file": "src/index.ts",
+      "symbol": "plain-unknown",
+      "reason": "`plain-unknown` is the package behind `plain-unknown/deep/path` and is not declared."
+    }
+  ]
+}

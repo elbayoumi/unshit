@@ -1,0 +1,12 @@
+{
+  "description": "A workspace package declares one unused and one used dependency.",
+  "groundTruth": "The workspace package is analysed on its own; `lodash` is imported, `unused-ws-dep` is not.",
+  "expected": [
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "packages/lib/package.json",
+      "symbol": "unused-ws-dep",
+      "reason": "`unused-ws-dep` is declared in the workspace package but nothing in that package imports or references it."
+    }
+  ]
+}

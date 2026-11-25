@@ -1,0 +1,7 @@
+{
+  "name": "hn-config-deps",
+  "devDependencies": {
+    "autoprefixer": "^10.0.0",
+    "babel-preset-thing": "^1.0.0"
+  }
+}

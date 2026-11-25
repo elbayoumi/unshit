@@ -1,0 +1,5 @@
+{
+  "description": "A dynamically imported module is reachable and its exports are consumed.",
+  "groundTruth": "src/index.ts uses `import()` and reads the `lazy` export; the dynamic target is not an unused file.",
+  "expected": []
+}

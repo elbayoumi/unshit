@@ -1,0 +1,12 @@
+{
+  "description": "A workspace package declares one unused dependency.",
+  "groundTruth": "`@m/ui` and `react` are used; `left-pad` is not.",
+  "expected": [
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "apps/web/package.json",
+      "symbol": "left-pad",
+      "reason": "`left-pad` is declared in the workspace package but nothing in that package imports or references it."
+    }
+  ]
+}

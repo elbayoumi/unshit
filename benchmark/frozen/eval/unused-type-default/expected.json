@@ -1,0 +1,12 @@
+{
+  "description": "A default-exported interface is never imported.",
+  "groundTruth": "The module is imported for a runtime value; the default type has no consumer.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-type-export",
+      "file": "src/types.ts",
+      "symbol": "default",
+      "reason": "The default-exported interface is never imported; the module is kept alive by the runtime `value` import."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "hn-storybook",
+  "dependencies": {
+    "@storybook/react": "^7.0.0"
+  }
+}

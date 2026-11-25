@@ -1,0 +1,18 @@
+{
+  "description": "Dynamic import and require also expose unlisted packages.",
+  "groundTruth": "The declared package is fine; both dynamic import and require name packages missing from package.json.",
+  "expected": [
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "file": "src/index.ts",
+      "symbol": "dynamic-unlisted",
+      "reason": "`dynamic-unlisted` is imported via `import()` and is not declared."
+    },
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "file": "src/index.ts",
+      "symbol": "required-unlisted",
+      "reason": "`required-unlisted` is loaded via `require()` and is not declared."
+    }
+  ]
+}

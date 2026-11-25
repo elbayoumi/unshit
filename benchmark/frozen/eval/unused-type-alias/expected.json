@@ -1,0 +1,12 @@
+{
+  "description": "An exported type alias is never imported.",
+  "groundTruth": "The module has a runtime import, so the only finding is the unused type alias.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-type-export",
+      "file": "src/types.ts",
+      "symbol": "DeadAlias",
+      "reason": "`DeadAlias` has no importer and is not used in its own file."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "description": "An `export { a, b }` list contains one name nobody imports.",
+  "groundTruth": "`a` is imported by the entry file; `b` appears only in its declaration and the export list.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/list.ts",
+      "symbol": "b",
+      "reason": "`b` is exported through the list but no importer references it."
+    }
+  ]
+}

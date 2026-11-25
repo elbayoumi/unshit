@@ -1,0 +1,12 @@
+{
+  "description": "A declared runtime dependency is never imported.",
+  "groundTruth": "`used-pkg` is imported by the entry file; `left-pad` is declared but has no import, script or config reference.",
+  "expected": [
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "symbol": "left-pad",
+      "reason": "`left-pad` is declared in dependencies but nothing imports, requires or references it."
+    }
+  ]
+}

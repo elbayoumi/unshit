@@ -1,0 +1,5 @@
+{
+  "description": "A test setup file referenced by vitest config is an entry point.",
+  "groundTruth": "vitest.config.ts names test/setup.ts in setupFiles, so setup.ts is an entry; its import of @testing-library/jest-dom is declared.",
+  "expected": []
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A root source file imports one declared and one undeclared package.",
+  "groundTruth": "`react` is declared; `axios` is not.",
+  "expected": [
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "file": "src/index.ts",
+      "symbol": "axios",
+      "reason": "`axios` is imported but absent from package.json."
+    }
+  ]
+}

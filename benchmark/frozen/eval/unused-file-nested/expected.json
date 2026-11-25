@@ -1,0 +1,12 @@
+{
+  "description": "A nested source file is not imported by any other file.",
+  "groundTruth": "Only the nested orphan is unreachable; the feature file is imported by the entry file.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/features/orphan.ts",
+      "symbol": null,
+      "reason": "No file imports src/features/orphan.ts and it is not an entry point."
+    }
+  ]
+}

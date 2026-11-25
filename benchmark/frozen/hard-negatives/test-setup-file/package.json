@@ -1,0 +1,7 @@
+{
+  "name": "hn-test-setup",
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "@testing-library/jest-dom": "^6.0.0"
+  }
+}

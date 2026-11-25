@@ -1,0 +1,12 @@
+{
+  "description": "A workspace import is fine, but a bare external import is not declared.",
+  "groundTruth": "`@m/ui` is a workspace package; `zod` is not declared anywhere.",
+  "expected": [
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "file": "apps/web/src/index.ts",
+      "symbol": "zod",
+      "reason": "`zod` is imported by the workspace app but is not declared in its package.json or the root package.json."
+    }
+  ]
+}

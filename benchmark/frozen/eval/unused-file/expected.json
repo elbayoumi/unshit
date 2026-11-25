@@ -1,0 +1,12 @@
+{
+  "description": "A source file is not imported by any other file and is not an entry point.",
+  "groundTruth": "`src/orphan.ts` has no incoming import; `src/used.ts` is imported by the entry file.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/orphan.ts",
+      "symbol": null,
+      "reason": "No file imports src/orphan.ts and it is not an entry point."
+    }
+  ]
+}

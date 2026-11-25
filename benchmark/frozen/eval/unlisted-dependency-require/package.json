@@ -1,0 +1,6 @@
+{
+  "name": "eval-unlisted-require",
+  "dependencies": {
+    "listed-pkg": "1.0.0"
+  }
+}

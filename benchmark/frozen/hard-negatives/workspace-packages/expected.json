@@ -1,0 +1,5 @@
+{
+  "description": "Workspace package imports and package entry targets are not dead code.",
+  "groundTruth": "apps/web imports the workspace package @m/ui and react; both packages expose entry files through main/exports.",
+  "expected": []
+}

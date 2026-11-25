@@ -1,0 +1,12 @@
+{
+  "description": "An exported interface is never imported while another type from the same module is.",
+  "groundTruth": "The module is imported for a runtime value, so it is not an unused file; `DeadType` is the only dead type.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-type-export",
+      "file": "src/types.ts",
+      "symbol": "DeadType",
+      "reason": "`DeadType` is exported but no import references it; `UsedType` is imported as a type by src/index.ts."
+    }
+  ]
+}

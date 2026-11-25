@@ -1,0 +1,5 @@
+{
+  "description": "All files targeted by package.json export conditions are entry points.",
+  "groundTruth": "Both ./src/index.ts and ./src/extra.ts are targets of the exports map.",
+  "expected": []
+}

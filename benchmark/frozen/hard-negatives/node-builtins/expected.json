@@ -1,0 +1,5 @@
+{
+  "description": "Node builtins, including prefixed and subpath forms, are not npm packages.",
+  "groundTruth": "fs, path/posix and node:os are builtins and need no package.json entry.",
+  "expected": []
+}

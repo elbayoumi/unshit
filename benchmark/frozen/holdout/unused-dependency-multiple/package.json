@@ -1,0 +1,8 @@
+{
+  "name": "holdout-unused-dependency-multiple",
+  "dependencies": {
+    "unused-a": "1.0.0",
+    "unused-b": "1.0.0",
+    "used-pkg": "1.0.0"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "description": "A dependency referenced from CSS @plugin is used.",
+  "groundTruth": "src/index.css references @tw/typography through @plugin, which the dependency detector counts as usage.",
+  "expected": []
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A named value export is imported by nobody while its module is still used.",
+  "groundTruth": "Only `dead` is dead: `used` is imported by the entry file and the module itself has an incoming import.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/used.ts",
+      "symbol": "dead",
+      "reason": "`dead` is exported from used.ts but no other file imports it; `used` is imported by src/index.ts."
+    }
+  ]
+}

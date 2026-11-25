@@ -1,0 +1,11 @@
+{
+  "name": "hn-vite-script",
+  "scripts": {
+    "dev": "vite",
+    "start": "tsx src/server.ts"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "tsx": "^4.0.0"
+  }
+}

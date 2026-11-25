@@ -1,0 +1,5 @@
+{
+  "description": "Vite entry points declared by an HTML module script and a script command must stay alive.",
+  "groundTruth": "The HTML module script marks src/main.ts as an entry, src/app.ts is imported by it, and the vite devDependency is referenced by a package script.",
+  "expected": []
+}

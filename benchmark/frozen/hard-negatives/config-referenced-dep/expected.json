@@ -1,0 +1,5 @@
+{
+  "description": "Dependencies referenced only by config files must not be called unused.",
+  "groundTruth": "autoprefixer appears in postcss.config.js and babel-preset-thing in babel.config.json; neither is imported as a module.",
+  "expected": []
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A bare import names a package missing from package.json.",
+  "groundTruth": "`listed-pkg` is declared; `missing-pkg` is not.",
+  "expected": [
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "file": "src/index.ts",
+      "symbol": "missing-pkg",
+      "reason": "`missing-pkg` is imported but absent from package.json."
+    }
+  ]
+}

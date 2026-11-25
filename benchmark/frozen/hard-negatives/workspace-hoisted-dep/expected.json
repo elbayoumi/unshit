@@ -1,0 +1,5 @@
+{
+  "description": "A root dependency used only by a workspace package is not unused or unlisted.",
+  "groundTruth": "packages/a imports lodash, which is declared at the root; the root package serves hoisted dependencies to workspaces.",
+  "expected": []
+}

@@ -1,0 +1,8 @@
+{
+  "name": "holdout-unlisted-workspace-root",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@m/web",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@m/ui": "*",
+    "react": "18.0.0"
+  }
+}
