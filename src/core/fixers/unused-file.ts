@@ -30,7 +30,7 @@ interface UnusedFileSkip {
   reason: string;
 }
 
-export interface UnusedFilePlan {
+interface UnusedFilePlan {
   deletions: UnusedFileDeletion[];
   skipped: UnusedFileSkip[];
 }
