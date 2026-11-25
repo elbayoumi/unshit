@@ -1,4 +1,4 @@
-import type { Detector, DetectorContext, Finding } from '../contracts.js';
+import type { Detector, DetectorContext, FileEntry, Finding } from '../contracts.js';
 
 function isTestPath(relPath: string): boolean {
   if (/(^|\/)build\.rs$/i.test(relPath)) return true;
@@ -6,109 +6,121 @@ function isTestPath(relPath: string): boolean {
   return /(^|\/)(tests?|__tests__)(\/|$)|\.(test|spec)\.|_test\.(rs|dart|py)$|(^|\/)test_[^/]*\.py$|(^|\/)conftest\.py$/i.test(relPath);
 }
 
+function blankKeepNewlines(out: string[], i: number, content: string): void {
+  if (content[i] !== '\n') out[i] = ' ';
+}
+
+function skipLineComment(content: string, out: string[], i: number): number {
+  let j = i;
+  while (j < content.length && content[j] !== '\n') { out[j] = ' '; j++; }
+  return j;
+}
+
+function skipBlockComment(content: string, out: string[], i: number): number {
+  out[i] = ' '; out[i + 1] = ' ';
+  let j = i + 2;
+  let depth = 1;
+  while (j < content.length && depth > 0) {
+    if (content[j] === '/' && content[j + 1] === '*') { out[j] = ' '; out[j + 1] = ' '; j += 2; depth++; continue; }
+    if (content[j] === '*' && content[j + 1] === '/') { out[j] = ' '; out[j + 1] = ' '; j += 2; depth--; continue; }
+    blankKeepNewlines(out, j, content);
+    j++;
+  }
+  return j;
+}
+
+function skipRustCharLiteral(content: string, out: string[], i: number): number | null {
+  if (i + 2 < content.length && content[i + 2] === "'") {
+    out[i] = out[i + 1] = out[i + 2] = ' ';
+    return i + 3;
+  }
+  if (i + 3 < content.length && content[i + 1] === '\\' && content[i + 3] === "'") {
+    out[i] = out[i + 1] = out[i + 2] = out[i + 3] = ' ';
+    return i + 4;
+  }
+  return null;
+}
+
+function skipTripleQuotedString(content: string, out: string[], i: number, q: string): number {
+  out[i] = out[i + 1] = out[i + 2] = ' ';
+  let j = i + 3;
+  while (j < content.length) {
+    if (content[j] === '\\' && j + 1 < content.length) {
+      blankKeepNewlines(out, j, content);
+      blankKeepNewlines(out, j + 1, content);
+      j += 2;
+      continue;
+    }
+    if (content[j] === q && content[j + 1] === q && content[j + 2] === q) {
+      out[j] = out[j + 1] = out[j + 2] = ' ';
+      return j + 3;
+    }
+    blankKeepNewlines(out, j, content);
+    j++;
+  }
+  return j;
+}
+
+function skipQuotedString(content: string, out: string[], i: number, q: string): number {
+  out[i] = ' ';
+  let j = i + 1;
+  while (j < content.length) {
+    const ch = content[j]!;
+    if (ch === '\n') break;
+    if (ch === '\\' && j + 1 < content.length) {
+      blankKeepNewlines(out, j, content);
+      blankKeepNewlines(out, j + 1, content);
+      j += 2;
+      continue;
+    }
+    out[j] = ' ';
+    j++;
+    if (ch === q) break;
+  }
+  return j;
+}
+
+function skipStringLike(lang: 'rust' | 'dart' | 'python', content: string, out: string[], i: number, c: string): number {
+  if (lang === 'rust' && c === "'") {
+    const next = skipRustCharLiteral(content, out, i);
+    return next ?? i + 1;
+  }
+  if (lang !== 'rust' && content[i + 1] === c && content[i + 2] === c) {
+    return skipTripleQuotedString(content, out, i, c);
+  }
+  return skipQuotedString(content, out, i, c);
+}
+
 /**
  * Masks comments and string literals with spaces while preserving line and column offsets.
  */
 function maskCommentsAndStrings(lang: 'rust' | 'dart' | 'python', content: string): string {
-  const n = content.length;
   const out = content.split('');
   let i = 0;
-
-  while (i < n) {
+  while (i < content.length) {
     const c = content[i] ?? '';
     const next = content[i + 1] ?? '';
-
-    if ((lang === 'rust' || lang === 'dart') && c === '/' && next === '/') {
-      while (i < n && content[i] !== '\n') {
-        out[i++] = ' ';
-      }
-      continue;
-    }
-    if (lang === 'python' && c === '#') {
-      while (i < n && content[i] !== '\n') {
-        out[i++] = ' ';
-      }
-      continue;
-    }
-    if ((lang === 'rust' || lang === 'dart') && c === '/' && next === '*') {
-      out[i++] = ' ';
-      out[i++] = ' ';
-      let depth = 1;
-      while (i < n && depth > 0) {
-        if (content[i] === '/' && content[i + 1] === '*') {
-          out[i++] = ' ';
-          out[i++] = ' ';
-          depth++;
-        } else if (content[i] === '*' && content[i + 1] === '/') {
-          out[i++] = ' ';
-          out[i++] = ' ';
-          depth--;
-        } else {
-          if (content[i] !== '\n') out[i] = ' ';
-          i++;
-        }
-      }
-      continue;
-    }
-
-    if (c === '"' || c === "'") {
-      if (lang === 'rust' && c === "'") {
-        if (i + 2 < n && content[i + 2] === "'") {
-          out[i] = out[i + 1] = out[i + 2] = ' ';
-          i += 3;
-          continue;
-        }
-        if (i + 3 < n && content[i + 1] === '\\' && content[i + 3] === "'") {
-          out[i] = out[i + 1] = out[i + 2] = out[i + 3] = ' ';
-          i += 4;
-          continue;
-        }
-        i++;
-        continue;
-      }
-
-      const triple = lang !== 'rust' && content[i + 1] === c && content[i + 2] === c;
-      if (triple) {
-        out[i] = out[i + 1] = out[i + 2] = ' ';
-        i += 3;
-        while (i < n) {
-          if (content[i] === '\\' && i + 1 < n) {
-            if (content[i] !== '\n') out[i] = ' ';
-            if (content[i + 1] !== '\n') out[i + 1] = ' ';
-            i += 2;
-            continue;
-          }
-          if (content[i] === c && content[i + 1] === c && content[i + 2] === c) {
-            out[i] = out[i + 1] = out[i + 2] = ' ';
-            i += 3;
-            break;
-          }
-          if (content[i] !== '\n') out[i] = ' ';
-          i++;
-        }
-        continue;
-      }
-
-      out[i++] = ' ';
-      while (i < n && content[i] !== '\n') {
-        if (content[i] === '\\' && i + 1 < n) {
-          out[i] = ' ';
-          if (content[i + 1] !== '\n') out[i + 1] = ' ';
-          i += 2;
-          continue;
-        }
-        if (content[i] === c) {
-          out[i++] = ' ';
-          break;
-        }
-        out[i++] = ' ';
-      }
-      continue;
-    }
+    if ((lang === 'rust' || lang === 'dart') && c === '/' && next === '/') { i = skipLineComment(content, out, i); continue; }
+    if (lang === 'python' && c === '#') { i = skipLineComment(content, out, i); continue; }
+    if ((lang === 'rust' || lang === 'dart') && c === '/' && next === '*') { i = skipBlockComment(content, out, i); continue; }
+    if (c === '"' || c === "'") { i = skipStringLike(lang, content, out, i, c); continue; }
     i++;
   }
-
   return out.join('');
+}
+
+interface MaskedFile {
+  file: FileEntry;
+  masked: string[];
+}
+
+function maskedLangFiles(ctx: DetectorContext, ext: string, lang: 'rust' | 'dart' | 'python'): MaskedFile[] {
+  const out: MaskedFile[] = [];
+  for (const file of ctx.files) {
+    if (file.ext !== ext || isTestPath(file.relPath)) continue;
+    out.push({ file, masked: maskCommentsAndStrings(lang, file.content).split(/\r?\n/) });
+  }
+  return out;
 }
 
 /**
@@ -122,12 +134,9 @@ export const rustNoUnwrapDetector: Detector = {
   description: 'Flags `.unwrap()` in non-test Rust code; propagate errors with `?` or `unwrap_or*`.',
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
-    for (const file of ctx.files) {
-      if (file.ext !== '.rs' || isTestPath(file.relPath)) continue;
-      const maskedLines = maskCommentsAndStrings('rust', file.content).split(/\r?\n/);
+    for (const { file, masked: maskedLines } of maskedLangFiles(ctx, '.rs', 'rust')) {
       let pendingCfgTest = false;
       let testDepth = 0;
-
       for (let i = 0; i < maskedLines.length; i++) {
         const line = maskedLines[i] ?? '';
         if (/^\s*#\[cfg\(test\)\]/.test(line)) {
@@ -193,10 +202,7 @@ export const dartHygieneDetector: Detector = {
   description: 'Flags `dynamic` type escapes and `print()` calls in non-test Dart/Flutter files.',
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
-    for (const file of ctx.files) {
-      if (file.ext !== '.dart' || isTestPath(file.relPath)) continue;
-      const maskedLines = maskCommentsAndStrings('dart', file.content).split(/\r?\n/);
-
+    for (const { file, masked: maskedLines } of maskedLangFiles(ctx, '.dart', 'dart')) {
       for (let i = 0; i < maskedLines.length; i++) {
         const line = maskedLines[i] ?? '';
         const origLine = file.lines[i] ?? '';
@@ -252,10 +258,7 @@ export const pythonBareExceptDetector: Detector = {
   description: 'Flags bare `except:` clauses in Python; catch specific exceptions instead.',
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
-    for (const file of ctx.files) {
-      if (file.ext !== '.py' || isTestPath(file.relPath)) continue;
-      const maskedLines = maskCommentsAndStrings('python', file.content).split(/\r?\n/);
-
+    for (const { file, masked: maskedLines } of maskedLangFiles(ctx, '.py', 'python')) {
       for (let i = 0; i < maskedLines.length; i++) {
         const line = maskedLines[i] ?? '';
         const match = /^(\s*)except\s*:/.exec(line);
