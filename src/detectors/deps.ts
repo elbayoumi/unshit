@@ -202,7 +202,7 @@ export const unusedDependencyDetector: Detector = {
   tier: 'structural',
   severity: 'warn',
   scope: 'project',
-  description: 'Flags packages in package.json dependencies/devDependencies that nothing imports or runs via scripts.',
+  description: 'Flags packages in package.json dependencies/devDependencies that nothing imports, requires or runs via scripts or references in configs such as CI workflows.',
   detect(ctx: DetectorContext): Finding[] {
     if (!existsSync(join(ctx.rootDir, 'package.json'))) return [];
 
@@ -268,6 +268,16 @@ export const unusedDependencyDetector: Detector = {
       const configTexts = dirFiles
         .filter((file) => /(config|rc)(\.|$)/i.test(file) && !file.endsWith('.lock'))
         .map((file) => safeReadText(join(pkgDirAbs, file)));
+      const workflowTexts: string[] = [];
+      try {
+        const wfDir = join(ctx.rootDir, '.github', 'workflows');
+        for (const entry of readdirSync(wfDir, { withFileTypes: true })) {
+          if (!entry.isFile() || !/\.ya?ml$/i.test(entry.name)) continue;
+          workflowTexts.push(safeReadText(join(wfDir, entry.name)));
+        }
+      } catch {
+        // No CI directory: nothing to reference.
+      }
 
       const unusedRuntime = new Set<string>();
       for (const name of deps.keys()) {
@@ -276,6 +286,7 @@ export const unusedDependencyDetector: Detector = {
         if (scriptsReference(scripts, name)) continue;
         if (dirFiles.some((file) => isConfigFileNamed(file, name))) continue;
         if (configTexts.some((t) => t.includes(name))) continue;
+        if (workflowTexts.some((t) => t.includes(name))) continue;
         unusedRuntime.add(name);
       }
       // `@types/x` is dead only when the runtime package `x` is declared here and itself unused.
