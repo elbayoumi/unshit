@@ -231,3 +231,45 @@ test('deps/unused-dependency flags @types/x only when x is declared and unused i
     assert.deepEqual(hits, ['packages/ui/package.json:@types/react-dom', 'packages/ui/package.json:react-dom']);
   });
 });
+
+test('deps/unused-dependency spares packages referenced only by CI workflow scripts', async () => {
+  const packageJson = JSON.stringify({
+    name: 'demo',
+    devDependencies: { cypress: '^13.0.0', 'left-pad': '^1.0.0' },
+  }, null, 2);
+
+  await withTempProject({
+    'package.json': packageJson,
+    '.github/workflows/e2e.yml': [
+      'name: e2e',
+      'on: push',
+      'jobs:',
+      '  e2e:',
+      '    runs-on: ubuntu-latest',
+      '    steps:',
+      '      - run: npx cypress run',
+      '',
+    ].join('\n'),
+    'src/a.ts': 'export const a = 1;\n',
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    const findings = findingsFor(scan, 'deps/unused-dependency');
+    assert.deepEqual(findings.map((f) => f.evidence), ['left-pad']);
+  });
+});
+
+test('deps/unused-dependency spares packages referenced only by tailwind/postcss configs, flagging nearby dead deps', async () => {
+  const packageJson = JSON.stringify({
+    name: 'demo',
+    devDependencies: { '@tailwindcss/typography': '^0.5.0', 'left-pad': '^1.0.0' },
+  }, null, 2);
+
+  await withTempProject({
+    'package.json': packageJson,
+    'tailwind.config.js': "export default { plugins: ['@tailwindcss/typography'] };\n",
+    'src/a.ts': 'export const a = 1;\n',
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    assert.deepEqual(findingsFor(scan, 'deps/unused-dependency').map((f) => f.evidence), ['left-pad']);
+  });
+});

@@ -94,3 +94,116 @@ test('nested index.html module scripts and vite/laravel `input` entries are entr
   });
   assert.deepEqual(r, ['src/orphan.ts']);
 });
+
+test('next.config files are entry points', async () => {
+  const r = await hits({
+    'next.config.ts': "import type { NextConfig } from 'next';\nconst config: NextConfig = {};\nexport default config;\n",
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
+
+test('next app router files and middleware are entry points', async () => {
+  const r = await hits({
+    'app/page.tsx': 'export const pageThing = 1;\nexport default function Page() { return null; }\n',
+    'app/blog/[slug]/page.tsx': 'export const blogThing = 1;\nexport default function Blog() { return null; }\n',
+    'src/middleware.ts': 'export const middlewareThing = 1;\n',
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
+
+test('vite.config input and vitest setupFiles mark files as entry points', async () => {
+  const r = await hits({
+    'vite.config.ts': "export default { build: { rollupOptions: { input: './src/main.tsx' } } };\n",
+    'src/main.tsx': 'export const m = 1;\n',
+    'vitest.config.ts': "export default { test: { setupFiles: ['setupTests.ts'] } };\n",
+    'setupTests.ts': 'export const setup = 1;\n',
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
+
+test('storybook stories files are entry points', async () => {
+  const r = await hits({
+    'src/ui/Button.stories.tsx': 'export const story = 1;\n',
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
+
+test('jest config setupFiles and moduleNameMapper keep files alive', async () => {
+  const r = await hits({
+    'jest.config.js': [
+      'module.exports = {',
+      "  setupFiles: ['setupTests.ts'],",
+      "  moduleNameMapper: { '^app/(.*)': '<rootDir>/app/$1' },",
+      '};',
+      '',
+    ].join('\n'),
+    'setupTests.ts': 'export const setup = 1;\n',
+    'app/thing.ts': 'export const thing = 1;\n',
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
+
+test('playwright and cypress configs and e2e directories are entry points', async () => {
+  const r = await hits({
+    'playwright.config.ts': 'export default {};\n',
+    'cypress.config.ts': 'export default {};\n',
+    'e2e/checkout.ts': 'export const flow = 1;\n',
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
+
+test('tailwind and postcss configs are entry points', async () => {
+  const r = await hits({
+    'tailwind.config.js': "export default { plugins: ['@tailwindcss/typography'] };\n",
+    'postcss.config.js': "export default { plugins: { tailwindcss: {} } };\n",
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
+
+test('github workflow script references keep files alive', async () => {
+  const r = await hits({
+    '.github/workflows/ci.yml': [
+      'name: ci',
+      'on: push',
+      'jobs:',
+      '  build:',
+      '    runs-on: ubuntu-latest',
+      '    steps:',
+      '      - run: node scripts/build.ts',
+      '',
+    ].join('\n'),
+    'scripts/build.ts': 'export const build = 1;\n',
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
+
+test('package.json bin and script file references are entry points', async () => {
+  const r = await hits({
+    'package.json': JSON.stringify({
+      name: 'demo',
+      bin: { demo: './bin/cli.ts' },
+      scripts: { start: 'tsx bin/cli.ts' },
+    }),
+    'bin/cli.ts': 'export const cli = 1;\n',
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
+
+test('astro, remix, nuxt and sveltekit route convention files are entry points', async () => {
+  const r = await hits({
+    'src/pages/index.tsx': 'export const pageThing = 1;\nexport default function P() { return null; }\n',
+    'src/layouts/Layout.tsx': 'export const layoutThing = 1;\n',
+    'app/routes/things/[id].tsx': 'export const handler = 1;\n',
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});
