@@ -83,20 +83,26 @@ test('listed exports, default exports and types in exported signatures are skipp
   });
 });
 
-test('a second fix pass is a no-op after --apply', async () => {
+test('a file that became unreferenced after --apply is deleted on the next pass, then settles', async () => {
   await withTempProject({
     'src/lib.ts': 'export const dead = 1;\nexport type Dead = { x: number };\n',
   }, async (dir) => {
     const first = await fix(dir, true);
     assert.equal(first.appliedCount, 2);
+    assert.equal(first.deletedCount, 0, 'a file patched in this run is never deleted in the same run');
     const afterFirst = await readFile(join(dir, 'src/lib.ts'), 'utf8');
     assert.equal(afterFirst, 'const dead = 1;\ntype Dead = { x: number };\n');
 
     const second = await fix(dir, true);
     assert.equal(second.deterministicPatches.length, 0);
-    assert.equal(second.appliedCount, 0);
-    assert.equal(second.diff, '');
-    assert.equal(await readFile(join(dir, 'src/lib.ts'), 'utf8'), afterFirst);
+    assert.deepEqual(second.deletions, ['src/lib.ts']);
+    assert.equal(second.deletedCount, 1);
+    await assert.rejects(() => readFile(join(dir, 'src/lib.ts'), 'utf8'));
+
+    const third = await fix(dir, true);
+    assert.equal(third.deterministicPatches.length, 0);
+    assert.equal(third.deletions.length, 0);
+    assert.equal(third.diff, '');
   });
 });
 
