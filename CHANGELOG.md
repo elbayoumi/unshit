@@ -23,6 +23,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 
 - `unshit note <rule> "text" --kind false-positive|improvement|scope-gap` and `unshit notes`: record local feedback in `.unshit/feedback.jsonl` (git-ignored) and print it as a markdown backlog grouped by rule, so false positives and gaps found while using the tool feed the next fix.
+- `unshit mcp`: new read-only MCP tool `unshit_check_patch` — input is a unified diff or `{ path, content }`; the server runs the real scanner/detectors on the in-memory proposed content and reports only the findings the patch would introduce (fingerprint diff against current file content) with severity and a pass/fail verdict; nothing is written to disk. MCP-protocol tests cover clean patches, introducing patches and malformed input.
 
 ### Fixed
 

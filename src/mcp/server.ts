@@ -5,6 +5,7 @@ import { evaluateGuard, loadBaseline } from '../core/pinner.js';
 import { runScan } from '../core/scanner.js';
 import { computeScore } from '../core/scorer.js';
 import { VERSION } from '../version.js';
+import { checkPatch } from './patch-check.js';
 
 interface JsonRpcReq {
   jsonrpc: '2.0';
@@ -38,6 +39,19 @@ function sendToolsList(req: JsonRpcReq): void {
         { name: 'unshit_scan', description: 'Read-only codebase scan for dead code, clones, CSS !important, i18n leaks, and slop.', inputSchema: { type: 'object', properties: { path: { type: 'string' } } } },
         { name: 'unshit_score', description: 'Compute 0-100 codebase health score.', inputSchema: { type: 'object', properties: { path: { type: 'string' } } } },
         { name: 'unshit_guard', description: 'Verify current codebase against unshit.baseline.json.', inputSchema: { type: 'object', properties: { path: { type: 'string' } } } },
+        {
+          name: 'unshit_check_patch',
+          description: 'Read-only check: the unshit findings a proposed patch (unified diff or { path, content }) would introduce versus current file content; writes nothing to disk.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              root: { type: 'string', description: 'Scan root (default: server working directory).' },
+              path: { type: 'string', description: 'File the proposed edit concerns (diff mode: defaults to the diff +++ path).' },
+              diff: { type: 'string', description: 'Unified diff to apply to current file content.' },
+              content: { type: 'string', description: 'Proposed full file content (alternative to diff).' },
+            },
+          },
+        },
       ],
     },
   });
@@ -60,6 +74,7 @@ async function handleRequest(req: JsonRpcReq): Promise<void> {
   if (req.method === 'initialize') return sendInitialize(req);
   if (req.method === 'tools/list') return sendToolsList(req);
   if (req.method !== 'tools/call') return;
+  if (String(req.params?.name ?? '') === 'unshit_check_patch') return sendCheckPatchResult(req);
   const args = (req.params?.arguments ?? {}) as { path?: string };
   const rootDir = resolve(args.path ?? process.cwd());
   const payload = await toolPayload(req, rootDir);
@@ -70,8 +85,25 @@ async function handleRequest(req: JsonRpcReq): Promise<void> {
   });
 }
 
+/** Routes tools/call to unshit_check_patch with its { path, diff, content } arguments. */
+async function sendCheckPatchResult(req: JsonRpcReq): Promise<void> {
+  const args = (req.params?.arguments ?? {}) as Record<string, unknown>;
+  const rootDir = resolve(typeof args.root === 'string' ? args.root : process.cwd());
+  const output = await checkPatch(rootDir, {
+    path: typeof args.path === 'string' ? args.path : undefined,
+    diff: typeof args.diff === 'string' ? args.diff : undefined,
+    content: typeof args.content === 'string' ? args.content : undefined,
+  });
+  send({
+    jsonrpc: '2.0',
+    id: req.id ?? null,
+    result: { content: [{ type: 'text', text: JSON.stringify(output, null, 2) }] },
+  });
+}
+
 /**
- * Minimal stdio MCP server exposing read-only `unshit_scan`, `unshit_score`, and `unshit_guard`.
+ * Minimal stdio MCP server exposing read-only `unshit_scan`, `unshit_score`, `unshit_guard`
+ * and `unshit_check_patch`.
  */
 export async function runMcpServer(): Promise<number> {
   const rl = createInterface({ input: process.stdin, crlfDelay: Infinity });
