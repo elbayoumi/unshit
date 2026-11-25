@@ -14,7 +14,7 @@ interface UnusedExportSkip {
   reason: string;
 }
 
-export interface UnusedExportPlan {
+interface UnusedExportPlan {
   patches: Patch[];
   skipped: UnusedExportSkip[];
 }
