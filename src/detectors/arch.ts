@@ -46,6 +46,23 @@ function layerOf(config: DetectorContext['config'], relPath: string) {
   return null;
 }
 
+interface TarjanFrame {
+  v: string;
+  pi: number;
+  neighbors: string[];
+}
+
+function popScc(stack: string[], onStack: Set<string>, root: string): string[] {
+  const comp: string[] = [];
+  let w: string;
+  do {
+    w = stack.pop()!;
+    onStack.delete(w);
+    comp.push(w);
+  } while (w !== root);
+  return comp;
+}
+
 // --- Tarjan SCC (iterative) ---
 export function tarjanSCC(nodes: string[], adj: Map<string, string[]>): string[][] {
   const index = new Map<string, number>();
@@ -53,10 +70,9 @@ export function tarjanSCC(nodes: string[], adj: Map<string, string[]>): string[]
   const onStack = new Set<string>();
   const stack: string[] = [];
   const result: string[][] = [];
+  const work: TarjanFrame[] = [];
   let idx = 0;
 
-  const sortedNodes = [...nodes].sort();
-  const work: { v: string; pi: number; neighbors: string[] }[] = [];
   const pushFrame = (v: string): void => {
     index.set(v, idx);
     lowlink.set(v, idx);
@@ -65,42 +81,26 @@ export function tarjanSCC(nodes: string[], adj: Map<string, string[]>): string[]
     onStack.add(v);
     work.push({ v, pi: 0, neighbors: [...(adj.get(v) ?? [])].sort() });
   };
-  for (const start of sortedNodes) {
+
+  const finishFrame = (frame: TarjanFrame): void => {
+    if (lowlink.get(frame.v) === index.get(frame.v)) result.push(popScc(stack, onStack, frame.v));
+    work.pop();
+    const parent = work.at(-1);
+    if (parent) lowlink.set(parent.v, Math.min(lowlink.get(parent.v)!, lowlink.get(frame.v)!));
+  };
+
+  for (const start of [...nodes].sort()) {
     if (index.has(start)) continue;
     pushFrame(start);
-
     while (work.length > 0) {
-      const frame = work[work.length - 1];
-      const v = frame.v;
-      if (frame.pi < frame.neighbors.length) {
-        const w = frame.neighbors[frame.pi];
-        frame.pi += 1;
-        if (!index.has(w)) {
-          pushFrame(w);
-        } else if (onStack.has(w)) {
-          const curLow = lowlink.get(v)!;
-          const wIndex = index.get(w)!;
-          if (wIndex < curLow) lowlink.set(v, wIndex);
-        }
-      } else {
-        if (lowlink.get(v) === index.get(v)) {
-          const comp: string[] = [];
-          let w: string;
-          do {
-            w = stack.pop()!;
-            onStack.delete(w);
-            comp.push(w);
-          } while (w !== v);
-          result.push(comp);
-        }
-        work.pop();
-        if (work.length > 0) {
-          const parent = work[work.length - 1].v;
-          const parentLow = lowlink.get(parent)!;
-          const vLow = lowlink.get(v)!;
-          if (vLow < parentLow) lowlink.set(parent, vLow);
-        }
+      const frame = work[work.length - 1]!;
+      if (frame.pi >= frame.neighbors.length) {
+        finishFrame(frame);
+        continue;
       }
+      const w = frame.neighbors[frame.pi++]!;
+      if (!index.has(w)) pushFrame(w);
+      else if (onStack.has(w)) lowlink.set(frame.v, Math.min(lowlink.get(frame.v)!, index.get(w)!));
     }
   }
   return result;
