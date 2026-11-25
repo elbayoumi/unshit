@@ -4,6 +4,32 @@ import { collectWorkspace } from '../walker.js';
 import { FindingCache, hashContent, isCacheableDetector } from './cache.js';
 import { isWaived } from './finding-utils.js';
 
+
+const DEEP_UNUSED_RULES = new Set(['ts/unused-export', 'ts/unused-type-export']);
+
+async function applyDeepUnusedExports(
+  raw: Finding[],
+  syntacticUnused: Detector[],
+  rootDir: string,
+  config: UnshitConfig,
+  files: FileEntry[],
+  manifests?: string[],
+): Promise<void> {
+  const ctx: DetectorContext = { rootDir, config, files, manifests };
+  try {
+    const { detectDeepUnusedExports } = await import('./deep/unused-exports.js');
+    const deep = await detectDeepUnusedExports(rootDir, config, files, manifests);
+    for (let i = raw.length - 1; i >= 0; i--) {
+      const f = raw[i]!;
+      if (DEEP_UNUSED_RULES.has(f.ruleId) && deep.analyzedFiles.has(f.file)) raw.splice(i, 1);
+    }
+    raw.push(...deep.findings);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`unshit: --deep unavailable, falling back to syntactic unused-export scan (${msg})`);
+    for (const detector of syntacticUnused) raw.push(...detector.detect(ctx));
+  }
+}
 export { findingFingerprint, isWaived } from './finding-utils.js';
 
 export interface ScanResult {
@@ -63,7 +89,6 @@ export async function runScan(
     raw.push(...fileFindings);
   }
 
-  const DEEP_UNUSED_RULES = new Set(['ts/unused-export', 'ts/unused-type-export']);
   let syntacticUnused: Detector[] = [];
   let crossFileRun = crossFile;
   if (options.deep) {
@@ -79,24 +104,7 @@ export async function runScan(
   }
 
   if (options.deep) {
-    const ctx: DetectorContext = { rootDir, config, files, manifests };
-    try {
-      const { detectDeepUnusedExports } = await import('./deep/unused-exports.js');
-      const deep = await detectDeepUnusedExports(rootDir, config, files, manifests);
-      // Remove syntactic unused-export findings for analyzed files (none should exist
-      // because we skipped detectors, but be defensive) and add deep findings.
-      for (let i = raw.length - 1; i >= 0; i--) {
-        const f = raw[i]!;
-        if (DEEP_UNUSED_RULES.has(f.ruleId) && deep.analyzedFiles.has(f.file)) raw.splice(i, 1);
-      }
-      raw.push(...deep.findings);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      console.error(`unshit: --deep unavailable, falling back to syntactic unused-export scan (${msg})`);
-      for (const detector of syntacticUnused) {
-        raw.push(...detector.detect(ctx));
-      }
-    }
+    await applyDeepUnusedExports(raw, syntacticUnused, rootDir, config, files, manifests);
   }
 
   const seen = new Set<string>();
