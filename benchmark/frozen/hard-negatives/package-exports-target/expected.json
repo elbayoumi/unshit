@@ -1,0 +1,5 @@
+{
+  "description": "package.json exports/main targets are public entry points.",
+  "groundTruth": "The exports/main targets point at src/index.ts, so its exports are consumed outside the scanned code.",
+  "expected": []
+}

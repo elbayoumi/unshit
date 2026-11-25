@@ -1,0 +1,18 @@
+{
+  "description": "A runtime dependency and its @types package are both unused.",
+  "groundTruth": "`lodash` is used; `chart.js` is not, so `@types/chart.js` is dead too; `@types/node` is spared.",
+  "expected": [
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "symbol": "chart.js",
+      "reason": "`chart.js` is declared but never imported."
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "symbol": "@types/chart.js",
+      "reason": "`@types/chart.js` is dead because its runtime package `chart.js` is declared and unused."
+    }
+  ]
+}

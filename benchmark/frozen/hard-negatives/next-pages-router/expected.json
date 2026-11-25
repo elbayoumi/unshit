@@ -1,0 +1,5 @@
+{
+  "description": "Next.js pages-router files are framework entry points.",
+  "groundTruth": "pages/index.tsx is loaded by Next, next.config.js references the next dependency by filename, and react is imported by the page.",
+  "expected": []
+}

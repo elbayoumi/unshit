@@ -1,0 +1,12 @@
+{
+  "description": "A CommonJS require names an undeclared package.",
+  "groundTruth": "The declared package is required normally; the second require is unlisted.",
+  "expected": [
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "file": "src/index.ts",
+      "symbol": "required-only-unlisted",
+      "reason": "`required-only-unlisted` is loaded via `require()` and is absent from package.json."
+    }
+  ]
+}

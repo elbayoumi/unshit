@@ -1,0 +1,12 @@
+{
+  "description": "One name in an export list has no importer.",
+  "groundTruth": "`a` is imported; `b` is only declared and exported.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/list.ts",
+      "symbol": "b",
+      "reason": "`b` is exported through the list but no importer references it."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A default export is not imported even though another export of the same module is.",
+  "groundTruth": "The module is imported for `helper`, so only the default export is unreachable from other files.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/widget.ts",
+      "symbol": "default",
+      "reason": "The default export is never imported; src/index.ts imports only the named `helper`."
+    }
+  ]
+}

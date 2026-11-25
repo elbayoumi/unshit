@@ -1,0 +1,5 @@
+{
+  "description": "Exports from a conventional entry file are public API, not dead code.",
+  "groundTruth": "src/index.ts is an entry point, so all of its exports are consumed outside the scanned code.",
+  "expected": []
+}

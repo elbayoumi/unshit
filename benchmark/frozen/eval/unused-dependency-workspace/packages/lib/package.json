@@ -1,0 +1,8 @@
+{
+  "name": "@x/lib",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "lodash": "4.0.0",
+    "unused-ws-dep": "1.0.0"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "description": "Next.js app-router files are framework entry points.",
+  "groundTruth": "app/layout.tsx and app/page.tsx are loaded by Next, not imported by project code; next.config.js references the next dependency by filename.",
+  "expected": []
+}

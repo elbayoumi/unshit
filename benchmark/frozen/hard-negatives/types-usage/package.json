@@ -1,0 +1,10 @@
+{
+  "name": "hn-types-usage",
+  "dependencies": {
+    "express": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.0.0",
+    "@types/node": "^22.0.0"
+  }
+}

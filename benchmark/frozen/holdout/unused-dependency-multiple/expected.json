@@ -1,0 +1,18 @@
+{
+  "description": "Two declared dependencies are unused.",
+  "groundTruth": "`used-pkg` is imported; both other packages are not.",
+  "expected": [
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "symbol": "unused-a",
+      "reason": "`unused-a` is declared but never imported or referenced."
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "symbol": "unused-b",
+      "reason": "`unused-b` is declared but never imported or referenced."
+    }
+  ]
+}

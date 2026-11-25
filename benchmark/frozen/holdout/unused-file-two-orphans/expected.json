@@ -1,0 +1,18 @@
+{
+  "description": "Two orphan files in a shared directory are both unreachable.",
+  "groundTruth": "Neither orphan is imported; the used file is imported by the entry.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/dead/one.ts",
+      "symbol": null,
+      "reason": "No file imports src/dead/one.ts and it is not an entry point."
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/dead/two.ts",
+      "symbol": null,
+      "reason": "No file imports src/dead/two.ts and it is not an entry point."
+    }
+  ]
+}

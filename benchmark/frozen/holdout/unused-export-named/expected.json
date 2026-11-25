@@ -1,0 +1,12 @@
+{
+  "description": "A named function export is never imported.",
+  "groundTruth": "`keep` is imported by the entry file; `drop` is not.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/module.ts",
+      "symbol": "drop",
+      "reason": "`drop` is exported but no other file imports it."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "eval-unused-dependency",
+  "dependencies": {
+    "left-pad": "1.3.0",
+    "used-pkg": "1.0.0"
+  }
+}

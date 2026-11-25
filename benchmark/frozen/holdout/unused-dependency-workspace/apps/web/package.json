@@ -1,0 +1,9 @@
+{
+  "name": "@m/web",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@m/ui": "*",
+    "react": "18.0.0",
+    "left-pad": "1.0.0"
+  }
+}

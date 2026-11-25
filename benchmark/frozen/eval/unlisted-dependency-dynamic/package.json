@@ -1,0 +1,6 @@
+{
+  "name": "eval-unlisted-dynamic",
+  "dependencies": {
+    "listed-pkg": "1.0.0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "holdout-unlisted-dependency",
+  "dependencies": {
+    "listed-pkg": "1.0.0"
+  }
+}

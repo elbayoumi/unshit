@@ -1,0 +1,6 @@
+{
+  "name": "hn-css-plugin",
+  "dependencies": {
+    "@tw/typography": "^1.0.0"
+  }
+}

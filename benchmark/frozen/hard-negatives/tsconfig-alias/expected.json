@@ -1,0 +1,5 @@
+{
+  "description": "tsconfig path aliases are internal imports, not unlisted packages.",
+  "groundTruth": "The tsconfig maps @/* to src/*, so @/thing is an internal file import.",
+  "expected": []
+}

@@ -1,0 +1,5 @@
+{
+  "description": "A barrel that re-exports every used symbol must not create dead exports.",
+  "groundTruth": "src/index.ts imports both `a` and `b` through the barrel; the barrel re-exports both modules.",
+  "expected": []
+}

@@ -1,0 +1,7 @@
+{
+  "name": "@m/web",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@m/ui": "*"
+  }
+}

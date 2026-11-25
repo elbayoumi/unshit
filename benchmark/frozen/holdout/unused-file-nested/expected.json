@@ -1,0 +1,12 @@
+{
+  "description": "A deeply nested orphan file is unreachable.",
+  "groundTruth": "The feature file is imported; the nested orphan is not.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/features/dead/orphan.ts",
+      "symbol": null,
+      "reason": "No file imports src/features/dead/orphan.ts and it is not an entry point."
+    }
+  ]
+}

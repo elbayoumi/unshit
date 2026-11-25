@@ -1,0 +1,5 @@
+{
+  "description": "A package.json bin target is an entry point even outside bin/.",
+  "groundTruth": "The bin target points at tools/cli.ts, so it is loaded by the CLI and its exports are public.",
+  "expected": []
+}

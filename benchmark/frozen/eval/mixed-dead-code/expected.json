@@ -1,0 +1,24 @@
+{
+  "description": "One project exercises unused value, unused type and unused file findings together.",
+  "groundTruth": "`dead` and `DeadType` are unreferenced exports of an otherwise imported module; `src/orphan.ts` has no incoming import.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/lib.ts",
+      "symbol": "dead",
+      "reason": "`dead` is exported but no importer references it."
+    },
+    {
+      "ruleId": "ts/unused-type-export",
+      "file": "src/lib.ts",
+      "symbol": "DeadType",
+      "reason": "`DeadType` is exported but no importer references it."
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/orphan.ts",
+      "symbol": null,
+      "reason": "No file imports src/orphan.ts and it is not an entry point."
+    }
+  ]
+}

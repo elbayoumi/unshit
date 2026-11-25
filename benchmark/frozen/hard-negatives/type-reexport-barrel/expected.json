@@ -1,0 +1,5 @@
+{
+  "description": "A type re-exported through a barrel is used when the barrel consumer imports it.",
+  "groundTruth": "src/index.ts imports `Used` through the barrel; the barrel also re-exports a runtime value so types.ts stays reachable.",
+  "expected": []
+}

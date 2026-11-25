@@ -1,0 +1,12 @@
+{
+  "description": "A default export is not imported while a named export is.",
+  "groundTruth": "The module is imported for `helper`, leaving the default export dead.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/widget.ts",
+      "symbol": "default",
+      "reason": "The default export is never imported; only `helper` is imported."
+    }
+  ]
+}

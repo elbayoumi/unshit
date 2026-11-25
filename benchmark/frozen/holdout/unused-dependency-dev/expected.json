@@ -1,0 +1,12 @@
+{
+  "description": "An unused devDependency is flagged while tooling is spared.",
+  "groundTruth": "`lodash` is used; `tsx` is tooling and spared; `unused-dev-dep` is not used.",
+  "expected": [
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "symbol": "unused-dev-dep",
+      "reason": "`unused-dev-dep` is declared in devDependencies but nothing imports, requires or references it."
+    }
+  ]
+}

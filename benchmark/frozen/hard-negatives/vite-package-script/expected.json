@@ -1,0 +1,5 @@
+{
+  "description": "A package script that runs a TypeScript file must make it an entry point.",
+  "groundTruth": "`tsx src/server.ts` marks src/server.ts as an entry; vite is referenced by the dev script and is tooling.",
+  "expected": []
+}

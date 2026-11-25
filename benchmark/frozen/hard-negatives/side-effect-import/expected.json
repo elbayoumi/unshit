@@ -1,0 +1,5 @@
+{
+  "description": "A side-effect import keeps a file alive even though it imports no bindings.",
+  "groundTruth": "src/index.ts imports ./polyfills for its side effects; polyfills.ts has no exports, so there is no dead export to report.",
+  "expected": []
+}

@@ -1,0 +1,5 @@
+{
+  "description": "An imported type is used and must not be reported.",
+  "groundTruth": "src/index.ts imports `Used` as a type and `value` as a runtime binding; the runtime import also keeps types.ts reachable.",
+  "expected": []
+}

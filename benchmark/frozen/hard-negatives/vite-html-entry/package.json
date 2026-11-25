@@ -1,0 +1,9 @@
+{
+  "name": "hn-vite-html",
+  "scripts": {
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

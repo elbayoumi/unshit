@@ -1,0 +1,12 @@
+{
+  "description": "An exported interface is never imported.",
+  "groundTruth": "`Used` is imported as a type; `Dead` is not.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-type-export",
+      "file": "src/types.ts",
+      "symbol": "Dead",
+      "reason": "`Dead` is exported but no import references it."
+    }
+  ]
+}

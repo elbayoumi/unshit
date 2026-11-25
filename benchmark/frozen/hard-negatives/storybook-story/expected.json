@@ -1,0 +1,5 @@
+{
+  "description": "Storybook story files are entry points and their imports are used.",
+  "groundTruth": "src/Button.stories.tsx matches the stories convention, so it is an entry; it imports Button and @storybook/react.",
+  "expected": []
+}

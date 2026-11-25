@@ -1,0 +1,18 @@
+{
+  "description": "A runtime dependency and its @types package are both unused.",
+  "groundTruth": "`lodash` is imported, so `@types/lodash` stays; `react-dom` is unused, so `@types/react-dom` is dead with it; `@types/node` is always spared.",
+  "expected": [
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "symbol": "react-dom",
+      "reason": "`react-dom` is declared but never imported."
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "symbol": "@types/react-dom",
+      "reason": "`@types/react-dom` is dead because its runtime package `react-dom` is declared and unused."
+    }
+  ]
+}

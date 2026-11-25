@@ -1,0 +1,6 @@
+{
+  "name": "holdout-unlisted-scoped",
+  "dependencies": {
+    "@scope/known": "1.0.0"
+  }
+}

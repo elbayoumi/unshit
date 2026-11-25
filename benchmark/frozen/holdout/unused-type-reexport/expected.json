@@ -1,0 +1,12 @@
+{
+  "description": "A type exported through a barrel is not imported, while another type is.",
+  "groundTruth": "`Used` is imported through the barrel; `Dead` is not; the barrel also re-exports a runtime value so the types module stays reachable.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-type-export",
+      "file": "src/types.ts",
+      "symbol": "Dead",
+      "reason": "`Dead` is exported by types.ts but never imported directly or through the barrel."
+    }
+  ]
+}

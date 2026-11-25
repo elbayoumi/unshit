@@ -1,0 +1,10 @@
+{
+  "name": "holdout-unused-dependency-dev",
+  "dependencies": {
+    "lodash": "4.0.0"
+  },
+  "devDependencies": {
+    "unused-dev-dep": "1.0.0",
+    "tsx": "4.0.0"
+  }
+}

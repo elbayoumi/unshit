@@ -1,0 +1,12 @@
+{
+  "description": "A scoped package is undeclared.",
+  "groundTruth": "`@scope/known` is declared; `@scope/unknown` is not.",
+  "expected": [
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "file": "src/index.ts",
+      "symbol": "@scope/unknown",
+      "reason": "`@scope/unknown` is imported but absent from package.json."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "name": "@m/a",
+  "main": "./src/index.ts"
+}

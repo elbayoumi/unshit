@@ -1,0 +1,12 @@
+{
+  "description": "An export is referenced only inside its own module.",
+  "groundTruth": "`run` is imported; `localOnly` is called only by `run` in the same file, so the export keyword is unnecessary.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/compute.ts",
+      "symbol": "localOnly",
+      "reason": "`localOnly` is used only inside compute.ts; no other file imports it, so the export is unnecessary."
+    }
+  ]
+}

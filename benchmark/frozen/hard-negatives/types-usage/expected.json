@@ -1,0 +1,5 @@
+{
+  "description": "@types packages are not reported when their runtime package is used.",
+  "groundTruth": "express is imported and @types/node is always spared; @types/express is a type-only companion of the used express package.",
+  "expected": []
+}

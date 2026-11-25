@@ -1,0 +1,6 @@
+{
+  "name": "hn-pkg-bin",
+  "bin": {
+    "mytool": "./tools/cli.ts"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "description": "An orphan file also contains a dead export.",
+  "groundTruth": "No file imports the orphan, so both the file and its export are dead.",
+  "expected": [
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/orphan.ts",
+      "symbol": null,
+      "reason": "No file imports src/orphan.ts and it is not an entry point."
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/orphan.ts",
+      "symbol": "orphanThing",
+      "reason": "`orphanThing` is exported from an unimported file, so no other file references it."
+    }
+  ]
+}
