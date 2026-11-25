@@ -18,7 +18,7 @@ interface UnusedDependencySkip {
   reason: string;
 }
 
-export interface UnusedDependencyPlan {
+interface UnusedDependencyPlan {
   patches: Patch[];
   skipped: UnusedDependencySkip[];
 }
