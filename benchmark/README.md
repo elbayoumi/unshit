@@ -28,10 +28,10 @@ Unused exports use import-binding analysis (resolved specifiers, default/named, 
 unshit now finds every export knip finds on all five corpora (nothing is knip-only). Its extra findings are listed
 in the table below.
 
-Duplication (unshit vs jscpd): self 4 vs 6, auctions-frontend 7 vs 2, bidshop 7 vs 2, rveta 2 vs 1, backend 0 vs 0.
-unshit now reports same-file repeats too (4 of the 7 on each frontend are same-file; at least one, a ~125-token JSX
-block in `App.tsx`, looks like boilerplate rather than a real clone). jscpd still finds 2 more clones in unshit itself.
-The counts are not a one-to-one match, so check overlap before reading them as recall or precision.
+Duplication (unshit vs jscpd): self 4 vs 6, auctions-frontend 6 vs 2, bidshop 6 vs 2, rveta 2 vs 1, backend 0 vs 0.
+unshit also reports same-file repeats (3 of the 6 on each frontend); same-file regions need at least 6 branch tokens so
+repeated JSX markup is not flagged. jscpd still finds 2 more clones in unshit itself. The counts are not a one-to-one
+match, so check overlap before reading them as recall or precision.
 
 ## Hand-checked disagreements
 
