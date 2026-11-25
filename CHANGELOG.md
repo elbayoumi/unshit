@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [Unreleased]
 
 ### Added
+- `ts/unused-file`: new structural dead-code detector (severity `warn`, confidence ~0.8) flagging source files (`.ts/.tsx/.js/.jsx/.mjs/.cjs`) that no other scanned file imports (static, dynamic, `require`, export-from or side-effect imports) and that are not entry points (package.json targets, root/framework routing files, config files, test/spec/storybook files).
 - `code/duplicate-block` now also reports a logic block repeated within a single file (confidence 0.7, only regions of at least 1.5x `cloneMinTokens` with at least 6 branch tokens, so repeated JSX markup is ignored; one finding per repeated region).
 - `benchmark/run.mjs` and `benchmark/README.md`: reproducible comparison of unused-export and duplicate-block findings against knip and jscpd, with hand-checked disagreements.
 
