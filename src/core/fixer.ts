@@ -2,6 +2,8 @@ import { execFile } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 import type { Finding, Patch } from '../contracts.js';
+import { formatUnifiedDiff, type FileDiff } from './fixers/diff.js';
+import { isUnusedExportRule, planUnusedExportFixes, type UnusedExportSkip } from './fixers/unused-export.js';
 import type { ScanResult } from './scanner.js';
 
 const execFileAsync = promisify(execFile);
@@ -18,6 +20,10 @@ export interface FixSummary {
   aiAttempted: string[];
   aiReverted: string[];
   dryRun: boolean;
+  /** Unified diff of all deterministic patches; always computed, printed by the CLI on dry runs. */
+  diff: string;
+  /** Fixes that were deliberately not made, with the reason for each. */
+  skipped: UnusedExportSkip[];
 }
 
 function applyEdits(content: string, patches: Patch[]): string {
@@ -78,7 +84,25 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
   const fileMap = new Map(scan.files.map((f) => [f.relPath, f]));
 
   const deterministicPatches: Patch[] = [];
+  const skipped: UnusedExportSkip[] = [];
+
+  const unusedByFile = new Map<string, Finding[]>();
   for (const finding of scan.findings) {
+    if (!isUnusedExportRule(finding.ruleId)) continue;
+    const list = unusedByFile.get(finding.file) ?? [];
+    list.push(finding);
+    unusedByFile.set(finding.file, list);
+  }
+  for (const [relPath, findings] of unusedByFile) {
+    const file = fileMap.get(relPath);
+    if (!file) continue;
+    const plan = planUnusedExportFixes(file, findings);
+    deterministicPatches.push(...plan.patches);
+    skipped.push(...plan.skipped);
+  }
+
+  for (const finding of scan.findings) {
+    if (isUnusedExportRule(finding.ruleId)) continue;
     const detector = detectorMap.get(finding.ruleId);
     const file = fileMap.get(finding.file);
     if (!detector?.fix || !file) continue;
@@ -88,15 +112,26 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
     }
   }
 
+  const patchesByFile = new Map<string, Patch[]>();
+  for (const p of deterministicPatches) {
+    const list = patchesByFile.get(p.file) ?? [];
+    list.push(p);
+    patchesByFile.set(p.file, list);
+  }
+  const diffInputs: FileDiff[] = [];
+  for (const [relPath, patches] of patchesByFile) {
+    const file = fileMap.get(relPath);
+    if (!file) continue;
+    const updated = applyEdits(file.content, patches);
+    if (updated !== file.content) {
+      diffInputs.push({ file: relPath, before: file.content, after: updated });
+    }
+  }
+  const diff = formatUnifiedDiff(diffInputs);
+
   let appliedCount = 0;
   if (opts.apply && deterministicPatches.length > 0) {
-    const byFile = new Map<string, Patch[]>();
-    for (const p of deterministicPatches) {
-      const list = byFile.get(p.file) ?? [];
-      list.push(p);
-      byFile.set(p.file, list);
-    }
-    for (const [relPath, patches] of byFile) {
+    for (const [relPath, patches] of patchesByFile) {
       const file = fileMap.get(relPath);
       if (!file) continue;
       const updated = applyEdits(file.content, patches);
@@ -144,5 +179,7 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
     aiAttempted,
     aiReverted,
     dryRun: !opts.apply,
+    diff,
+    skipped,
   };
 }

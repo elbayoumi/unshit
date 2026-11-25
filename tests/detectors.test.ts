@@ -93,11 +93,14 @@ test('dry-run does not mutate, and --apply fixes catch(err: any) deterministical
       const dry = await runFix(scan, { apply: false, ai: false });
       assert.equal(dry.dryRun, true);
       assert.equal(dry.appliedCount, 0);
-      assert.equal(dry.deterministicPatches.length, 1);
+      assert.deepEqual(
+        dry.deterministicPatches.map((p) => p.ruleId).sort(),
+        ['ts/no-explicit-any', 'ts/unused-export'],
+      );
 
       const applied = await runFix(scan, { apply: true, ai: false });
       assert.equal(applied.dryRun, false);
-      assert.equal(applied.appliedCount, 1);
+      assert.equal(applied.appliedCount, 2);
 
       const updated = await readFile(join(dir, 'catch.ts'), 'utf8');
       assert.match(updated, /catch \(err: unknown\)/);
@@ -113,9 +116,9 @@ test('slop/redundant-catch unwraps try/catch that only rethrows when no finally 
     async (dir) => {
       const scan = await runScan(dir, { ...DEFAULT_CONFIG });
       const applied = await runFix(scan, { apply: true, ai: false });
-      assert.equal(applied.appliedCount, 1);
+      assert.equal(applied.appliedCount, 2); // redundant catch + unused export
       const updated = await readFile(join(dir, 'rethrow.ts'), 'utf8');
-      assert.equal(updated.trim(), 'export function unwrap() { return 42; }');
+      assert.equal(updated.trim(), 'function unwrap() { return 42; }');
     },
   );
 });
