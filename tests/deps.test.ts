@@ -1,0 +1,155 @@
+import assert from 'node:assert/strict';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
+import test from 'node:test';
+import { DEFAULT_CONFIG } from '../src/config.js';
+import type { Finding } from '../src/contracts.js';
+import { runScan } from '../src/core/scanner.js';
+
+async function withTempProject(files: Record<string, string>, fn: (dir: string) => Promise<void>): Promise<void> {
+  const dir = await mkdtemp(join(tmpdir(), 'unshit-deps-test-'));
+  try {
+    for (const [name, content] of Object.entries(files)) {
+      await mkdir(dirname(join(dir, name)), { recursive: true });
+      await writeFile(join(dir, name), content, 'utf8');
+    }
+    await fn(dir);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+}
+
+function findingsFor(scan: Awaited<ReturnType<typeof runScan>>, ruleId: string): Finding[] {
+  return scan.findings.filter((f) => f.ruleId === ruleId);
+}
+
+test('deps/unused-dependency flags declared deps that are never used, sparing tooling and scripts', async () => {
+  const packageJson = JSON.stringify({
+    name: 'demo',
+    scripts: { start: 'mytool', lint: 'xo' },
+    dependencies: {
+      'unused-pkg': '^1.0.0',
+      'mytool': '^1.0.0',
+      lodash: '^4.0.0',
+    },
+    devDependencies: {
+      '@types/node': '^22.0.0',
+      'unused-dev': '^1.0.0',
+      'xo': '^1.0.0',
+      'eslint-plugin-foo': '^1.0.0',
+    },
+  }, null, 2);
+
+  await withTempProject({
+    'package.json': packageJson,
+    'src/index.ts': [
+      "import fs from 'node:fs';",
+      "import { some } from 'lodash';",
+      'export const x = some + String(fs);',
+    ].join('\n'),
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    const findings = findingsFor(scan, 'deps/unused-dependency');
+    const names = new Set(findings.map((f) => f.evidence));
+
+    assert.ok(names.has('unused-pkg'));
+    assert.ok(names.has('unused-dev'));
+    assert.ok(!names.has('lodash'), 'lodash is imported by src/index.ts');
+    assert.ok(!names.has('@types/node'), 'node is used via the node:fs builtin import');
+    assert.ok(!names.has('mytool'), 'mytool is referenced in scripts');
+    assert.ok(!names.has('xo'), 'xo is referenced in scripts');
+    assert.ok(!names.has('eslint-plugin-foo'), 'eslint* tooling is ignored');
+    assert.ok(findings.every((f) => f.file === 'package.json'));
+
+    const lineOf = (key: string): number =>
+      packageJson.split('\n').findIndex((line) => line.trimStart().startsWith(`"${key}":`)) + 1;
+    for (const name of names) {
+      const finding = findings.find((f) => f.evidence === name);
+      assert.equal(finding?.span.line, lineOf(name), `span line of key "${name}"`);
+    }
+  });
+});
+
+test('deps/unlisted-dependency flags bare imports missing from package.json', async () => {
+  const packageJson = JSON.stringify({
+    name: 'demo',
+    dependencies: { 'listed-pkg': '^1.0.0' },
+    peerDependencies: { 'peer-pkg': '^3.0.0' },
+    optionalDependencies: { 'opt-pkg': '^1.0.0' },
+    devDependencies: { '@scope/pkg': '^2.0.0' },
+  }, null, 2);
+
+  const indexTs = [
+    "import { a } from 'listed-pkg';",
+    "import { b } from 'peer-pkg';",
+    "import { c } from 'opt-pkg';",
+    "import { d } from '@scope/pkg/sub';",
+    "import { e } from 'unlisted-pkg';",
+    "import fs from 'node:fs';",
+    "import relative from './relative';",
+    "const dyn = await import('also-unlisted');",
+    "const r = require('third-unlisted');",
+  ].join('\n');
+
+  await withTempProject({
+    'package.json': packageJson,
+    'src/index.ts': indexTs,
+    'src/relative.ts': 'export const rel = 1;\n',
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    const findings = findingsFor(scan, 'deps/unlisted-dependency');
+    const specs = new Set(findings.map((f) => f.evidence.replace(/^import '(.*)'$/, '$1')));
+
+    assert.equal(findings.length, 3);
+    assert.ok(specs.has('unlisted-pkg'));
+    assert.ok(specs.has('also-unlisted'));
+    assert.ok(specs.has('third-unlisted'));
+    assert.ok(!specs.has('listed-pkg'));
+    assert.ok(!specs.has('peer-pkg'));
+    assert.ok(!specs.has('opt-pkg'));
+    assert.ok(!specs.has('@scope/pkg/sub'), 'scoped subpath of a declared package is fine');
+    assert.ok(!specs.has('node:fs'), 'builtin specs are not packages');
+    assert.ok(!specs.has('relative'), 'relative specs are not packages');
+    assert.ok(findings.every((f) => f.file === 'src/index.ts'));
+
+    const unlistedLine = indexTs.split('\n').findIndex((l) => l.includes("from 'unlisted-pkg'")) + 1;
+    const finding = findings.find((f) => f.evidence === "import 'unlisted-pkg'");
+    assert.equal(finding?.span.line, unlistedLine);
+  });
+});
+
+test('deps/unlisted-dependency stays silent without a package.json at the scan root', async () => {
+  await withTempProject({
+    'src/index.ts': "import { anything } from 'anything-unlisted';\n",
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    assert.equal(findingsFor(scan, 'deps/unlisted-dependency').length, 0);
+  });
+});
+
+test('deps/unlisted-dependency ignores tsconfig path aliases and the project own name', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'demo', dependencies: { 'demo-dep': '^1.0.0' } }, null, 2),
+    'tsconfig.json': JSON.stringify({ compilerOptions: { paths: { '@/*': ['src/*'] } } }, null, 2),
+    'src/index.ts': [
+      "import { a } from '@/thing';",
+      "import { b } from 'demo';",
+      "import { c } from 'demo-dep';",
+    ].join('\n'),
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    const findings = findingsFor(scan, 'deps/unlisted-dependency');
+    assert.equal(findings.length, 0);
+  });
+});
+
+test('deps/unlisted-dependency ignores bare Node builtins like fs and path/posix', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'demo', dependencies: {} }),
+    'src/a.ts': "import fs from 'fs';\nimport { posix } from 'path/posix';\nexport const x = [fs, posix];\n",
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    assert.equal(findingsFor(scan, 'deps/unlisted-dependency').length, 0);
+  });
+});

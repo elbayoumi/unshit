@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [Unreleased]
 
 ### Added
+- `deps/unused-dependency` (dead-code, warn): flags packages in root `package.json` `dependencies`/`devDependencies` that nothing imports/requires and no script or root config-file name references, sparing common tooling (`typescript`, `vitest`, `jest`, `tsx`, `ts-node`, `prettier`, `eslint*`, …). Finding is on the `package.json` line of the dep key.
+- `deps/unlisted-dependency` (dead-code, warn): flags bare import specifiers (non-relative, non-`node:` builtin, non-tsconfig alias) whose package name is not declared in root `package.json` `dependencies`/`devDependencies`/`peerDependencies`/`optionalDependencies`; silent when no `package.json` exists at the scan root.
 - `code/duplicate-block` now also reports a logic block repeated within a single file (confidence 0.7, only regions of at least 1.5x `cloneMinTokens` with at least 6 branch tokens, so repeated JSX markup is ignored; one finding per repeated region).
 - `benchmark/run.mjs` and `benchmark/README.md`: reproducible comparison of unused-export and duplicate-block findings against knip and jscpd, with hand-checked disagreements.
 
