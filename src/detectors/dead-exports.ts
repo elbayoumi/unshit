@@ -1,7 +1,7 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, readdirSync, type Dirent } from 'node:fs';
+import { join, relative } from 'node:path';
 import ts from 'typescript';
-import type { Detector, DetectorContext, Finding } from '../contracts.js';
+import type { Detector, DetectorContext, FileEntry, Finding } from '../contracts.js';
 import { createTsSpecResolver } from '../core/import-graph.js';
 
 const FRAMEWORK_EXPORTS = new Set([
@@ -15,37 +15,191 @@ function isPluginOrIntegrationFile(relPath: string): boolean {
 }
 
 /**
- * Source files that package.json publishes (exports/main/module/types/bin).
- * Build outputs (dist/…) are mapped back to their source counterpart.
+ * Source files that package.json publishes (exports/main/module/types/typings/bin),
+ * plus scripts that run files. Build outputs (dist/…) are mapped back to their
+ * source counterpart.
  */
-function publicEntryFiles(rootDir: string, files: Set<string>): Set<string> {
-  const entries = new Set<string>();
-  let pkg: unknown;
+const PKG_TARGET_KEYS = ['exports', 'main', 'module', 'types', 'typings', 'bin', 'workspaces'] as const;
+const PKG_EXTS = ['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs'];
+
+function readManifest(rootDir: string, rel: string): Record<string, unknown> | null {
   try {
-    pkg = JSON.parse(readFileSync(join(rootDir, 'package.json'), 'utf8'));
+    const pkg = JSON.parse(readFileSync(join(rootDir, rel), 'utf8')) as Record<string, unknown>;
+    return pkg && typeof pkg === 'object' && !Array.isArray(pkg) ? pkg : null;
   } catch {
-    return entries;
+    return null;
   }
+}
+
+function posixDirname(relPath: string): string {
+  const idx = relPath.lastIndexOf('/');
+  return idx === -1 ? '' : relPath.slice(0, idx);
+}
+
+function addPkgEntryTargets(
+  entries: Set<string>,
+  files: Set<string>,
+  dir: string,
+  pkg: Record<string, unknown>,
+): void {
   const targets: string[] = [];
   const walk = (value: unknown): void => {
     if (typeof value === 'string') targets.push(value);
     else if (Array.isArray(value)) value.forEach(walk);
     else if (value && typeof value === 'object') Object.values(value).forEach(walk);
   };
-  const record = pkg as Record<string, unknown>;
-  for (const key of ['exports', 'main', 'module', 'types', 'typings']) walk(record[key]);
+  for (const key of PKG_TARGET_KEYS) walk(pkg[key]);
 
   for (const target of targets) {
     const clean = target.replace(/^\.\//, '').replace(/\.(d\.)?[cm]?[jt]sx?$/, '');
     const variants = [clean, clean.replace(/^(dist|build|lib|out)\//, '')];
     for (const variant of variants) {
-      for (const ext of ['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs']) {
-        const candidate = variant + ext;
+      const base = dir ? `${dir}/${variant}` : variant;
+      for (const ext of PKG_EXTS) {
+        const candidate = base + ext;
         if (files.has(candidate)) entries.add(candidate);
       }
     }
   }
+}
+
+/**
+ * Files a package.json script executes (`node x.js`, `tsx x.ts`, `ts-node`,
+ * `vite-node`), resolved relative to the manifest's directory.
+ */
+function addScriptEntryTargets(
+  entries: Set<string>,
+  files: Set<string>,
+  dir: string,
+  pkg: Record<string, unknown>,
+): void {
+  const scripts = pkg.scripts;
+  if (!scripts || typeof scripts !== 'object') return;
+  for (const value of Object.values(scripts)) {
+    if (typeof value !== 'string') continue;
+    for (const m of value.matchAll(SCRIPT_RUNNER_RE)) {
+      const raw = m[1] ?? '';
+      if (!raw || raw.startsWith('-')) continue; // runner flags like `node --inspect`
+      const target = resolveSpecToFile(dir, raw, files);
+      if (target) entries.add(target);
+    }
+  }
+}
+
+/**
+ * Source files referenced by package.json manifests (the root one or workspace
+ * packages): exports/main/module/types/typings/bin plus script runners.
+ */
+function manifestEntryFiles(ctx: DetectorContext, files: Set<string>): Set<string> {
+  const entries = new Set<string>();
+  const rels = new Set<string>(ctx.manifests ?? []);
+  rels.add('package.json');
+  for (const rel of rels) {
+    const pkg = readManifest(ctx.rootDir, rel);
+    if (!pkg) continue;
+    const dir = posixDirname(rel);
+    addPkgEntryTargets(entries, files, dir, pkg);
+    addScriptEntryTargets(entries, files, dir, pkg);
+  }
   return entries;
+}
+
+const SCRIPT_RUNNER_RE = /\b(?:node|tsx|ts-node|vite-node)\b[ \t]+([^\s&|;<>"']+)/g;
+
+/** Resolves a module spec (relative or root-absolute) against the scanned file set. */
+function resolveSpecToFile(dirRel: string, spec: string, fileSet: Set<string>): string | null {
+  const clean = (spec.split('?')[0] ?? spec).replace(/^<rootDir>\/?/, '');
+  if (!clean) return null;
+  const base = posixJoin(dirRel ? `${dirRel}/x` : 'x', clean);
+  for (const suffix of ['', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']) {
+    const candidate = base + suffix;
+    if (fileSet.has(candidate)) return candidate;
+  }
+  return null;
+}
+
+function safeReaddir(dir: string): Dirent[] | null {
+  try {
+    return readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return null;
+  }
+}
+
+/** `<script type="module" src>` targets in any .html file on disk, read-only. */
+function htmlScriptEntryFiles(ctx: DetectorContext, files: Set<string>): Set<string> {
+  const targets = new Set<string>();
+  const process = (relPath: string, content: string): void => {
+    const re = /<script\b([^>]*)>/gi;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(content)) !== null) {
+      const attrs = m[1] ?? '';
+      if (!/\btype\s*=\s*(?:"module"|'module'|module)\b/i.test(attrs)) continue;
+      const srcM = /\bsrc\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s>]+))/i.exec(attrs);
+      const spec = srcM?.[1] ?? srcM?.[2] ?? srcM?.[3];
+      if (!spec) continue;
+      const target = resolveSpecToFile(posixDirname(relPath), spec, files);
+      if (target) targets.add(target);
+    }
+  };
+  const walk = (dir: string): void => {
+    const entries = safeReaddir(dir);
+    if (!entries) return;
+    for (const entry of entries) {
+      if (entry.name === 'node_modules' || entry.name === '.git') continue;
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (entry.isFile() && /\.html$/i.test(entry.name)) {
+        const rel = relative(ctx.rootDir, full).replaceAll('\\', '/');
+        process(rel, readFileSync(full, 'utf8'));
+      }
+    }
+  };
+  walk(ctx.rootDir);
+  return targets;
+}
+
+const CONFIG_FILE_RE = /(^|\/)(vite|vitest|jest|webpack|rollup|next|nuxt|astro|svelte|tailwind|postcss|eslint|playwright|cypress|drizzle|prisma)\.config\.[cm]?[jt]s$/i;
+
+const CONFIG_SETUP_RE = /\b(setupFiles|globalSetup|globalSetupFile)\s*:\s*(?:\[([^\]]*)\]|"([^"]+)"|'([^']+)')/g;
+const CONFIG_SETUP_QUOTED_RE = /["']([^"']+)["']/g;
+
+/**
+ * Files referenced by `setupFiles`/`globalSetup` keys of tool configs,
+ * resolved relative to the config file's directory.
+ */
+function configSetupEntryFiles(files: FileEntry[], fileSet: Set<string>): Set<string> {
+  const entries = new Set<string>();
+  for (const file of files) {
+    if (!CONFIG_FILE_RE.test(file.relPath)) continue;
+    const dir = posixDirname(file.relPath);
+    for (const m of file.content.matchAll(CONFIG_SETUP_RE)) {
+      if (m[2] !== undefined) {
+        for (const qm of m[2].matchAll(CONFIG_SETUP_QUOTED_RE)) {
+          const target = resolveSpecToFile(dir, (qm[1] ?? '').replace(/^<rootDir>\/?/, ''), fileSet);
+          if (target) entries.add(target);
+        }
+      } else {
+        const target = resolveSpecToFile(dir, m[3] ?? m[4] ?? '', fileSet);
+        if (target) entries.add(target);
+      }
+    }
+  }
+  return entries;
+}
+
+/** Framework routing/app dirs whose files are loaded externally (Next, Nuxt, Remix, SvelteKit, Astro). */
+function isFrameworkEntryPath(relPath: string): boolean {
+  return /(^|\/)(pages|layouts|middleware|plugins|server)\//.test(relPath)
+    || /(^|\/)src\/routes\/(?:[^/]+\/)*\+[^/]*$/.test(relPath);
+}
+
+/** Test/Storybook conventions whose files are entry points. */
+function isTestConventionEntry(relPath: string): boolean {
+  return /(^|\/)__mocks__\//.test(relPath)
+    || /(^|\/)(e2e|cypress|playwright)\//.test(relPath)
+    || /(^|\/)\.storybook\//.test(relPath)
+    || /[^/]*\.stories?\.[cm]?[jt]sx?$/.test(relPath);
 }
 
 const IDENT_RE = /\b[A-Za-z_$][\w$]*\b/g;
@@ -70,7 +224,7 @@ function isConventionalDefaultFile(relPath: string): boolean {
 function isRootEntry(relPath: string): boolean {
   return /^(src\/)?(index|main|cli|app|server|bin)\.[cm]?[jt]sx?$/i.test(relPath)
     || /^(docs|benchmark|benchmarks|examples?|fixtures|__fixtures__)\//.test(relPath)
-    || /(^|\/)(vite|vitest|jest|webpack|rollup|next|nuxt|astro|svelte|tailwind|postcss|eslint|playwright|cypress|drizzle|prisma)\.config\.[cm]?[jt]s$/i.test(relPath)
+    || CONFIG_FILE_RE.test(relPath)
     || /\.(test|spec|d)\.[cm]?[jt]sx?$/.test(relPath)
     || /(^|\/)(bin|scripts)\//.test(relPath);
 }
@@ -108,7 +262,9 @@ function analyze(ctx: DetectorContext): Analysis {
 
   const resolve = createTsSpecResolver(ctx);
   const fileSet = new Set(ctx.files.map((f) => f.relPath));
-  const publicEntries = publicEntryFiles(ctx.rootDir, fileSet);
+  const publicEntries = manifestEntryFiles(ctx, fileSet);
+  const setupEntries = configSetupEntryFiles(ctx.files, fileSet);
+  const htmlEntries = htmlScriptEntryFiles(ctx, fileSet);
   const decls: ExportDecl[] = [];
   const consumed = new Map<string, Set<string>>();
   const fuzzy = new Set<string>();
@@ -124,7 +280,15 @@ function analyze(ctx: DetectorContext): Analysis {
   };
 
   for (const file of ctx.files) {
-    if (publicEntries.has(file.relPath) || isRootEntry(file.relPath) || isPluginOrIntegrationFile(file.relPath)) consume(file.relPath, STAR);
+    if (publicEntries.has(file.relPath)
+      || isRootEntry(file.relPath)
+      || isPluginOrIntegrationFile(file.relPath)
+      || isFrameworkEntryPath(file.relPath)
+      || isTestConventionEntry(file.relPath)
+      || setupEntries.has(file.relPath)
+      || htmlEntries.has(file.relPath)) {
+      consume(file.relPath, STAR);
+    }
 
     if (!file.sourceFile) {
       // Vue/Svelte/Astro script blocks are not parsed here: be conservative and treat every identifier as a use.
