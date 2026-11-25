@@ -19,14 +19,17 @@ Unused exports use import-binding analysis (resolved specifiers, default/named, 
 
 | Corpus | unshit exports | knip exports | both | unshit ms |
 |---|---|---|---|---|
-| unshit (self) | 12 | 20 | 12 | 220 |
-| auctions-platform-frontend | 3 | 1 | 0 | 193 |
-| bidshop-frontend | 2 | 1 | 0 | 190 |
-| rveta-site | 2 | 2 | 1 | 196 |
-| auctions-platform-backend | 0 | 0 | 0 | 130 |
+| unshit (self) | 32 | 20 | 20 | 556 |
+| auctions-platform-frontend | 1 | 1 | 1 | 232 |
+| bidshop-frontend | 1 | 1 | 1 | 218 |
+| rveta-site | 3 | 2 | 2 | 216 |
+| auctions-platform-backend | 0 | 0 | 0 | 224 |
 
-Duplication: jscpd found 1-2 clones per frontend corpus; unshit found 0 (its default threshold is stricter and it
-only compares across files).
+unshit now finds every export knip finds on all five corpora (nothing is knip-only). Its extra findings are listed
+in the table below.
+
+Duplication (jscpd vs unshit): self 6 vs 0, auctions-frontend 2 vs 0, bidshop 2 vs 0, rveta 1 vs 0, backend 0 vs 0.
+jscpd still finds clones that unshit does not; clone recall is the open gap in this benchmark.
 
 ## Hand-checked disagreements
 
@@ -38,12 +41,12 @@ only compares across files).
 | `Tokens` (packages/tokens/index.ts) | unshit | Correct within the repo: never imported. knip treats workspace package entries as public API. |
 | `i18n` default export | both (now) | Correct: module is imported only for side effects. Was an unshit miss before binding analysis. |
 | `inferShape`, `BASELINE_FILENAME` (unshit self) | both (now) | Correct: only the default / other names were imported. Were unshit misses before. |
-| `ActiveTab`, `NotificationPriority`, 8 types in unshit itself | knip | Types exported but used only inside their own file. unshit skips these on purpose (dropping `export` can break declaration emit). Defensible either way; this is the remaining gap. |
+| 12 exported types in unshit itself (e.g. `FeedbackEntry`) | unshit only | Exported but used only inside their own file, so unshit suggests dropping `export`. Verified `FeedbackEntry` has no outside importer. knip does not report these in this setup. |
 
 ## Caveats, honestly
 
-- Small corpora; do not read a ranking into 5 repos. Hand-checked cases were all resolved in unshit's favour or tied,
-  except the locally-used-type policy above.
+- Small corpora; do not read a ranking into 5 repos. Hand-checked cases were all resolved in unshit's favour or tied.
+  Locally used types are reported (like knip's `types` mode); dropping `export` from one that appears in a public signature can break declaration emit, so review before applying.
 - knip understands plugins and framework entry points (tests, configs, Storybook, etc.) far more broadly. unshit
   covers `package.json` entries, root entry files, Next app-router conventions and `integrations/`, nothing more.
 - unshit falls back to name matching when a specifier is internal but unresolvable, which can hide a real dead export.

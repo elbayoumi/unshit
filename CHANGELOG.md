@@ -21,7 +21,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Changed
 - `code/duplicate-block`: duplicate-window signatures now start at every token position (was every third), so identical regions at different offsets in two files are no longer missed. On the auctions and bidshop frontends this goes from 0 to 3 cross-file clones, against 2 from jscpd. The logic-density floor stays at 3 to avoid JSX boilerplate noise.
+- `ts/unused-type-export` now also reports types that are exported but only used inside their own file (suggesting to drop `export`), matching knip. `*Props` types stay skipped.
 - `ts/unused-export` and `ts/unused-type-export` now use import-binding analysis instead of identifier-name counting: specifiers are resolved with the tsconfig-aware resolver, default and named imports are distinguished, `export *`/`export {…} from` chains, namespace member access, `import()`/`require` and `import.meta.glob` are followed, and side-effect imports consume nothing. Unused default exports are reported. Unresolvable internal specifiers fall back to name matching.
+- `ts/unused-export` / `ts/unused-type-export` now also treat more files as entry points, matching knip: HTML files with `<script type="module" src>` (their targets, read from disk), `package.json` `scripts` that run files (`node x.js`, `tsx x.ts`, `ts-node`, `vite-node`) and `bin` maps in root and workspace manifests, `*.stories.*`/`__mocks__`/`e2e`/`cypress`/`playwright` files, and framework routing dirs (Next `pages/`, Nuxt `pages/`/`layouts/`/`middleware/`/`plugins/`/`server/`, SvelteKit `src/routes/+*`, Remix `app/routes/`, Astro `pages/`).
 
 - README, ROADMAP and ARCHITECTURE corrected to match the code: unproven benchmarks are labelled targets, unimplemented items are marked planned, and the rule/layout/command lists are current.
 
