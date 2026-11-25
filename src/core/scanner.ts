@@ -10,12 +10,20 @@ export interface ScanResult {
   detectors: Detector[];
 }
 
-function isIgnoredByComment(file: FileEntry, finding: Finding): boolean {
+/**
+ * Checks whether `finding` is waived by an `unshit-ignore:` comment on its line or the line above.
+ * Supports comma-separated rule IDs and requires exact rule-ID token match.
+ */
+export function isWaived(lines: string[], finding: Finding): boolean {
   const lineIdx = finding.span.line - 1;
-  const current = file.lines[lineIdx] ?? '';
-  const prev = lineIdx > 0 ? (file.lines[lineIdx - 1] ?? '') : '';
-  const re = new RegExp(`unshit-ignore:\\s*${finding.ruleId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
-  return re.test(current) || re.test(prev);
+  const candidates = [lines[lineIdx] ?? '', lineIdx > 0 ? (lines[lineIdx - 1] ?? '') : ''];
+  for (const text of candidates) {
+    const match = /unshit-ignore:\s*([^\n—*]+)/.exec(text);
+    if (!match) continue;
+    const rawList = (match[1] ?? '').split(/[\s,]+/).filter(Boolean);
+    if (rawList.includes(finding.ruleId)) return true;
+  }
+  return false;
 }
 
 export function findingFingerprint(f: Finding): string {
@@ -46,7 +54,7 @@ export async function runScan(
   const findings: Finding[] = [];
   for (const f of raw) {
     const file = fileMap.get(f.file);
-    if (file && isIgnoredByComment(file, f)) continue;
+    if (file && isWaived(file.lines, f)) continue;
     const key = `${f.ruleId}|${f.file}|${f.span.line}|${f.span.column}`;
     if (seen.has(key)) continue;
     seen.add(key);

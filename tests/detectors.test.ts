@@ -372,3 +372,86 @@ test('css/no-important catches spaced/uppercase !important and css/duplicate-sel
     },
   );
 });
+
+test('css waivers support comma lists, exact rule IDs, string masking, and [hidden]/@media print exemptions', async () => {
+  await withTempProject(
+    {
+      'waive.css': `
+.a { content: "!important"; }
+.sr-only { position: absolute !important; }
+[hidden] { display: none !important; }
+@media print { .no-print { display: none !important; } }
+/* unshit-ignore: css/no-important, css/duplicate-selector — intentional */
+.waived { color: red !important; }
+/* unshit-ignore: css/no-important-x */
+.not-waived { color: blue !important; }
+`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const imp = scan.findings.filter((f) => f.ruleId === 'css/no-important');
+      assert.equal(imp.length, 1);
+      assert.match(imp[0]?.evidence ?? '', /blue/);
+    },
+  );
+});
+
+test('dead-exports separates ts/unused-export from ts/unused-type-export and distinguishes local-only use', async () => {
+  await withTempProject(
+    {
+      'comp.tsx': `
+export interface CompProps { title: string }
+export type UnusedType = { a: number };
+export function Comp(p: CompProps) { return p.title; }
+export const deadConst = 42;
+`,
+      'index.ts': `import { Comp } from './comp.js'; export const ok = Comp({ title: 'hi' });\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const valDead = scan.findings.filter((f) => f.ruleId === 'ts/unused-export');
+      const typeDead = scan.findings.filter((f) => f.ruleId === 'ts/unused-type-export');
+      assert.equal(valDead.length, 1);
+      assert.match(valDead[0]?.evidence ?? '', /deadConst/);
+      assert.equal(typeDead.length, 2);
+      const propsHit = typeDead.find((f) => f.evidence.includes('CompProps'));
+      assert.match(propsHit?.message ?? '', /drop the `export` keyword/);
+    },
+  );
+});
+
+test('clones ignores pure JSX/multi-line import boilerplate and catches duplicated logic', async () => {
+  await withTempProject(
+    {
+      'a.tsx': `
+import {\n  alpha,\n  beta,\n  gamma,\n} from 'pkg';
+export function A(p: { x: string; y: string; z: string }) {
+  return <div className={p.x} title={p.y} aria-label={p.z} data-id="1" />;
+}
+export async function handleA(items: number[]) {
+  if (!items || items.length === 0) return [];
+  const filtered = items.filter((n) => n > 0 && n < 100);
+  if (filtered.length === 0) return [];
+  return filtered.map((n) => n * 2 + 1);
+}
+`,
+      'b.tsx': `
+import {\n  alpha,\n  beta,\n  gamma,\n} from 'pkg';
+export function B(p: { x: string; y: string; z: string }) {
+  return <div className={p.x} title={p.y} aria-label={p.z} data-id="1" />;
+}
+export async function handleB(values: number[]) {
+  if (!values || values.length === 0) return [];
+  const filtered = values.filter((v) => v > 0 && v < 100);
+  if (filtered.length === 0) return [];
+  return filtered.map((v) => v * 2 + 1);
+}
+`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG, cloneMinTokens: 25 });
+      const clones = scan.findings.filter((f) => f.ruleId === 'code/duplicate-block');
+      assert.equal(clones.length, 1);
+    },
+  );
+});

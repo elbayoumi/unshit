@@ -1,6 +1,6 @@
 {
   "name": "unshit",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Open-source codebase detox CLI: deterministic dead-code, clone, CSS, i18n, and AI-slop scanner + gated AI fixer.",
   "type": "module",
   "license": "MIT",

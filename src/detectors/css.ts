@@ -2,8 +2,60 @@ import type { Detector, DetectorContext, Finding } from '../contracts.js';
 
 const CSS_EXTS = new Set(['.css', '.scss']);
 
-function stripCssCommentsPreserveLines(content: string): string {
-  return content.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\r\n]/g, ' '));
+function stripCommentsAndStringsPreserveLines(content: string, isScss: boolean): string {
+  const out = content.split('');
+  const n = content.length;
+  let i = 0;
+
+  while (i < n) {
+    const c = content[i] ?? '';
+    const next = content[i + 1] ?? '';
+
+    if (c === '/' && next === '*') {
+      out[i++] = ' ';
+      out[i++] = ' ';
+      while (i < n) {
+        if (content[i] === '*' && content[i + 1] === '/') {
+          out[i++] = ' ';
+          out[i++] = ' ';
+          break;
+        }
+        if (content[i] !== '\n') out[i] = ' ';
+        i++;
+      }
+      continue;
+    }
+
+    if (isScss && c === '/' && next === '/') {
+      while (i < n && content[i] !== '\n') {
+        out[i++] = ' ';
+      }
+      continue;
+    }
+
+    if (c === '"' || c === "'") {
+      const q = c;
+      out[i++] = ' ';
+      while (i < n && content[i] !== '\n') {
+        if (content[i] === '\\' && i + 1 < n) {
+          out[i++] = ' ';
+          if (content[i] !== '\n') out[i] = ' ';
+          i++;
+          continue;
+        }
+        if (content[i] === q) {
+          out[i++] = ' ';
+          break;
+        }
+        out[i++] = ' ';
+      }
+      continue;
+    }
+
+    i++;
+  }
+
+  return out.join('');
 }
 
 function buildLineOffsets(content: string): number[] {
@@ -25,36 +77,92 @@ function lineAtOffset(offsets: number[], offset: number): number {
   return hi + 1;
 }
 
+function isExemptImportantContext(scopeStack: string[]): boolean {
+  for (const entry of scopeStack) {
+    if (/^@media\s+print\b/i.test(entry)) return true;
+    if (/^@media\b[^]*prefers-reduced-motion\s*:\s*reduce/i.test(entry)) return true;
+    if (entry.startsWith('RULE:')) {
+      const sel = entry.slice(5);
+      if (/\[hidden\]|\.sr-only\b|\.visually-hidden\b/i.test(sel)) return true;
+    }
+  }
+  return false;
+}
+
+function walkCssScopes(
+  clean: string,
+  onOpenRule: (selector: string, scopeStack: string[], selectorStartOffset: number) => void,
+  onBlockText?: (text: string, startOffset: number, scopeStack: string[]) => void,
+): void {
+  const scopeStack: string[] = [];
+  let headerStart = 0;
+
+  for (let i = 0; i < clean.length; i++) {
+    const ch = clean[i];
+    if (ch === '{') {
+      const rawSlice = clean.slice(headerStart, i);
+      const leadingWs = rawSlice.search(/\S/);
+      const selectorStart = leadingWs === -1 ? headerStart : headerStart + leadingWs;
+      const header = rawSlice.trim().replace(/\s+/g, ' ');
+      if (header.startsWith('@')) {
+        scopeStack.push(header);
+      } else {
+        if (header) {
+          onOpenRule(header, scopeStack, selectorStart);
+        }
+        scopeStack.push(`RULE:${header}`);
+      }
+      headerStart = i + 1;
+    } else if (ch === '}') {
+      onBlockText?.(clean.slice(headerStart, i), headerStart, scopeStack);
+      scopeStack.pop();
+      headerStart = i + 1;
+    } else if (ch === ';' && !scopeStack.some((s) => s.startsWith('RULE:'))) {
+      headerStart = i + 1;
+    }
+  }
+}
+
 export const cssNoImportantDetector: Detector = {
   id: 'css/no-important',
   category: 'css',
   tier: 'structural',
   severity: 'warn',
-  description: 'Flags `!important` overrides in stylesheets (ignoring comments).',
+  description: 'Flags `!important` overrides in stylesheets (exempting [hidden], .sr-only, print, reduced-motion).',
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
     for (const file of ctx.files) {
       if (!CSS_EXTS.has(file.ext)) continue;
-      const strippedLines = stripCssCommentsPreserveLines(file.content).split(/\r?\n/);
-      for (let i = 0; i < strippedLines.length; i++) {
-        const line = strippedLines[i] ?? '';
-        const importantRe = /!\s*important\b/gi;
-        for (const match of line.matchAll(importantRe)) {
-          const idx = match.index ?? 0;
-          findings.push({
-            ruleId: this.id,
-            category: this.category,
-            tier: this.tier,
-            severity: this.severity,
-            fixability: 'ai',
-            confidence: 0.99,
-            file: file.relPath,
-            span: { line: i + 1, column: idx + 1 },
-            message: 'Avoid `!important`; use CSS cascade order or `@layer` instead.',
-            evidence: (file.lines[i] ?? line).trim().slice(0, 100),
-          });
-        }
-      }
+      const clean = stripCommentsAndStringsPreserveLines(file.content, file.ext === '.scss');
+      const offsets = buildLineOffsets(clean);
+      const re = /!\s*important\b/gi;
+
+      walkCssScopes(
+        clean,
+        () => {},
+        (blockText, blockStart, scopeStack) => {
+          if (isExemptImportantContext(scopeStack)) return;
+          re.lastIndex = 0;
+          let match: RegExpExecArray | null;
+          while ((match = re.exec(blockText)) !== null) {
+            const absOffset = blockStart + match.index;
+            const lineNum = lineAtOffset(offsets, absOffset);
+            const lineStart = offsets[lineNum - 1] ?? 0;
+            findings.push({
+              ruleId: this.id,
+              category: this.category,
+              tier: this.tier,
+              severity: this.severity,
+              fixability: 'ai',
+              confidence: 0.99,
+              file: file.relPath,
+              span: { line: lineNum, column: absOffset - lineStart + 1 },
+              message: 'Avoid `!important`; use CSS cascade order or `@layer` instead.',
+              evidence: (file.lines[lineNum - 1] ?? '').trim().slice(0, 100),
+            });
+          }
+        },
+      );
     }
     return findings;
   },
@@ -71,49 +179,18 @@ export const cssDuplicateSelectorDetector: Detector = {
 
     for (const file of ctx.files) {
       if (!CSS_EXTS.has(file.ext)) continue;
-      const clean = stripCssCommentsPreserveLines(file.content);
+      const clean = stripCommentsAndStringsPreserveLines(file.content, file.ext === '.scss');
       const offsets = buildLineOffsets(clean);
-      const scopeStack: string[] = [];
-      let headerStart = 0;
-      let quote: '"' | "'" | null = null;
 
-      for (let i = 0; i < clean.length; i++) {
-        const ch = clean[i];
-        if (quote) {
-          if (ch === '\\') {
-            i++;
-          } else if (ch === quote) {
-            quote = null;
-          }
-          continue;
-        }
-        if (ch === '"' || ch === "'") {
-          quote = ch;
-          continue;
-        }
-        if (ch === '{') {
-          const header = clean.slice(headerStart, i).trim().replace(/\s+/g, ' ');
-          if (header.startsWith('@')) {
-            scopeStack.push(header);
-          } else {
-            const insideKeyframes = scopeStack.some((s) => /^@(-webkit-|-moz-)?keyframes\b/i.test(s));
-            if (header && !insideKeyframes) {
-              const scopeKey = scopeStack.join(' > ');
-              const mapKey = `${scopeKey}::${header}`;
-              const list = seen.get(mapKey) ?? [];
-              list.push({ file: file.relPath, line: lineAtOffset(offsets, headerStart), selector: header });
-              seen.set(mapKey, list);
-            }
-            scopeStack.push(`RULE:${header}`);
-          }
-          headerStart = i + 1;
-        } else if (ch === '}') {
-          scopeStack.pop();
-          headerStart = i + 1;
-        } else if (ch === ';' && !scopeStack.some((s) => s.startsWith('RULE:'))) {
-          headerStart = i + 1;
-        }
-      }
+      walkCssScopes(clean, (header, scopeStack, selectorStart) => {
+        const insideKeyframes = scopeStack.some((s) => /^@(-webkit-|-moz-)?keyframes\b/i.test(s));
+        if (insideKeyframes) return;
+        const scopeKey = scopeStack.join(' > ');
+        const mapKey = `${scopeKey}::${header}`;
+        const list = seen.get(mapKey) ?? [];
+        list.push({ file: file.relPath, line: lineAtOffset(offsets, selectorStart), selector: header });
+        seen.set(mapKey, list);
+      });
     }
 
     const findings: Finding[] = [];

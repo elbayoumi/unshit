@@ -5,6 +5,7 @@ import ts from 'typescript';
 import { loadConfig } from '../config.js';
 import type { FileEntry, Finding, UnshitConfig } from '../contracts.js';
 import { BUILTIN_DETECTORS } from '../detectors/index.js';
+import { isWaived } from './scanner.js';
 
 const SINGLE_FILE_SKIP = new Set(['ts/unused-export', 'code/duplicate-block']);
 
@@ -201,13 +202,7 @@ export function scanSingleContent(
     findings.push(...detector.detect(ctx));
   }
 
-  return findings.filter((f) => {
-    const idx = f.span.line - 1;
-    const cur = file.lines[idx] ?? '';
-    const prev = idx > 0 ? (file.lines[idx - 1] ?? '') : '';
-    const re = new RegExp(`unshit-ignore:\\s*${f.ruleId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
-    return !re.test(cur) && !re.test(prev);
-  });
+  return findings.filter((f) => !isWaived(file.lines, f));
 }
 
 async function readStdin(): Promise<string> {
