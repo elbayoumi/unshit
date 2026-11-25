@@ -433,12 +433,17 @@ function parsePythonImports(file: FileEntry, fileSet: Set<string>, roots: string
       const mod = (match[2] ?? '').replace(/^\.+/, '');
       const spec = '.'.repeat(level) + mod;
       const baseTarget = resolvePyModule(file.relPath, mod, level, roots, fileSet);
-      push(spec, baseTarget, line, level > 0 || baseTarget !== null);
       const base = baseTarget ? packageBase(baseTarget) : relativePyBase(file.relPath, level, mod);
+      let resolvedNames = 0;
       for (const name of splitPyNames(match[3] ?? '')) {
         const hit = tryPyPath(path.posix.join(base, name), fileSet);
-        if (hit) push(`${spec}.${name}`, hit, line, true);
+        if (hit) {
+          push(`${spec}.${name}`, hit, line, true);
+          resolvedNames++;
+        }
       }
+      // `from . import sibling` depends on the sibling modules, not on the package __init__ itself.
+      if (mod !== '' || resolvedNames === 0) push(spec, baseTarget, line, level > 0 || baseTarget !== null);
       continue;
     }
 

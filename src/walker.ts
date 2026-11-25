@@ -4,7 +4,7 @@ import ts from 'typescript';
 import type { FileEntry, UnshitConfig } from './contracts.js';
 
 const TS_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
-const GENERATED_FILE_RE = /\.min\.(?:css|[cm]?js)$|\.bundle\.js$/i;
+const GENERATED_FILE_RE = /\.min\.(?:css|[cm]?js)$|\.bundle\.js$|\.(?:g|freezed|gr)\.dart$|_pb2(?:_grpc)?\.py$/i;
 const READ_BATCH_SIZE = 32;
 const REGEX_SPECIALS = /[.*+?^${}()|[\]\\]/g;
 const MANIFEST_NAMES = new Set([
@@ -134,7 +134,10 @@ function isIgnored(fullPath: string, isDirectory: boolean, scopes: IgnoreScope[]
   return ignored;
 }
 
+const VENDORED_DIR_RE = /(^|\/)static\/(lib|vendor)$/;
+
 function isExcludedByConfig(rel: string, name: string, excludes: string[]): boolean {
+  if (VENDORED_DIR_RE.test(rel)) return true;
   return excludes.some((exclude) => exclude.includes('/')
     ? rel === exclude || rel.startsWith(`${exclude}/`)
     : name === exclude);

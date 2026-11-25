@@ -4,6 +4,7 @@ import type { Severity } from './contracts.js';
 import { abortSwarmFix, runSwarmFix } from './core/swarm-fixer.js';
 import { runFix } from './core/fixer.js';
 import { runHook } from './core/hook.js';
+import { addFeedback, isFeedbackKind, readFeedback, summarizeFeedback, FEEDBACK_KINDS } from './core/feedback.js';
 import { runInit } from './core/init.js';
 import { computeHotspots } from './core/hotspots.js';
 import { createBaseline, evaluateGuard, getChangedFiles, getChangedLineRanges, loadBaseline, type LineRange } from './core/pinner.js';
@@ -13,7 +14,7 @@ import { computeScore } from './core/scorer.js';
 import { computeStructureVerdict } from './core/structure-verdict.js';
 import { runMcpServer } from './mcp/server.js';
 
-const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'structure', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'help', '--help', '-h']);
+const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'structure', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'note', 'notes', 'help', '--help', '-h']);
 const VALID_FORMATS = new Set<OutputFormat>(['human', 'json', 'sarif', 'markdown']);
 const SEV_RANK: Record<Severity, number> = { info: 1, warn: 2, error: 3 };
 
@@ -29,7 +30,7 @@ function getOpt(args: string[], name: string): string | undefined {
 function getTargetPath(args: string[]): string {
   for (let i = 0; i < args.length; i++) {
     const a = args[i]!;
-    if (a === '--format' || a === '--runner' || a === '--model' || a === '--fail-on' || a === '--base' || a === '--since' || a === '--top' || a === '--concurrency' || a === '--max-files' || a === '--max-diff-lines') {
+    if (a === '--format' || a === '--runner' || a === '--model' || a === '--fail-on' || a === '--base' || a === '--since' || a === '--top' || a === '--concurrency' || a === '--max-files' || a === '--max-diff-lines' || a === '--kind' || a === '--file') {
       i += 1;
       continue;
     }
@@ -59,6 +60,25 @@ export async function main(argv: string[]): Promise<number> {
     return runInit(getTargetPath(rest), { force: getFlag(rest, '--force') });
   }
 
+  if (cmd === 'note') {
+    const positional = rest.filter((a, i) => !a.startsWith('-') && !['--kind', '--file'].includes(rest[i - 1] ?? ''));
+    const [rule, ...noteParts] = positional;
+    const kind = getOpt(rest, '--kind') ?? 'false-positive';
+    if (!rule || noteParts.length === 0 || !isFeedbackKind(kind)) {
+      console.error(`Usage: unshit note <rule-id|general> "<what is wrong or missing>" [--kind ${FEEDBACK_KINDS.join('|')}] [--file <path>]`);
+      return 2;
+    }
+    await addFeedback(process.cwd(), { kind, rule, file: getOpt(rest, '--file'), note: noteParts.join(' ') });
+    console.log(`Recorded ${kind} for ${rule} in .unshit/feedback.jsonl`);
+    return 0;
+  }
+
+  if (cmd === 'notes') {
+    const entries = await readFeedback(getTargetPath(rest));
+    console.log(getFlag(rest, '--json') ? JSON.stringify(entries, null, 2) : summarizeFeedback(entries));
+    return 0;
+  }
+
   if (cmd === 'help' || cmd === '--help' || cmd === '-h') {
     console.log([
       'unshit <command> [path] [options]',
@@ -73,6 +93,8 @@ export async function main(argv: string[]): Promise<number> {
       '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude; --swarm for parallel worktree AI fixer; --abort to clean stale worktrees)',
       '  init [path]    Bootstrap config, baseline, and Claude Code PreToolUse hook (--force to overwrite)',
       '  hook [file]    Live AI Guardrail Hook (--stdin for Claude Code PreToolUse/PostToolUse, exits 2 on slop)',
+      '  note <rule> "text"  Record a local false-positive / improvement / scope-gap note (--kind, --file) in .unshit/feedback.jsonl',
+      '  notes [path]   Summarize recorded notes as a markdown backlog grouped by rule (--json)',
       '  mcp            Start stdio MCP server (unshit_scan, unshit_score, unshit_guard)',
     ].join('\n'));
     return 0;

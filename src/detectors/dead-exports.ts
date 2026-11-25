@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import ts from 'typescript';
 import type { Detector, DetectorContext, Finding } from '../contracts.js';
 
@@ -14,6 +16,50 @@ function isEntryFile(relPath: string): boolean {
     || /\.(test|spec|d)\./.test(relPath);
 }
 
+const FRAMEWORK_EXPORTS = new Set([
+  'metadata', 'generateMetadata', 'generateStaticParams', 'dynamic', 'revalidate', 'runtime',
+  'viewport', 'generateViewport', 'dynamicParams', 'fetchCache', 'preferredRegion', 'maxDuration',
+  'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS', 'config', 'loader', 'action', 'meta', 'links',
+]);
+
+function isPluginOrIntegrationFile(relPath: string): boolean {
+  return /(^|\/)integrations?\//.test(relPath);
+}
+
+/**
+ * Source files that package.json publishes (exports/main/module/types/bin).
+ * Build outputs (dist/…) are mapped back to their source counterpart.
+ */
+function publicEntryFiles(rootDir: string, files: Set<string>): Set<string> {
+  const entries = new Set<string>();
+  let pkg: unknown;
+  try {
+    pkg = JSON.parse(readFileSync(join(rootDir, 'package.json'), 'utf8'));
+  } catch {
+    return entries;
+  }
+  const targets: string[] = [];
+  const walk = (value: unknown): void => {
+    if (typeof value === 'string') targets.push(value);
+    else if (Array.isArray(value)) value.forEach(walk);
+    else if (value && typeof value === 'object') Object.values(value).forEach(walk);
+  };
+  const record = pkg as Record<string, unknown>;
+  for (const key of ['exports', 'main', 'module', 'types', 'typings']) walk(record[key]);
+
+  for (const target of targets) {
+    const clean = target.replace(/^\.\//, '').replace(/\.(d\.)?[cm]?[jt]sx?$/, '');
+    const variants = [clean, clean.replace(/^(dist|build|lib|out)\//, '')];
+    for (const variant of variants) {
+      for (const ext of ['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs']) {
+        const candidate = variant + ext;
+        if (files.has(candidate)) entries.add(candidate);
+      }
+    }
+  }
+  return entries;
+}
+
 const IDENT_RE = /\b[A-Za-z_$][\w$]*\b/g;
 
 function collectExportedDecls(ctx: DetectorContext): {
@@ -21,6 +67,7 @@ function collectExportedDecls(ctx: DetectorContext): {
   identifierCountsByFile: Map<string, Map<string, number>>;
 } {
   const decls: ExportDecl[] = [];
+  const publicEntries = publicEntryFiles(ctx.rootDir, new Set(ctx.files.map((f) => f.relPath)));
   const seenKey = new Set<string>();
   const identifierCountsByFile = new Map<string, Map<string, number>>();
 
@@ -33,10 +80,13 @@ function collectExportedDecls(ctx: DetectorContext): {
     }
     identifierCountsByFile.set(file.relPath, counts);
 
-    if (!file.sourceFile || isEntryFile(file.relPath)) continue;
+    if (!file.sourceFile || isEntryFile(file.relPath) || publicEntries.has(file.relPath) || isPluginOrIntegrationFile(file.relPath)) continue;
     const sf = file.sourceFile;
 
+    const isAppRouterFile = /(^|\/)(page|layout|route|loading|error|not-found|template|default|middleware|instrumentation)\.[jt]sx?$/.test(file.relPath);
     const record = (nameNode: ts.Node, name: string, isTypeOnly: boolean): void => {
+      if (isAppRouterFile && FRAMEWORK_EXPORTS.has(name)) return;
+      if (isTypeOnly && /Props$/.test(name)) return;
       const key = `${file.relPath}::${name}::${isTypeOnly ? 'T' : 'V'}`;
       if (seenKey.has(key)) return;
       seenKey.add(key);
@@ -87,6 +137,8 @@ function findUnused(ctx: DetectorContext, wantTypeOnly: boolean, ruleId: string)
 
     const ownCount = identifierCountsByFile.get(exp.file)?.get(exp.name) ?? 1;
     const isOverExported = ownCount >= 2;
+    // A type used inside its own module is usually part of an exported signature; dropping `export` breaks consumers' typing.
+    if (isOverExported && wantTypeOnly) continue;
 
     findings.push({
       ruleId,

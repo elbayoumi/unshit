@@ -38,7 +38,7 @@ flowchart LR
 
 AI coding assistants ship features fast—and silently leave behind **AI slop**: 1,000-line God hooks, hundreds of CSS `!important` overrides, copy-pasted logic blocks, inline `isAr ? ... : ...` i18n leaks, `catch (e: any)` type escapes, and unused exports.
 
-Existing tools each solve one slice of the problem. **`unshit`** synthesizes the strongest architectural ideas from the open-source ecosystem into a single, deterministic detox pipeline:
+Existing tools each solve one slice of the problem. **`unshit`** borrows ideas from them and combines them into one zero-infrastructure, deterministic pipeline. It is **not** a drop-in replacement for any of them: TS/JS rules use the TypeScript AST, clone detection uses a TypeScript-scanner token window, and CSS plus Rust/Dart/Python rules are lightweight text heuristics. Expect fewer edge cases handled than in the dedicated tools.
 
 | Inspiration | What `unshit` Adopts |
 |---|---|
@@ -53,9 +53,9 @@ Existing tools each solve one slice of the problem. **`unshit`** synthesizes the
 ## Example Output
 
 ```text
-$ npx unshit score ./apps/web
+$ npx unshit score ./apps/web   # illustrative output; your numbers will differ
 unshit score: 84/100 (Grade B) — 1411 findings across 801 files (118664 lines)
-By category: {"css":395,"types":0,"i18n":38,"architecture":49,"slop":57,"duplication":568,"dead-code":304}
+By category: {"css":395,"types":0,"i18n":38,"architecture":49,"slop":57,"duplication":568,"dead-code":304,"performance":0}
 ```
 
 ---
@@ -118,6 +118,7 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 | `unshit fix [path]` | Preview or apply deterministic + gated AI fixes | `--apply`, `--ai`, `--swarm`, `--abort`, `--runner opencode\|claude` |
 | `unshit hook [file]` | **Live AI Guardrail Hook** — blocks AI slop in real time (exits `2`) | `--stdin` (Claude Code `PreToolUse` / `PostToolUse` JSON) |
 | `unshit mcp` | Start stdio MCP server (`unshit_scan`, `unshit_score`, `unshit_guard`) | — |
+| `unshit note <rule> "text"` / `unshit notes` | Record local false-positive / improvement / scope-gap notes in `.unshit/feedback.jsonl`, then print a backlog grouped by rule | `--kind`, `--file`, `--json` |
 
 ---
 
@@ -133,13 +134,18 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 | `react/god-file` | heuristic | `warn` | `ai` | Modules exceeding `godFileMaxLines` (350) or `godFileMaxHooks` (15) |
 | `slop/magic-timer` | structural | `info` | `ai` | Raw numeric delays in `setTimeout` / `window.setTimeout` / `setInterval` |
 | `slop/redundant-catch` | structural | `warn` | `ai` | Empty `catch {}` blocks or `catch (e) { throw e; }` |
-| `code/duplicate-block` | structural | `info` | `ai` | Copy-pasted token blocks across files (`cloneMinTokens`: 45) |
+| `code/duplicate-block` | structural | `info` | `ai` | Copy-pasted token blocks across files (`cloneMinTokens`: 80) |
 | `ts/unused-export` | structural | `info` | `unsafe` | Exported symbols with zero cross-file references |
 | `rust/no-unwrap` | structural | `warn` | `ai` | `.unwrap()` in non-test `.rs` files (skips `#[cfg(test)]`) |
 | `dart/no-dynamic-or-print` | structural | `warn` | `ai` | `dynamic` type escapes & `print()` calls in non-test `.dart` files |
 | `python/no-bare-except` | structural | `warn` | `ai` | Bare `except:` clauses in non-test `.py` files |
-| `arch/import-cycle` | structural | `warn` | `manual` | Circular import cycles (TS/JS + Python via iterative Tarjan SCC) |
+| `arch/import-cycle` | structural | `warn` | `manual` | Circular import cycles (TS/JS, Python, Rust, Dart via iterative Tarjan SCC) |
 | `arch/layer-violation` | structural | `error` | `manual` | Cross-layer imports violating `layers[]` rules in `unshit.config.json` |
+
+| `css/design-drift` | structural | `info` | `ai` | Hardcoded colors where design tokens exist |
+| `ts/unused-type-export` | structural | `info` | `unsafe` | Exported types with zero cross-file references |
+| `structure/*` | structural | `error` / `warn` / `info` | `manual` | Cross-package and feature-boundary imports, feature cycles, junk drawers (see `src/detectors/structure.ts`) |
+| `db/query-in-loop` | structural | `warn` | `manual` | ORM queries (Prisma, TypeORM, Drizzle) executed inside loops |
 
 ---
 
@@ -164,7 +170,7 @@ Create `unshit.config.json` in your project root to customize thresholds, exclud
   "exclude": ["node_modules", "dist", "coverage"],
   "godFileMaxLines": 400,
   "godFileMaxHooks": 15,
-  "cloneMinTokens": 45,
+  "cloneMinTokens": 80,
   "aiRunner": "opencode",
   "aiModel": "opencode/big-pickle",
   "verifyCommand": "npm run typecheck && npm test"

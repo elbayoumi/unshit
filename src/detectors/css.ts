@@ -328,7 +328,7 @@ export const cssDuplicateSelectorDetector: Detector = {
   category: 'css',
   tier: 'structural',
   severity: 'info',
-  description: 'Flags CSS selectors defined multiple times in the same at-rule scope (skipping @keyframes).',
+  description: 'Flags CSS selectors defined multiple times in the same file and at-rule scope (skipping @keyframes).',
   detect(ctx: DetectorContext): Finding[] {
     const seen = new Map<string, { file: string; line: number; selector: string }[]>();
 
@@ -341,7 +341,9 @@ export const cssDuplicateSelectorDetector: Detector = {
         const insideKeyframes = scopeStack.some((s) => /^@(-webkit-|-moz-)?keyframes\b/i.test(s));
         if (insideKeyframes) return;
         const scopeKey = scopeStack.join(' > ');
-        const mapKey = `${scopeKey}::${header}`;
+        if (/^(:root|:host(\(.*\))?|html|body|\*)$/i.test(header.trim())) return;
+        // Same class names across unrelated stylesheets are separate modules, not duplicates.
+        const mapKey = `${file.relPath}::${scopeKey}::${header}`;
         const list = seen.get(mapKey) ?? [];
         list.push({ file: file.relPath, line: lineAtOffset(offsets, selectorStart), selector: header });
         seen.set(mapKey, list);

@@ -414,9 +414,9 @@ export const deadConst = 42;
       const typeDead = scan.findings.filter((f) => f.ruleId === 'ts/unused-type-export');
       assert.equal(valDead.length, 1);
       assert.match(valDead[0]?.evidence ?? '', /deadConst/);
-      assert.equal(typeDead.length, 2);
-      const propsHit = typeDead.find((f) => f.evidence.includes('CompProps'));
-      assert.match(propsHit?.message ?? '', /drop the `export` keyword/);
+      // Locally used / *Props types are part of an exported signature, so only the truly unreferenced type is flagged.
+      assert.equal(typeDead.length, 1);
+      assert.match(typeDead[0]?.evidence ?? '', /UnusedType/);
     },
   );
 });

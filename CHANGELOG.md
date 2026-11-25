@@ -5,6 +5,22 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+
+- `unshit note <rule> "text" --kind false-positive|improvement|scope-gap` and `unshit notes`: record local feedback in `.unshit/feedback.jsonl` (git-ignored) and print it as a markdown backlog grouped by rule, so false positives and gaps found while using the tool feed the next fix.
+
+### Fixed
+
+- `ts/unused-export` / `ts/unused-type-export` no longer flag symbols reachable from `package.json` `exports`/`main`/`types`, files under `integrations/`, Next app-router convention exports (`metadata`, `dynamic`, `GET`, ...), `*Props` types, or types used only inside their own module.
+- `react/god-file` skips Python `test_*.py`, `tests/`, `migrations/` and generated `.g.dart` / `_pb2.py` files, and applies a 2x line limit to Rust/Dart/Python.
+- `arch/import-cycle`: Python `from . import sibling` no longer adds a package `__init__` edge that produced false cycles.
+- `css/duplicate-selector` only compares within one file and ignores `:root`/`:host`/`html`/`body`/`*`.
+- Default excludes add `.dart_tool`, and `static/lib` / `static/vendor` directories are skipped at any depth; generated `.g.dart`, `.freezed.dart` and `_pb2.py` files are skipped. `cloneMinTokens` default raised from 45 to 80 to cut `code/duplicate-block` noise.
+
+### Changed
+
+- README, ROADMAP and ARCHITECTURE corrected to match the code: unproven benchmarks are labelled targets, unimplemented items are marked planned, and the rule/layout/command lists are current.
+
 ## [0.7.0] - 2026-11-25
 
 ### Added

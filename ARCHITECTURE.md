@@ -25,12 +25,12 @@ discover -> scan (read-only) -> pin (baseline) -> fix (deterministic -> AI workt
 1. **Read-Only Discovery (`unshit scan`):** Capability-based `DetectorContext` exposes source, TS AST, CSS tokens, and config — **never** filesystem writes, network, or subprocesses.
 2. **Pin Before Change (`unshit pin`):** Captures `unshit.baseline.json` (file hashes, baseline check status, 0–100 health score) before any mutation.
 3. **Dry-Run Default (`unshit fix`):** Outputs unified patches and plan by default; `--apply` is required to mutate.
-4. **Deterministic First, AI Last:** Mechanical fixes run via deterministic AST/text patches first. Complex refactors (`--ai` via `opencode` or `claude`) run in an isolated `git worktree` with path allowlists, diff budgets, and automatic rollback if `typecheck`/`test`/`build` regresses.
+4. **Deterministic First, AI Last:** Mechanical fixes run via deterministic AST/text patches first. Complex refactors (`--ai` via `opencode` or `claude`) are snapshotted per file and rolled back automatically if `verifyCommand` regresses. Isolated `git worktree` execution with path allowlists and compare-and-swap landing currently exists only for `fix --swarm`; extending it to single-file `--ai` is on the roadmap.
 5. **Relapse Prevention (`unshit guard`):** Compares current scan against `unshit.baseline.json` for CI/pre-commit gates, supporting `// unshit-ignore: <ruleId> — <reason>`.
 
 ---
 
-## 3. Built-in Detector Suite (v0.1)
+## 3. Built-in Detector Suite (original v0.1 set; the authoritative list is `src/detectors/index.ts` and the README rule table)
 
 | Rule ID | Tier | Category | What It Catches | Fixability |
 |---|---|---|---|---|
@@ -62,15 +62,23 @@ unshit/
 │   │   ├── css.ts             # CSS detectors (!important, duplicate selectors)
 │   │   ├── god-file.ts        # LOC + React hook density detector
 │   │   ├── clones.ts          # Token-window duplicate block detector
-│   │   └── dead-exports.ts    # Cross-file export reachability detector
+│   │   ├── dead-exports.ts    # Cross-file export reachability detector
+│   │   ├── arch.ts            # Import cycles + layer violations
+│   │   ├── polyglot.ts        # Rust / Dart / Python heuristics
+│   │   ├── structure.ts       # Feature/package boundary rules
+│   │   └── db-query-in-loop.ts # ORM queries inside loops
 │   ├── core/
 │   │   ├── scanner.ts         # Deterministic scan + finding deduplication/sorting
 │   │   ├── scorer.ts          # 0-100 explainable health score
 │   │   ├── pinner.ts          # unshit.baseline.json capture & diff
-│   │   ├── fixer.ts           # Deterministic patcher + OpenCode/Claude worktree runner
+│   │   ├── fixer.ts           # Deterministic patcher + per-file snapshot/verify/rollback AI runner
+│   │   ├── swarm-fixer.ts     # Parallel worktree fixer (--swarm)
+│   │   ├── import-graph.ts    # Multi-language import graph
+│   │   ├── hook.ts            # Agent hook (blocks slop while writing)
+│   │   ├── hotspots.ts        # Changed-line hotspots
 │   │   └── reporters.ts       # Human terminal, JSON, SARIF, Markdown
 │   ├── mcp/server.ts          # Read-only MCP server (unshit_scan, unshit_score, unshit_guard)
-│   └── cli.ts                 # Command router: scan | pin | fix | guard | score | mcp
+│   └── cli.ts                 # Command router: scan | score | hotspots | structure | pin | guard | fix | hook | init | mcp
 └── tests/
-    └── detectors.test.ts      # Node test runner suite
+    └── *.test.ts              # Node test runner suites
 ```

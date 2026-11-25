@@ -2,6 +2,9 @@ import type { Detector, DetectorContext, Finding } from '../contracts.js';
 
 const HOOK_RE = /\buse(State|Effect|Memo|Callback|Ref|Reducer|Context|LayoutEffect)\s*\(/g;
 const POLYGLOT_CODE_EXTS = new Set(['.rs', '.dart', '.py']);
+const POLYGLOT_LINE_FACTOR = 2;
+const TEST_FILE_RE = /\.(test|spec)\.|_test\.(rs|dart|py)$|(^|\/)test_[^/]*\.py$|(^|\/)(tests?|__tests__|spec|migrations)\//;
+const GENERATED_SUFFIX_RE = /\.(g|freezed|gr|mocks)\.dart$|_pb2(_grpc)?\.py$/;
 
 export const godFileDetector: Detector = {
   id: 'react/god-file',
@@ -14,14 +17,16 @@ export const godFileDetector: Detector = {
     const { godFileMaxLines, godFileMaxHooks } = ctx.config;
 
     for (const file of ctx.files) {
-      if ((!file.sourceFile && !POLYGLOT_CODE_EXTS.has(file.ext)) || /\.(test|spec)\.|_test\.(rs|dart|py)$/.test(file.relPath)) {
+      if ((!file.sourceFile && !POLYGLOT_CODE_EXTS.has(file.ext)) || TEST_FILE_RE.test(file.relPath) || GENERATED_SUFFIX_RE.test(file.relPath)) {
         continue;
       }
       const lineCount = file.lines.length;
       const hookMatches = file.sourceFile ? file.content.match(HOOK_RE) : null;
       const hookCount = hookMatches ? hookMatches.length : 0;
 
-      if (lineCount > godFileMaxLines || hookCount > godFileMaxHooks) {
+      // The line limit is React-calibrated; Rust/Dart/Python modules legitimately run longer.
+      const lineLimit = file.sourceFile ? godFileMaxLines : godFileMaxLines * POLYGLOT_LINE_FACTOR;
+      if (lineCount > lineLimit || hookCount > godFileMaxHooks) {
         findings.push({
           ruleId: this.id,
           category: this.category,
@@ -31,7 +36,7 @@ export const godFileDetector: Detector = {
           confidence: 0.9,
           file: file.relPath,
           span: { line: 1, column: 1 },
-          message: `Oversized module (${lineCount} lines${hookCount ? `, ${hookCount} hooks` : ''}; limits: ${godFileMaxLines} lines / ${godFileMaxHooks} hooks). Split by domain.`,
+          message: `Oversized module (${lineCount} lines${hookCount ? `, ${hookCount} hooks` : ''}; limits: ${lineLimit} lines / ${godFileMaxHooks} hooks). Split by domain.`,
           evidence: `${lineCount} LOC${hookCount ? `, ${hookCount} React hooks` : ''}`,
         });
       }
