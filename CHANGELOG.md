@@ -93,6 +93,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - CSS waivers and exemptions.
 - Separate reporting for unused type exports.
 - Clone detection based on the TypeScript scanner.
+- Opt-in `unshit scan --deep` mode that uses `ts.createProgram` and the TypeChecker for more precise `ts/unused-export` detection, with soft fallback when tsconfig/program creation fails.
 
 ### Fixed
 

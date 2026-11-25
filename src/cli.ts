@@ -34,7 +34,7 @@ function printHelp(): number {
     'unshit <command> [path] [options]',
     '',
     'Commands:',
-    '  scan [path]    Read-only AST/CSS/clone/slop scan (--format human|json|sarif|markdown, --fail-on error|warn|info, --no-cache)',
+    '  scan [path]    Read-only AST/CSS/clone/slop scan (--format human|json|sarif|markdown, --fail-on error|warn|info, --deep, --no-cache)',
     '  score [path]   Compute 0-100 codebase health score (--no-cache)',
     '  hotspots [path] Rank files by churn and finding density (--since 90.days, --top 10, --json, --no-cache)',
     '  structure [path] Diagnose project directory/module health (archetype, layout, cycles, boundary leaks, verdict, --fail-on error|warn|info, --no-cache)',
@@ -315,8 +315,9 @@ export async function main(argv: string[]): Promise<number> {
 
   if (getFlag(rest, '--abort')) return runAbortCommand(targetDir);
 
+  const deep = cmd === 'scan' && getFlag(rest, '--deep');
   const { runScan } = await import('./core/scanner.js');
-  const scan = await runScan(targetDir, config, [], { noCache });
+  const scan = await runScan(targetDir, config, [], { noCache, deep });
   const { computeScore } = await import('./core/scorer.js');
   const score = computeScore(scan.files, scan.findings);
 

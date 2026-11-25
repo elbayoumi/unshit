@@ -17,6 +17,7 @@ export interface ScanResult {
 
 export interface ScanOptions {
   noCache?: boolean;
+  deep?: boolean;
 }
 
 /**
@@ -62,10 +63,39 @@ export async function runScan(
     raw.push(...fileFindings);
   }
 
-  if (crossFile.length > 0) {
+  const DEEP_UNUSED_RULES = new Set(['ts/unused-export', 'ts/unused-type-export']);
+  let syntacticUnused: Detector[] = [];
+  let crossFileRun = crossFile;
+  if (options.deep) {
+    syntacticUnused = crossFile.filter((d) => DEEP_UNUSED_RULES.has(d.id));
+    crossFileRun = crossFile.filter((d) => !DEEP_UNUSED_RULES.has(d.id));
+  }
+
+  if (crossFileRun.length > 0) {
     const ctx: DetectorContext = { rootDir, config, files, manifests };
-    for (const detector of crossFile) {
+    for (const detector of crossFileRun) {
       raw.push(...detector.detect(ctx));
+    }
+  }
+
+  if (options.deep) {
+    const ctx: DetectorContext = { rootDir, config, files, manifests };
+    try {
+      const { detectDeepUnusedExports } = await import('./deep/unused-exports.js');
+      const deep = await detectDeepUnusedExports(rootDir, config, files, manifests);
+      // Remove syntactic unused-export findings for analyzed files (none should exist
+      // because we skipped detectors, but be defensive) and add deep findings.
+      for (let i = raw.length - 1; i >= 0; i--) {
+        const f = raw[i]!;
+        if (DEEP_UNUSED_RULES.has(f.ruleId) && deep.analyzedFiles.has(f.file)) raw.splice(i, 1);
+      }
+      raw.push(...deep.findings);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`unshit: --deep unavailable, falling back to syntactic unused-export scan (${msg})`);
+      for (const detector of syntacticUnused) {
+        raw.push(...detector.detect(ctx));
+      }
     }
   }
 
