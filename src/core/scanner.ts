@@ -1,11 +1,12 @@
 import type { Detector, DetectorContext, FileEntry, Finding, UnshitConfig } from '../contracts.js';
 import { BUILTIN_DETECTORS } from '../detectors/index.js';
-import { collectFiles } from '../walker.js';
+import { collectWorkspace } from '../walker.js';
 
 export interface ScanResult {
   rootDir: string;
   config: UnshitConfig;
   files: FileEntry[];
+  manifests?: string[];
   findings: Finding[];
   detectors: Detector[];
 }
@@ -39,12 +40,12 @@ export async function runScan(
   config: UnshitConfig,
   extraDetectors: Detector[] = [],
 ): Promise<ScanResult> {
-  const files = await collectFiles(rootDir, config);
+  const { files, manifests } = await collectWorkspace(rootDir, config);
   const disabled = new Set(config.disabledRules);
   const detectors = [...BUILTIN_DETECTORS, ...extraDetectors].filter((d) => !disabled.has(d.id));
   const fileMap = new Map(files.map((f) => [f.relPath, f]));
 
-  const ctx: DetectorContext = { rootDir, config, files };
+  const ctx: DetectorContext = { rootDir, config, files, manifests };
   const raw: Finding[] = [];
   for (const detector of detectors) {
     raw.push(...detector.detect(ctx));
@@ -68,5 +69,5 @@ export async function runScan(
     || a.ruleId.localeCompare(b.ruleId),
   );
 
-  return { rootDir, config, files, findings, detectors };
+  return { rootDir, config, files, manifests, findings, detectors };
 }

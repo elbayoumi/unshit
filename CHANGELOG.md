@@ -5,6 +5,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+
+- v0.6.0 Project Structure Health: `unshit structure [path]` reports archetype, layout, import resolution, cycles, boundary leaks, and an explainable verdict.
+- Five `structure/*` rules, including error-level `structure/cross-package-import`, plus deep imports, shared-to-feature leaks, feature cycles, and junk drawers.
+- TypeScript `paths`/`baseUrl` alias resolution and a Dart `package:` import graph for structure analysis.
+- `structure` config (`featureContainers`, `allow`, `tangleMinFiles`) with validation and `structure --fail-on error|warn|info` for CI gating.
+
+### Fixed
+
+- Exclude `vendor`, `storage`, `__pycache__`, `venv`, `.venv`, path-based excludes, `.min.{css,js,mjs,cjs}` / `.bundle.js`, and compiled/sourcemap bundles from scanning.
+- Support `jsconfig.json`, Vite root-absolute `/...`, Laravel `@/ -> resources/js` aliases, static `require()`, and exclude non-graphable `.vue`/asset specs from `resolvedRatio`.
+- Fix `structure/shared-imports-feature` false positives on Flutter `lib/` and nested folders like `resources/js/Layouts/Components/`, and cache `tsconfig` parsing (`readDirectory: () => []`) + `WeakMap` graph cache.
+
 ## [0.5.1] - 2026-11-25
 
 ### Added

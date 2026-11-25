@@ -59,6 +59,12 @@ export interface LayerRule {
   allowImportsFrom: string[];
 }
 
+export interface StructureConfig {
+  featureContainers?: string[];
+  allow?: string[];
+  tangleMinFiles?: number;
+}
+
 export interface UnshitConfig {
   include: string[];
   exclude: string[];
@@ -71,12 +77,14 @@ export interface UnshitConfig {
   verifyCommand?: string;
   layers?: LayerRule[];
   unassignedLayer?: 'ignore' | 'warn';
+  structure?: StructureConfig;
 }
 
 export interface DetectorContext {
   rootDir: string;
   config: UnshitConfig;
   files: FileEntry[];
+  manifests?: string[];
 }
 
 export interface Detector {

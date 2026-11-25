@@ -20,6 +20,44 @@ function validateLayers(config: UnshitConfig): void {
   }
 }
 
+function validateStructure(config: UnshitConfig): void {
+  const structure: unknown = config.structure;
+  if (structure === undefined) return;
+  if (typeof structure !== 'object' || structure === null || Array.isArray(structure)) {
+    throw new Error('Structure config must be an object');
+  }
+  const value = structure as Record<string, unknown>;
+
+  if (value.featureContainers !== undefined) {
+    if (!Array.isArray(value.featureContainers)) {
+      throw new Error('Structure "featureContainers" must be an array of non-empty strings');
+    }
+    value.featureContainers.forEach((container: unknown, idx: number) => {
+      if (typeof container !== 'string' || container.trim() === '') {
+        throw new Error(`Structure "featureContainers[${idx}]" must be a non-empty string`);
+      }
+    });
+  }
+
+  if (value.allow !== undefined) {
+    if (!Array.isArray(value.allow)) {
+      throw new Error('Structure "allow" must be an array of strings containing "->"');
+    }
+    value.allow.forEach((rule: unknown, idx: number) => {
+      if (typeof rule !== 'string' || !rule.includes('->')) {
+        throw new Error(`Structure "allow[${idx}]" must be a string containing "->"`);
+      }
+    });
+  }
+
+  if (value.tangleMinFiles !== undefined
+    && (typeof value.tangleMinFiles !== 'number'
+      || !Number.isFinite(value.tangleMinFiles)
+      || value.tangleMinFiles <= 0)) {
+    throw new Error('Structure "tangleMinFiles" must be a finite positive number');
+  }
+}
+
 export const DEFAULT_CONFIG: UnshitConfig = {
   include: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.css', '.scss', '.rs', '.dart', '.py'],
   exclude: [
@@ -34,6 +72,11 @@ export const DEFAULT_CONFIG: UnshitConfig = {
     'src-tauri',
     '.next',
     'playwright-report',
+    'vendor',
+    'storage',
+    '__pycache__',
+    'venv',
+    '.venv',
   ],
   disabledRules: [],
   godFileMaxLines: 350,
@@ -69,7 +112,9 @@ export async function loadConfig(rootDir: string): Promise<UnshitConfig> {
   };
   if (parsed?.layers !== undefined) config.layers = parsed.layers;
   if (parsed?.unassignedLayer !== undefined) config.unassignedLayer = parsed.unassignedLayer;
+  if (parsed?.structure !== undefined) config.structure = parsed.structure;
 
   validateLayers(config);
+  validateStructure(config);
   return config;
 }

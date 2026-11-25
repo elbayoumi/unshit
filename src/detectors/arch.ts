@@ -47,7 +47,7 @@ function layerOf(config: DetectorContext['config'], relPath: string) {
 }
 
 // --- Tarjan SCC (iterative) ---
-function tarjanSCC(nodes: string[], adj: Map<string, string[]>): string[][] {
+export function tarjanSCC(nodes: string[], adj: Map<string, string[]>): string[][] {
   const index = new Map<string, number>();
   const lowlink = new Map<string, number>();
   const onStack = new Set<string>();
@@ -56,29 +56,27 @@ function tarjanSCC(nodes: string[], adj: Map<string, string[]>): string[][] {
   let idx = 0;
 
   const sortedNodes = [...nodes].sort();
+  const work: { v: string; pi: number; neighbors: string[] }[] = [];
+  const pushFrame = (v: string): void => {
+    index.set(v, idx);
+    lowlink.set(v, idx);
+    idx += 1;
+    stack.push(v);
+    onStack.add(v);
+    work.push({ v, pi: 0, neighbors: [...(adj.get(v) ?? [])].sort() });
+  };
   for (const start of sortedNodes) {
     if (index.has(start)) continue;
-    const work: { v: string; pi: number }[] = [{ v: start, pi: 0 }];
-    index.set(start, idx);
-    lowlink.set(start, idx);
-    idx += 1;
-    stack.push(start);
-    onStack.add(start);
+    pushFrame(start);
 
     while (work.length > 0) {
       const frame = work[work.length - 1];
       const v = frame.v;
-      const neighbors = [...(adj.get(v) ?? [])].sort();
-      if (frame.pi < neighbors.length) {
-        const w = neighbors[frame.pi];
+      if (frame.pi < frame.neighbors.length) {
+        const w = frame.neighbors[frame.pi];
         frame.pi += 1;
         if (!index.has(w)) {
-          index.set(w, idx);
-          lowlink.set(w, idx);
-          idx += 1;
-          stack.push(w);
-          onStack.add(w);
-          work.push({ v: w, pi: 0 });
+          pushFrame(w);
         } else if (onStack.has(w)) {
           const curLow = lowlink.get(v)!;
           const wIndex = index.get(w)!;

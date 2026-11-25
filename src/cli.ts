@@ -10,9 +10,10 @@ import { createBaseline, evaluateGuard, getChangedFiles, getChangedLineRanges, l
 import { formatScanOutput, type OutputFormat } from './core/reporters.js';
 import { runScan } from './core/scanner.js';
 import { computeScore } from './core/scorer.js';
+import { computeStructureVerdict } from './core/structure-verdict.js';
 import { runMcpServer } from './mcp/server.js';
 
-const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'help', '--help', '-h']);
+const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'structure', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'help', '--help', '-h']);
 const VALID_FORMATS = new Set<OutputFormat>(['human', 'json', 'sarif', 'markdown']);
 const SEV_RANK: Record<Severity, number> = { info: 1, warn: 2, error: 3 };
 
@@ -66,6 +67,7 @@ export async function main(argv: string[]): Promise<number> {
       '  scan [path]    Read-only AST/CSS/clone/slop scan (--format human|json|sarif|markdown, --fail-on error|warn|info)',
       '  score [path]   Compute 0-100 codebase health score',
       '  hotspots [path] Rank files by churn and finding density (--since 90.days, --top 10, --json)',
+      '  structure [path] Diagnose project directory/module health (archetype, layout, cycles, boundary leaks, verdict, --fail-on error|warn|info)',
       '  pin [path]     Capture unshit.baseline.json characterization snapshot',
       '  guard [path]   Fail CI/pre-commit on regressions (--changed [baseRef] for diff-only PRs, --lines for changed-line scope)',
       '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude; --swarm for parallel worktree AI fixer; --abort to clean stale worktrees)',
@@ -102,6 +104,13 @@ export async function main(argv: string[]): Promise<number> {
 
   if (cmd === 'scan') {
     console.log(formatScanOutput(scan.findings, score, format));
+    if (format === 'human') {
+      const sv = computeStructureVerdict(
+        { rootDir: scan.rootDir, config: scan.config, files: scan.files, manifests: scan.manifests },
+        scan.findings,
+      );
+      console.log(`Structure: ${sv.verdict} (${sv.archetype} · ${sv.layout} · ${Math.round(sv.graph.resolvedRatio * 100)}% imports resolved)`);
+    }
     const failOn = getOpt(rest, '--fail-on') as Severity | undefined;
     if (failOn && SEV_RANK[failOn]) {
       const minRank = SEV_RANK[failOn];
@@ -146,6 +155,42 @@ export async function main(argv: string[]): Promise<number> {
       console.error(`unshit hotspots: ${err instanceof Error ? err.message : String(err)}`);
       return 2;
     }
+  }
+
+  if (cmd === 'structure') {
+    const failOnRaw = getOpt(rest, '--fail-on');
+    if (failOnRaw !== undefined && !SEV_RANK[failOnRaw as Severity]) {
+      console.error(`Invalid --fail-on: ${failOnRaw}. Expected error|warn|info.`);
+      return 2;
+    }
+    const failOn = failOnRaw as Severity | undefined;
+    const sv = computeStructureVerdict(
+      { rootDir: scan.rootDir, config: scan.config, files: scan.files, manifests: scan.manifests },
+      scan.findings,
+    );
+    if (format === 'json') {
+      console.log(JSON.stringify(sv, null, 2));
+    } else {
+      console.log(`Archetype  ${sv.archetype} · ${sv.layout}`);
+      console.log(`Graph      ${sv.graph.graphedFiles}/${sv.graph.totalCodeFiles} code files graphed (${Math.round(sv.graph.resolvedRatio * 100)}% internal imports resolved)`);
+      console.log(`Verdict    ${sv.verdict}${sv.reason ? ` — ${sv.reason}` : ''}`);
+      console.log(`  Cycles          ${sv.metrics.cycles} (largest: ${sv.metrics.largestCycle} files)`);
+      console.log(`  Boundary leaks  ${sv.metrics.boundaryLeaks}`);
+      console.log(`  Largest flat    ${sv.metrics.largestFlatDir} files [metric only]`);
+      if (sv.topFixes.length > 0) {
+        console.log('Top fixes');
+        sv.topFixes.slice(0, 3).forEach((fix, idx) => console.log(`  ${idx + 1}. ${fix}`));
+      }
+    }
+    if (failOn) {
+      const minRank = SEV_RANK[failOn];
+      if (scan.findings.some(
+        (f) => f.ruleId.startsWith('structure/') && SEV_RANK[f.severity] >= minRank,
+      )) {
+        return 1;
+      }
+    }
+    return 0;
   }
 
   if (cmd === 'pin') {

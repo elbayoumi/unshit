@@ -5,6 +5,7 @@ import { unusedExportDetector, unusedTypeExportDetector } from './dead-exports.j
 import { godFileDetector } from './god-file.js';
 import { importCycleDetector, layerViolationDetector } from './arch.js';
 import { dartHygieneDetector, pythonBareExceptDetector, rustNoUnwrapDetector } from './polyglot.js';
+import { STRUCTURE_DETECTORS } from './structure.js';
 import {
   magicTimerDetector,
   noDoubleCastDetector,
@@ -16,6 +17,7 @@ import {
 export const BUILTIN_DETECTORS: Detector[] = [
   importCycleDetector,
   layerViolationDetector,
+  ...STRUCTURE_DETECTORS,
   noExplicitAnyDetector,
   noDoubleCastDetector,
   noInlineI18nTernaryDetector,
