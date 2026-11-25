@@ -126,6 +126,29 @@ function maskedLangFiles(ctx: DetectorContext, ext: string, lang: 'rust' | 'dart
 /**
  * Flags `.unwrap()` calls in non-test Rust code, skipping `#[cfg(test)]` blocks by brace depth.
  */
+function updateRustTestState(state: { pending: boolean; depth: number }, line: string): boolean {
+  if (/^\s*#\[cfg\(test\)\]/.test(line)) state.pending = true;
+  const openCount = (line.match(/\{/g) ?? []).length;
+  const closeCount = (line.match(/\}/g) ?? []).length;
+  if (state.pending && openCount > 0) {
+    state.depth += openCount - closeCount;
+    state.pending = false;
+    if (state.depth <= 0) state.depth = 0;
+    return true;
+  }
+  if (state.depth > 0) {
+    state.depth += openCount - closeCount;
+    if (state.depth <= 0) state.depth = 0;
+    return true;
+  }
+  if (state.pending && /;\s*$/.test(line)) { state.pending = false; return true; }
+  return false;
+}
+
+function isAllowedRustUnwrap(prefix: string): boolean {
+  return /\b(?:lock|read|write)\(\)\s*$/.test(prefix) || /Regex::new\([^)]*\)\s*$/.test(prefix);
+}
+
 export const rustNoUnwrapDetector: Detector = {
   id: 'rust/no-unwrap',
   category: 'slop',
@@ -135,49 +158,16 @@ export const rustNoUnwrapDetector: Detector = {
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
     for (const { file, masked: maskedLines } of maskedLangFiles(ctx, '.rs', 'rust')) {
-      let pendingCfgTest = false;
-      let testDepth = 0;
+      const state = { pending: false, depth: 0 };
       for (let i = 0; i < maskedLines.length; i++) {
         const line = maskedLines[i] ?? '';
-        if (/^\s*#\[cfg\(test\)\]/.test(line)) {
-          pendingCfgTest = true;
-        }
-
-        const openCount = (line.match(/\{/g) ?? []).length;
-        const closeCount = (line.match(/\}/g) ?? []).length;
-
-        if (pendingCfgTest && openCount > 0) {
-          testDepth += openCount - closeCount;
-          pendingCfgTest = false;
-          if (testDepth <= 0) testDepth = 0;
-          continue;
-        }
-
-        if (testDepth > 0) {
-          testDepth += openCount - closeCount;
-          if (testDepth <= 0) testDepth = 0;
-          continue;
-        }
-
-        if (pendingCfgTest && /;\s*$/.test(line)) {
-          pendingCfgTest = false;
-          continue;
-        }
-
+        if (updateRustTestState(state, line)) continue;
         let pos = 0;
         while ((pos = line.indexOf('.unwrap()', pos)) !== -1) {
-          const prefix = line.slice(0, pos);
-          const allowLock = /\b(?:lock|read|write)\(\)\s*$/.test(prefix);
-          const allowRegex = /Regex::new\([^)]*\)\s*$/.test(prefix);
-          if (!allowLock && !allowRegex) {
+          if (!isAllowedRustUnwrap(line.slice(0, pos))) {
             findings.push({
-              ruleId: this.id,
-              category: this.category,
-              tier: this.tier,
-              severity: this.severity,
-              fixability: 'ai',
-              confidence: 0.94,
-              file: file.relPath,
+              ruleId: this.id, category: this.category, tier: this.tier, severity: this.severity,
+              fixability: 'ai', confidence: 0.94, file: file.relPath,
               span: { line: i + 1, column: pos + 1 },
               message: 'Avoid `.unwrap()` in production Rust code; use `?`, `ok_or`, or `unwrap_or_default()`.',
               evidence: (file.lines[i] ?? line).trim().slice(0, 100),
@@ -206,37 +196,24 @@ export const dartHygieneDetector: Detector = {
       for (let i = 0; i < maskedLines.length; i++) {
         const line = maskedLines[i] ?? '';
         const origLine = file.lines[i] ?? '';
-        const prevOrig = i > 0 ? (file.lines[i - 1] ?? '') : '';
-
-        const withoutJsonMap = line.replace(/\bMap\s*<\s*String\s*,\s*dynamic\s*>/g, 'Map<String, Object?>');
-        const dynMatch = /(?::\s*dynamic\b|\bdynamic\s+[a-zA-Z_]\w*|<dynamic>)/.exec(withoutJsonMap);
-        if (dynMatch) {
+        const prevOrig = file.lines[i - 1] ?? '';
+        const dynamicIdx = /(?::\s*dynamic\b|\bdynamic\s+[a-zA-Z_]\w*|<dynamic>)/.exec(
+          line.replace(/\bMap\s*<\s*String\s*,\s*dynamic\s*>/g, 'Map<String, Object?>'),
+        )?.index;
+        if (dynamicIdx !== undefined) {
           findings.push({
-            ruleId: this.id,
-            category: this.category,
-            tier: this.tier,
-            severity: this.severity,
-            fixability: 'ai',
-            confidence: 0.9,
-            file: file.relPath,
-            span: { line: i + 1, column: dynMatch.index + 1 },
+            ruleId: this.id, category: this.category, tier: this.tier, severity: this.severity,
+            fixability: 'ai', confidence: 0.9, file: file.relPath, span: { line: i + 1, column: dynamicIdx + 1 },
             message: 'Avoid `dynamic` in Dart; use `Object?` or a concrete type.',
             evidence: origLine.trim().slice(0, 100),
           });
         }
-
         const ignorePrint = /\/\/\s*ignore:\s*avoid_print\b/.test(origLine) || /\/\/\s*ignore:\s*avoid_print\b/.test(prevOrig);
-        const printMatch = /(?<![.\w])print\s*\(/.exec(line);
-        if (printMatch && !ignorePrint) {
+        const printIdx = ignorePrint ? undefined : /(?<![.\w])print\s*\(/.exec(line)?.index;
+        if (printIdx !== undefined) {
           findings.push({
-            ruleId: this.id,
-            category: this.category,
-            tier: this.tier,
-            severity: 'info',
-            fixability: 'ai',
-            confidence: 0.92,
-            file: file.relPath,
-            span: { line: i + 1, column: printMatch.index + 1 },
+            ruleId: this.id, category: this.category, tier: this.tier, severity: 'info',
+            fixability: 'ai', confidence: 0.92, file: file.relPath, span: { line: i + 1, column: printIdx + 1 },
             message: 'Avoid `print()` in production Dart/Flutter code; use structured logging or `debugPrint`.',
             evidence: origLine.trim().slice(0, 100),
           });
@@ -246,6 +223,17 @@ export const dartHygieneDetector: Detector = {
     return findings;
   },
 };
+
+function bareExceptEndsWithRaise(maskedLines: string[], start: number, indent: number): boolean {
+  let endsWithRaise = false;
+  for (let j = start; j < maskedLines.length; j++) {
+    const nextLine = maskedLines[j] ?? '';
+    if (!nextLine.trim()) continue;
+    if ((nextLine.match(/^(\s*)/)?.[1]?.length ?? 0) <= indent) break;
+    if (/^\s*raise\b/.test(nextLine)) endsWithRaise = true;
+  }
+  return endsWithRaise;
+}
 
 /**
  * Flags bare `except:` clauses in Python that swallow KeyboardInterrupt/SystemExit.
@@ -260,31 +248,16 @@ export const pythonBareExceptDetector: Detector = {
     const findings: Finding[] = [];
     for (const { file, masked: maskedLines } of maskedLangFiles(ctx, '.py', 'python')) {
       for (let i = 0; i < maskedLines.length; i++) {
-        const line = maskedLines[i] ?? '';
-        const match = /^(\s*)except\s*:/.exec(line);
-        if (match) {
-          const indent = match[1]?.length ?? 0;
-          let endsWithRaise = false;
-          for (let j = i + 1; j < maskedLines.length; j++) {
-            const nextLine = maskedLines[j] ?? '';
-            if (!nextLine.trim()) continue;
-            const nextIndent = nextLine.match(/^(\s*)/)?.[1]?.length ?? 0;
-            if (nextIndent <= indent) break;
-            if (/^\s*raise\b/.test(nextLine)) endsWithRaise = true;
-          }
-          findings.push({
-            ruleId: this.id,
-            category: this.category,
-            tier: this.tier,
-            severity: this.severity,
-            fixability: 'ai',
-            confidence: endsWithRaise ? 0.75 : 0.98,
-            file: file.relPath,
-            span: { line: i + 1, column: match.index + 1 },
-            message: 'Bare `except:` catches SystemExit/KeyboardInterrupt; catch a specific Exception.',
-            evidence: (file.lines[i] ?? line).trim().slice(0, 100),
-          });
-        }
+        const match = /^(\s*)except\s*:/.exec(maskedLines[i] ?? '');
+        if (!match) continue;
+        const endsWithRaise = bareExceptEndsWithRaise(maskedLines, i + 1, (match[1] ?? '').length);
+        findings.push({
+          ruleId: this.id, category: this.category, tier: this.tier, severity: this.severity,
+          fixability: 'ai', confidence: endsWithRaise ? 0.75 : 0.98, file: file.relPath,
+          span: { line: i + 1, column: match.index + 1 },
+          message: 'Bare `except:` catches SystemExit/KeyboardInterrupt; catch a specific Exception.',
+          evidence: (file.lines[i] ?? '').trim().slice(0, 100),
+        });
       }
     }
     return findings;
