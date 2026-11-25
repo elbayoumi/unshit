@@ -5,6 +5,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+
+- Import graph parses Vue/Svelte `<script>` blocks (static imports, re-exports, `require()`) and Rust `mod` / `use crate::` / `super::` / `self::` edges, including grouped uses and `.vue`/`.svelte` target resolution.
+
 ## [0.6.0] - 2026-11-25
 
 ### Added

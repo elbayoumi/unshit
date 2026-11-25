@@ -3,13 +3,19 @@ import ts from 'typescript';
 import type { DetectorContext, FileEntry } from '../contracts.js';
 
 const TS_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
+const COMPONENT_EXTS = new Set(['.vue', '.svelte']);
 const TS_SUFFIXES = [
-  '', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs',
+  '', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.vue', '.svelte',
   '/index.ts', '/index.tsx', '/index.js', '/index.jsx', '/index.mjs',
+  '/index.vue', '/index.svelte',
 ];
 const JS_EXTS = new Set(['.js', '.jsx', '.mjs', '.cjs']);
-const NON_GRAPHABLE_RE = /\.(?:vue|svelte|svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|eot|json|html|md|txt|css|scss|less)$/i;
+const NON_GRAPHABLE_RE = /\.(?:svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|eot|json|html|md|txt|css|scss|less)$/i;
 const VITE_SOURCE_ROOTS = ['src', 'resources/js', 'resources/ts', 'app/javascript'];
+const RUST_SUFFIXES = ['', '.rs', '/mod.rs'];
+const RUST_USE_PREFIXES = new Set(['crate', 'super', 'self']);
+const RUST_MOD_RE = /^\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+([A-Za-z_]\w*)\s*;/;
+const RUST_USE_RE = /^\s*(?:pub(?:\s*\([^)]*\))?\s+)?use\s+(.+)$/;
 
 export interface ImportEdge {
   from: string;
@@ -473,6 +479,217 @@ function parsePythonImports(file: FileEntry, fileSet: Set<string>, roots: string
   return results;
 }
 
+function getScriptKindFromLang(lang: string | undefined): ts.ScriptKind {
+  const value = (lang ?? '').trim().toLowerCase();
+  if (value === 'tsx') return ts.ScriptKind.TSX;
+  if (value === 'jsx') return ts.ScriptKind.JSX;
+  if (value === 'js' || value === 'javascript') return ts.ScriptKind.JS;
+  return ts.ScriptKind.TS;
+}
+
+/** Extracts every `<script ...>...</script>` body with its original starting line. */
+function extractScriptBlocks(file: FileEntry): Array<{ sourceFile: ts.SourceFile; lineOffset: number }> {
+  const blocks: Array<{ sourceFile: ts.SourceFile; lineOffset: number }> = [];
+  const scriptRe = /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi;
+  for (const match of file.content.matchAll(scriptRe)) {
+    const openTagEnd = match[0].indexOf('>');
+    if (openTagEnd < 0) continue;
+    const bodyStart = (match.index ?? 0) + openTagEnd + 1;
+    const body = match[2] ?? '';
+    if (!body.trim()) continue;
+    const langMatch = /\blang\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(match[1] ?? '');
+    const lang = langMatch?.[1] ?? langMatch?.[2] ?? langMatch?.[3];
+    const lineOffset = file.content.slice(0, bodyStart).split('\n').length - 1;
+    const sourceFile = ts.createSourceFile(
+      `${file.relPath}#script-${blocks.length}`,
+      body,
+      ts.ScriptTarget.Latest,
+      true,
+      getScriptKindFromLang(lang),
+    );
+    blocks.push({ sourceFile, lineOffset });
+  }
+  return blocks;
+}
+
+/** Shared static import/export/require extractor for TS/JS files and component script blocks. */
+function collectTsJsEdges(
+  sf: ts.SourceFile,
+  emitSpec: (spec: string, line: number) => void,
+  lineOffset: number,
+): void {
+  const lineOf = (node: ts.Node): number =>
+    sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1 + lineOffset;
+
+  for (const stmt of sf.statements) {
+    let moduleSpecifier: ts.Expression | undefined;
+    if (ts.isImportDeclaration(stmt)) {
+      const clause = stmt.importClause;
+      if (clause?.isTypeOnly) continue;
+      if (clause?.namedBindings && ts.isNamedImports(clause.namedBindings)) {
+        const elements = clause.namedBindings.elements;
+        if (elements.length > 0 && elements.every((element) => element.isTypeOnly)) continue;
+      }
+      moduleSpecifier = stmt.moduleSpecifier;
+    } else if (ts.isExportDeclaration(stmt)) {
+      if (stmt.isTypeOnly) continue;
+      moduleSpecifier = stmt.moduleSpecifier;
+    }
+    if (!moduleSpecifier || !ts.isStringLiteral(moduleSpecifier)) continue;
+    emitSpec(moduleSpecifier.text, lineOf(moduleSpecifier));
+  }
+
+  // Static CommonJS require('...') calls, including nested ones.
+  const visitRequires = (node: ts.Node): void => {
+    if (ts.isCallExpression(node)
+      && ts.isIdentifier(node.expression)
+      && node.expression.text === 'require'
+      && node.arguments.length > 0) {
+      const arg = node.arguments[0];
+      if (arg && ts.isStringLiteral(arg)) emitSpec(arg.text, lineOf(arg));
+    }
+    ts.forEachChild(node, visitRequires);
+  };
+  visitRequires(sf);
+}
+
+function tryRustPath(base: string, fileSet: Set<string>): string | null {
+  const norm = normalizeRel(path.posix.normalize(base));
+  for (const suffix of RUST_SUFFIXES) {
+    const candidate = suffix === '' ? norm : norm + suffix;
+    if (fileSet.has(candidate)) return candidate;
+  }
+  return null;
+}
+
+function resolveRustPathParts(baseDir: string, parts: string[], fileSet: Set<string>): string | null {
+  for (let len = parts.length; len > 0; len--) {
+    const hit = tryRustPath(path.posix.join(baseDir, ...parts.slice(0, len)), fileSet);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+/** Directory holding a module's child modules (`src/foo.rs` owns `src/foo/`). */
+function rustChildModuleDir(relPath: string): string {
+  const dir = path.posix.dirname(relPath);
+  const stem = path.posix.basename(relPath, '.rs');
+  if (stem === 'mod' || stem === 'lib' || stem === 'main') return dir;
+  return path.posix.join(dir, stem);
+}
+
+function rustCrateSrcRoots(ctx: DetectorContext, fileSet: Set<string>): string[] {
+  const roots = new Set<string>();
+  for (const manifest of ctx.manifests ?? []) {
+    const norm = normalizeRel(manifest);
+    if (!/(^|\/)Cargo\.toml$/.test(norm)) continue;
+    const dir = path.posix.dirname(norm);
+    roots.add(dir === '.' ? 'src' : path.posix.join(dir, 'src'));
+  }
+  if (!roots.has('src') && [...fileSet].some((file) => file.startsWith('src/'))) roots.add('src');
+  return [...roots].sort((a, b) => b.length - a.length);
+}
+
+function nearestRustCrateRoot(relPath: string, roots: string[]): string {
+  for (const root of roots) {
+    if (relPath === root || relPath.startsWith(`${root}/`)) return root;
+  }
+  return roots.find((root) => root === 'src') ?? 'src';
+}
+
+function splitRustUseList(text: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === '{' || char === '(' || char === '[') depth++;
+    else if (char === '}' || char === ')' || char === ']') depth--;
+    else if (char === ',' && depth === 0) {
+      parts.push(text.slice(start, i));
+      start = i + 1;
+    }
+  }
+  parts.push(text.slice(start));
+  return parts;
+}
+
+/** Expands `crate::{a, b::c}` into individual module paths. */
+function expandRustUseTree(text: string): string[] {
+  const trimmed = text.trim().replace(/\s+as\s+[A-Za-z_]\w*$/, '').trim();
+  const grouped = /^([^{}]*)\{([\s\S]*)\}$/.exec(trimmed);
+  if (!grouped) return trimmed ? [trimmed] : [];
+  const prefix = (grouped[1] ?? '').replace(/::\s*$/, '').trim();
+  const expanded: string[] = [];
+  for (const part of splitRustUseList(grouped[2] ?? '')) {
+    const item = part.trim().replace(/\s+as\s+[A-Za-z_]\w*$/, '').trim();
+    if (!item || item === '*') continue;
+    const combined = !prefix ? item : item === 'self' ? prefix : `${prefix}::${item}`;
+    expanded.push(...expandRustUseTree(combined));
+  }
+  return expanded;
+}
+
+function parseRustImports(
+  file: FileEntry,
+  fileSet: Set<string>,
+  crateRoots: string[],
+): ResolvedImport[] {
+  const results: ResolvedImport[] = [];
+  const crateRoot = nearestRustCrateRoot(file.relPath, crateRoots);
+  const childDir = rustChildModuleDir(file.relPath);
+  const containingDir = path.posix.dirname(file.relPath);
+
+  for (let i = 0; i < file.lines.length; i++) {
+    const trimmed = (file.lines[i] ?? '').trim();
+    const line = i + 1;
+
+    const modMatch = RUST_MOD_RE.exec(trimmed);
+    if (modMatch) {
+      const name = modMatch[1]!;
+      const target = tryRustPath(path.posix.join(childDir, name), fileSet)
+        ?? tryRustPath(path.posix.join(containingDir, name), fileSet)
+        ?? tryRustPath(path.posix.join(crateRoot, name), fileSet);
+      results.push({ spec: `mod ${name}`, target, line, internal: true });
+      continue;
+    }
+
+    const useMatch = RUST_USE_RE.exec(trimmed);
+    if (!useMatch) continue;
+    let body = useMatch[1] ?? '';
+    let endLine = i;
+    while (!body.includes(';') && endLine + 1 < file.lines.length) {
+      endLine += 1;
+      body += ` ${file.lines[endLine]?.trim() ?? ''}`;
+    }
+    const semi = body.indexOf(';');
+    const statement = (semi === -1 ? body : body.slice(0, semi)).trim();
+    const parts = statement.split('::').map((part) => part.trim()).filter(Boolean);
+    const first = parts[0];
+    if (!first || !RUST_USE_PREFIXES.has(first)) {
+      i = endLine;
+      continue;
+    }
+
+    let baseDir = first === 'crate' ? crateRoot : childDir;
+    let prefixLen = first === 'crate' ? 1 : 0;
+    while (parts[prefixLen] === 'super' || parts[prefixLen] === 'self') {
+      if (parts[prefixLen] === 'super') baseDir = path.posix.dirname(baseDir);
+      prefixLen += 1;
+    }
+    const rest = expandRustUseTree(parts.slice(prefixLen).join('::'));
+    for (const expanded of rest) {
+      const moduleParts = expanded.split('::').map((part) => part.trim()).filter(Boolean);
+      if (moduleParts.length === 0) continue;
+      const target = resolveRustPathParts(baseDir, moduleParts, fileSet);
+      results.push({ spec: statement, target, line, internal: true });
+    }
+    i = endLine;
+  }
+
+  return results;
+}
+
 function computeGraph(ctx: DetectorContext): ImportGraph {
   const rootDir = ctx.rootDir;
   const filesSorted = [...ctx.files].sort((a, b) => a.relPath.localeCompare(b.relPath));
@@ -502,63 +719,57 @@ function computeGraph(ctx: DetectorContext): ImportGraph {
   const pubspecCache = new Map<string, PubspecInfo | null>();
   const packageNames = loadPackageNames(ctx, rootDir);
 
-  // TS/JS edges
-  for (const file of ctx.files) {
-    if (!TS_EXTS.has(file.ext) || !file.sourceFile) continue;
-    const sf = file.sourceFile;
-    const info = loadTsConfigInfo(path.dirname(file.absPath), rootDir, tsconfigCache);
+  const processTsSource = (
+    fromRel: string,
+    containingAbs: string,
+    sf: ts.SourceFile,
+    lineOffset: number,
+  ): void => {
+    const info = loadTsConfigInfo(path.dirname(containingAbs), rootDir, tsconfigCache);
     const resolutionCache = getResolutionCache(info, rootDir, resolutionCaches);
 
     const emitSpec = (spec: string, line: number): void => {
       const clean = spec.split('?')[0] ?? spec;
-      if (!clean || NON_GRAPHABLE_RE.test(clean)) return;
+      if (!clean) return;
+      const isComponentSpec = COMPONENT_EXTS.has(path.posix.extname(clean).toLowerCase());
+      if (NON_GRAPHABLE_RE.test(clean) && !isComponentSpec) return;
       if (!isInternalTsSpec(clean, info, rootDir, packageNames, fileSet)) return;
       let target = tryResolveTs(
-        clean, file.absPath, info, resolutionCache, absToRel, fileSet, rootDir,
+        clean, containingAbs, info, resolutionCache, absToRel, fileSet, rootDir,
       );
       if (!target || !fileSet.has(target)) {
-        target = resolveRelativeTs(clean, file.relPath, fileSet)
+        target = resolveRelativeTs(clean, fromRel, fileSet)
           ?? resolveAliasFallback(clean, fileSet);
       }
-      emit(file.relPath, clean, target, line, true);
+      // A component that is not a scanned file is an asset, not a broken import.
+      if (isComponentSpec && !target) return;
+      emit(fromRel, clean, target, line, true);
     };
 
-    for (const stmt of sf.statements) {
-      let moduleSpecifier: ts.Expression | undefined;
-      if (ts.isImportDeclaration(stmt)) {
-        const clause = stmt.importClause;
-        if (clause?.isTypeOnly) continue;
-        if (clause?.namedBindings && ts.isNamedImports(clause.namedBindings)) {
-          const elements = clause.namedBindings.elements;
-          if (elements.length > 0 && elements.every((element) => element.isTypeOnly)) continue;
-        }
-        moduleSpecifier = stmt.moduleSpecifier;
-      } else if (ts.isExportDeclaration(stmt)) {
-        if (stmt.isTypeOnly) continue;
-        moduleSpecifier = stmt.moduleSpecifier;
-      }
-      if (!moduleSpecifier || !ts.isStringLiteral(moduleSpecifier)) continue;
+    collectTsJsEdges(sf, emitSpec, lineOffset);
+  };
 
-      const spec = moduleSpecifier.text;
-      const line = sf.getLineAndCharacterOfPosition(moduleSpecifier.getStart(sf)).line + 1;
-      emitSpec(spec, line);
+  // TS/JS edges
+  for (const file of ctx.files) {
+    if (!TS_EXTS.has(file.ext) || !file.sourceFile) continue;
+    processTsSource(file.relPath, file.absPath, file.sourceFile, 0);
+  }
+
+  // Vue/Svelte <script> edges
+  for (const file of ctx.files) {
+    if (!COMPONENT_EXTS.has(file.ext)) continue;
+    for (const block of extractScriptBlocks(file)) {
+      processTsSource(file.relPath, file.absPath, block.sourceFile, block.lineOffset);
     }
+  }
 
-    // Static CommonJS require('...') calls, including nested ones.
-    const visitRequires = (node: ts.Node): void => {
-      if (ts.isCallExpression(node)
-        && ts.isIdentifier(node.expression)
-        && node.expression.text === 'require'
-        && node.arguments.length > 0) {
-        const arg = node.arguments[0];
-        if (arg && ts.isStringLiteral(arg)) {
-          const line = sf.getLineAndCharacterOfPosition(arg.getStart(sf)).line + 1;
-          emitSpec(arg.text, line);
-        }
-      }
-      ts.forEachChild(node, visitRequires);
-    };
-    visitRequires(sf);
+  // Rust edges
+  const rustRoots = rustCrateSrcRoots(ctx, fileSet);
+  for (const file of ctx.files) {
+    if (file.ext !== '.rs') continue;
+    for (const imp of parseRustImports(file, fileSet, rustRoots)) {
+      emit(file.relPath, imp.spec, imp.target, imp.line, imp.internal);
+    }
   }
 
   // Dart edges
