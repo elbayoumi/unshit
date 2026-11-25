@@ -82,3 +82,15 @@ test('barrel re-export chain keeps inner files alive', async () => {
   });
   assert.deepEqual(r, []);
 });
+
+test('nested index.html module scripts and vite/laravel `input` entries are entry points', async () => {
+  const r = await hits({
+    'package.json': JSON.stringify({ name: 'demo' }, null, 2),
+    'apps/shell/index.html': '<script type="module" src="/src/main.tsx"></script>\n',
+    'apps/shell/src/main.tsx': 'export const m = 1;\n',
+    'vite.config.ts': "export default { plugins: [laravel({ input: ['resources/js/app.js'] })] };\n",
+    'resources/js/app.js': 'export const a = 1;\n',
+    'src/orphan.ts': 'export const o = 1;\n',
+  });
+  assert.deepEqual(r, ['src/orphan.ts']);
+});

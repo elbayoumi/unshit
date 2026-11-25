@@ -110,10 +110,15 @@ const SCRIPT_RUNNER_RE = /\b(?:node|tsx|ts-node|vite-node)\b[ \t]+([^\s&|;<>"']+
 function resolveSpecToFile(dirRel: string, spec: string, fileSet: Set<string>): string | null {
   const clean = (spec.split('?')[0] ?? spec).replace(/^<rootDir>\/?/, '');
   if (!clean) return null;
-  const base = posixJoin(dirRel ? `${dirRel}/x` : 'x', clean);
-  for (const suffix of ['', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']) {
-    const candidate = base + suffix;
-    if (fileSet.has(candidate)) return candidate;
+  // A leading "/" is root-relative (Vite serves `/src/main.tsx` from the project dir): try the file's dir, then the root.
+  const rootRelative = clean.startsWith('/');
+  const bases = [posixJoin(dirRel ? `${dirRel}/x` : 'x', rootRelative ? clean.slice(1) : clean)];
+  if (rootRelative) bases.push(clean.slice(1));
+  for (const base of bases) {
+    for (const suffix of ['', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']) {
+      const candidate = base + suffix;
+      if (fileSet.has(candidate)) return candidate;
+    }
   }
   return null;
 }
@@ -134,7 +139,7 @@ function htmlScriptEntryFiles(ctx: DetectorContext, files: Set<string>): Set<str
     let m: RegExpExecArray | null;
     while ((m = re.exec(content)) !== null) {
       const attrs = m[1] ?? '';
-      if (!/\btype\s*=\s*(?:"module"|'module'|module)\b/i.test(attrs)) continue;
+      if (!/\btype\s*=\s*(?:"module"|'module'|module(?![\w-]))/i.test(attrs)) continue;
       const srcM = /\bsrc\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s>]+))/i.exec(attrs);
       const spec = srcM?.[1] ?? srcM?.[2] ?? srcM?.[3];
       if (!spec) continue;
@@ -161,7 +166,7 @@ function htmlScriptEntryFiles(ctx: DetectorContext, files: Set<string>): Set<str
 
 const CONFIG_FILE_RE = /(^|\/)(vite|vitest|jest|webpack|rollup|next|nuxt|astro|svelte|tailwind|postcss|eslint|playwright|cypress|drizzle|prisma)\.config\.[cm]?[jt]s$/i;
 
-const CONFIG_SETUP_RE = /\b(setupFiles|globalSetup|globalSetupFile)\s*:\s*(?:\[([^\]]*)\]|"([^"]+)"|'([^']+)')/g;
+const CONFIG_SETUP_RE = /\b(setupFiles|globalSetup|globalSetupFile|input)\s*:\s*(?:\[([^\]]*)\]|"([^"]+)"|'([^']+)')/g;
 const CONFIG_SETUP_QUOTED_RE = /["']([^"']+)["']/g;
 
 /**

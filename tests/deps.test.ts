@@ -189,3 +189,14 @@ test('deps/unused-dependency counts CSS @plugin and @import references as usage'
     assert.deepEqual(findingsFor(scan, 'deps/unused-dependency').map((f) => f.evidence), []);
   });
 });
+
+test('deps/unlisted-dependency skips docs and fixture directories', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'demo' }, null, 2),
+    'docs/example.ts': "import x from 'left-pad';\nexport default x;\n",
+    'src/a.ts': 'export const a = 1;\n',
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    assert.deepEqual(findingsFor(scan, 'deps/unlisted-dependency'), []);
+  });
+});

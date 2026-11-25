@@ -35,20 +35,32 @@ for (const root of corpora) {
   // unshit
   const u = timed('node', [unshitBin, 'scan', root, '--format', 'json'], root);
   const uj = JSON.parse(u.out || '{"findings":[]}');
-  const ue = new Set(), ud = [];
+  const ue = new Set(), ud = [], uf = new Set(), udep = new Set(), unl = new Set();
+  let complex = 0;
   for (const f of uj.findings) {
     if (f.ruleId === 'ts/unused-export' || f.ruleId === 'ts/unused-type-export') ue.add(key(norm(root, f.file), (f.message.match(/[`'"]([\w$]+)[`'"]/) ?? [])[1] ?? f.message));
+    if (f.ruleId === 'ts/unused-file') uf.add(norm(root, f.file));
+    if (f.ruleId === 'deps/unused-dependency') udep.add(f.evidence);
+    if (f.ruleId === 'deps/unlisted-dependency') unl.add(`${norm(root, f.file)}#${f.evidence}`);
+    if (f.ruleId === 'code/high-complexity') complex++;
     if (f.ruleId === 'code/duplicate-block') ud.push({ file: norm(root, f.file), line: f.line });
   }
-  r.unshit = { ms: u.ms, unusedExports: ue.size, duplicateBlocks: ud.length };
+  r.unshit = { ms: u.ms, unusedExports: ue.size, duplicateBlocks: ud.length, unusedFiles: uf.size, unusedDependencies: udep.size, unlistedImports: unl.size, highComplexity: complex };
   // knip
   if (existsSync(bin('knip'))) {
     const k = timed(bin('knip'), ['--reporter', 'json', '--no-progress'], root);
-    const ke = new Set();
+    const ke = new Set(), kf = new Set(), kd = new Set(), kunl = new Set();
     try {
-      for (const i of JSON.parse(k.out).issues ?? []) for (const kind of ['exports', 'types']) for (const e of i[kind] ?? []) ke.add(key(norm(root, i.file), e.name));
+      for (const i of JSON.parse(k.out).issues ?? []) {
+        for (const kind of ['exports', 'types']) for (const e of i[kind] ?? []) ke.add(key(norm(root, i.file), e.name));
+        for (const e of i.files ?? []) kf.add(norm(root, i.file));
+        for (const kind of ['dependencies', 'devDependencies']) for (const e of i[kind] ?? []) kd.add(e.name);
+        for (const e of i.unlisted ?? []) kunl.add(`${norm(root, i.file)}#${e.name}`);
+      }
     } catch { r.knipError = 'unparseable output (missing node_modules / config?)'; }
-    r.knip = { ms: k.ms, unusedExports: ke.size };
+    r.knip = { ms: k.ms, unusedExports: ke.size, unusedFiles: kf.size, unusedDependencies: kd.size, unlistedImports: kunl.size };
+    r.fileOverlap = { both: [...uf].filter((x) => kf.has(x)).length, onlyUnshit: [...uf].filter((x) => !kf.has(x)), onlyKnip: [...kf].filter((x) => !uf.has(x)) };
+    r.depOverlap = { both: [...udep].filter((x) => kd.has(x)).length, onlyUnshit: [...udep].filter((x) => !kd.has(x)), onlyKnip: [...kd].filter((x) => !udep.has(x)) };
     r.exportOverlap = { both: [...ue].filter((x) => ke.has(x)).length, onlyUnshit: [...ue].filter((x) => !ke.has(x)), onlyKnip: [...ke].filter((x) => !ue.has(x)) };
   }
   // jscpd
@@ -60,6 +72,6 @@ for (const root of corpora) {
   }
   results.push(r);
 }
-const summary = results.map((r) => ({ corpus: r.corpus, unshit: r.unshit, knip: r.knip, jscpd: r.jscpd, exportOverlap: r.exportOverlap && { both: r.exportOverlap.both, onlyUnshit: r.exportOverlap.onlyUnshit.length, onlyKnip: r.exportOverlap.onlyKnip.length } }));
+const summary = results.map((r) => ({ corpus: r.corpus, unshit: r.unshit, knip: r.knip, jscpd: r.jscpd, fileOverlap: r.fileOverlap, depOverlap: r.depOverlap, exportOverlap: r.exportOverlap && { both: r.exportOverlap.both, onlyUnshit: r.exportOverlap.onlyUnshit.length, onlyKnip: r.exportOverlap.onlyKnip.length } }));
 console.log(JSON.stringify(summary, null, 2));
 if (outFile) writeFileSync(outFile, JSON.stringify(results, null, 2));

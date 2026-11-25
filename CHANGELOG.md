@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [Unreleased]
 
 ### Added
+- `ts/unused-file` no longer flags files wired in by nested `index.html` module scripts (including root-relative `src`) or vite/laravel-style `input:` config entries; `deps/unlisted-dependency` skips `docs/` and fixture directories. `benchmark/run.mjs` now also compares unused files, dependencies and unlisted imports against knip and reports `code/high-complexity` counts; results in `benchmark/README.md`.
 - `deps/unused-dependency` (dead-code, warn): flags packages in root `package.json` `dependencies`/`devDependencies` that nothing imports/requires and no script or root config-file name references, sparing common tooling (`typescript`, `vitest`, `jest`, `tsx`, `ts-node`, `prettier`, `eslint*`, …). Finding is on the `package.json` line of the dep key.
 - `deps/unlisted-dependency` (dead-code, warn): flags bare import specifiers (non-relative, non-`node:` builtin, non-tsconfig alias) whose package name is not declared in root `package.json` `dependencies`/`devDependencies`/`peerDependencies`/`optionalDependencies`; silent when no `package.json` exists at the scan root.
 - `ts/unused-file`: new structural dead-code detector (severity `warn`, confidence ~0.8) flagging source files (`.ts/.tsx/.js/.jsx/.mjs/.cjs`) that no other scanned file imports (static, dynamic, `require`, export-from or side-effect imports) and that are not entry points (package.json targets, root/framework routing files, config files, test/spec/storybook files).

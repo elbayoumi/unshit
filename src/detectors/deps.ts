@@ -343,6 +343,7 @@ export const unlistedDependencyDetector: Detector = {
     const findings: Finding[] = [];
     const seen = new Set<string>();
     for (const file of ctx.files) {
+      if (/(^|\/)(docs|fixtures|__fixtures__)\//.test(file.relPath)) continue;
       for (const spec of collectModuleSpecs(file)) {
         if (!isBareImportSpec(spec.text, aliases)) continue;
         const name = packageName(spec.text);
