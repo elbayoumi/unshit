@@ -301,24 +301,28 @@ function multisetNewFindings(after: Finding[], before: Finding[]): Finding[] {
   return result;
 }
 
-/**
- * Live AI Guardrail Hook: exits 2 (blocking) when error/warn slop is newly introduced in an edited file.
- */
-export async function runHook(args: string[]): Promise<number> {
+interface HookInvocation {
+  rootDir: string;
+  targetPath: string;
+  overrideContent?: string;
+  normalized: NormalizedHookPayload;
+}
+
+/** Resolves the edited path and optional in-memory content from CLI args or hook stdin. */
+async function readHookInvocation(args: string[]): Promise<HookInvocation | null> {
   const useStdin = args.includes('--stdin');
   let rootDir = process.cwd();
   let targetPath = args.find((a) => !a.startsWith('-'));
   let overrideContent: string | undefined;
-
   let normalized: NormalizedHookPayload = {};
 
   if (useStdin) {
     const raw = await readStdin();
-    if (!raw.trim()) return 0;
+    if (!raw.trim()) return null;
     try {
       normalized = normalizePayload(raw);
     } catch {
-      return 0;
+      return null;
     }
     if (normalized.cwd || normalized.rootDir) rootDir = (normalized.cwd ?? normalized.rootDir)!;
     targetPath = normalized.filePath ?? normalized.file_path ?? normalized.path ?? targetPath;
@@ -330,8 +334,73 @@ export async function runHook(args: string[]): Promise<number> {
       overrideContent = normalized.new_string;
     }
   }
+  if (!targetPath) return null;
+  return { rootDir, targetPath, overrideContent, normalized };
+}
 
-  if (!targetPath) return 0;
+/** Applies the payload's edits to the on-disk content; null means "ignore this hook event". */
+function computeAfterContent(
+  beforeContent: string,
+  normalized: NormalizedHookPayload,
+  overrideContent: string | undefined,
+): string | null {
+  const edits = normalized.edits ?? [];
+  const oldString = normalized.oldString ?? normalized.old_string;
+  const newString = normalized.newString ?? normalized.new_string;
+  const replaceAll = normalized.replaceAll ?? normalized.replace_all ?? false;
+  const content = normalized.content ?? overrideContent;
+
+  if (edits.length > 0) {
+    let afterContent = beforeContent;
+    for (const edit of edits) {
+      const os = edit.oldString ?? edit.old_string;
+      if (os === undefined) continue;
+      const ns = edit.newString ?? edit.new_string ?? '';
+      const ra = edit.replaceAll ?? edit.replace_all ?? false;
+      const res = applyReplacement(afterContent, os, ns, ra);
+      if (res === null) return null;
+      afterContent = res;
+    }
+    return afterContent;
+  }
+  if (oldString !== undefined) {
+    const res = applyReplacement(beforeContent, oldString, newString ?? '', replaceAll);
+    return res === null ? null : res;
+  }
+  if (content !== undefined) return content;
+  if (overrideContent !== undefined) return overrideContent;
+  return beforeContent;
+}
+
+/** Loop-breaker: after three advisories for the same rule, stop blocking. */
+async function breakerAllowsBlock(
+  blocking: Finding[],
+  normalized: NormalizedHookPayload,
+  relPath: string,
+): Promise<boolean> {
+  const sessionId = normalized.sessionId ?? normalized.session_id ?? '';
+  const ruleIds = Array.from(new Set(blocking.map((f) => f.ruleId)));
+  const counts = await readBreaker();
+  const shouldBreak = ruleIds.some((rid) => (counts[`${sessionId}::${relPath}::${rid}`] ?? 0) >= 3);
+  if (shouldBreak) {
+    console.error(`[unshit hook] Advisory: loop-breaker triggered for ${relPath}; skipping block.`);
+    return false;
+  }
+  for (const rid of ruleIds) {
+    const key = `${sessionId}::${relPath}::${rid}`;
+    counts[key] = (counts[key] ?? 0) + 1;
+  }
+  await writeBreaker(counts);
+  return true;
+}
+
+/**
+ * Live AI Guardrail Hook: exits 2 (blocking) when error/warn slop is newly introduced in an edited file.
+ */
+export async function runHook(args: string[]): Promise<number> {
+  const invocation = await readHookInvocation(args);
+  if (!invocation) return 0;
+  const { rootDir, targetPath, overrideContent, normalized } = invocation;
   const absPath = resolve(rootDir, targetPath);
   const relPath = relative(rootDir, absPath).replaceAll('\\', '/');
 
@@ -351,34 +420,9 @@ export async function runHook(args: string[]): Promise<number> {
 
   let afterContent: string;
   try {
-    const edits = normalized.edits ?? [];
-    const oldString = normalized.oldString ?? normalized.old_string;
-    const newString = normalized.newString ?? normalized.new_string;
-    const replaceAll = normalized.replaceAll ?? normalized.replace_all ?? false;
-    const content = normalized.content ?? overrideContent;
-
-    if (edits.length > 0) {
-      afterContent = beforeContent;
-      for (const edit of edits) {
-        const os = edit.oldString ?? edit.old_string;
-        if (os === undefined) continue;
-        const ns = edit.newString ?? edit.new_string ?? '';
-        const ra = edit.replaceAll ?? edit.replace_all ?? false;
-        const res = applyReplacement(afterContent, os, ns, ra);
-        if (res === null) return 0;
-        afterContent = res;
-      }
-    } else if (oldString !== undefined) {
-      const res = applyReplacement(beforeContent, oldString, newString ?? '', replaceAll);
-      if (res === null) return 0;
-      afterContent = res;
-    } else if (content !== undefined) {
-      afterContent = content;
-    } else if (overrideContent !== undefined) {
-      afterContent = overrideContent;
-    } else {
-      afterContent = beforeContent;
-    }
+    const computed = computeAfterContent(beforeContent, normalized, overrideContent);
+    if (computed === null) return 0;
+    afterContent = computed;
   } catch {
     return 0;
   }
@@ -394,20 +438,7 @@ export async function runHook(args: string[]): Promise<number> {
   );
 
   if (blocking.length === 0) return 0;
-
-  const sessionId = normalized.sessionId ?? normalized.session_id ?? '';
-  const ruleIds = Array.from(new Set(blocking.map((f) => f.ruleId)));
-  const counts = await readBreaker();
-  const shouldBreak = ruleIds.some((rid) => (counts[`${sessionId}::${relPath}::${rid}`] ?? 0) >= 3);
-  if (shouldBreak) {
-    console.error(`[unshit hook] Advisory: loop-breaker triggered for ${relPath}; skipping block.`);
-    return 0;
-  }
-  for (const rid of ruleIds) {
-    const key = `${sessionId}::${relPath}::${rid}`;
-    counts[key] = (counts[key] ?? 0) + 1;
-  }
-  await writeBreaker(counts);
+  if (!(await breakerAllowsBlock(blocking, normalized, relPath))) return 0;
 
   console.error(`[unshit hook] Blocked ${blocking.length} slop finding(s) in ${relPath}:`);
   for (const f of blocking.slice(0, 10)) {
