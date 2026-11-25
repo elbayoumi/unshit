@@ -197,7 +197,7 @@ export const duplicateBlockDetector: Detector = {
   category: 'duplication',
   tier: 'structural',
   severity: 'info',
-  description: 'Detects copy-pasted structural token blocks across source files.',
+  description: 'Detects copy-pasted structural token blocks across and within source files.',
   detect(ctx: DetectorContext): Finding[] {
     const windowSize = Math.max(1, Math.floor(ctx.config.cloneMinTokens));
     // Windows start at every token position (step 1) so that two identical token
@@ -235,6 +235,7 @@ export const duplicateBlockDetector: Detector = {
     }
 
     const pairs = new Map<string, { first: string; second: string; windows: CloneWindow[] }>();
+    const sameFile = new Map<string, { earlier: CloneWindow[]; later: CloneWindow[] }>();
     for (const occurrences of buckets.values()) {
       const byFile = new Map<string, CloneWindow[]>();
       for (const occurrence of occurrences) {
@@ -242,6 +243,19 @@ export const duplicateBlockDetector: Detector = {
         list.push(occurrence);
         byFile.set(occurrence.file, list);
       }
+      for (const [file, list] of byFile) {
+        if (list.length < 2) continue;
+        const sorted = [...list].sort((a, b) => a.startToken - b.startToken);
+        for (let j = 1; j < sorted.length; j++) {
+          const earlier = sorted.find((w) => sorted[j]!.startToken - w.startToken >= windowSize);
+          if (!earlier) continue;
+          const entry = sameFile.get(file) ?? { earlier: [], later: [] };
+          entry.earlier.push(earlier);
+          entry.later.push(sorted[j]!);
+          sameFile.set(file, entry);
+        }
+      }
+
       const fileNames = [...byFile.keys()].sort();
       if (fileNames.length < 2) continue;
 
@@ -281,6 +295,38 @@ export const duplicateBlockDetector: Detector = {
           span: { line: target.startLine, column: 1, endLine: target.endLine },
           message: `Duplicate logic block (~${tokenCount} tokens) matches ${source.file}:${source.startLine}-${source.endLine}.`,
           evidence: `${target.file}:${target.startLine}-${target.endLine} <-> ${source.file}:${source.startLine}-${source.endLine}`,
+        });
+      }
+    }
+
+    for (const [file, { earlier, later }] of sameFile) {
+      const sources = mergeWindows(earlier);
+      const reported: CloneWindow[] = [];
+      const targets = mergeWindows(later).sort(
+        (a, b) => (b.endToken - b.startToken) - (a.endToken - a.startToken),
+      );
+      for (const target of targets) {
+        const size = target.endToken - target.startToken;
+        const overlap = (w: CloneWindow): number =>
+          Math.max(0, Math.min(target.endToken, w.endToken) - Math.max(target.startToken, w.startToken));
+        // A region that is mostly a source itself (A B C repeated) or already reported is not a new finding.
+        if (sources.some((w) => overlap(w) * 2 > size) || reported.some((w) => overlap(w) > 0)) continue;
+        // Same-file repeats are noisier (JSX siblings, sequential similar steps), so need a longer region.
+        if (target.endToken - target.startToken < windowSize * 1.5) continue;
+        reported.push(target);
+        const source = sources.find((src) => src.endToken <= target.startToken) ?? sources[0]!;
+        const tokenCount = target.endToken - target.startToken;
+        findings.push({
+          ruleId: this.id,
+          category: this.category,
+          tier: this.tier,
+          severity: this.severity,
+          fixability: 'ai',
+          confidence: 0.7,
+          file,
+          span: { line: target.startLine, column: 1, endLine: target.endLine },
+          message: `Duplicate logic block (~${tokenCount} tokens) repeats ${file}:${source.startLine}-${source.endLine} in the same file.`,
+          evidence: `${file}:${target.startLine}-${target.endLine} <-> ${file}:${source.startLine}-${source.endLine}`,
         });
       }
     }

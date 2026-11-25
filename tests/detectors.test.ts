@@ -517,6 +517,36 @@ test('code/duplicate-block stays quiet on trivial boilerplate', async () => {
   );
 });
 
+function cloneBody(n: string): string {
+  return `  if (!${n} || ${n}.length === 0) return [];\n  const kept = ${n}.filter((v) => v > 0 && v < 100);\n  if (kept.length === 0) return [];\n  return kept.map((v) => v * 2 + 1);\n`;
+}
+
+test('code/duplicate-block catches a block repeated within one file once', async () => {
+  await withTempProject(
+    {
+      'a.ts': `export function one(values: number[]) {\n${cloneBody('values')}}\nexport function two(items: number[]) {\n${cloneBody('items')}}\nexport function three(rows: number[]) {\n${cloneBody('rows')}}\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG, cloneMinTokens: 25 });
+      const clones = scan.findings.filter((f) => f.ruleId === 'code/duplicate-block');
+      assert.ok(clones.length >= 1 && clones.length <= 2, `got ${clones.length}`);
+      assert.ok(clones.every((f) => f.message.includes('in the same file')));
+    },
+  );
+});
+
+test('code/duplicate-block ignores short same-file repeats', async () => {
+  await withTempProject(
+    {
+      'a.ts': `export function one(v: number[]) {\n  if (!v) return [];\n  return v.map((x) => x + 1);\n}\nexport function two(w: number[]) {\n  if (!w) return [];\n  return w.map((x) => x + 1);\n}\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG, cloneMinTokens: 40 });
+      assert.equal(scan.findings.filter((f) => f.ruleId === 'code/duplicate-block').length, 0);
+    },
+  );
+});
+
 test('css/design-drift flags hardcoded colors when tokens exist and suggests matching var(--token)', async () => {
   await withTempProject(
     {
