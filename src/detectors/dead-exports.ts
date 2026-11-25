@@ -256,15 +256,36 @@ const analysisCache = new WeakMap<DetectorContext, Analysis>();
 
 const TS_LIKE = new Set(['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs']);
 
+/**
+ * Source files treated as entry points: package.json targets (exports/main/bin/
+ * scripts), tool-setup and HTML script targets, framework routing conventions
+ * and test/spec/storybook files.
+ */
+export function entryPointFileSet(ctx: DetectorContext, files: FileEntry[]): Set<string> {
+  const fileSet = new Set(files.map((f) => f.relPath));
+  const entries = new Set<string>([
+    ...manifestEntryFiles(ctx, fileSet),
+    ...configSetupEntryFiles(files, fileSet),
+    ...htmlScriptEntryFiles(ctx, fileSet),
+  ]);
+  for (const file of files) {
+    if (isRootEntry(file.relPath)
+      || isPluginOrIntegrationFile(file.relPath)
+      || isFrameworkEntryPath(file.relPath)
+      || isTestConventionEntry(file.relPath)) {
+      entries.add(file.relPath);
+    }
+  }
+  return entries;
+}
+
 function analyze(ctx: DetectorContext): Analysis {
   const cached = analysisCache.get(ctx);
   if (cached) return cached;
 
   const resolve = createTsSpecResolver(ctx);
   const fileSet = new Set(ctx.files.map((f) => f.relPath));
-  const publicEntries = manifestEntryFiles(ctx, fileSet);
-  const setupEntries = configSetupEntryFiles(ctx.files, fileSet);
-  const htmlEntries = htmlScriptEntryFiles(ctx, fileSet);
+  const entryPoints = entryPointFileSet(ctx, ctx.files);
   const decls: ExportDecl[] = [];
   const consumed = new Map<string, Set<string>>();
   const fuzzy = new Set<string>();
@@ -280,13 +301,7 @@ function analyze(ctx: DetectorContext): Analysis {
   };
 
   for (const file of ctx.files) {
-    if (publicEntries.has(file.relPath)
-      || isRootEntry(file.relPath)
-      || isPluginOrIntegrationFile(file.relPath)
-      || isFrameworkEntryPath(file.relPath)
-      || isTestConventionEntry(file.relPath)
-      || setupEntries.has(file.relPath)
-      || htmlEntries.has(file.relPath)) {
+    if (entryPoints.has(file.relPath)) {
       consume(file.relPath, STAR);
     }
 

@@ -3,6 +3,7 @@ import { duplicateBlockDetector } from './clones.js';
 import { cssDesignDriftDetector, cssDuplicateSelectorDetector, cssNoImportantDetector } from './css.js';
 import { unusedExportDetector, unusedTypeExportDetector } from './dead-exports.js';
 import { unlistedDependencyDetector, unusedDependencyDetector } from './deps.js';
+import { unusedFileDetector } from './unused-file.js';
 import { godFileDetector } from './god-file.js';
 import { importCycleDetector, layerViolationDetector } from './arch.js';
 import { dartHygieneDetector, pythonBareExceptDetector, rustNoUnwrapDetector } from './polyglot.js';
@@ -33,6 +34,7 @@ export const BUILTIN_DETECTORS: Detector[] = [
   unusedTypeExportDetector,
   unusedDependencyDetector,
   unlistedDependencyDetector,
+  unusedFileDetector,
   rustNoUnwrapDetector,
   dartHygieneDetector,
   pythonBareExceptDetector,
