@@ -22,6 +22,7 @@ interface CloneWindow {
 
 const TS_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
 const LOGIC_DENSITY_MIN = 3;
+const SAME_FILE_LOGIC_MIN = 6;
 
 const LOGIC_TOKENS = new Set([
   'if', 'else', 'for', 'while', 'do', 'switch', 'case',
@@ -206,6 +207,7 @@ export const duplicateBlockDetector: Detector = {
     // can all fall between window starts, and an exact-signature match is missed.
     const step = 1;
     const buckets = new Map<string, CloneWindow[]>();
+    const logicByFile = new Map<string, number[]>();
 
     for (const file of ctx.files) {
       if (!isTsLikeFile(file) || /\.(test|spec|d)\./.test(file.relPath)) continue;
@@ -213,6 +215,7 @@ export const duplicateBlockDetector: Detector = {
       if (tokens.length < windowSize) continue;
 
       const logicPrefix = new Array<number>(tokens.length + 1).fill(0);
+      logicByFile.set(file.relPath, logicPrefix);
       for (let i = 0; i < tokens.length; i++) {
         logicPrefix[i + 1] = logicPrefix[i]! + (tokens[i]!.logic ? 1 : 0);
       }
@@ -313,6 +316,9 @@ export const duplicateBlockDetector: Detector = {
         if (sources.some((w) => overlap(w) * 2 > size) || reported.some((w) => overlap(w) > 0)) continue;
         // Same-file repeats are noisier (JSX siblings, sequential similar steps), so need a longer region.
         if (target.endToken - target.startToken < windowSize * 1.5) continue;
+        const prefix = logicByFile.get(file)!;
+        // JSX siblings carry few branches; real repeated logic carries several.
+        if (prefix[target.endToken]! - prefix[target.startToken]! < SAME_FILE_LOGIC_MIN) continue;
         reported.push(target);
         const source = sources.find((src) => src.endToken <= target.startToken) ?? sources[0]!;
         const tokenCount = target.endToken - target.startToken;

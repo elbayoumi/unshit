@@ -535,6 +535,17 @@ test('code/duplicate-block catches a block repeated within one file once', async
   );
 });
 
+test('code/duplicate-block ignores same-file JSX siblings with few branches', async () => {
+  const card = (t: string) => `      <div style={{ padding: '8px', margin: '4px', color: 'red', border: '1px solid blue' }}>\n        <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px' }}>{lang === 'ar' ? 'a${t}' : 'b${t}'}</h4>\n        <p style={{ fontSize: '11px', margin: 0, lineHeight: 1.4 }}>{lang === 'ar' ? 'c${t}' : 'd${t}'}</p>\n      </div>\n`;
+  await withTempProject(
+    { 'a.tsx': `export function A({ lang }: { lang: string }) {\n  return (\n    <section>\n${card('1')}${card('2')}${card('3')}    </section>\n  );\n}\n` },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG, cloneMinTokens: 25 });
+      assert.equal(scan.findings.filter((f) => f.ruleId === 'code/duplicate-block').length, 0);
+    },
+  );
+});
+
 test('code/duplicate-block ignores short same-file repeats', async () => {
   await withTempProject(
     {
