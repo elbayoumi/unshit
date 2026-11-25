@@ -89,13 +89,13 @@ function specLocFromNode(sf: ts.SourceFile, node: ts.StringLiteralLike): SpecLoc
 function collectSpecsFromAst(sf: ts.SourceFile): SpecLoc[] {
   const out: SpecLoc[] = [];
   const visit = (node: ts.Node): void => {
-    if (ts.isCallExpression(node)) {
-      const arg0 = node.arguments[0];
-      const isImport = node.expression.kind === ts.SyntaxKind.ImportKeyword;
-      const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
-      if ((isImport || isRequire) && arg0 && ts.isStringLiteralLike(arg0)) out.push(specLocFromNode(sf, arg0));
-    } else if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument) && ts.isStringLiteral(node.argument.literal)) {
+    if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument) && ts.isStringLiteral(node.argument.literal)) {
       out.push(specLocFromNode(sf, node.argument.literal));
+    } else if (ts.isCallExpression(node)) {
+      const arg0 = node.arguments[0];
+      const isDynamicImport = node.expression.kind === ts.SyntaxKind.ImportKeyword;
+      const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
+      if ((isDynamicImport || isRequire) && arg0 && ts.isStringLiteralLike(arg0)) out.push(specLocFromNode(sf, arg0));
     }
     ts.forEachChild(node, visit);
   };

@@ -453,7 +453,11 @@ function analyze(ctx: DetectorContext): Analysis {
     const nsMembers = new Map<string, { members: Set<string>; star: boolean }>();
     for (const name of nsLocals.keys()) nsMembers.set(name, { members: new Set(), star: false });
     const visit = (node: ts.Node): void => {
-      if (ts.isCallExpression(node)) {
+      if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument) && ts.isStringLiteral(node.argument.literal)) {
+        const q = node.qualifier;
+        const first = q ? (ts.isIdentifier(q) ? q.text : leftmost(q)) : null;
+        useSpec(node.argument.literal.text, first ? [first] : STAR);
+      } else if (ts.isCallExpression(node)) {
         const arg0 = node.arguments[0];
         const isImportCall = node.expression.kind === ts.SyntaxKind.ImportKeyword;
         const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
@@ -479,10 +483,6 @@ function analyze(ctx: DetectorContext): Analysis {
             for (const other of fileSet) if (other.startsWith(dir.endsWith('/') ? dir : dir.replace(/[^/]*$/, ''))) consume(other, STAR);
           }
         }
-      } else if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument) && ts.isStringLiteral(node.argument.literal)) {
-        const q = node.qualifier;
-        const first = q ? (ts.isIdentifier(q) ? q.text : leftmost(q)) : null;
-        useSpec(node.argument.literal.text, first ? [first] : STAR);
       } else if (ts.isIdentifier(node) && nsMembers.has(node.text)) {
         const parent = node.parent;
         const entry = nsMembers.get(node.text)!;
