@@ -455,3 +455,18 @@ export async function handleB(values: number[]) {
     },
   );
 });
+
+test('css/design-drift flags hardcoded colors when tokens exist and suggests matching var(--token)', async () => {
+  await withTempProject(
+    {
+      'tokens.css': `:root { --brand: #ff0000; }\n`,
+      'ui.css': `.btn { color: #ff0000; background: var(--bg, #123456); border-color: transparent; }\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      const drift = scan.findings.filter((f) => f.ruleId === 'css/design-drift');
+      assert.equal(drift.length, 1);
+      assert.match(drift[0]!.message, /use var\(--brand\)/);
+    },
+  );
+});

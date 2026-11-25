@@ -1,0 +1,12 @@
+name: Rule or feature request
+description: Propose a new check or capability
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: What problem should this solve?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Example code it should (and should not) flag

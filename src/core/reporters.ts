@@ -1,4 +1,5 @@
 import type { Finding, ScoreBreakdown } from '../contracts.js';
+import { VERSION } from '../version.js';
 
 export type OutputFormat = 'human' | 'json' | 'sarif' | 'markdown';
 
@@ -18,7 +19,7 @@ export function formatScanOutput(
         version: '2.1.0',
         runs: [
           {
-            tool: { driver: { name: 'unshit', version: '0.1.0' } },
+            tool: { driver: { name: 'unshit', version: VERSION } },
             results: findings.map((f) => ({
               ruleId: f.ruleId,
               level: f.severity === 'error' ? 'error' : f.severity === 'warn' ? 'warning' : 'note',

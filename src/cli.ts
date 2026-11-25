@@ -5,13 +5,14 @@ import { abortSwarmFix, runSwarmFix } from './core/swarm-fixer.js';
 import { runFix } from './core/fixer.js';
 import { runHook } from './core/hook.js';
 import { runInit } from './core/init.js';
-import { createBaseline, evaluateGuard, getChangedFiles, loadBaseline } from './core/pinner.js';
+import { computeHotspots } from './core/hotspots.js';
+import { createBaseline, evaluateGuard, getChangedFiles, getChangedLineRanges, loadBaseline, type LineRange } from './core/pinner.js';
 import { formatScanOutput, type OutputFormat } from './core/reporters.js';
 import { runScan } from './core/scanner.js';
 import { computeScore } from './core/scorer.js';
 import { runMcpServer } from './mcp/server.js';
 
-const VALID_COMMANDS = new Set(['scan', 'score', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'help', '--help', '-h']);
+const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'help', '--help', '-h']);
 const VALID_FORMATS = new Set<OutputFormat>(['human', 'json', 'sarif', 'markdown']);
 const SEV_RANK: Record<Severity, number> = { info: 1, warn: 2, error: 3 };
 
@@ -27,7 +28,7 @@ function getOpt(args: string[], name: string): string | undefined {
 function getTargetPath(args: string[]): string {
   for (let i = 0; i < args.length; i++) {
     const a = args[i]!;
-    if (a === '--format' || a === '--runner' || a === '--model' || a === '--fail-on' || a === '--base' || a === '--concurrency' || a === '--max-files' || a === '--max-diff-lines') {
+    if (a === '--format' || a === '--runner' || a === '--model' || a === '--fail-on' || a === '--base' || a === '--since' || a === '--top' || a === '--concurrency' || a === '--max-files' || a === '--max-diff-lines') {
       i += 1;
       continue;
     }
@@ -64,8 +65,9 @@ export async function main(argv: string[]): Promise<number> {
       'Commands:',
       '  scan [path]    Read-only AST/CSS/clone/slop scan (--format human|json|sarif|markdown, --fail-on error|warn|info)',
       '  score [path]   Compute 0-100 codebase health score',
+      '  hotspots [path] Rank files by churn and finding density (--since 90.days, --top 10, --json)',
       '  pin [path]     Capture unshit.baseline.json characterization snapshot',
-      '  guard [path]   Fail CI/pre-commit on regressions (--changed [baseRef] for diff-only PRs)',
+      '  guard [path]   Fail CI/pre-commit on regressions (--changed [baseRef] for diff-only PRs, --lines for changed-line scope)',
       '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude; --swarm for parallel worktree AI fixer; --abort to clean stale worktrees)',
       '  init [path]    Bootstrap config, baseline, and Claude Code PreToolUse hook (--force to overwrite)',
       '  hook [file]    Live AI Guardrail Hook (--stdin for Claude Code PreToolUse/PostToolUse, exits 2 on slop)',
@@ -120,6 +122,32 @@ export async function main(argv: string[]): Promise<number> {
     return 0;
   }
 
+  if (cmd === 'hotspots') {
+    const since = getOpt(rest, '--since') ?? '90.days';
+    const topRaw = getOpt(rest, '--top');
+    const top = topRaw === undefined ? 10 : Number.parseInt(topRaw, 10);
+    try {
+      const hotspots = await computeHotspots(targetDir, scan, {
+        since,
+        top: Number.isFinite(top) ? top : 10,
+      });
+      if (format === 'json') {
+        console.log(JSON.stringify(hotspots, null, 2));
+      } else {
+        console.log(`unshit hotspots (since ${since}): top ${hotspots.length}`);
+        hotspots.forEach((h, idx) => {
+          console.log(
+            `  ${String(idx + 1).padStart(2)}. ${h.score.toFixed(2).padStart(8)}  ${h.file} — churn: ${h.churnCommits} commits / ${h.churnLines} lines, findings: ${h.findings}`,
+          );
+        });
+      }
+      return 0;
+    } catch (err) {
+      console.error(`unshit hotspots: ${err instanceof Error ? err.message : String(err)}`);
+      return 2;
+    }
+  }
+
   if (cmd === 'pin') {
     const snap = await createBaseline(scan);
     console.log(`Pinned baseline: ${snap.score.score}/100 (${snap.fingerprints.length} findings, ${Object.keys(snap.fileHashes).length} files) -> unshit.baseline.json`);
@@ -128,6 +156,7 @@ export async function main(argv: string[]): Promise<number> {
 
   if (cmd === 'guard') {
     const changed = getFlag(rest, '--changed');
+    const lines = getFlag(rest, '--lines');
     const baseRef = getOpt(rest, '--base') ?? 'HEAD';
     let baseline;
     try {
@@ -141,16 +170,23 @@ export async function main(argv: string[]): Promise<number> {
       return 2;
     }
     let changedFiles: Set<string> | undefined;
+    let changedLineRanges: Map<string, LineRange[]> | undefined;
     if (changed) {
       try {
         changedFiles = await getChangedFiles(targetDir, baseRef);
+        if (lines) changedLineRanges = await getChangedLineRanges(targetDir, baseRef);
       } catch (err) {
         console.error(err instanceof Error ? err.message : String(err));
         return 3;
       }
     }
-    const res = evaluateGuard(scan, baseline, changedFiles);
-    const scopeLabel = changed ? ` (changed: ${changedFiles?.size ?? 0} files)` : '';
+    const res = evaluateGuard(scan, baseline, changedFiles, changedLineRanges);
+    const lineCount = changedLineRanges
+      ? [...changedLineRanges.values()].reduce((sum, ranges) => sum + ranges.length, 0)
+      : 0;
+    const scopeLabel = changed
+      ? ` (changed: ${changedFiles?.size ?? 0} files${changedLineRanges ? `, ${lineCount} line ranges` : ''})`
+      : '';
     console.log(
       `unshit guard${scopeLabel}: ${res.passed ? 'PASS' : 'FAIL'} | score ${res.baselineScore} -> ${res.currentScore} | new: ${res.newFindings.length} | resolved: ${res.resolvedCount}`,
     );

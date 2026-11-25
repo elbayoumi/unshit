@@ -4,6 +4,7 @@ import { loadConfig } from '../config.js';
 import { evaluateGuard, loadBaseline } from '../core/pinner.js';
 import { runScan } from '../core/scanner.js';
 import { computeScore } from '../core/scorer.js';
+import { VERSION } from '../version.js';
 
 interface JsonRpcReq {
   jsonrpc: '2.0';
@@ -38,7 +39,7 @@ export async function runMcpServer(): Promise<number> {
         result: {
           protocolVersion: '2024-11-05',
           capabilities: { tools: {} },
-          serverInfo: { name: 'unshit', version: '0.1.0' },
+          serverInfo: { name: 'unshit', version: VERSION },
         },
       });
       continue;

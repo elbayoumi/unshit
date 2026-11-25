@@ -1,6 +1,6 @@
 import type { Detector } from '../contracts.js';
 import { duplicateBlockDetector } from './clones.js';
-import { cssDuplicateSelectorDetector, cssNoImportantDetector } from './css.js';
+import { cssDesignDriftDetector, cssDuplicateSelectorDetector, cssNoImportantDetector } from './css.js';
 import { unusedExportDetector, unusedTypeExportDetector } from './dead-exports.js';
 import { godFileDetector } from './god-file.js';
 import { importCycleDetector, layerViolationDetector } from './arch.js';
@@ -23,6 +23,7 @@ export const BUILTIN_DETECTORS: Detector[] = [
   redundantCatchDetector,
   cssNoImportantDetector,
   cssDuplicateSelectorDetector,
+  cssDesignDriftDetector,
   godFileDetector,
   duplicateBlockDetector,
   unusedExportDetector,

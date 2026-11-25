@@ -1,20 +1,36 @@
 <div align="center">
 
-# `unshit`
+# 🧹 `unshit`
 
-**Codebase detox CLI: deterministic dead-code, clone, CSS, i18n, and AI-slop scanner + gated AI fixer.**
+### Your AI writes code fast. `unshit` stops it from rotting your repo.
 
-[![npm version](https://img.shields.io/npm/v/unshit?color=cb3837&label=npm)](https://www.npmjs.com/package/unshit)
+**Deterministic dead-code, clone, CSS, i18n, and AI-slop scanner with a gated AI fixer.**
+
+[![CI](https://github.com/elbayoumi/unshit/actions/workflows/ci.yml/badge.svg)](https://github.com/elbayoumi/unshit/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/unshit?color=cb3837&logo=npm)](https://www.npmjs.com/package/unshit)
+[![npm downloads](https://img.shields.io/npm/dm/unshit?color=blue)](https://www.npmjs.com/package/unshit)
+[![node](https://img.shields.io/badge/node-%3E%3D22-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![node](https://img.shields.io/badge/node-%3E%3D22.0.0-339933.svg)](https://nodejs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8%2B-3178c6.svg)](https://www.typescriptlang.org)
 
 ```bash
 npx unshit score .
-npx unshit scan .
 ```
 
+[Quick Start](#quick-start) · [CLI](#cli-reference) · [Rules](#built-in-rules) · [CI & Agents](#ci--ai-agent-integration) · [Changelog](./CHANGELOG.md)
+
 </div>
+
+| 📊 **Score** | 🔒 **Guard** | 🛡️ **Hook** | 🔧 **Fix** |
+|:---:|:---:|:---:|:---:|
+| A 0–100 health grade for the whole repo | CI fails only on *new* slop | Blocks slop while the AI agent is writing it | Dry-run by default, AI fixes are verify-gated |
+
+```mermaid
+flowchart LR
+  A[scan] --> B[pin baseline] --> C[guard in CI]
+  B --> D[fix] --> E{verify}
+  E -- pass --> F[keep]
+  E -- fail --> G[rollback]
+```
 
 ---
 
@@ -96,8 +112,9 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 | `unshit init [path]` | One-command setup: `unshit.config.json`, Claude hook, and baseline pin | `--force` |
 | `unshit scan [path]` | Read-only AST, CSS, clone, and slop scan | `--format human\|json\|sarif\|markdown`, `--fail-on error\|warn\|info` |
 | `unshit score [path]` | Compute deterministic 0–100 health score (`Grade A–F`) | `--format human\|json` |
+| `unshit hotspots [path]` | Rank files by churn and finding density | `--since 90.days`, `--top 10`, `--json` |
 | `unshit pin [path]` | Write `unshit.baseline.json` snapshot | — |
-| `unshit guard [path]` | Compare current scan against `unshit.baseline.json` | `--changed` (diff-only PR mode), `--base <ref>` |
+| `unshit guard [path]` | Compare current scan against `unshit.baseline.json` | `--changed` (diff-only PR mode), `--lines` (changed lines only), `--base <ref>` |
 | `unshit fix [path]` | Preview or apply deterministic + gated AI fixes | `--apply`, `--ai`, `--swarm`, `--abort`, `--runner opencode\|claude` |
 | `unshit hook [file]` | **Live AI Guardrail Hook** — blocks AI slop in real time (exits `2`) | `--stdin` (Claude Code `PreToolUse` / `PostToolUse` JSON) |
 | `unshit mcp` | Start stdio MCP server (`unshit_scan`, `unshit_score`, `unshit_guard`) | — |
@@ -209,6 +226,8 @@ Expose `unshit_scan`, `unshit_score`, and `unshit_guard` as read-only MCP tools:
 ---
 
 ## Development & Architecture
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started and [RELEASING.md](./RELEASING.md) for how versions are shipped.
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full design and safety invariants.
 
