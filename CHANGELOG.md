@@ -5,6 +5,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+
+- `.gitignore` support during file discovery: root and nested scopes with comments, blank lines, anchoring, directory-only rules, `*` / `**` globs, and negation.
+
+### Fixed
+
+- Release workflow strips empty `_authToken` placeholders and requires npm >= 11.5.1 so `npm publish --provenance` works with OIDC Trusted Publishing.
+
 ## [0.6.0] - 2026-11-25
 
 ### Added
