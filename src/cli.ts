@@ -299,12 +299,17 @@ export async function main(argv: string[]): Promise<number> {
   }
 
   const summary = await runFix(scan, { apply, ai });
-  if (summary.dryRun && summary.diff) process.stdout.write(summary.diff);
+  if (summary.dryRun) {
+    if (summary.diff) process.stdout.write(summary.diff);
+    for (const file of summary.deletions) {
+      console.log(`  DELETE ${file} — would be removed by --apply`);
+    }
+  }
   for (const skip of summary.skipped) {
     console.log(`  SKIP [${skip.ruleId}] ${skip.file}:${skip.line} — ${skip.reason}`);
   }
   console.log(
-    `unshit fix (${summary.dryRun ? 'dry-run' : 'applied'}): ${summary.deterministicPatches.length} deterministic patches (${summary.appliedCount} applied), skipped: ${summary.skipped.length}, AI attempted: ${summary.aiAttempted.length}, reverted: ${summary.aiReverted.length}`,
+    `unshit fix (${summary.dryRun ? 'dry-run' : 'applied'}): ${summary.deterministicPatches.length} deterministic patches (${summary.appliedCount} applied), deletions: ${summary.deletions.length} (${summary.deletedCount} deleted), skipped: ${summary.skipped.length}, AI attempted: ${summary.aiAttempted.length}, reverted: ${summary.aiReverted.length}`,
   );
   return summary.aiReverted.length > 0 ? 1 : 0;
 }

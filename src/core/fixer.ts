@@ -1,9 +1,20 @@
 import { execFile } from 'node:child_process';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, unlink, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { promisify } from 'node:util';
 import type { Finding, Patch } from '../contracts.js';
 import { formatUnifiedDiff, type FileDiff } from './fixers/diff.js';
-import { isUnusedExportRule, planUnusedExportFixes, type UnusedExportSkip } from './fixers/unused-export.js';
+import {
+  isUnusedDependencyRule,
+  planUnusedDependencyFixes,
+} from './fixers/unused-dependency.js';
+import {
+  isUnusedFileRule,
+  gitDirtyFiles,
+  planUnusedFileDeletions,
+  type UnusedFileDeletion,
+} from './fixers/unused-file.js';
+import { isUnusedExportRule, planUnusedExportFixes } from './fixers/unused-export.js';
 import type { ScanResult } from './scanner.js';
 
 const execFileAsync = promisify(execFile);
@@ -12,6 +23,14 @@ interface FixOptions {
   apply: boolean;
   ai: boolean;
   maxAiFiles?: number;
+}
+
+/** A fix that was deliberately not made, with the reason. */
+export interface FixSkip {
+  file: string;
+  ruleId: string;
+  line: number;
+  reason: string;
 }
 
 interface FixSummary {
@@ -23,7 +42,10 @@ interface FixSummary {
   /** Unified diff of all deterministic patches; always computed, printed by the CLI on dry runs. */
   diff: string;
   /** Fixes that were deliberately not made, with the reason for each. */
-  skipped: UnusedExportSkip[];
+  skipped: FixSkip[];
+  /** Files a `ts/unused-file` fix would delete (dry run) or deleted (apply). */
+  deletions: string[];
+  deletedCount: number;
 }
 
 function applyEdits(content: string, patches: Patch[]): string {
@@ -77,14 +99,17 @@ async function runAiFixForFile(
 }
 
 /**
- * Applies deterministic safe patches first, then optionally runs gated AI fixes per file.
+ * Applies deterministic safe patches first (including unused dependency keys
+ * and provably unreferenced files), then optionally runs gated AI fixes.
  */
 export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSummary> {
   const detectorMap = new Map(scan.detectors.map((d) => [d.id, d]));
   const fileMap = new Map(scan.files.map((f) => [f.relPath, f]));
+  const manifestSet = new Set(scan.manifests ?? []);
 
   const deterministicPatches: Patch[] = [];
-  const skipped: UnusedExportSkip[] = [];
+  const skipped: FixSkip[] = [];
+  const deletionPlan: UnusedFileDeletion[] = [];
 
   const unusedByFile = new Map<string, Finding[]>();
   for (const finding of scan.findings) {
@@ -101,8 +126,17 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
     skipped.push(...plan.skipped);
   }
 
+  const dependencyFindings = scan.findings.filter((f) => isUnusedDependencyRule(f.ruleId));
+  if (dependencyFindings.length > 0) {
+    const plan = planUnusedDependencyFixes(scan, dependencyFindings);
+    deterministicPatches.push(...plan.patches);
+    skipped.push(...plan.skipped);
+  }
+
   for (const finding of scan.findings) {
-    if (isUnusedExportRule(finding.ruleId)) continue;
+    if (isUnusedExportRule(finding.ruleId)
+      || isUnusedDependencyRule(finding.ruleId)
+      || isUnusedFileRule(finding.ruleId)) continue;
     const detector = detectorMap.get(finding.ruleId);
     const file = fileMap.get(finding.file);
     if (!detector?.fix || !file) continue;
@@ -118,27 +152,77 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
     list.push(p);
     patchesByFile.set(p.file, list);
   }
+
+  const unusedFileFindings = scan.findings.filter((f) => isUnusedFileRule(f.ruleId));
+  if (unusedFileFindings.length > 0) {
+    const dirty = await gitDirtyFiles(scan.rootDir);
+    const plan = planUnusedFileDeletions(scan, unusedFileFindings, dirty, new Set(patchesByFile.keys()));
+    deletionPlan.push(...plan.deletions);
+    skipped.push(...plan.skipped);
+  }
+
+  /** Scanned files and manifests are the only files a deterministic patch may touch. */
+  const originalContent = async (relPath: string): Promise<string | null> => {
+    const file = fileMap.get(relPath);
+    if (file) return file.content;
+    if (manifestSet.has(relPath) && relPath.endsWith('package.json') && !relPath.includes('..')) {
+      try {
+        return await readFile(join(scan.rootDir, relPath), 'utf8');
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  };
+  const absolutePath = (relPath: string): string | null => {
+    const file = fileMap.get(relPath);
+    if (file) return file.absPath;
+    if (manifestSet.has(relPath) && relPath.endsWith('package.json') && !relPath.includes('..')) {
+      return join(scan.rootDir, relPath);
+    }
+    return null;
+  };
+
   const diffInputs: FileDiff[] = [];
   for (const [relPath, patches] of patchesByFile) {
-    const file = fileMap.get(relPath);
-    if (!file) continue;
-    const updated = applyEdits(file.content, patches);
-    if (updated !== file.content) {
-      diffInputs.push({ file: relPath, before: file.content, after: updated });
+    const before = await originalContent(relPath);
+    if (before === null) continue;
+    const updated = applyEdits(before, patches);
+    if (updated !== before) {
+      diffInputs.push({ file: relPath, before, after: updated });
     }
+  }
+  for (const deletion of deletionPlan) {
+    diffInputs.push({ file: deletion.relPath, before: deletion.content, after: '' });
   }
   const diff = formatUnifiedDiff(diffInputs);
 
   let appliedCount = 0;
-  if (opts.apply && deterministicPatches.length > 0) {
+  let deletedCount = 0;
+  if (opts.apply) {
     for (const [relPath, patches] of patchesByFile) {
-      const file = fileMap.get(relPath);
-      if (!file) continue;
-      const updated = applyEdits(file.content, patches);
-      if (updated !== file.content) {
-        await writeFile(file.absPath, updated, 'utf8');
+      const before = await originalContent(relPath);
+      const absPath = absolutePath(relPath);
+      if (before === null || !absPath) continue;
+      const updated = applyEdits(before, patches);
+      if (updated !== before) {
+        await writeFile(absPath, updated, 'utf8');
         appliedCount += patches.length;
       }
+    }
+    for (const deletion of deletionPlan) {
+      const current = await readFile(deletion.absPath, 'utf8').catch(() => null);
+      if (current !== deletion.content) {
+        skipped.push({
+          file: deletion.relPath,
+          ruleId: deletion.ruleId,
+          line: deletion.line,
+          reason: 'file changed on disk since the fix plan',
+        });
+        continue;
+      }
+      await unlink(deletion.absPath);
+      deletedCount += 1;
     }
   }
 
@@ -147,6 +231,8 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
   if (opts.apply && opts.ai) {
     const aiByFile = new Map<string, Finding[]>();
     for (const f of scan.findings) {
+      // These rules have deterministic fixes and must never be handed to an AI runner.
+      if (isUnusedFileRule(f.ruleId) || isUnusedDependencyRule(f.ruleId)) continue;
       if (f.fixability !== 'ai') continue;
       const list = aiByFile.get(f.file) ?? [];
       list.push(f);
@@ -181,5 +267,7 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
     dryRun: !opts.apply,
     diff,
     skipped,
+    deletions: deletionPlan.map((d) => d.relPath),
+    deletedCount,
   };
 }
