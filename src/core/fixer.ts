@@ -8,13 +8,13 @@ import type { ScanResult } from './scanner.js';
 
 const execFileAsync = promisify(execFile);
 
-export interface FixOptions {
+interface FixOptions {
   apply: boolean;
   ai: boolean;
   maxAiFiles?: number;
 }
 
-export interface FixSummary {
+interface FixSummary {
   deterministicPatches: Patch[];
   appliedCount: number;
   aiAttempted: string[];

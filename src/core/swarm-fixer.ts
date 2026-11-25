@@ -43,7 +43,7 @@ function runWithInput(
   });
 }
 
-export interface SwarmWorkerResult {
+interface SwarmWorkerResult {
   index: number;
   relPath: string;
   worktree: string;
@@ -55,7 +55,7 @@ export interface SwarmWorkerResult {
   changedFiles?: string[];
 }
 
-export interface SwarmFixSummary {
+interface SwarmFixSummary {
   runId: string;
   baseSha: string;
   workers: SwarmWorkerResult[];

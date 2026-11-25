@@ -1,6 +1,6 @@
 import type { Detector, DetectorContext, Finding } from '../contracts.js';
 
-export function isTestPath(relPath: string): boolean {
+function isTestPath(relPath: string): boolean {
   if (/(^|\/)build\.rs$/i.test(relPath)) return true;
   if (/(^|\/)(examples|benches|bin|tool)(\/|$)/i.test(relPath)) return true;
   return /(^|\/)(tests?|__tests__)(\/|$)|\.(test|spec)\.|_test\.(rs|dart|py)$|(^|\/)test_[^/]*\.py$|(^|\/)conftest\.py$/i.test(relPath);
@@ -9,7 +9,7 @@ export function isTestPath(relPath: string): boolean {
 /**
  * Masks comments and string literals with spaces while preserving line and column offsets.
  */
-export function maskCommentsAndStrings(lang: 'rust' | 'dart' | 'python', content: string): string {
+function maskCommentsAndStrings(lang: 'rust' | 'dart' | 'python', content: string): string {
   const n = content.length;
   const out = content.split('');
   let i = 0;

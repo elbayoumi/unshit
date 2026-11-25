@@ -4,9 +4,9 @@ import { STRUCTURE_RULES } from '../detectors/structure.js';
 import { buildImportGraph } from './import-graph.js';
 import inferShape, { type ProjectShape } from './project-shape.js';
 
-export type StructureVerdictKind = 'HEALTHY' | 'NEEDS ATTENTION' | 'TANGLED' | 'NOT ASSESSED';
+type StructureVerdictKind = 'HEALTHY' | 'NEEDS ATTENTION' | 'TANGLED' | 'NOT ASSESSED';
 
-export interface StructureVerdict {
+interface StructureVerdict {
   verdict: StructureVerdictKind;
   reason?: string;
   archetype: string;

@@ -218,7 +218,7 @@ export async function collectWorkspace(
 }
 
 /** Backward-compatible wrapper: returns only the parsed files. */
-export async function collectFiles(rootDir: string, config: UnshitConfig): Promise<FileEntry[]> {
+async function collectFiles(rootDir: string, config: UnshitConfig): Promise<FileEntry[]> {
   const { files } = await collectWorkspace(rootDir, config);
   return files;
 }
