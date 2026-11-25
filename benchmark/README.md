@@ -28,8 +28,9 @@ Unused exports use import-binding analysis (resolved specifiers, default/named, 
 unshit now finds every export knip finds on all five corpora (nothing is knip-only). Its extra findings are listed
 in the table below.
 
-Duplication (jscpd vs unshit): self 6 vs 0, auctions-frontend 2 vs 0, bidshop 2 vs 0, rveta 1 vs 0, backend 0 vs 0.
-jscpd still finds clones that unshit does not; clone recall is the open gap in this benchmark.
+Duplication (unshit vs jscpd): self 2 vs 6, auctions-frontend 3 vs 2, bidshop 3 vs 2, rveta 1 vs 1, backend 0 vs 0.
+unshit now matches or exceeds jscpd on the frontends, but jscpd still finds 4 more clones in unshit itself; the counts are
+not a one-to-one match, so check overlap before reading them as recall.
 
 ## Hand-checked disagreements
 
