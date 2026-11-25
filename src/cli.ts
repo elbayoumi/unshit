@@ -4,7 +4,7 @@ import type { OutputFormat } from './core/reporters.js';
 import type { ScanResult } from './core/scanner.js';
 import type { LineRange } from './core/pinner.js';
 
-const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'structure', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'note', 'notes', 'help', '--help', '-h']);
+const VALID_COMMANDS = new Set(['scan', 'score', 'hotspots', 'structure', 'pin', 'guard', 'fix', 'init', 'hook', 'mcp', 'note', 'notes', 'context', 'help', '--help', '-h']);
 const VALID_FORMATS = new Set<OutputFormat>(['human', 'json', 'sarif', 'markdown']);
 const SEV_RANK: Record<Severity, number> = { info: 1, warn: 2, error: 3 };
 
@@ -50,6 +50,15 @@ function printHelp(): number {
   return 0;
 }
 
+async function runContextCommand(rest: string[], scan: ScanResult): Promise<number> {
+  const { generateContextBlock, writeContextBlock } = await import('./core/context.js');
+  if (!getFlag(rest, '--write')) {
+    process.stdout.write(`${generateContextBlock(scan)}\n`);
+    return 0;
+  }
+  await writeContextBlock(getTargetPath(rest), generateContextBlock(scan));
+  return 0;
+}
 async function runNoteCommand(rest: string[]): Promise<number> {
   const { addFeedback, isFeedbackKind, FEEDBACK_KINDS } = await import('./core/feedback.js');
   const positional = rest.filter((a, i) => !a.startsWith('-') && !['--kind', '--file'].includes(rest[i - 1] ?? ''));
@@ -320,6 +329,7 @@ export async function main(argv: string[]): Promise<number> {
   const { computeScore } = await import('./core/scorer.js');
   const score = computeScore(scan.files, scan.findings);
 
+  if (cmd === 'context') return runContextCommand(rest, scan);
   if (cmd === 'scan') return runScanCommand(rest, scan, score, format);
   if (cmd === 'score') return runScoreCommand(score, format);
   if (cmd === 'hotspots') return runHotspotsCommand(targetDir, scan, rest, format);
