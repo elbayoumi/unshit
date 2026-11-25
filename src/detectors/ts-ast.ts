@@ -26,6 +26,19 @@ function isDictionaryFile(relPath: string): boolean {
   return /(^|\/)(i18n|dictionary|translations|text-direction)(\.[cm]?[jt]sx?)?$|(^|\/)locales?\//i.test(relPath);
 }
 
+function walkSourceFiles(
+  ctx: DetectorContext,
+  opts: { skipDts?: boolean; skipDictionary?: boolean },
+  fn: (file: FileEntry, sf: ts.SourceFile) => void,
+): void {
+  for (const file of ctx.files) {
+    if (!file.sourceFile || isTestFile(file.relPath)) continue;
+    if (opts.skipDts && /\.d\.ts$/.test(file.relPath)) continue;
+    if (opts.skipDictionary && isDictionaryFile(file.relPath)) continue;
+    fn(file, file.sourceFile);
+  }
+}
+
 function isTimerCall(expr: ts.LeftHandSideExpression): string | null {
   if (ts.isIdentifier(expr) && (expr.text === 'setTimeout' || expr.text === 'setInterval')) {
     return expr.text;
@@ -49,9 +62,7 @@ export const noExplicitAnyDetector: Detector = {
   description: 'Flags explicit `any` type annotations and casts.',
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
-    for (const file of ctx.files) {
-      if (!file.sourceFile || /\.d\.ts$/.test(file.relPath) || isTestFile(file.relPath)) continue;
-      const sf = file.sourceFile;
+    walkSourceFiles(ctx, { skipDts: true }, (file, sf) => {
       const visit = (node: ts.Node): void => {
         if (node.kind === ts.SyntaxKind.AnyKeyword) {
           const parent = node.parent;
@@ -74,7 +85,7 @@ export const noExplicitAnyDetector: Detector = {
         ts.forEachChild(node, visit);
       };
       visit(sf);
-    }
+    });
     return findings;
   },
   fix(file: FileEntry, finding: Finding): Patch | null {
@@ -98,9 +109,7 @@ export const noDoubleCastDetector: Detector = {
   description: 'Flags `as unknown as T` double type assertions.',
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
-    for (const file of ctx.files) {
-      if (!file.sourceFile || isTestFile(file.relPath)) continue;
-      const sf = file.sourceFile;
+    walkSourceFiles(ctx, {}, (file, sf) => {
       const visit = (node: ts.Node): void => {
         if (ts.isAsExpression(node) && ts.isAsExpression(node.expression)) {
           if (node.expression.type.kind === ts.SyntaxKind.UnknownKeyword) {
@@ -121,7 +130,7 @@ export const noDoubleCastDetector: Detector = {
         ts.forEachChild(node, visit);
       };
       visit(sf);
-    }
+    });
     return findings;
   },
 };
@@ -164,9 +173,7 @@ export const noInlineI18nTernaryDetector: Detector = {
   description: 'Flags inline locale/language ternaries instead of centralized i18n dictionary calls.',
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
-    for (const file of ctx.files) {
-      if (!file.sourceFile || isTestFile(file.relPath) || isDictionaryFile(file.relPath)) continue;
-      const sf = file.sourceFile;
+    walkSourceFiles(ctx, { skipDictionary: true }, (file, sf) => {
       const visit = (node: ts.Node): void => {
         if (ts.isConditionalExpression(node)) {
           const condText = node.condition.getText(sf).trim();
@@ -188,7 +195,7 @@ export const noInlineI18nTernaryDetector: Detector = {
         ts.forEachChild(node, visit);
       };
       visit(sf);
-    }
+    });
     return findings;
   },
 };
@@ -201,9 +208,7 @@ export const magicTimerDetector: Detector = {
   description: 'Flags raw numeric delays in setTimeout/setInterval instead of named constants.',
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
-    for (const file of ctx.files) {
-      if (!file.sourceFile || isTestFile(file.relPath)) continue;
-      const sf = file.sourceFile;
+    walkSourceFiles(ctx, {}, (file, sf) => {
       const visit = (node: ts.Node): void => {
         if (ts.isCallExpression(node) && node.arguments.length >= 2) {
           const fn = isTimerCall(node.expression);
@@ -228,7 +233,7 @@ export const magicTimerDetector: Detector = {
         ts.forEachChild(node, visit);
       };
       visit(sf);
-    }
+    });
     return findings;
   },
 };
@@ -241,9 +246,7 @@ export const redundantCatchDetector: Detector = {
   description: 'Flags AI-slop empty catch blocks or catch blocks that immediately rethrow.',
   detect(ctx: DetectorContext): Finding[] {
     const findings: Finding[] = [];
-    for (const file of ctx.files) {
-      if (!file.sourceFile || isTestFile(file.relPath)) continue;
-      const sf = file.sourceFile;
+    walkSourceFiles(ctx, {}, (file, sf) => {
       const visit = (node: ts.Node): void => {
         if (ts.isCatchClause(node)) {
           const stmts = node.block.statements;
@@ -290,7 +293,7 @@ export const redundantCatchDetector: Detector = {
         ts.forEachChild(node, visit);
       };
       visit(sf);
-    }
+    });
     return findings;
   },
   fix(file: FileEntry, finding: Finding): Patch | null {
