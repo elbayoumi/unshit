@@ -26,7 +26,7 @@ interface FixOptions {
 }
 
 /** A fix that was deliberately not made, with the reason. */
-export interface FixSkip {
+interface FixSkip {
   file: string;
   ruleId: string;
   line: number;
