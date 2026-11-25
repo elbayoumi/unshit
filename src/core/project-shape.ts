@@ -196,18 +196,37 @@ function parseJsonObject(text: string): Record<string, unknown> | null {
   }
 }
 
+function addWorkspacePattern(patterns: Set<string>, value: unknown): void {
+  if (typeof value === 'string') {
+    const pattern = value.trim();
+    if (pattern) patterns.add(pattern);
+  } else if (Array.isArray(value)) {
+    for (const item of value) addWorkspacePattern(patterns, item);
+  } else if (value !== null && typeof value === 'object') {
+    addWorkspacePattern(patterns, (value as Record<string, unknown>).packages);
+  }
+}
+
+function parsePnpmWorkspacePackages(text: string, add: (value: unknown) => void): void {
+  let inPackages = false;
+  for (const line of text.split(/\r?\n/)) {
+    if (/^packages\s*:/.test(line)) {
+      inPackages = true;
+      continue;
+    }
+    if (/^\S/.test(line)) {
+      inPackages = false;
+      continue;
+    }
+    if (!inPackages) continue;
+    const item = /^\s*-\s*(.+?)\s*$/.exec(line)?.[1];
+    if (item) add(item.replace(/^['"]|['"]$/g, ''));
+  }
+}
+
 function workspacePatterns(read: (relPath: string) => string | undefined, paths: string[]): string[] {
   const patterns = new Set<string>();
-  const add = (value: unknown): void => {
-    if (typeof value === 'string') {
-      const pattern = value.trim();
-      if (pattern) patterns.add(pattern);
-    } else if (Array.isArray(value)) {
-      for (const item of value) add(item);
-    } else if (value !== null && typeof value === 'object') {
-      add((value as Record<string, unknown>).packages);
-    }
-  };
+  const add = (value: unknown): void => addWorkspacePattern(patterns, value);
 
   for (const relPath of paths) {
     const base = basenameOf(relPath).toLowerCase();
@@ -216,23 +235,9 @@ function workspacePatterns(read: (relPath: string) => string | undefined, paths:
     if (!text) continue;
 
     if (base === 'pnpm-workspace.yaml') {
-      let inPackages = false;
-      for (const line of text.split(/\r?\n/)) {
-        if (/^packages\s*:/.test(line)) {
-          inPackages = true;
-          continue;
-        }
-        if (/^\S/.test(line)) {
-          inPackages = false;
-          continue;
-        }
-        if (!inPackages) continue;
-        const item = /^\s*-\s*(.+?)\s*$/.exec(line)?.[1];
-        if (item) add(item.replace(/^['"]|['"]$/g, ''));
-      }
+      parsePnpmWorkspacePackages(text, add);
       continue;
     }
-
     const json = parseJsonObject(text);
     if (json) add(json.workspaces ?? (base === 'lerna.json' ? json.packages : undefined));
   }
