@@ -20,6 +20,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Default excludes add `.dart_tool`, and `static/lib` / `static/vendor` directories are skipped at any depth; generated `.g.dart`, `.freezed.dart` and `_pb2.py` files are skipped. `cloneMinTokens` default raised from 45 to 80 to cut `code/duplicate-block` noise.
 
 ### Changed
+- `ts/unused-type-export` now also reports types that are exported but only used inside their own file (suggesting to drop `export`), matching knip. `*Props` types stay skipped.
 - `ts/unused-export` and `ts/unused-type-export` now use import-binding analysis instead of identifier-name counting: specifiers are resolved with the tsconfig-aware resolver, default and named imports are distinguished, `export *`/`export {…} from` chains, namespace member access, `import()`/`require` and `import.meta.glob` are followed, and side-effect imports consume nothing. Unused default exports are reported. Unresolvable internal specifiers fall back to name matching.
 
 - README, ROADMAP and ARCHITECTURE corrected to match the code: unproven benchmarks are labelled targets, unimplemented items are marked planned, and the rule/layout/command lists are current.

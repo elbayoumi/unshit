@@ -377,8 +377,6 @@ function findUnused(ctx: DetectorContext, wantTypeOnly: boolean, ruleId: string)
     const content = contentByFile.get(exp.file) ?? '';
     const ownCount = exp.isDefault ? 0 : identifierCount(content, exp.localName);
     const isOverExported = ownCount >= (exp.isListed ? 3 : 2);
-    // A type used inside its own module is usually part of an exported signature; dropping `export` breaks consumers' typing.
-    if (isOverExported && wantTypeOnly) continue;
 
     const kind = wantTypeOnly ? 'type' : 'symbol';
     findings.push({
