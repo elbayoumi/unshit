@@ -6,6 +6,7 @@ import type { FileEntry, UnshitConfig } from './contracts.js';
 const TS_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
 const GENERATED_FILE_RE = /\.min\.(?:css|[cm]?js)$|\.bundle\.js$/i;
 const READ_BATCH_SIZE = 32;
+const REGEX_SPECIALS = /[.*+?^${}()|[\]\\]/g;
 const MANIFEST_NAMES = new Set([
   'package.json',
   'pnpm-workspace.yaml',
@@ -40,41 +41,152 @@ function getScriptKind(ext: string): ts.ScriptKind {
   }
 }
 
+interface IgnoreRule {
+  regex: RegExp;
+  negated: boolean;
+  directoryOnly: boolean;
+}
+
+interface IgnoreScope {
+  baseDir: string;
+  rules: IgnoreRule[];
+}
+
+function globSegmentToRegex(segment: string): string {
+  let source = '';
+  for (let i = 0; i < segment.length; i += 1) {
+    const ch = segment[i]!;
+    if (ch === '*') {
+      source += '[^/]*';
+    } else if (ch === '?') {
+      source += '[^/]';
+    } else if (ch === '[') {
+      const end = segment.indexOf(']', i + 1);
+      if (end > i + 1) {
+        let body = segment.slice(i + 1, end);
+        if (body.startsWith('!')) body = `^${body.slice(1)}`;
+        source += `[${body.replace(/\\/g, '\\\\')}]`;
+        i = end;
+      } else {
+        source += '\\[';
+      }
+    } else {
+      source += ch.replace(REGEX_SPECIALS, '\\$&');
+    }
+  }
+  return source;
+}
+
+/** Compiles one .gitignore line into a matcher relative to the file's directory. */
+function compileIgnoreLine(line: string): IgnoreRule | null {
+  let pattern = line.trim();
+  if (!pattern || pattern.startsWith('#')) return null;
+
+  let negated = false;
+  if (pattern.startsWith('!')) {
+    negated = true;
+    pattern = pattern.slice(1);
+  } else if (pattern.startsWith('\\!') || pattern.startsWith('\\#')) {
+    pattern = pattern.slice(1);
+  }
+  const anchored = pattern.startsWith('/');
+  if (anchored) pattern = pattern.slice(1);
+  const directoryOnly = pattern.endsWith('/');
+  if (directoryOnly) pattern = pattern.slice(0, -1);
+
+  const segments = pattern.split('/').filter((segment) => segment.length > 0);
+  if (segments.length === 0) return null;
+
+  let source = anchored ? '' : '(?:.*/)?';
+  for (let i = 0; i < segments.length; i += 1) {
+    const segment = segments[i]!;
+    if (segment === '**') {
+      source += i === segments.length - 1 ? '.*' : '(?:[^/]+/)*';
+      continue;
+    }
+    source += globSegmentToRegex(segment);
+    if (i < segments.length - 1) source += '/';
+  }
+  return { regex: new RegExp(`^${source}$`), negated, directoryOnly };
+}
+
+function parseGitignore(content: string): IgnoreRule[] {
+  const rules: IgnoreRule[] = [];
+  const lines = content.replace(/^\uFEFF/, '').split(/\r?\n/);
+  for (const line of lines) {
+    const rule = compileIgnoreLine(line);
+    if (rule) rules.push(rule);
+  }
+  return rules;
+}
+
+/** Deeper .gitignore scopes override shallower ones; within a scope, the last rule wins. */
+function isIgnored(fullPath: string, isDirectory: boolean, scopes: IgnoreScope[]): boolean {
+  let ignored = false;
+  for (const scope of scopes) {
+    const rel = relative(scope.baseDir, fullPath).replaceAll('\\', '/');
+    if (!rel || rel === '..' || rel.startsWith('../')) continue;
+    for (const rule of scope.rules) {
+      if (rule.directoryOnly && !isDirectory) continue;
+      if (rule.regex.test(rel)) ignored = !rule.negated;
+    }
+  }
+  return ignored;
+}
+
+function isExcludedByConfig(rel: string, name: string, excludes: string[]): boolean {
+  return excludes.some((exclude) => exclude.includes('/')
+    ? rel === exclude || rel.startsWith(`${exclude}/`)
+    : name === exclude);
+}
+
 /**
- * Walks `rootDir` respecting `config.exclude` and `config.include`, parsing TS/JS ASTs lazily.
+ * Walks `rootDir` respecting `config.exclude`, `config.include`, and root/nested
+ * `.gitignore` files, parsing TS/JS ASTs lazily.
  * Manifest paths are collected in the same readdir pass, independent of `config.include`.
  */
 export async function collectWorkspace(
   rootDir: string,
   config: UnshitConfig,
 ): Promise<{ files: FileEntry[]; manifests: string[] }> {
-  const excludes = config.exclude;
   const includeSet = new Set(config.include);
   const paths: string[] = [];
   const manifests: string[] = [];
+  const ignoreScopes: IgnoreScope[] = [];
 
   async function walk(dir: string): Promise<void> {
     const entries = await readdir(dir, { withFileTypes: true });
-    for (const entry of entries) {
-      if (entry.name.startsWith('.') && entry.name !== '.agent') continue;
-      const fullPath = join(dir, entry.name);
-      const rel = relative(rootDir, fullPath).replaceAll('\\', '/');
-      if (excludes.some((e) => e.includes('/')
-        ? rel === e || rel.startsWith(`${e}/`)
-        : entry.name === e)) continue;
+    const gitignore = entries.find((entry) => entry.name === '.gitignore' && entry.isFile());
+    let scope: IgnoreScope | undefined;
+    if (gitignore) {
+      const content = await readFile(join(dir, '.gitignore'), 'utf8');
+      scope = { baseDir: dir, rules: parseGitignore(content) };
+      ignoreScopes.push(scope);
+    }
 
-      if (entry.isDirectory()) {
-        await walk(fullPath);
-      } else if (entry.isFile()) {
-        if (GENERATED_FILE_RE.test(entry.name)) continue;
-        if (isManifest(entry.name)) {
-          manifests.push(relative(rootDir, fullPath).replaceAll('\\', '/'));
-        }
-        const ext = extname(entry.name).toLowerCase();
-        if (includeSet.has(ext)) {
-          paths.push(fullPath);
+    try {
+      for (const entry of entries) {
+        if (entry.name.startsWith('.') && entry.name !== '.agent') continue;
+        const fullPath = join(dir, entry.name);
+        const rel = relative(rootDir, fullPath).replaceAll('\\', '/');
+        if (isExcludedByConfig(rel, entry.name, config.exclude)) continue;
+        if (isIgnored(fullPath, entry.isDirectory(), ignoreScopes)) continue;
+
+        if (entry.isDirectory()) {
+          await walk(fullPath);
+        } else if (entry.isFile()) {
+          if (GENERATED_FILE_RE.test(entry.name)) continue;
+          if (isManifest(entry.name)) {
+            manifests.push(rel);
+          }
+          const ext = extname(entry.name).toLowerCase();
+          if (includeSet.has(ext)) {
+            paths.push(fullPath);
+          }
         }
       }
+    } finally {
+      if (scope) ignoreScopes.pop();
     }
   }
 
