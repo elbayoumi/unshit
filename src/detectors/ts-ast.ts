@@ -18,7 +18,7 @@ function snippet(sf: ts.SourceFile, node: ts.Node): string {
   return node.getText(sf).replace(/\s+/g, ' ').slice(0, 100);
 }
 
-function isTestFile(relPath: string): boolean {
+export function isTestFile(relPath: string): boolean {
   return /\.(test|spec)\.|__tests__|\/tests?\//i.test(relPath);
 }
 

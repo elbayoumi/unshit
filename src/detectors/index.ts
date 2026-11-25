@@ -15,6 +15,7 @@ import {
   noInlineI18nTernaryDetector,
   redundantCatchDetector,
 } from './ts-ast.js';
+import { highComplexityDetector } from './complexity.js';
 
 export const BUILTIN_DETECTORS: Detector[] = [
   importCycleDetector,
@@ -25,6 +26,7 @@ export const BUILTIN_DETECTORS: Detector[] = [
   noInlineI18nTernaryDetector,
   magicTimerDetector,
   redundantCatchDetector,
+  highComplexityDetector,
   cssNoImportantDetector,
   cssDuplicateSelectorDetector,
   cssDesignDriftDetector,

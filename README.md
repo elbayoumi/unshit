@@ -135,6 +135,7 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 | `slop/magic-timer` | structural | `info` | `ai` | Raw numeric delays in `setTimeout` / `window.setTimeout` / `setInterval` |
 | `slop/redundant-catch` | structural | `warn` | `ai` | Empty `catch {}` blocks or `catch (e) { throw e; }` |
 | `code/duplicate-block` | structural | `info` | `ai` | Copy-pasted token blocks across files (`cloneMinTokens`: 80) |
+| `code/high-complexity` | structural | `warn` | `ai` | Functions/methods/arrows with cognitive complexity above `complexityMax` (25); skips `.d.ts` and test files |
 | `ts/unused-export` | structural | `info` | `unsafe` | Exported symbols with zero cross-file references |
 | `rust/no-unwrap` | structural | `warn` | `ai` | `.unwrap()` in non-test `.rs` files (skips `#[cfg(test)]`) |
 | `dart/no-dynamic-or-print` | structural | `warn` | `ai` | `dynamic` type escapes & `print()` calls in non-test `.dart` files |
@@ -170,6 +171,7 @@ Create `unshit.config.json` in your project root to customize thresholds, exclud
   "exclude": ["node_modules", "dist", "coverage"],
   "godFileMaxLines": 400,
   "godFileMaxHooks": 15,
+  "complexityMax": 25,
   "cloneMinTokens": 80,
   "aiRunner": "opencode",
   "aiModel": "opencode/big-pickle",

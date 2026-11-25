@@ -71,6 +71,7 @@ export interface UnshitConfig {
   disabledRules: string[];
   godFileMaxLines: number;
   godFileMaxHooks: number;
+  complexityMax: number;
   cloneMinTokens: number;
   aiRunner: 'opencode' | 'claude';
   aiModel?: string;

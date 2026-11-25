@@ -43,6 +43,7 @@ discover -> scan (read-only) -> pin (baseline) -> fix (deterministic -> AI workt
 | `slop/magic-timer` | structural | slop | Raw `setTimeout(..., N)` without named constant | safe / ai |
 | `slop/redundant-catch` | structural | slop | `try { ... } catch (e) { throw e; }` or empty catch | safe |
 | `code/duplicate-block` | structural | duplication | Copy-pasted token blocks across files (`jscpd`-style) | ai |
+| `code/high-complexity` | structural | architecture | Functions/methods/arrows with cognitive complexity above `complexityMax` (25) | ai |
 | `ts/unused-export` | structural | dead-code | Exported symbols with zero cross-file references | safe |
 
 ---
