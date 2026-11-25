@@ -48,6 +48,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - README, ROADMAP and ARCHITECTURE corrected to match the code: unproven benchmarks are labelled targets, unimplemented items are marked planned, and the rule/layout/command lists are current.
 - Dropped the `export` keyword from 32 locally-used or zero-reference symbols in `src/` reported by `ts/unused-export` and `ts/unused-type-export`. Every symbol was checked for outside importers (including default exports) first; runtime behaviour is unchanged.
 - `src/cli.ts` is now a thin entry point with explicit dispatch tables; command handlers live in small `src/cli/*.ts` modules loaded by the same lazy `import()` paths as before, so CLI output and hook latency are unchanged and adding a command is a one-line table entry.
+- `src/detectors/dead-exports.ts` split into cohesive modules under `src/detectors/dead-exports/` (entries, usage analysis, handlers, reporting) with the two high-complexity functions refactored into helpers; public exports unchanged and behaviour identical.
 
 ## [0.7.0] - 2026-11-25
 
