@@ -167,7 +167,7 @@ export function normalizePayload(raw: unknown): NormalizedHookPayload {
   return result;
 }
 
-export interface ScanSingleOptions {
+interface ScanSingleOptions {
   noCache?: boolean;
   cache?: FindingCache;
 }
