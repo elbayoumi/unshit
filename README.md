@@ -117,7 +117,7 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 | `unshit guard [path]` | Compare current scan against `unshit.baseline.json` | `--changed` (diff-only PR mode), `--lines` (changed lines only), `--base <ref>` |
 | `unshit fix [path]` | Preview or apply deterministic + gated AI fixes | `--apply`, `--ai`, `--swarm`, `--abort`, `--runner opencode\|claude` |
 | `unshit hook [file]` | **Live AI Guardrail Hook** — blocks AI slop in real time (exits `2`) | `--stdin` (Claude Code `PreToolUse` / `PostToolUse` JSON) |
-| `unshit mcp` | Start stdio MCP server (`unshit_scan`, `unshit_score`, `unshit_guard`) | — |
+| `unshit mcp` | Start stdio MCP server (`unshit_scan`, `unshit_score`, `unshit_guard`, `unshit_check_patch`) | — |
 | `unshit note <rule> "text"` / `unshit notes` | Record local false-positive / improvement / scope-gap notes in `.unshit/feedback.jsonl`, then print a backlog grouped by rule | `--kind`, `--file`, `--json` |
 
 ---
@@ -218,7 +218,7 @@ Block AI-generated slop (`!important`, `any`, inline i18n ternaries, `.unwrap()`
 
 ### MCP Server (Claude Code / Cursor / Antigravity)
 
-Expose `unshit_scan`, `unshit_score`, and `unshit_guard` as read-only MCP tools:
+Expose `unshit_scan`, `unshit_score`, `unshit_guard`, and the read-only `unshit_check_patch` as MCP tools:
 
 ```json
 {
