@@ -270,6 +270,119 @@ function expectedManifest(raw: string, names: string[]): unknown {
   return copy;
 }
 
+type SkipFn = (finding: Finding, reason: string) => void;
+
+function skipAll(findings: Finding[], reason: string, skip: SkipFn): void {
+  for (const finding of findings) skip(finding, reason);
+}
+
+function groupFindingsByFile(findings: Finding[]): Map<string, Finding[]> {
+  const byFile = new Map<string, Finding[]>();
+  for (const finding of findings) {
+    const list = byFile.get(finding.file) ?? [];
+    list.push(finding);
+    byFile.set(finding.file, list);
+  }
+  return byFile;
+}
+
+function readDeclared(raw: string): Record<string, unknown> | null {
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+    return parsed as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
+
+function isDeclaredKey(declared: Record<string, unknown>, name: string): boolean {
+  for (const section of ['dependencies', 'devDependencies'] as const) {
+    const value = declared[section];
+    if (value && typeof value === 'object' && !Array.isArray(value)
+      && Object.prototype.hasOwnProperty.call(value, name)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function selectRemovable(
+  scan: ScanResult,
+  relPath: string,
+  list: Finding[],
+  declared: Record<string, unknown>,
+  used: Set<string>,
+  skip: SkipFn,
+): Finding[] {
+  const owners = list.map((f) => f.evidence.trim());
+  const removable: Finding[] = [];
+  for (const finding of list) {
+    const name = finding.evidence.trim();
+    if (!owners.includes(name) || !isDeclaredKey(declared, name)) {
+      skip(finding, 'dependency key is no longer declared in package.json');
+    } else if (used.has(name)) {
+      skip(finding, `\`${name}\` still imported (or required) by a scanned file anywhere in the project`);
+    } else {
+      const external = externalReference(scan, relPath, name);
+      if (external) skip(finding, external);
+      else removable.push(finding);
+    }
+  }
+  return removable;
+}
+
+interface ManifestPlanContext {
+  scan: ScanResult;
+  manifests: Set<string>;
+  used: Set<string>;
+  skip: SkipFn;
+}
+
+function planForManifest(relPath: string, list: Finding[], ctx: ManifestPlanContext): Patch[] {
+  if (!ctx.manifests.has(relPath) || !relPath.endsWith('package.json') || relPath.includes('..')) {
+    skipAll(list, 'finding does not point at a scanned package.json', ctx.skip);
+    return [];
+  }
+  const raw = readText(join(ctx.scan.rootDir, relPath));
+  if (!raw) {
+    skipAll(list, 'could not read the owning package.json', ctx.skip);
+    return [];
+  }
+  const declared = readDeclared(raw);
+  if (!declared) {
+    skipAll(list, 'owning package.json is not valid JSON', ctx.skip);
+    return [];
+  }
+
+  const removable = selectRemovable(ctx.scan, relPath, list, declared, ctx.used, ctx.skip);
+  if (removable.length === 0) return [];
+
+  const names = [...new Set(removable.map((f) => f.evidence.trim()))];
+  const editsByName = removalEdits(raw, names);
+  if (!editsByName || editsByName.size === 0) {
+    skipAll(removable, 'could not locate the dependency key in package.json', ctx.skip);
+    return [];
+  }
+  const updated = applyEdits(raw, [...editsByName.values()].flat());
+  try {
+    const after = JSON.parse(updated);
+    if (JSON.stringify(after) !== JSON.stringify(expectedManifest(raw, names))) {
+      throw new Error('unexpected manifest change');
+    }
+  } catch {
+    skipAll(removable, 'removing this key would change package.json unexpectedly', ctx.skip);
+    return [];
+  }
+
+  return [...editsByName].map(([name, edits]) => ({
+    file: relPath,
+    ruleId: RULE,
+    description: `Remove unused dependency key \`${name}\` from ${relPath}`,
+    edits,
+  }));
+}
+
 /**
  * Plans key removals from the owning package.json files. Every name is
  * re-checked against the current sources/manifests/configs before it is
@@ -278,94 +391,20 @@ function expectedManifest(raw: string, names: string[]): unknown {
  */
 export function planUnusedDependencyFixes(scan: ScanResult, findings: Finding[]): UnusedDependencyPlan {
   const skipped: UnusedDependencySkip[] = [];
-  const patches: Patch[] = [];
-  if (findings.length === 0) return { patches, skipped };
+  if (findings.length === 0) return { patches: [], skipped };
 
-  const skip = (finding: Finding, reason: string): void => {
+  const skip: SkipFn = (finding, reason) => {
     skipped.push({ file: finding.file, ruleId: finding.ruleId, line: finding.span.line, reason });
   };
-  const manifests = new Set(scan.manifests ?? []);
-  const used = usedPackageNames(scan);
-  const byManifest = new Map<string, Finding[]>();
-  for (const finding of findings) {
-    const list = byManifest.get(finding.file) ?? [];
-    list.push(finding);
-    byManifest.set(finding.file, list);
+  const ctx: ManifestPlanContext = {
+    scan,
+    manifests: new Set(scan.manifests ?? []),
+    used: usedPackageNames(scan),
+    skip,
+  };
+  const patches: Patch[] = [];
+  for (const [relPath, list] of groupFindingsByFile(findings)) {
+    patches.push(...planForManifest(relPath, list, ctx));
   }
-
-  for (const [relPath, list] of byManifest) {
-    const owners = list.map((f) => f.evidence.trim());
-    if (!manifests.has(relPath) || !relPath.endsWith('package.json') || relPath.includes('..')) {
-      for (const finding of list) skip(finding, 'finding does not point at a scanned package.json');
-      continue;
-    }
-    const absPath = join(scan.rootDir, relPath);
-    const raw = readText(absPath);
-    if (!raw) {
-      for (const finding of list) skip(finding, 'could not read the owning package.json');
-      continue;
-    }
-    let declared: Record<string, unknown>;
-    try {
-      const parsed: unknown = JSON.parse(raw);
-      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('not an object');
-      declared = parsed as Record<string, unknown>;
-    } catch {
-      for (const finding of list) skip(finding, 'owning package.json is not valid JSON');
-      continue;
-    }
-
-    const removable: Finding[] = [];
-    for (const finding of list) {
-      const name = finding.evidence.trim();
-      let isDeclared = false;
-      for (const section of ['dependencies', 'devDependencies'] as const) {
-        const value = declared[section];
-        if (value && typeof value === 'object' && !Array.isArray(value)
-          && Object.prototype.hasOwnProperty.call(value, name)) {
-          isDeclared = true;
-          break;
-        }
-      }
-      if (!owners.includes(name) || !isDeclared) {
-        skip(finding, 'dependency key is no longer declared in package.json');
-      } else if (used.has(name)) {
-        skip(finding, `\`${name}\` still imported (or required) by a scanned file anywhere in the project`);
-      } else {
-        const external = externalReference(scan, relPath, name);
-        if (external) skip(finding, external);
-        else removable.push(finding);
-      }
-    }
-    if (removable.length === 0) continue;
-
-    const names = [...new Set(removable.map((f) => f.evidence.trim()))];
-    const editsByName = removalEdits(raw, names);
-    if (!editsByName || editsByName.size === 0) {
-      for (const finding of removable) skip(finding, 'could not locate the dependency key in package.json');
-      continue;
-    }
-    const allEdits = [...editsByName.values()].flat();
-    const updated = applyEdits(raw, allEdits);
-    try {
-      const after = JSON.parse(updated);
-      if (JSON.stringify(after) !== JSON.stringify(expectedManifest(raw, names))) {
-        throw new Error('unexpected manifest change');
-      }
-    } catch {
-      for (const finding of removable) skip(finding, 'removing this key would change package.json unexpectedly');
-      continue;
-    }
-
-    for (const [name, edits] of editsByName) {
-      patches.push({
-        file: relPath,
-        ruleId: RULE,
-        description: `Remove unused dependency key \`${name}\` from ${relPath}`,
-        edits,
-      });
-    }
-  }
-
   return { patches, skipped };
 }
