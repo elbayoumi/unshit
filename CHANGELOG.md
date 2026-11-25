@@ -10,6 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - CI workflow, tag-driven release workflow, and the `pnpm release` script.
 - Changed-line filtering for `guard --changed --lines` via `getChangedLineRanges()`.
 - `unshit hotspots [path]` ranking files by git churn and finding density (`--since`, `--top`, `--json`).
+- `css/design-drift` rule: flags hardcoded colors when design tokens exist and suggests the matching `var(--token)`.
 
 ### Fixed
 
