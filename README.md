@@ -238,4 +238,4 @@ npm test
 
 ## License
 
-[MIT](./LICENSE) © Mohamed Ashraf (Crewloom)
+[MIT](./LICENSE) © 2026 Mohamed Ashraf (Crewloom) — see [NOTICE](./NOTICE) for attribution and trademark details.
