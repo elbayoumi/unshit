@@ -70,6 +70,7 @@ export const DEFAULT_CONFIG: UnshitConfig = {
     'research',
     'fixtures',
     '__fixtures__',
+    'benchmark/frozen',
     '.unshit',
     'coverage',
     'target',

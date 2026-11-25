@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import { DEFAULT_CONFIG } from '../src/config.js';
 import { runScan } from '../src/core/scanner.js';
 
-const EXCLUDED_DIRS = ['docs', 'research', 'fixtures', '__fixtures__'];
+const EXCLUDED_DIRS = ['docs', 'research', 'fixtures', '__fixtures__', 'benchmark/frozen'];
 
 async function withFixture(
   files: Record<string, string>,
@@ -38,6 +38,7 @@ test('default-config scan reports no findings from docs/research benchmark fixtu
       'docs/research/bench/src/probe.ts': doubleCast,
       'research/bench/src/probe.ts': doubleCast,
       'fixtures/probe.ts': doubleCast,
+      'benchmark/frozen/eval/case/src/probe.ts': doubleCast,
       '__fixtures__/probe.ts': doubleCast,
       'src/keep.ts': doubleCast,
     },

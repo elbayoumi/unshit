@@ -120,21 +120,13 @@ deps/unused-dependency     7/7   100.00%
 deps/unlisted-dependency   6/6   100.00%
 
 HARD-NEGATIVE FPR
-cases: 22   cases with >=1 FP: 1   FPR: 4.55%   unexpected findings: 2
+cases: 22   cases with >=1 FP: 0   FPR: 0.00%   unexpected findings: 0
 
 EVAL (informational)
 recall: 100.00% (21/21)   unexpected findings: 0
 ```
 
-The suite currently **fails the FPR gate** because of one known detector gap:
-
-| Case | Findings | Why it is a false positive |
-|---|---|---|
-| `hard-negatives/next-app-router` | `ts/unused-file` on `app/layout.tsx` and `app/page.tsx` | Next.js app-router files are loaded by the framework, not imported by project code. `entryPointFileSet` recognises `pages/` and other routing dirs but not the `app/` convention, so both files are treated as unused. |
-
-This is recorded rather than worked around: the fixtures are correct, and fixing the
-detector belongs in `src/` with its own test. The `next-pages-router` hard negative
-passes, so the failure is specifically the `app/` entry convention.
+The suite passes all gates. It originally failed the FPR gate on `hard-negatives/next-app-router` (`ts/unused-file` flagged `app/layout.tsx` and `app/page.tsx`); that was fixed in `src/` by treating the Next.js `app/` router as entry points, and the case now guards against regression.
 
 ## Frozen policy
 
