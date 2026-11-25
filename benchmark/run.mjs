@@ -40,7 +40,7 @@ for (const root of corpora) {
   for (const f of uj.findings) {
     if (f.ruleId === 'ts/unused-export' || f.ruleId === 'ts/unused-type-export') ue.add(key(norm(root, f.file), (f.message.match(/[`'"]([\w$]+)[`'"]/) ?? [])[1] ?? f.message));
     if (f.ruleId === 'ts/unused-file') uf.add(norm(root, f.file));
-    if (f.ruleId === 'deps/unused-dependency') udep.add(f.evidence);
+    if (f.ruleId === 'deps/unused-dependency') udep.add(`${norm(root, f.file)}#${f.evidence}`);
     if (f.ruleId === 'deps/unlisted-dependency') unl.add(`${norm(root, f.file)}#${f.evidence}`);
     if (f.ruleId === 'code/high-complexity') complex++;
     if (f.ruleId === 'code/duplicate-block') ud.push({ file: norm(root, f.file), line: f.line });
@@ -54,7 +54,7 @@ for (const root of corpora) {
       for (const i of JSON.parse(k.out).issues ?? []) {
         for (const kind of ['exports', 'types']) for (const e of i[kind] ?? []) ke.add(key(norm(root, i.file), e.name));
         for (const e of i.files ?? []) kf.add(norm(root, i.file));
-        for (const kind of ['dependencies', 'devDependencies']) for (const e of i[kind] ?? []) kd.add(e.name);
+        for (const kind of ['dependencies', 'devDependencies']) for (const e of i[kind] ?? []) kd.add(`${norm(root, i.file)}#${e.name}`);
         for (const e of i.unlisted ?? []) kunl.add(`${norm(root, i.file)}#${e.name}`);
       }
     } catch { r.knipError = 'unparseable output (missing node_modules / config?)'; }

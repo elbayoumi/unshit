@@ -215,3 +215,19 @@ test('deps/unused-dependency analyses each workspace package separately', async 
     assert.deepEqual(hits, ['apps/api/package.json:react', 'apps/web/package.json:left-pad']);
   });
 });
+
+test('deps/unused-dependency flags @types/x only when x is declared and unused in the same package', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'mono', workspaces: ['packages/*'] }, null, 2),
+    'packages/ui/package.json': JSON.stringify({
+      name: 'ui',
+      dependencies: { 'react-dom': '1', lodash: '1' },
+      devDependencies: { '@types/react-dom': '1', '@types/lodash': '1', '@types/node': '1', '@types/jest': '1' },
+    }, null, 2),
+    'packages/ui/src/a.ts': "import _ from 'lodash';\nexport default _;\n",
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    const hits = findingsFor(scan, 'deps/unused-dependency').map((f) => `${f.file}:${f.evidence}`).sort();
+    assert.deepEqual(hits, ['packages/ui/package.json:@types/react-dom', 'packages/ui/package.json:react-dom']);
+  });
+});

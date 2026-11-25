@@ -41,8 +41,8 @@ match, so check overlap before reading them as recall or precision.
 | Corpus | unused files (unshit / knip / both) | unused deps (unshit / knip / both) | unlisted (unshit / knip) | high-complexity |
 |---|---|---|---|---|
 | unshit (self) | 0 / 6 / 0 | 0 / 0 / 0 | 0 / 0 | 27 |
-| auctions-platform-frontend | 0 / 0 / 0 | 0 / 3 / 0 | 1 / 1 | 2 |
-| bidshop-frontend | 0 / 0 / 0 | 0 / 3 / 0 | 1 / 1 | 2 |
+| auctions-platform-frontend | 0 / 0 / 0 | 16 / 16 / 16 | 1 / 1 | 2 |
+| bidshop-frontend | 0 / 0 / 0 | 16 / 16 / 16 | 1 / 1 | 2 |
 | rveta-site | 1 / 1 / 1 | 2 / 4 / 2 | 0 / 0 | 2 |
 | auctions-platform-backend | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 | 0 |
 
@@ -52,7 +52,7 @@ Disagreements, hand-checked:
 |---|---|---|
 | rveta unused file, `@google/genai`, `autoprefixer` | both | Correct. |
 | `tsx`, `vite` (rveta) | knip only | Both are CLI tooling; unshit deliberately spares tooling packages (scripts, configs). Judgement call. |
-| `react-dom`, `@types/react-dom`, `@auctions/tokens` (frontends) | knip only | Real misses: unshit does not do per-workspace unused-dependency analysis. |
+| `react-dom`, `@types/react-dom`, `@auctions/tokens` (frontends) | both (now) | Correct, per workspace package (counts are `package.json#dependency` pairs). Were unshit misses before per-workspace analysis; `@types/x` is flagged only when `x` is declared and unused in the same package. |
 | `react` unlisted in `packages/core` (frontends) | both | Correct: a phantom dependency resolved from the monorepo root. |
 | `apps/shell/src/main.tsx`, `resources/js/app.js` | unshit (early run) | False positives, fixed: nested `index.html` module scripts and vite/laravel `input` entries are now entry points. Both are covered by tests. |
 | `@prisma/client` unlisted in `docs/research/**` | unshit (early run) | False positive, fixed: `docs/` and fixture directories are skipped. |
@@ -79,7 +79,7 @@ Disagreements, hand-checked:
 - jscpd is mature and exact; unshit's clone detector is a token-window approximation tuned for fewer false positives.
 - knip needs `node_modules` and a resolvable config; unshit needs neither.
 - Runtimes are the same order of magnitude (~0.1-0.4 s); the repos are too small to compare scaling.
-- unshit's unused-dependency check is root-level only (no per-workspace analysis) and spares tooling packages, so knip
-  finds more unused deps in monorepos. knip has far more plugins for deciding what a config file uses.
+- unshit's unused-dependency check runs per workspace package but spares tooling packages (`tsx`, `vite`, ...), so knip
+  still finds a few more. knip has far more plugins for deciding what a config file uses.
 - unshit treats `integrations/` as entry points, which is why it finds none of knip's 6 self-reported unused files.
 - unshit also reports ~18 other rule families that neither tool covers; this benchmark does not measure those.

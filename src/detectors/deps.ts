@@ -269,12 +269,24 @@ export const unusedDependencyDetector: Detector = {
         .filter((file) => /(config|rc)(\.|$)/i.test(file) && !file.endsWith('.lock'))
         .map((file) => safeReadText(join(pkgDirAbs, file)));
 
+      const unusedRuntime = new Set<string>();
       for (const name of deps.keys()) {
         if (isCommonTooling(name) || name.startsWith('@types/')) continue;
         if (used.has(name)) continue;
         if (scriptsReference(scripts, name)) continue;
         if (dirFiles.some((file) => isConfigFileNamed(file, name))) continue;
         if (configTexts.some((t) => t.includes(name))) continue;
+        unusedRuntime.add(name);
+      }
+      // `@types/x` is dead only when the runtime package `x` is declared here and itself unused.
+      for (const name of deps.keys()) {
+        if (!name.startsWith('@types/') || name === '@types/node') continue;
+        const base = name.slice('@types/'.length);
+        const runtime = base.includes('__') ? `@${base.replace('__', '/')}` : base;
+        if (unusedRuntime.has(runtime) && !used.has(name)) unusedRuntime.add(name);
+      }
+      for (const name of deps.keys()) {
+        if (!unusedRuntime.has(name)) continue;
         const pos = keyLine(text, name);
         if (!pos) continue;
         findings.push({
