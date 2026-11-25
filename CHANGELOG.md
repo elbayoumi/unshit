@@ -5,6 +5,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-25
+
 ### Added
 
 - `NOTICE` file documenting `Mohamed Ashraf / Crewloom` copyright attribution and trademark notice under the MIT license.
@@ -80,7 +82,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - npm package metadata.
 
-[Unreleased]: https://github.com/elbayoumi/unshit/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/elbayoumi/unshit/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/elbayoumi/unshit/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/elbayoumi/unshit/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/elbayoumi/unshit/compare/v0.4.1...v0.5.1
 [0.4.1]: https://github.com/elbayoumi/unshit/compare/v0.4.0...v0.4.1
