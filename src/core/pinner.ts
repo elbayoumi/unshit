@@ -1,7 +1,7 @@
 import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import { promisify } from 'node:util';
 import type { BaselineSnapshot, Finding } from '../contracts.js';
 import { findingFingerprint, type ScanResult } from './scanner.js';
@@ -35,13 +35,42 @@ export async function createBaseline(scan: ScanResult): Promise<BaselineSnapshot
   return snapshot;
 }
 
+function isBaselineSnapshot(value: unknown): value is BaselineSnapshot {
+  if (typeof value !== 'object' || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return (
+    v.version === 1 &&
+    typeof v.createdAt === 'string' &&
+    typeof v.rootDir === 'string' &&
+    typeof v.score === 'object' &&
+    v.score !== null &&
+    Array.isArray(v.fingerprints) &&
+    typeof v.fileHashes === 'object' &&
+    v.fileHashes !== null
+  );
+}
+
 export async function loadBaseline(rootDir: string): Promise<BaselineSnapshot | null> {
+  const filePath = join(rootDir, BASELINE_FILENAME);
+  let raw: string;
   try {
-    const raw = await readFile(join(rootDir, BASELINE_FILENAME), 'utf8');
-    return JSON.parse(raw) as BaselineSnapshot;
-  } catch {
-    return null;
+    raw = await readFile(filePath, 'utf8');
+  } catch (err) {
+    if (err && typeof err === 'object' && 'code' in err && (err as { code?: unknown }).code === 'ENOENT') {
+      return null;
+    }
+    throw err instanceof Error ? err : new Error(String(err));
   }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`Corrupt ${BASELINE_FILENAME}: ${err instanceof Error ? err.message : String(err)}`);
+  }
+  if (!isBaselineSnapshot(parsed)) {
+    throw new Error(`Corrupt ${BASELINE_FILENAME}: invalid baseline snapshot`);
+  }
+  return parsed;
 }
 
 export interface GuardResult {
@@ -64,19 +93,50 @@ export async function getChangedFiles(rootDir: string, baseRef = 'HEAD'): Promis
     }
   };
 
+  if (baseRef !== 'HEAD') {
+    try {
+      await execFileAsync('git', ['merge-base', baseRef, 'HEAD'], { cwd: rootDir });
+    } catch {
+      throw new Error(`unshit guard: unable to compute merge base for base ref "${baseRef}" (shallow checkout?). Re-run with fetch-depth: 0.`);
+    }
+  }
+
   try {
-    const { stdout } = await execFileAsync('git', ['diff', '--name-only', `${baseRef}...HEAD`], { cwd: rootDir });
+    const { stdout } = await execFileAsync('git', ['diff', '--relative', '--name-only', `${baseRef}...HEAD`], { cwd: rootDir });
     addLines(stdout);
   } catch {
     /* Detached or single-commit repo without baseRef...HEAD */
   }
   try {
-    const { stdout } = await execFileAsync('git', ['status', '--porcelain'], { cwd: rootDir });
-    for (const line of stdout.split(/\r?\n/)) {
-      if (line.length > 3) {
-        const file = line.slice(3).replace(/^.* -> /, '').trim();
-        if (file) changed.add(file.replaceAll('\\', '/'));
+    const { stdout } = await execFileAsync('git', ['status', '--porcelain', '-z', '--untracked-files=all'], { cwd: rootDir });
+    let prefix = '';
+    try {
+      const { stdout: top } = await execFileAsync('git', ['rev-parse', '--show-toplevel'], { cwd: rootDir });
+      const rel = relative(top.trim(), rootDir).replaceAll('\\', '/');
+      if (rel && rel !== '.') prefix = rel;
+    } catch {
+      /* Not a git repo */
+    }
+    const entries = stdout.split('\0');
+    let i = 0;
+    while (i < entries.length) {
+      const entry = entries[i] ?? '';
+      i += 1;
+      if (!entry || entry.length < 4) continue;
+      const status = entry.slice(0, 2);
+      const file = entry.slice(3);
+      if (/[RC]/.test(status)) {
+        // Skip the original-path entry that follows for renames/copies.
+        i += 1;
       }
+      if (!file) continue;
+      if (status.includes('D')) continue;
+      let relFile = file.replaceAll('\\', '/');
+      if (prefix) {
+        const p = prefix + '/';
+        if (relFile.startsWith(p)) relFile = relFile.slice(p.length);
+      }
+      changed.add(relFile);
     }
   } catch {
     /* Not a git repo */
@@ -109,13 +169,31 @@ export function evaluateGuard(
     };
   }
 
-  const pinnedSet = new Set(baseline.fingerprints);
-  const currentSet = new Set(scan.findings.map(findingFingerprint));
-  const newFindings = scopedFindings.filter((f) => !pinnedSet.has(findingFingerprint(f)));
-  let resolvedCount = 0;
-  for (const fp of pinnedSet) {
-    if (!currentSet.has(fp)) resolvedCount += 1;
+  const baselineCounts = new Map<string, number>();
+  for (const fp of baseline.fingerprints) {
+    baselineCounts.set(fp, (baselineCounts.get(fp) ?? 0) + 1);
   }
+  const currentCounts = new Map<string, number>();
+  for (const f of scan.findings) {
+    const fp = findingFingerprint(f);
+    currentCounts.set(fp, (currentCounts.get(fp) ?? 0) + 1);
+  }
+
+  let resolvedCount = 0;
+  for (const [fp, count] of baselineCounts) {
+    const current = currentCounts.get(fp) ?? 0;
+    resolvedCount += Math.max(0, count - current);
+  }
+
+  const consumed = new Map<string, number>();
+  const newFindings = scopedFindings.filter((f) => {
+    const fp = findingFingerprint(f);
+    const baselineCount = baselineCounts.get(fp) ?? 0;
+    const seen = consumed.get(fp) ?? 0;
+    consumed.set(fp, seen + 1);
+    return seen >= baselineCount;
+  });
+
   const scoreOk = changedFiles ? true : currentScore >= baseline.score.score;
   return {
     passed: newFindings.length === 0 && scoreOk,

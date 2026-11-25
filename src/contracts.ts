@@ -77,6 +77,7 @@ export interface Detector {
   tier: DetectorTier;
   severity: Severity;
   description: string;
+  scope?: 'file' | 'project';
   detect(ctx: DetectorContext): Finding[];
   fix?(file: FileEntry, finding: Finding): Patch | null;
 }

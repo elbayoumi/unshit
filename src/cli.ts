@@ -110,12 +110,26 @@ export async function main(argv: string[]): Promise<number> {
   if (cmd === 'guard') {
     const changed = getFlag(rest, '--changed');
     const baseRef = getOpt(rest, '--base') ?? 'HEAD';
-    const baseline = await loadBaseline(targetDir);
+    let baseline;
+    try {
+      baseline = await loadBaseline(targetDir);
+    } catch (err) {
+      console.error(`unshit guard: ${err instanceof Error ? err.message : String(err)}`);
+      return 2;
+    }
     if (!baseline && !changed) {
       console.error('unshit guard: missing unshit.baseline.json. Run `unshit pin` first (or pass --changed).');
       return 2;
     }
-    const changedFiles = changed ? await getChangedFiles(targetDir, baseRef) : undefined;
+    let changedFiles: Set<string> | undefined;
+    if (changed) {
+      try {
+        changedFiles = await getChangedFiles(targetDir, baseRef);
+      } catch (err) {
+        console.error(err instanceof Error ? err.message : String(err));
+        return 3;
+      }
+    }
     const res = evaluateGuard(scan, baseline, changedFiles);
     const scopeLabel = changed ? ` (changed: ${changedFiles?.size ?? 0} files)` : '';
     console.log(

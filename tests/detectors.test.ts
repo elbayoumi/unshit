@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { DEFAULT_CONFIG } from '../src/config.js';
 import { runFix } from '../src/core/fixer.js';
-import { scanSingleContent } from '../src/core/hook.js';
+import { normalizePayload, scanSingleContent } from '../src/core/hook.js';
 import { createBaseline, evaluateGuard } from '../src/core/pinner.js';
 import { runScan } from '../src/core/scanner.js';
 import { computeScore } from '../src/core/scorer.js';
@@ -164,4 +164,51 @@ test('scanSingleContent catches slop immediately for Live AI Guardrail Hook', ()
   const hits = scanSingleContent('/tmp', 'src/App.css', '.btn { color: red !important; }\n', DEFAULT_CONFIG);
   assert.equal(hits.length, 1);
   assert.equal(hits[0]?.ruleId, 'css/no-important');
+});
+
+test('normalizePayload supports both Claude Code and OpenCode Edit payloads', () => {
+  const claude = normalizePayload({
+    session_id: 's1',
+    cwd: '/repo',
+    tool_name: 'Edit',
+    tool_input: { file_path: 'a.ts', old_string: 'x', new_string: 'y', replace_all: true },
+  });
+  assert.equal(claude?.filePath, 'a.ts');
+  assert.equal(claude?.oldString, 'x');
+  assert.equal(claude?.replaceAll, true);
+
+  const opencode = normalizePayload({ filePath: 'b.rs', oldString: 'a', newString: 'b' });
+  assert.equal(opencode?.filePath, 'b.rs');
+  assert.equal(opencode?.newString, 'b');
+});
+
+test('polyglot exemptions: Map<String, dynamic>, lock().unwrap(), and mid-file #[cfg(test)]', async () => {
+  await withTempProject(
+    {
+      'prod.rs': `#[cfg(test)]\nmod t { fn x() { a.unwrap(); } }\npub fn ok(m: Mutex<i32>) { let _ = m.lock().unwrap(); }\npub fn bad() { y.unwrap(); }\n`,
+      'json.dart': `void parse(Map<String, dynamic> raw) { logger.print(raw); }\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      assert.equal(scan.findings.filter((f) => f.ruleId === 'rust/no-unwrap').length, 1);
+      assert.equal(scan.findings.filter((f) => f.ruleId === 'dart/no-dynamic-or-print').length, 0);
+    },
+  );
+});
+
+test('multiset evaluateGuard detects second identical finding in the same file', async () => {
+  await withTempProject(
+    {
+      'a.css': `.a { color: red !important; }\n`,
+    },
+    async (dir) => {
+      const s1 = await runScan(dir, { ...DEFAULT_CONFIG });
+      const base = await createBaseline(s1);
+      await writeFile(join(dir, 'a.css'), `.a { color: red !important; }\n.b { color: red !important; }\n`, 'utf8');
+      const s2 = await runScan(dir, { ...DEFAULT_CONFIG });
+      const guard = evaluateGuard(s2, base);
+      assert.equal(guard.passed, false);
+      assert.equal(guard.newFindings.length, 1);
+    },
+  );
 });
