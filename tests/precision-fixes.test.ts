@@ -32,12 +32,14 @@ test('ts/unused-export skips package.json public entry points, integrations/, an
   assert.match(hits[0]!, /internal\.ts/);
 });
 
-test('ts/unused-type-export skips locally used types and *Props', async () => {
+test('ts/unused-type-export reports locally used types (drop `export`) and skips *Props', async () => {
   const hits = await scanFixture({
     'src/a.ts': 'export interface Opts { a: number }\nexport function f(o: Opts) { return o.a; }\nexport type ButtonProps = { x: 1 };\nexport type Dead = { z: 1 };\n',
   }, 'ts/unused-type-export');
-  assert.equal(hits.length, 1);
-  assert.match(hits[0]!, /Dead/);
+  assert.equal(hits.length, 2);
+  assert.ok(hits.some((h) => /Opts.*used only locally/.test(h)));
+  assert.ok(hits.some((h) => /Dead.*zero references/.test(h)));
+  assert.ok(!hits.some((h) => /ButtonProps/.test(h)));
 });
 
 test('react/god-file ignores Python tests/generated Dart and uses a higher polyglot limit', async () => {
