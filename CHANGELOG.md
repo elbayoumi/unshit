@@ -5,6 +5,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-25
+
 ### Added
 
 - v0.6.0 Project Structure Health: `unshit structure [path]` reports archetype, layout, import resolution, cycles, boundary leaks, and an explainable verdict.
@@ -68,7 +70,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - npm package metadata.
 
-[Unreleased]: https://github.com/elbayoumi/unshit/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/elbayoumi/unshit/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/elbayoumi/unshit/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/elbayoumi/unshit/compare/v0.4.1...v0.5.1
 [0.4.1]: https://github.com/elbayoumi/unshit/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/elbayoumi/unshit/releases/tag/v0.4.0
