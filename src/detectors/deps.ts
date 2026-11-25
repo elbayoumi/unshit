@@ -204,52 +204,92 @@ export const unusedDependencyDetector: Detector = {
   scope: 'project',
   description: 'Flags packages in package.json dependencies/devDependencies that nothing imports or runs via scripts.',
   detect(ctx: DetectorContext): Finding[] {
-    const pkgPath = join(ctx.rootDir, 'package.json');
-    if (!existsSync(pkgPath)) return [];
-    const text = readFileSync(pkgPath, 'utf8');
-    const pkg = readJson(ctx.rootDir, 'package.json');
-    if (!pkg) return [];
+    if (!existsSync(join(ctx.rootDir, 'package.json'))) return [];
 
-    const deps = new Map<string, unknown>();
-    for (const section of ['dependencies', 'devDependencies'] as const) {
-      const value = pkg[section];
-      if (value && typeof value === 'object' && !Array.isArray(value)) {
-        for (const [name, version] of Object.entries(value as Record<string, unknown>)) deps.set(name, version);
+    // Group files by their nearest package.json directory ('' = root package).
+    const pkgCache = new Map<string, boolean>();
+    const hasPkg = (dir: string): boolean => {
+      let v = pkgCache.get(dir);
+      if (v === undefined) {
+        v = existsSync(join(ctx.rootDir, dir, 'package.json'));
+        pkgCache.set(dir, v);
       }
+      return v;
+    };
+    const ownerOf = (relPath: string): string => {
+      const parts = relPath.split('/').slice(0, -1);
+      for (let i = parts.length; i > 0; i--) {
+        const dir = parts.slice(0, i).join('/');
+        if (hasPkg(dir)) return dir;
+      }
+      return '';
+    };
+    const groups = new Map<string, FileEntry[]>();
+    for (const file of ctx.files) {
+      if (/(^|\/)(docs|fixtures|__fixtures__)\//.test(file.relPath)) continue;
+      const owner = ownerOf(file.relPath);
+      let list = groups.get(owner);
+      if (!list) groups.set(owner, (list = []));
+      list.push(file);
     }
-    if (deps.size === 0) return [];
-
-    const used = collectUsedNames(collectModuleSpecsFromContext(ctx));
-    const scripts = (pkg.scripts && typeof pkg.scripts === 'object' && !Array.isArray(pkg.scripts))
-      ? pkg.scripts as Record<string, unknown>
-      : undefined;
-    const rootFiles = safeReaddirNames(ctx.rootDir);
-    const configTexts = rootFiles
-      .filter((file) => /(config|rc)(\.|$)/i.test(file) && !file.endsWith('.lock'))
-      .map((file) => safeReadText(join(ctx.rootDir, file)));
-
     const findings: Finding[] = [];
-    for (const name of deps.keys()) {
-      if (isCommonTooling(name) || name.startsWith('@types/')) continue;
-      const usedName = name.startsWith('@types/') ? name.slice('@types/'.length) : name;
-      if (used.has(name) || used.has(usedName)) continue;
-      if (scriptsReference(scripts, name)) continue;
-      if (rootFiles.some((file) => isConfigFileNamed(file, name))) continue;
-      if (configTexts.some((text) => text.includes(name))) continue;
-      const pos = keyLine(text, name);
-      if (!pos) continue;
-      findings.push({
-        ruleId: this.id,
-        category: 'dead-code',
-        tier: 'structural',
-        severity: 'warn',
-        fixability: 'manual',
-        confidence: 0.85,
-        file: 'package.json',
-        span: pos,
-        message: `Dependency \`${name}\` is never imported, required or referenced by name in scripts.`,
-        evidence: name,
-      });
+    const allUsed = collectUsedNames(collectModuleSpecsFromContext(ctx));
+    const workspaceNames = new Set<string>();
+    for (const dir of groups.keys()) {
+      const sub = dir ? readJson(ctx.rootDir, `${dir}/package.json`) : null;
+      if (sub && typeof sub.name === 'string') workspaceNames.add(sub.name);
+    }
+
+    const dirs = new Set<string>(['', ...groups.keys()]);
+    for (const dir of dirs) {
+      const rel = dir ? `${dir}/package.json` : 'package.json';
+      const pkg = readJson(ctx.rootDir, rel);
+      if (!pkg) continue;
+      const files = groups.get(dir) ?? [];
+      if (dir && files.length === 0) continue;
+      const text = safeReadText(join(ctx.rootDir, rel));
+
+      const deps = new Map<string, unknown>();
+      for (const section of ['dependencies', 'devDependencies'] as const) {
+        const value = pkg[section];
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+          for (const [name, version] of Object.entries(value as Record<string, unknown>)) deps.set(name, version);
+        }
+      }
+      if (deps.size === 0) continue;
+
+      // The root package may serve hoisted dependencies to workspaces, so for it any usage in the repo counts.
+      const used = dir === '' ? allUsed : collectUsedNames(files.flatMap((f) => collectModuleSpecsFromContext({ ...ctx, files: [f] })));
+      const scripts = (pkg.scripts && typeof pkg.scripts === 'object' && !Array.isArray(pkg.scripts))
+        ? pkg.scripts as Record<string, unknown>
+        : undefined;
+      const pkgDirAbs = join(ctx.rootDir, dir);
+      const dirFiles = safeReaddirNames(pkgDirAbs);
+      const configTexts = dirFiles
+        .filter((file) => /(config|rc)(\.|$)/i.test(file) && !file.endsWith('.lock'))
+        .map((file) => safeReadText(join(pkgDirAbs, file)));
+
+      for (const name of deps.keys()) {
+        if (isCommonTooling(name) || name.startsWith('@types/')) continue;
+        if (used.has(name)) continue;
+        if (scriptsReference(scripts, name)) continue;
+        if (dirFiles.some((file) => isConfigFileNamed(file, name))) continue;
+        if (configTexts.some((t) => t.includes(name))) continue;
+        const pos = keyLine(text, name);
+        if (!pos) continue;
+        findings.push({
+          ruleId: this.id,
+          category: 'dead-code',
+          tier: 'structural',
+          severity: 'warn',
+          fixability: 'manual',
+          confidence: workspaceNames.has(name) ? 0.7 : 0.85,
+          file: rel,
+          span: pos,
+          message: `Dependency \`${name}\` is never imported, required or referenced by name in scripts${dir ? ` of ${dir}` : ''}.`,
+          evidence: name,
+        });
+      }
     }
     return findings;
   },

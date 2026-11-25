@@ -200,3 +200,18 @@ test('deps/unlisted-dependency skips docs and fixture directories', async () => 
     assert.deepEqual(findingsFor(scan, 'deps/unlisted-dependency'), []);
   });
 });
+
+test('deps/unused-dependency analyses each workspace package separately', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'mono', workspaces: ['apps/*'], dependencies: { lodash: '1' } }, null, 2),
+    'apps/web/package.json': JSON.stringify({ name: 'web', dependencies: { react: '1', 'left-pad': '1' } }, null, 2),
+    'apps/web/src/a.ts': "import React from 'react';\nexport default React;\n",
+    'apps/api/package.json': JSON.stringify({ name: 'api', dependencies: { react: '1', express: '1' } }, null, 2),
+    'apps/api/src/b.ts': "import express from 'express';\nexport default express;\n",
+    'src/root.ts': "import _ from 'lodash';\nexport default _;\n",
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    const hits = findingsFor(scan, 'deps/unused-dependency').map((f) => `${f.file}:${f.evidence}`).sort();
+    assert.deepEqual(hits, ['apps/api/package.json:react', 'apps/web/package.json:left-pad']);
+  });
+});
