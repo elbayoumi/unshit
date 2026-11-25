@@ -84,15 +84,15 @@ export async function main(argv: string[]): Promise<number> {
       'unshit <command> [path] [options]',
       '',
       'Commands:',
-      '  scan [path]    Read-only AST/CSS/clone/slop scan (--format human|json|sarif|markdown, --fail-on error|warn|info)',
-      '  score [path]   Compute 0-100 codebase health score',
-      '  hotspots [path] Rank files by churn and finding density (--since 90.days, --top 10, --json)',
-      '  structure [path] Diagnose project directory/module health (archetype, layout, cycles, boundary leaks, verdict, --fail-on error|warn|info)',
-      '  pin [path]     Capture unshit.baseline.json characterization snapshot',
-      '  guard [path]   Fail CI/pre-commit on regressions (--changed [baseRef] for diff-only PRs, --lines for changed-line scope)',
-      '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude; --swarm for parallel worktree AI fixer; --abort to clean stale worktrees)',
+      '  scan [path]    Read-only AST/CSS/clone/slop scan (--format human|json|sarif|markdown, --fail-on error|warn|info, --no-cache)',
+      '  score [path]   Compute 0-100 codebase health score (--no-cache)',
+      '  hotspots [path] Rank files by churn and finding density (--since 90.days, --top 10, --json, --no-cache)',
+      '  structure [path] Diagnose project directory/module health (archetype, layout, cycles, boundary leaks, verdict, --fail-on error|warn|info, --no-cache)',
+      '  pin [path]     Capture unshit.baseline.json characterization snapshot (--no-cache)',
+      '  guard [path]   Fail CI/pre-commit on regressions (--changed [baseRef] for diff-only PRs, --lines for changed-line scope, --no-cache)',
+      '  fix [path]     Dry-run by default; pass --apply for deterministic fixes (+ --ai for OpenCode/Claude; --swarm for parallel worktree AI fixer; --abort to clean stale worktrees, --no-cache)',
       '  init [path]    Bootstrap config, baseline, and Claude Code PreToolUse hook (--force to overwrite)',
-      '  hook [file]    Live AI Guardrail Hook (--stdin for Claude Code PreToolUse/PostToolUse, exits 2 on slop)',
+      '  hook [file]    Live AI Guardrail Hook (--stdin for Claude Code PreToolUse/PostToolUse, exits 2 on slop, --no-cache)',
       '  note <rule> "text"  Record a local false-positive / improvement / scope-gap note (--kind, --file) in .unshit/feedback.jsonl',
       '  notes [path]   Summarize recorded notes as a markdown backlog grouped by rule (--json)',
       '  mcp            Start stdio MCP server (unshit_scan, unshit_score, unshit_guard)',
@@ -106,6 +106,7 @@ export async function main(argv: string[]): Promise<number> {
     return 2;
   }
   const format = rawFormat as OutputFormat;
+  const noCache = getFlag(rest, '--no-cache');
 
   const targetDir = getTargetPath(rest);
   const config = await loadConfig(targetDir);
@@ -121,7 +122,7 @@ export async function main(argv: string[]): Promise<number> {
     }
   }
 
-  const scan = await runScan(targetDir, config);
+  const scan = await runScan(targetDir, config, [], { noCache });
   const score = computeScore(scan.files, scan.findings);
 
   if (cmd === 'scan') {

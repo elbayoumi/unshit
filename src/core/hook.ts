@@ -5,6 +5,7 @@ import ts from 'typescript';
 import { loadConfig } from '../config.js';
 import type { FileEntry, Finding, UnshitConfig } from '../contracts.js';
 import { BUILTIN_DETECTORS } from '../detectors/index.js';
+import { FindingCache, hashContent } from './cache.js';
 import { isWaived } from './scanner.js';
 
 const SINGLE_FILE_SKIP = new Set(['ts/unused-export', 'code/duplicate-block']);
@@ -166,6 +167,11 @@ export function normalizePayload(raw: unknown): NormalizedHookPayload {
   return result;
 }
 
+export interface ScanSingleOptions {
+  noCache?: boolean;
+  cache?: FindingCache;
+}
+
 /**
  * Scans a single in-memory file payload in milliseconds for live AI agent hooks.
  */
@@ -174,6 +180,7 @@ export function scanSingleContent(
   relPath: string,
   content: string,
   config: UnshitConfig,
+  options: ScanSingleOptions = {},
 ): Finding[] {
   const ext = extname(relPath).toLowerCase();
   if (!config.include.includes(ext)) return [];
@@ -181,13 +188,21 @@ export function scanSingleContent(
   const segments = relPath.split(/[\\/]/);
   if (config.exclude.some((ex) => segments.includes(ex))) return [];
 
+  const lines = content.split(/\r?\n/);
+  const cache = options.cache ?? new FindingCache(rootDir, config, { noCache: options.noCache });
+  const contentHash = hashContent(content);
+  const cached = cache.get(contentHash, relPath);
+  if (cached) {
+    return cached.filter((f) => !isWaived(lines, f));
+  }
+
   const isTs = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'].includes(ext);
   const file: FileEntry = {
     absPath: resolve(rootDir, relPath),
     relPath,
     ext,
     content,
-    lines: content.split(/\r?\n/),
+    lines,
     sourceFile: isTs
       ? ts.createSourceFile(relPath, content, ts.ScriptTarget.Latest, true, getScriptKind(ext))
       : undefined,
@@ -202,6 +217,7 @@ export function scanSingleContent(
     findings.push(...detector.detect(ctx));
   }
 
+  cache.set(contentHash, findings);
   return findings.filter((f) => !isWaived(file.lines, f));
 }
 
@@ -367,8 +383,10 @@ export async function runHook(args: string[]): Promise<number> {
     return 0;
   }
 
-  const beforeFindings = scanSingleContent(rootDir, relPath, beforeContent, config);
-  const afterFindings = scanSingleContent(rootDir, relPath, afterContent, config);
+  const noCache = args.includes('--no-cache');
+  const cache = new FindingCache(rootDir, config, { noCache });
+  const beforeFindings = scanSingleContent(rootDir, relPath, beforeContent, config, { cache });
+  const afterFindings = scanSingleContent(rootDir, relPath, afterContent, config, { cache });
 
   const newFindings = multisetNewFindings(afterFindings, beforeFindings);
   const blocking = newFindings.filter(
