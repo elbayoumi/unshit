@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [Unreleased]
 
 ### Added
+- `code/high-complexity`: new structural detector flagging functions, methods and arrows whose cognitive complexity exceeds `complexityMax` (SonarSource-style: +1 per control construct, +1 per nesting level, +1 per logical-operator sequence; recursion ignored; skips `.d.ts` and test files). The `complexityMax` config key (default 25) is added to `DEFAULT_CONFIG` and the `UnshitConfig` contract, and documented in README.
 - `code/duplicate-block` now also reports a logic block repeated within a single file (confidence 0.7, only regions of at least 1.5x `cloneMinTokens` with at least 6 branch tokens, so repeated JSX markup is ignored; one finding per repeated region).
 - `benchmark/run.mjs` and `benchmark/README.md`: reproducible comparison of unused-export and duplicate-block findings against knip and jscpd, with hand-checked disagreements.
 

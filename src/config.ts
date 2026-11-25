@@ -83,6 +83,7 @@ export const DEFAULT_CONFIG: UnshitConfig = {
   disabledRules: [],
   godFileMaxLines: 350,
   godFileMaxHooks: 15,
+  complexityMax: 25,
   cloneMinTokens: 80,
   aiRunner: 'opencode',
   aiModel: 'opencode/big-pickle',
