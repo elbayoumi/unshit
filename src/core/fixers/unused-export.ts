@@ -7,7 +7,7 @@ export function isUnusedExportRule(ruleId: string): boolean {
   return RULES.has(ruleId);
 }
 
-export interface UnusedExportSkip {
+interface UnusedExportSkip {
   file: string;
   ruleId: string;
   line: number;
