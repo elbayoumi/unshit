@@ -11,7 +11,7 @@ export function isUnusedDependencyRule(ruleId: string): boolean {
   return ruleId === RULE;
 }
 
-export interface UnusedDependencySkip {
+interface UnusedDependencySkip {
   file: string;
   ruleId: string;
   line: number;
