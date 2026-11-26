@@ -22,7 +22,7 @@ function parseArgs(argv) {
   const reps = repsAt >= 0 ? Number(argv[repsAt + 1]) : 5;
   const out = outAt >= 0 ? argv[outAt + 1] : undefined;
   const dirs = argv.filter((a, i) =>
-    !a.startsWith('--') && i !== repsAt + 1 && i !== outAt + 1);
+    !a.startsWith('--') && (repsAt < 0 || i !== repsAt + 1) && (outAt < 0 || i !== outAt + 1));
   if (!dirs.length || !Number.isInteger(reps) || reps < 1) {
     console.error('usage: node benchmark/scan-speed.mjs <dir>... [--reps N] [--out report.json]');
     process.exit(2);
