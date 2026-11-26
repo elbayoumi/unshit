@@ -1,0 +1,5 @@
+{
+  "description": "Files under __tests__ directories are test convention entry points.",
+  "groundTruth": "__tests__ files are discovered by test runners and should not be reported as unused files.",
+  "expected": []
+}

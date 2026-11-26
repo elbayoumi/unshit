@@ -30,6 +30,46 @@ function dynamicImportTargets(ctx: DetectorContext): Set<string> {
   return targets;
 }
 
+function isAllTypeOnlyImport(clause: ts.ImportClause | undefined): boolean {
+  if (!clause) return false;
+  if (clause.isTypeOnly) return true;
+  const namedBindings = clause.namedBindings;
+  if (!namedBindings || !ts.isNamedImports(namedBindings) || clause.name) return false;
+  return namedBindings.elements.length > 0 && namedBindings.elements.every((el) => el.isTypeOnly);
+}
+
+function isAllTypeOnlyExport(stmt: ts.ExportDeclaration): boolean {
+  if (stmt.isTypeOnly) return true;
+  const clause = stmt.exportClause;
+  if (!clause || !ts.isNamedExports(clause)) return false;
+  return clause.elements.length > 0 && clause.elements.every((el) => el.isTypeOnly);
+}
+
+/**
+ * Resolved targets of type-only imports/exports. The runtime import graph
+ * intentionally skips them, but a file referenced only by `import type` is
+ * still used and must not be reported as unused.
+ */
+function typeOnlyImportTargets(ctx: DetectorContext): Set<string> {
+  const resolve = createTsSpecResolver(ctx);
+  const targets = new Set<string>();
+  const add = (spec: string, file: FileEntry): void => {
+    const res = resolve(spec, file);
+    if (res.internal && res.target) targets.add(res.target);
+  };
+  for (const file of ctx.files) {
+    if (!file.sourceFile) continue;
+    for (const stmt of file.sourceFile.statements) {
+      if (ts.isImportDeclaration(stmt) && ts.isStringLiteral(stmt.moduleSpecifier)) {
+        if (isAllTypeOnlyImport(stmt.importClause)) add(stmt.moduleSpecifier.text, file);
+      } else if (ts.isExportDeclaration(stmt) && stmt.moduleSpecifier && ts.isStringLiteral(stmt.moduleSpecifier)) {
+        if (isAllTypeOnlyExport(stmt)) add(stmt.moduleSpecifier.text, file);
+      }
+    }
+  }
+  return targets;
+}
+
 /**
  * Flags source files that no other scanned file imports (static, dynamic,
  * `require`, export-from or side-effect imports) and that are not entry
@@ -46,11 +86,12 @@ export const unusedFileDetector: Detector = {
     const graph = buildImportGraph(ctx);
     const entries = entryPointFileSet(ctx, ctx.files);
     const dynamic = dynamicImportTargets(ctx);
+    const typeOnly = typeOnlyImportTargets(ctx);
     const findings: Finding[] = [];
     for (const file of ctx.files) {
       if (!TS_LIKE.has(file.ext) || file.relPath.endsWith('.d.ts')) continue;
       if (entries.has(file.relPath)) continue;
-      if (graph.incomingOf(file.relPath).length > 0 || dynamic.has(file.relPath)) continue;
+      if (graph.incomingOf(file.relPath).length > 0 || dynamic.has(file.relPath) || typeOnly.has(file.relPath)) continue;
       findings.push({
         ruleId: this.id,
         category: 'dead-code',

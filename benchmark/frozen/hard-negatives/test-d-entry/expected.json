@@ -1,0 +1,5 @@
+{
+  "description": "Type test files (*.test-d.ts) are test entries and must not be reported as unused files.",
+  "groundTruth": "tsd-style type tests are executed by type test runners, not imported by runtime code.",
+  "expected": []
+}

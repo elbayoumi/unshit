@@ -1,0 +1,5 @@
+{
+  "description": "A file referenced only by type-only imports is still used and must not be reported as unused-file.",
+  "groundTruth": "src/types.ts is imported only via `import type` and `export type ... from`; deleting it would break type checking.",
+  "expected": []
+}

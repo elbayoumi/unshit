@@ -1,0 +1,5 @@
+{
+  "description": "Files matched by node --test glob patterns in package.json scripts are test entry points.",
+  "groundTruth": "The test script runs node --test with a glob; matched test files are executed directly and not dead files.",
+  "expected": []
+}
