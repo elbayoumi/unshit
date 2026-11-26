@@ -45,7 +45,7 @@ private-app-1 123.2          122.0        1.01x
 private-app-2 190.0          173.8        1.09x
 private-app-3          217.7          214.4        1.02x
 private-app-4                237.1          222.9        1.06x
-/Volumes/data/projects/unshit-wt/r10-perf        408.6          391.1        1.04x
+this-repo        408.6          391.1        1.04x
 ```
 
 These two runs disagree on the small corpora (fresh-copy noise); the interleaved A/B above is the measurement to trust.
@@ -74,7 +74,7 @@ Neither file was edited (both are on the do-not-modify list), so the clone-detec
 
 ## Equivalence evidence
 
-Before and after JSON was captured with `--no-cache` for all five targets. The `findings` arrays are byte-identical (backend 0, frontend 124, bidshop 112, rveta 126, self 0). The self score stays 100 with 0 findings. `pnpm run typecheck` passes, `pnpm test` passes (213 tests, including the new `tests/scan-walk-sharing.test.ts`), and `pnpm build && node benchmark/frozen/run.mjs` prints `RESULT: PASS`.
+Before and after JSON was captured with `--no-cache` for all five targets. The `findings` arrays are byte-identical (backend 0, frontend 124, app-3 112, app-4 126, self 0). The self score stays 100 with 0 findings. `pnpm run typecheck` passes, `pnpm test` passes (213 tests, including the new `tests/scan-walk-sharing.test.ts`), and `pnpm build && node benchmark/frozen/run.mjs` prints `RESULT: PASS`.
 
 ## Caveats
 
