@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for arch/import-cycle: cy namespace.",
+  "groundTruth": "Namespace imports still create runtime edges in both directions.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/left.ts",
+      "symbol": "src/left.ts -> src/right.ts -> src/left.ts",
+      "reason": "Namespace imports still create runtime edges in both directions."
+    }
+  ]
+}

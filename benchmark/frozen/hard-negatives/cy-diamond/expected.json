@@ -1,0 +1,8 @@
+{
+  "description": "Frozen hard-negatives case for arch/import-cycle: cy diamond.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": []
+}

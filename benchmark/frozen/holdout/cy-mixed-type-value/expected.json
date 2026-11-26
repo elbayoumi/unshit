@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for arch/import-cycle: cy mixed type value.",
+  "groundTruth": "a mixes a type and a value import from b; b reads the value exported by a, so both runtime edges exist.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/a.ts",
+      "symbol": "src/a.ts -> src/b.ts -> src/a.ts",
+      "reason": "a mixes a type and a value import from b; b reads the value exported by a, so both runtime edges exist."
+    }
+  ]
+}

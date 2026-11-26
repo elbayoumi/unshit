@@ -1,0 +1,15 @@
+{
+  "description": "Two runtime modules import each other directly.",
+  "groundTruth": "a <-> b is a genuine cycle; the entry file only imports a, so the SCC contains exactly two files.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/a.ts",
+      "symbol": "src/a.ts -> src/b.ts -> src/a.ts",
+      "reason": "a.ts and b.ts import each other, forming a two-node strongly connected component."
+    }
+  ]
+}
