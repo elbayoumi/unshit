@@ -2,30 +2,21 @@ import ts from 'typescript';
 import type { Detector, DetectorContext, FileEntry, Finding } from '../contracts.js';
 import { buildImportGraph, createTsSpecResolver } from '../core/import-graph.js';
 import { entryPointFileSet } from './dead-exports.js';
+import { collectModuleSpecs } from './deps-shared.js';
 
 const TS_LIKE = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
 
-/** Resolved targets of dynamic `import()` calls anywhere in the scanned set. */
+/** Resolved targets of dynamic `import()` calls, reusing the memoized spec collection. */
 function dynamicImportTargets(ctx: DetectorContext): Set<string> {
   const resolve = createTsSpecResolver(ctx);
   const targets = new Set<string>();
-  const visit = (file: FileEntry, node: ts.Node): void => {
-    if (
-      ts.isCallExpression(node)
-      && node.expression.kind === ts.SyntaxKind.ImportKeyword
-      && node.arguments.length > 0
-    ) {
-      const arg = node.arguments[0]!;
-      if (ts.isStringLiteralLike(arg)) {
-        const res = resolve(arg.text, file);
-        if (res.internal && res.target) targets.add(res.target);
-      }
-    }
-    ts.forEachChild(node, (child) => visit(file, child));
-  };
   for (const file of ctx.files) {
     if (!file.sourceFile) continue;
-    visit(file, file.sourceFile);
+    for (const spec of collectModuleSpecs(file)) {
+      if (spec.kind !== 'dynamic-import') continue;
+      const res = resolve(spec.text, file);
+      if (res.internal && res.target) targets.add(res.target);
+    }
   }
   return targets;
 }

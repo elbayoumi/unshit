@@ -136,7 +136,11 @@ function workflowScriptEntryFiles(ctx: DetectorContext, files: Set<string>): Set
   return entries;
 }
 
+const entryCache = new WeakMap<DetectorContext, Set<string>>();
+
 export function entryPointFileSet(ctx: DetectorContext, files: FileEntry[]): Set<string> {
+  const cached = entryCache.get(ctx);
+  if (cached) return cached;
   const fileSet = new Set(files.map((f) => f.relPath));
   const entries = new Set<string>([
     ...manifestEntryFiles(ctx, fileSet),
@@ -153,5 +157,6 @@ export function entryPointFileSet(ctx: DetectorContext, files: FileEntry[]): Set
       entries.add(file.relPath);
     }
   }
+  entryCache.set(ctx, entries);
   return entries;
 }
