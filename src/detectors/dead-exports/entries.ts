@@ -18,10 +18,31 @@ import {
   SCRIPT_RUNNER_RE,
 } from './utils.js';
 
+const DISK_MANIFEST_NAMES = new Set(['package.json', 'pnpm-workspace.yaml', 'tsconfig.json']);
+
+function diskManifestFiles(ctx: DetectorContext): Set<string> {
+  const out = new Set<string>();
+  const walk = (dir: string): void => {
+    const entries = safeReaddir(dir);
+    if (!entries) return;
+    for (const entry of entries) {
+      if (entry.name === 'node_modules' || entry.name === '.git') continue;
+      const full = join(dir, entry.name);
+      const rel = relative(ctx.rootDir, full).replaceAll('\\', '/');
+      if (ctx.config.exclude.some((ex) => ex.includes('/') ? rel === ex || rel.startsWith(`${ex}/`) : entry.name === ex)) continue;
+      if (entry.isDirectory()) walk(full);
+      else if (entry.isFile() && DISK_MANIFEST_NAMES.has(entry.name)) out.add(rel);
+    }
+  };
+  walk(ctx.rootDir);
+  return out;
+}
+
 function manifestEntryFiles(ctx: DetectorContext, files: Set<string>): Set<string> {
   const entries = new Set<string>();
   const rels = new Set<string>(ctx.manifests ?? []);
   rels.add('package.json');
+  for (const rel of diskManifestFiles(ctx)) rels.add(rel);
   for (const rel of rels) {
     const pkg = readManifest(ctx.rootDir, rel);
     if (!pkg) continue;

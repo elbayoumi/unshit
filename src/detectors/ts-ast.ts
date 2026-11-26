@@ -70,15 +70,26 @@ export const noExplicitAnyDetector: Detector = {
       const visit = (node: TS.Node): void => {
         if (node.kind === ts.SyntaxKind.AnyKeyword) {
           const parent = node.parent;
-          const isCatch = Boolean(
-            parent && ts.isVariableDeclaration(parent) && parent.parent && ts.isCatchClause(parent.parent),
-          );
+          const catchClause = parent && ts.isVariableDeclaration(parent) && parent.parent && ts.isCatchClause(parent.parent)
+            ? parent.parent
+            : null;
+          let fixability: 'safe' | 'ai' = 'ai';
+          if (catchClause && ts.isCatchClause(catchClause) && catchClause.variableDeclaration?.name && ts.isIdentifier(catchClause.variableDeclaration.name)) {
+            const name = catchClause.variableDeclaration.name.text;
+            let refs = 0;
+            const countRefs = (n: TS.Node): void => {
+              if (ts.isIdentifier(n) && n.text === name && n !== catchClause.variableDeclaration!.name) refs++;
+              ts.forEachChild(n, countRefs);
+            };
+            countRefs(catchClause.block);
+            fixability = refs === 0 ? 'safe' : 'ai';
+          }
           findings.push({
             ruleId: this.id,
             category: this.category,
             tier: this.tier,
             severity: this.severity,
-            fixability: isCatch ? 'safe' : 'ai',
+            fixability,
             confidence: 0.98,
             file: file.relPath,
             span: spanOf(sf, node),
