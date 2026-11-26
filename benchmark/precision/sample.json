@@ -1,0 +1,3647 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-26T13:45:23.483Z",
+  "seed": 20261128,
+  "perRulePerCorpus": 15,
+  "corpora": [
+    "hono",
+    "zod",
+    "execa",
+    "fastify",
+    "commander.js"
+  ],
+  "corpusDir": "/Volumes/data/projects/unshit-bench/corpus",
+  "totalFindings": 2257,
+  "sampledCount": 395,
+  "perCorpusCounts": {
+    "hono": {
+      "total": 642,
+      "byRule": {
+        "react/god-file": 18,
+        "ts/unused-export": 18,
+        "ts/unused-type-export": 36,
+        "ts/no-explicit-any": 459,
+        "slop/redundant-catch": 10,
+        "ts/no-double-cast": 34,
+        "ts/unused-file": 3,
+        "deps/unused-dependency": 3,
+        "code/duplicate-block": 23,
+        "code/high-complexity": 34,
+        "arch/import-cycle": 4
+      }
+    },
+    "zod": {
+      "total": 1477,
+      "byRule": {
+        "ts/unused-file": 107,
+        "deps/unused-dependency": 11,
+        "ts/no-explicit-any": 1045,
+        "ts/unused-export": 33,
+        "code/duplicate-block": 45,
+        "react/god-file": 19,
+        "ts/no-double-cast": 45,
+        "ts/unused-type-export": 34,
+        "slop/redundant-catch": 32,
+        "code/high-complexity": 103,
+        "arch/import-cycle": 1,
+        "slop/magic-timer": 1,
+        "deps/unlisted-dependency": 1
+      }
+    },
+    "execa": {
+      "total": 35,
+      "byRule": {
+        "slop/redundant-catch": 13,
+        "arch/import-cycle": 1,
+        "code/duplicate-block": 11,
+        "code/high-complexity": 1,
+        "deps/unused-dependency": 1,
+        "ts/unused-file": 2,
+        "ts/no-double-cast": 1,
+        "ts/no-explicit-any": 2,
+        "slop/magic-timer": 1,
+        "react/god-file": 2
+      }
+    },
+    "fastify": {
+      "total": 88,
+      "byRule": {
+        "react/god-file": 13,
+        "code/duplicate-block": 15,
+        "code/high-complexity": 11,
+        "deps/unused-dependency": 4,
+        "slop/magic-timer": 1,
+        "ts/unused-file": 20,
+        "slop/redundant-catch": 1,
+        "ts/no-explicit-any": 23
+      }
+    },
+    "commander.js": {
+      "total": 15,
+      "byRule": {
+        "react/god-file": 5,
+        "code/high-complexity": 2,
+        "code/duplicate-block": 1,
+        "ts/unused-file": 4,
+        "ts/no-explicit-any": 3
+      }
+    }
+  },
+  "sample": [
+    {
+      "id": "code/duplicate-block|lib/option.js|171",
+      "corpus": "commander.js",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/option.js",
+      "line": 171,
+      "message": "Duplicate logic block (~80 tokens) matches lib/argument.js:88-119.",
+      "evidence": "lib/option.js:171-203 <-> lib/argument.js:88-119"
+    },
+    {
+      "id": "code/high-complexity|lib/command.js|1562",
+      "corpus": "commander.js",
+      "ruleId": "code/high-complexity",
+      "file": "lib/command.js",
+      "line": 1562,
+      "message": "Cognitive complexity 26 exceeds threshold 25 in \"_parseCommand\"; simplify or extract the function.",
+      "evidence": "Score: 26, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/command.js|1760",
+      "corpus": "commander.js",
+      "ruleId": "code/high-complexity",
+      "file": "lib/command.js",
+      "line": 1760,
+      "message": "Cognitive complexity 85 exceeds threshold 25 in \"parseOptions\"; simplify or extract the function.",
+      "evidence": "Score: 85, threshold: 25"
+    },
+    {
+      "id": "react/god-file|lib/command.js|1",
+      "corpus": "commander.js",
+      "ruleId": "react/god-file",
+      "file": "lib/command.js",
+      "line": 1,
+      "message": "Oversized module (2804 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "2804 LOC"
+    },
+    {
+      "id": "react/god-file|lib/help.js|1",
+      "corpus": "commander.js",
+      "ruleId": "react/god-file",
+      "file": "lib/help.js",
+      "line": 1,
+      "message": "Oversized module (736 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "736 LOC"
+    },
+    {
+      "id": "react/god-file|lib/option.js|1",
+      "corpus": "commander.js",
+      "ruleId": "react/god-file",
+      "file": "lib/option.js",
+      "line": 1,
+      "message": "Oversized module (378 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "378 LOC"
+    },
+    {
+      "id": "react/god-file|typings/index.d.ts|1",
+      "corpus": "commander.js",
+      "ruleId": "react/god-file",
+      "file": "typings/index.d.ts",
+      "line": 1,
+      "message": "Oversized module (1117 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "1117 LOC"
+    },
+    {
+      "id": "react/god-file|typings/index.test-d.ts|1",
+      "corpus": "commander.js",
+      "ruleId": "react/god-file",
+      "file": "typings/index.test-d.ts",
+      "line": 1,
+      "message": "Oversized module (788 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "788 LOC"
+    },
+    {
+      "id": "ts/no-explicit-any|typings/index.test-d.ts|34",
+      "corpus": "commander.js",
+      "ruleId": "ts/no-explicit-any",
+      "file": "typings/index.test-d.ts",
+      "line": 34,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "any[]"
+    },
+    {
+      "id": "ts/no-explicit-any|typings/index.test-d.ts|679",
+      "corpus": "commander.js",
+      "ruleId": "ts/no-explicit-any",
+      "file": "typings/index.test-d.ts",
+      "line": 679,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "expectType<any>(baseOption.defaultValue)"
+    },
+    {
+      "id": "ts/no-explicit-any|typings/index.test-d.ts|752",
+      "corpus": "commander.js",
+      "ruleId": "ts/no-explicit-any",
+      "file": "typings/index.test-d.ts",
+      "line": 752,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "expectType<any>(baseArgument.defaultValue)"
+    },
+    {
+      "id": "ts/unused-file|tests/fixtures-extensions/pm-try-cjs.cjs|1",
+      "corpus": "commander.js",
+      "ruleId": "ts/unused-file",
+      "file": "tests/fixtures-extensions/pm-try-cjs.cjs",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|tests/fixtures-extensions/pm-try-mjs.mjs|1",
+      "corpus": "commander.js",
+      "ruleId": "ts/unused-file",
+      "file": "tests/fixtures-extensions/pm-try-mjs.mjs",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|tests/fixtures-extensions/pm-try-ts.ts|1",
+      "corpus": "commander.js",
+      "ruleId": "ts/unused-file",
+      "file": "tests/fixtures-extensions/pm-try-ts.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|tests/fixtures-extensions/pm.js|1",
+      "corpus": "commander.js",
+      "ruleId": "ts/unused-file",
+      "file": "tests/fixtures-extensions/pm.js",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "arch/import-cycle|lib/ipc/forward.js|1",
+      "corpus": "execa",
+      "ruleId": "arch/import-cycle",
+      "file": "lib/ipc/forward.js",
+      "line": 1,
+      "message": "Import cycle detected among 6 file(s).",
+      "evidence": "lib/ipc/forward.js -> lib/ipc/incoming.js -> lib/ipc/graceful.js -> lib/ipc/forward.js"
+    },
+    {
+      "id": "code/duplicate-block|lib/ipc/get-one.js|60",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/ipc/get-one.js",
+      "line": 60,
+      "message": "Duplicate logic block (~80 tokens) matches lib/ipc/get-each.js:61-79.",
+      "evidence": "lib/ipc/get-one.js:60-77 <-> lib/ipc/get-each.js:61-79"
+    },
+    {
+      "id": "code/duplicate-block|test/convert/readable.js|55",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/convert/readable.js",
+      "line": 55,
+      "message": "Duplicate logic block (~82 tokens) matches test/convert/duplex.js:57-65.",
+      "evidence": "test/convert/readable.js:55-63 <-> test/convert/duplex.js:57-65"
+    },
+    {
+      "id": "code/duplicate-block|test/ipc/strict.js|17",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/ipc/strict.js",
+      "line": 17,
+      "message": "Duplicate logic block (~85 tokens) matches test/ipc/pending.js:12-23.",
+      "evidence": "test/ipc/strict.js:17-28 <-> test/ipc/pending.js:12-23"
+    },
+    {
+      "id": "code/duplicate-block|test/pipe/streaming.js|253",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/pipe/streaming.js",
+      "line": 253,
+      "message": "Duplicate logic block (~283 tokens) repeats test/pipe/streaming.js:33-49 in the same file.",
+      "evidence": "test/pipe/streaming.js:253-286 <-> test/pipe/streaming.js:33-49"
+    },
+    {
+      "id": "code/duplicate-block|test/verbose/custom-complete.js|27",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/verbose/custom-complete.js",
+      "line": 27,
+      "message": "Duplicate logic block (~120 tokens) matches test/verbose/custom-command.js:32-52.",
+      "evidence": "test/verbose/custom-complete.js:27-47 <-> test/verbose/custom-command.js:32-52"
+    },
+    {
+      "id": "code/duplicate-block|test/verbose/custom-error.js|32",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/verbose/custom-error.js",
+      "line": 32,
+      "message": "Duplicate logic block (~120 tokens) matches test/verbose/custom-command.js:32-52.",
+      "evidence": "test/verbose/custom-error.js:32-52 <-> test/verbose/custom-command.js:32-52"
+    },
+    {
+      "id": "code/duplicate-block|test/verbose/custom-ipc.js|35",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/verbose/custom-ipc.js",
+      "line": 35,
+      "message": "Duplicate logic block (~102 tokens) matches test/verbose/custom-command.js:32-51.",
+      "evidence": "test/verbose/custom-ipc.js:35-54 <-> test/verbose/custom-command.js:32-51"
+    },
+    {
+      "id": "code/duplicate-block|test/verbose/custom-ipc.js|65",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/verbose/custom-ipc.js",
+      "line": 65,
+      "message": "Duplicate logic block (~90 tokens) matches test/verbose/custom-command.js:32-51.",
+      "evidence": "test/verbose/custom-ipc.js:65-83 <-> test/verbose/custom-command.js:32-51"
+    },
+    {
+      "id": "code/duplicate-block|test/verbose/custom-output.js|41",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/verbose/custom-output.js",
+      "line": 41,
+      "message": "Duplicate logic block (~101 tokens) matches test/verbose/custom-command.js:33-52.",
+      "evidence": "test/verbose/custom-output.js:41-60 <-> test/verbose/custom-command.js:33-52"
+    },
+    {
+      "id": "code/duplicate-block|test/verbose/custom-output.js|70",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/verbose/custom-output.js",
+      "line": 70,
+      "message": "Duplicate logic block (~101 tokens) matches test/verbose/custom-command.js:33-52.",
+      "evidence": "test/verbose/custom-output.js:70-89 <-> test/verbose/custom-command.js:33-52"
+    },
+    {
+      "id": "code/duplicate-block|test/verbose/custom-start.js|44",
+      "corpus": "execa",
+      "ruleId": "code/duplicate-block",
+      "file": "test/verbose/custom-start.js",
+      "line": 44,
+      "message": "Duplicate logic block (~103 tokens) matches test/verbose/custom-command.js:33-52.",
+      "evidence": "test/verbose/custom-start.js:44-63 <-> test/verbose/custom-command.js:33-52"
+    },
+    {
+      "id": "code/high-complexity|lib/methods/template.js|66",
+      "corpus": "execa",
+      "ruleId": "code/high-complexity",
+      "file": "lib/methods/template.js",
+      "line": 66,
+      "message": "Cognitive complexity 31 exceeds threshold 25 in \"splitByWhitespaces\"; simplify or extract the function.",
+      "evidence": "Score: 31, threshold: 25"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|65",
+      "corpus": "execa",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 65,
+      "message": "Dependency `@typescript/native` is never imported, required or referenced by name in scripts.",
+      "evidence": "@typescript/native"
+    },
+    {
+      "id": "react/god-file|types/arguments/options.d.ts|1",
+      "corpus": "execa",
+      "ruleId": "react/god-file",
+      "file": "types/arguments/options.d.ts",
+      "line": 1,
+      "message": "Oversized module (430 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "430 LOC"
+    },
+    {
+      "id": "react/god-file|types/methods/main-async.d.ts|1",
+      "corpus": "execa",
+      "ruleId": "react/god-file",
+      "file": "types/methods/main-async.d.ts",
+      "line": 1,
+      "message": "Oversized module (383 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "383 LOC"
+    },
+    {
+      "id": "slop/magic-timer|test/io/max-buffer.js|25",
+      "corpus": "execa",
+      "ruleId": "slop/magic-timer",
+      "file": "test/io/max-buffer.js",
+      "line": 25,
+      "message": "Magic timer delay (5000ms) in setTimeout; extract a named constant with rationale.",
+      "evidence": "setTimeout(() => { subprocess.kill('SIGKILL'); }, 5000)"
+    },
+    {
+      "id": "slop/redundant-catch|lib/arguments/cwd.js|26",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/arguments/cwd.js",
+      "line": 26,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/convert/readable.js|81",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/convert/readable.js",
+      "line": 81,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/convert/shared.js|11",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/convert/shared.js",
+      "line": 11,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/convert/shared.js|21",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/convert/shared.js",
+      "line": 21,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/io/iterate.js|25",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/io/iterate.js",
+      "line": 25,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/io/pipeline.js|21",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/io/pipeline.js",
+      "line": 21,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/io/pipeline.js|40",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/io/pipeline.js",
+      "line": 40,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/ipc/get-each.js|83",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/ipc/get-each.js",
+      "line": 83,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/ipc/get-each.js|91",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/ipc/get-each.js",
+      "line": 91,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/pipe/streaming.js|82",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/pipe/streaming.js",
+      "line": 82,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|lib/terminate/kill.js|90",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "lib/terminate/kill.js",
+      "line": 90,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|test/helpers/graceful.js|7",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "test/helpers/graceful.js",
+      "line": 7,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|test/terminate/kill-force.js|215",
+      "corpus": "execa",
+      "ruleId": "slop/redundant-catch",
+      "file": "test/terminate/kill-force.js",
+      "line": 215,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "ts/no-double-cast|test-d/return/result-ipc.ts|97",
+      "corpus": "execa",
+      "ruleId": "ts/no-double-cast",
+      "file": "test-d/return/result-ipc.ts",
+      "line": 97,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "{} as unknown as SyncResult['ipcOutput']"
+    },
+    {
+      "id": "ts/no-explicit-any|test-d/return/result-main.test-d.ts|60",
+      "corpus": "execa",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test-d/return/result-main.test-d.ts",
+      "line": 60,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "ExecaError<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|test-d/return/result-main.test-d.ts|84",
+      "corpus": "execa",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test-d/return/result-main.test-d.ts",
+      "line": 84,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "ExecaSyncError<any>"
+    },
+    {
+      "id": "ts/unused-file|test-d/ipc/graceful.ts|1",
+      "corpus": "execa",
+      "ruleId": "ts/unused-file",
+      "file": "test-d/ipc/graceful.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test-d/return/result-ipc.ts|1",
+      "corpus": "execa",
+      "ruleId": "ts/unused-file",
+      "file": "test-d/return/result-ipc.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "code/duplicate-block|fastify.js|209",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "fastify.js",
+      "line": 209,
+      "message": "Duplicate logic block (~194 tokens) repeats fastify.js:200-207 in the same file.",
+      "evidence": "fastify.js:209-225 <-> fastify.js:200-207"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|82",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 82,
+      "message": "Duplicate logic block (~182 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:82-105 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|239",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 239,
+      "message": "Duplicate logic block (~447 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:239-300 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|311",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 311,
+      "message": "Duplicate logic block (~186 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:311-335 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|467",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 467,
+      "message": "Duplicate logic block (~126 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:467-494 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|600",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 600,
+      "message": "Duplicate logic block (~327 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:600-658 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|669",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 669,
+      "message": "Duplicate logic block (~429 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:669-735 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|739",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 739,
+      "message": "Duplicate logic block (~162 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:739-767 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|770",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 770,
+      "message": "Duplicate logic block (~168 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:770-800 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|827",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 827,
+      "message": "Duplicate logic block (~339 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:827-876 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|909",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 909,
+      "message": "Duplicate logic block (~457 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:909-984 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/config-validator.js|1048",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/config-validator.js",
+      "line": 1048,
+      "message": "Duplicate logic block (~645 tokens) repeats lib/config-validator.js:58-82 in the same file.",
+      "evidence": "lib/config-validator.js:1048-1147 <-> lib/config-validator.js:58-82"
+    },
+    {
+      "id": "code/duplicate-block|lib/error-serializer.js|81",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "lib/error-serializer.js",
+      "line": 81,
+      "message": "Duplicate logic block (~223 tokens) repeats lib/error-serializer.js:60-93 in the same file.",
+      "evidence": "lib/error-serializer.js:81-123 <-> lib/error-serializer.js:60-93"
+    },
+    {
+      "id": "code/duplicate-block|test/types/hooks.tst.ts|84",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "test/types/hooks.tst.ts",
+      "line": 84,
+      "message": "Duplicate logic block (~385 tokens) repeats test/types/hooks.tst.ts:34-57 in the same file.",
+      "evidence": "test/types/hooks.tst.ts:84-114 <-> test/types/hooks.tst.ts:34-57"
+    },
+    {
+      "id": "code/duplicate-block|test/types/hooks.tst.ts|145",
+      "corpus": "fastify",
+      "ruleId": "code/duplicate-block",
+      "file": "test/types/hooks.tst.ts",
+      "line": 145,
+      "message": "Duplicate logic block (~249 tokens) repeats test/types/hooks.tst.ts:34-57 in the same file.",
+      "evidence": "test/types/hooks.tst.ts:145-167 <-> test/types/hooks.tst.ts:34-57"
+    },
+    {
+      "id": "code/high-complexity|fastify.js|600",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "fastify.js",
+      "line": 600,
+      "message": "Cognitive complexity 37 exceeds threshold 25 in \"addHook\"; simplify or extract the function.",
+      "evidence": "Score: 37, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/config-validator.js|10",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/config-validator.js",
+      "line": 10,
+      "message": "Cognitive complexity 5071 exceeds threshold 25 in \"validate10\"; simplify or extract the function.",
+      "evidence": "Score: 5071, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/error-serializer.js|44",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/error-serializer.js",
+      "line": 44,
+      "message": "Cognitive complexity 57 exceeds threshold 25 in \"anonymous0\"; simplify or extract the function.",
+      "evidence": "Score: 57, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/reply.js|156",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/reply.js",
+      "line": 156,
+      "message": "Cognitive complexity 37 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 37, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/reply.js|600",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/reply.js",
+      "line": 600,
+      "message": "Cognitive complexity 45 exceeds threshold 25 in \"onSendEnd\"; simplify or extract the function.",
+      "evidence": "Score: 45, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/route.js|209",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/route.js",
+      "line": 209,
+      "message": "Cognitive complexity 26 exceeds threshold 25 in \"route\"; simplify or extract the function.",
+      "evidence": "Score: 26, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/route.js|282",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/route.js",
+      "line": 282,
+      "message": "Cognitive complexity 77 exceeds threshold 25 in \"addNewRoute\"; simplify or extract the function.",
+      "evidence": "Score: 77, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/schemas.js|59",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/schemas.js",
+      "line": 59,
+      "message": "Cognitive complexity 39 exceeds threshold 25 in \"normalizeSchema\"; simplify or extract the function.",
+      "evidence": "Score: 39, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/validation.js|78",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/validation.js",
+      "line": 78,
+      "message": "Cognitive complexity 81 exceeds threshold 25 in \"lowerCaseHeadersSchema\"; simplify or extract the function.",
+      "evidence": "Score: 81, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/validation.js|273",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/validation.js",
+      "line": 273,
+      "message": "Cognitive complexity 35 exceeds threshold 25 in \"compileSchemasForValidation\"; simplify or extract the function.",
+      "evidence": "Score: 35, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|lib/validation.js|398",
+      "corpus": "fastify",
+      "ruleId": "code/high-complexity",
+      "file": "lib/validation.js",
+      "line": 398,
+      "message": "Cognitive complexity 35 exceeds threshold 25 in \"validate\"; simplify or extract the function.",
+      "evidence": "Score: 35, threshold: 25"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|175",
+      "corpus": "fastify",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 175,
+      "message": "Dependency `@stylistic/eslint-plugin` is never imported, required or referenced by name in scripts.",
+      "evidence": "@stylistic/eslint-plugin"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|176",
+      "corpus": "fastify",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 176,
+      "message": "Dependency `@stylistic/eslint-plugin-js` is never imported, required or referenced by name in scripts.",
+      "evidence": "@stylistic/eslint-plugin-js"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|185",
+      "corpus": "fastify",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 185,
+      "message": "Dependency `branch-comparer` is never imported, required or referenced by name in scripts.",
+      "evidence": "branch-comparer"
+    },
+    {
+      "id": "deps/unused-dependency|test/bundler/webpack/package.json|9",
+      "corpus": "fastify",
+      "ruleId": "deps/unused-dependency",
+      "file": "test/bundler/webpack/package.json",
+      "line": 9,
+      "message": "Dependency `webpack-cli` is never imported, required or referenced by name in scripts of test/bundler/webpack.",
+      "evidence": "webpack-cli"
+    },
+    {
+      "id": "react/god-file|fastify.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "fastify.js",
+      "line": 1,
+      "message": "Oversized module (1044 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "1044 LOC"
+    },
+    {
+      "id": "react/god-file|lib/config-validator.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/config-validator.js",
+      "line": 1,
+      "message": "Oversized module (1197 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "1197 LOC"
+    },
+    {
+      "id": "react/god-file|lib/content-type-parser.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/content-type-parser.js",
+      "line": 1,
+      "message": "Oversized module (447 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "447 LOC"
+    },
+    {
+      "id": "react/god-file|lib/errors.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/errors.js",
+      "line": 1,
+      "message": "Oversized module (556 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "556 LOC"
+    },
+    {
+      "id": "react/god-file|lib/hooks.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/hooks.js",
+      "line": 1,
+      "message": "Oversized module (435 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "435 LOC"
+    },
+    {
+      "id": "react/god-file|lib/log-controller.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/log-controller.js",
+      "line": 1,
+      "message": "Oversized module (359 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "359 LOC"
+    },
+    {
+      "id": "react/god-file|lib/reply.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/reply.js",
+      "line": 1,
+      "message": "Oversized module (1100 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "1100 LOC"
+    },
+    {
+      "id": "react/god-file|lib/request.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/request.js",
+      "line": 1,
+      "message": "Oversized module (404 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "404 LOC"
+    },
+    {
+      "id": "react/god-file|lib/route.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/route.js",
+      "line": 1,
+      "message": "Oversized module (730 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "730 LOC"
+    },
+    {
+      "id": "react/god-file|lib/server.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/server.js",
+      "line": 1,
+      "message": "Oversized module (441 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "441 LOC"
+    },
+    {
+      "id": "react/god-file|lib/validation.js|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "lib/validation.js",
+      "line": 1,
+      "message": "Oversized module (530 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "530 LOC"
+    },
+    {
+      "id": "react/god-file|types/hooks.d.ts|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "types/hooks.d.ts",
+      "line": 1,
+      "message": "Oversized module (937 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "937 LOC"
+    },
+    {
+      "id": "react/god-file|types/instance.d.ts|1",
+      "corpus": "fastify",
+      "ruleId": "react/god-file",
+      "file": "types/instance.d.ts",
+      "line": 1,
+      "message": "Oversized module (718 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "718 LOC"
+    },
+    {
+      "id": "slop/magic-timer|scripts/validate-ecosystem-links.js|124",
+      "corpus": "fastify",
+      "ruleId": "slop/magic-timer",
+      "file": "scripts/validate-ecosystem-links.js",
+      "line": 124,
+      "message": "Magic timer delay (200ms) in setTimeout; extract a named constant with rationale.",
+      "evidence": "setTimeout(resolve, 200)"
+    },
+    {
+      "id": "slop/redundant-catch|test/logger/logger-test-utils.js|23",
+      "corpus": "fastify",
+      "ruleId": "slop/redundant-catch",
+      "file": "test/logger/logger-test-utils.js",
+      "line": 23,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch { }"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/hooks.tst.ts|359",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/hooks.tst.ts",
+      "line": 359,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "FastifyRequest<any, any, any, any, any, CustomContextConfig, any>"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/hooks.tst.ts|360",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/hooks.tst.ts",
+      "line": 360,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "FastifyReply<any, any, any, any, CustomContextConfig, any, any>"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/hooks.tst.ts|381",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/hooks.tst.ts",
+      "line": 381,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "payload: any"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/instance.tst.ts|81",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/instance.tst.ts",
+      "line": 81,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "private __brand: any"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/instance.tst.ts|597",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/instance.tst.ts",
+      "line": 597,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "FastifySchemaCompiler<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/instance.tst.ts|598",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/instance.tst.ts",
+      "line": 598,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "FastifySerializerCompiler<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/register.tst.ts|40",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/register.tst.ts",
+      "line": 40,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "value: any"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/reply.tst.ts|38",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/reply.tst.ts",
+      "line": 38,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "value: any"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/reply.tst.ts|39",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/reply.tst.ts",
+      "line": 39,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "[key: string]: any"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/reply.tst.ts|49",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/reply.tst.ts",
+      "line": 49,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "payload: any"
+    },
+    {
+      "id": "ts/no-explicit-any|test/types/request.tst.ts|91",
+      "corpus": "fastify",
+      "ruleId": "ts/no-explicit-any",
+      "file": "test/types/request.tst.ts",
+      "line": 91,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "validation: any;"
+    },
+    {
+      "id": "ts/unused-file|test/bundler/esbuild/src/fail-plugin-version.js|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/bundler/esbuild/src/fail-plugin-version.js",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/bundler/esbuild/src/index.js|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/bundler/esbuild/src/index.js",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/content-type-parser.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/content-type-parser.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/fastify.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/fastify.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/hooks.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/hooks.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/instance.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/instance.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/logger.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/logger.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/plugin.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/plugin.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/register.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/register.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/reply.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/reply.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/route.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/route.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/schema.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/schema.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/serverFactory.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/serverFactory.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/type-provider.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/type-provider.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|test/types/using.tst.ts|1",
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/using.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "arch/import-cycle|src/helper/streaming/index.ts|1",
+      "corpus": "hono",
+      "ruleId": "arch/import-cycle",
+      "file": "src/helper/streaming/index.ts",
+      "line": 1,
+      "message": "Import cycle detected among 2 file(s).",
+      "evidence": "src/helper/streaming/index.ts -> src/helper/streaming/text.ts -> src/helper/streaming/index.ts"
+    },
+    {
+      "id": "arch/import-cycle|src/jsx/base.ts|1",
+      "corpus": "hono",
+      "ruleId": "arch/import-cycle",
+      "file": "src/jsx/base.ts",
+      "line": 1,
+      "message": "Import cycle detected among 4 file(s).",
+      "evidence": "src/jsx/base.ts -> src/jsx/context.ts -> src/jsx/base.ts"
+    },
+    {
+      "id": "arch/import-cycle|src/jsx/components.ts|1",
+      "corpus": "hono",
+      "ruleId": "arch/import-cycle",
+      "file": "src/jsx/components.ts",
+      "line": 1,
+      "message": "Import cycle detected among 2 file(s).",
+      "evidence": "src/jsx/components.ts -> src/jsx/streaming.ts -> src/jsx/components.ts"
+    },
+    {
+      "id": "arch/import-cycle|src/jsx/dom/render.ts|1",
+      "corpus": "hono",
+      "ruleId": "arch/import-cycle",
+      "file": "src/jsx/dom/render.ts",
+      "line": 1,
+      "message": "Import cycle detected among 2 file(s).",
+      "evidence": "src/jsx/dom/render.ts -> src/jsx/hooks/index.ts -> src/jsx/dom/render.ts"
+    },
+    {
+      "id": "code/duplicate-block|benchmarks/jsx/src/react-jsx/benchmark.ts|8",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "benchmarks/jsx/src/react-jsx/benchmark.ts",
+      "line": 8,
+      "message": "Duplicate logic block (~118 tokens) matches benchmarks/jsx/src/benchmark.ts:8-30.",
+      "evidence": "benchmarks/jsx/src/react-jsx/benchmark.ts:8-30 <-> benchmarks/jsx/src/benchmark.ts:8-30"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/aws-lambda/conninfo.ts|9",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/aws-lambda/conninfo.ts",
+      "line": 9,
+      "message": "Duplicate logic block (~148 tokens) matches adapters/aws-lambda/src/conninfo.ts:9-73.",
+      "evidence": "src/adapter/aws-lambda/conninfo.ts:9-74 <-> adapters/aws-lambda/src/conninfo.ts:9-73"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/aws-lambda/types.ts|29",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/aws-lambda/types.ts",
+      "line": 29,
+      "message": "Duplicate logic block (~357 tokens) matches adapters/aws-lambda/src/types.ts:20-132.",
+      "evidence": "src/adapter/aws-lambda/types.ts:29-154 <-> adapters/aws-lambda/src/types.ts:20-132"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/aws-lambda/types.ts|156",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/aws-lambda/types.ts",
+      "line": 156,
+      "message": "Duplicate logic block (~112 tokens) matches adapters/aws-lambda/src/types.ts:134-173.",
+      "evidence": "src/adapter/aws-lambda/types.ts:156-201 <-> adapters/aws-lambda/src/types.ts:134-173"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/bun/conninfo.ts|11",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/bun/conninfo.ts",
+      "line": 11,
+      "message": "Duplicate logic block (~145 tokens) matches adapters/bun/src/conninfo.ts:10-43.",
+      "evidence": "src/adapter/bun/conninfo.ts:11-44 <-> adapters/bun/src/conninfo.ts:10-43"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/cloudflare-workers/utils.ts|2",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/cloudflare-workers/utils.ts",
+      "line": 2,
+      "message": "Duplicate logic block (~204 tokens) matches adapters/cloudflare-workers/src/utils.ts:2-50.",
+      "evidence": "src/adapter/cloudflare-workers/utils.ts:2-56 <-> adapters/cloudflare-workers/src/utils.ts:2-50"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/cloudflare-workers/websocket.ts|8",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/cloudflare-workers/websocket.ts",
+      "line": 8,
+      "message": "Duplicate logic block (~272 tokens) matches adapters/cloudflare-workers/src/websocket.ts:5-51.",
+      "evidence": "src/adapter/cloudflare-workers/websocket.ts:8-54 <-> adapters/cloudflare-workers/src/websocket.ts:5-51"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/deno/serve-static.ts|6",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/deno/serve-static.ts",
+      "line": 6,
+      "message": "Duplicate logic block (~165 tokens) matches adapters/deno/src/serve-static.ts:6-42.",
+      "evidence": "src/adapter/deno/serve-static.ts:6-45 <-> adapters/deno/src/serve-static.ts:6-42"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/deno/ssg.ts|10",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/deno/ssg.ts",
+      "line": 10,
+      "message": "Duplicate logic block (~105 tokens) matches adapters/deno/src/ssg.ts:9-27.",
+      "evidence": "src/adapter/deno/ssg.ts:10-29 <-> adapters/deno/src/ssg.ts:9-27"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/lambda-edge/handler.ts|23",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/lambda-edge/handler.ts",
+      "line": 23,
+      "message": "Duplicate logic block (~1008 tokens) matches adapters/lambda-edge/src/handler.ts:23-246.",
+      "evidence": "src/adapter/lambda-edge/handler.ts:23-270 <-> adapters/lambda-edge/src/handler.ts:23-246"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/netlify/conninfo.ts|8",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/netlify/conninfo.ts",
+      "line": 8,
+      "message": "Duplicate logic block (~110 tokens) matches adapters/netlify/src/conninfo.ts:8-57.",
+      "evidence": "src/adapter/netlify/conninfo.ts:8-58 <-> adapters/netlify/src/conninfo.ts:8-57"
+    },
+    {
+      "id": "code/duplicate-block|src/adapter/service-worker/handler.ts|10",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/service-worker/handler.ts",
+      "line": 10,
+      "message": "Duplicate logic block (~138 tokens) matches adapters/service-worker/src/handler.ts:10-37.",
+      "evidence": "src/adapter/service-worker/handler.ts:10-41 <-> adapters/service-worker/src/handler.ts:10-37"
+    },
+    {
+      "id": "code/duplicate-block|src/jsx/intrinsic-elements.ts|36",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/jsx/intrinsic-elements.ts",
+      "line": 36,
+      "message": "Duplicate logic block (~1140 tokens) repeats src/jsx/intrinsic-elements.ts:28-36 in the same file.",
+      "evidence": "src/jsx/intrinsic-elements.ts:36-149 <-> src/jsx/intrinsic-elements.ts:28-36"
+    },
+    {
+      "id": "code/duplicate-block|src/middleware/jwt/jwt.ts|70",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/middleware/jwt/jwt.ts",
+      "line": 70,
+      "message": "Duplicate logic block (~299 tokens) matches src/middleware/jwk/jwk.ts:70-122.",
+      "evidence": "src/middleware/jwt/jwt.ts:70-122 <-> src/middleware/jwk/jwk.ts:70-122"
+    },
+    {
+      "id": "code/duplicate-block|src/middleware/mount/index.ts|73",
+      "corpus": "hono",
+      "ruleId": "code/duplicate-block",
+      "file": "src/middleware/mount/index.ts",
+      "line": 73,
+      "message": "Duplicate logic block (~107 tokens) matches src/hono-base.ts:356-379.",
+      "evidence": "src/middleware/mount/index.ts:73-96 <-> src/hono-base.ts:356-379"
+    },
+    {
+      "id": "code/high-complexity|src/helper/css/common.ts|143",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/helper/css/common.ts",
+      "line": 143,
+      "message": "Cognitive complexity 57 exceeds threshold 25 in \"buildStyleString\"; simplify or extract the function.",
+      "evidence": "Score: 57, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/helper/html/index.ts|11",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/helper/html/index.ts",
+      "line": 11,
+      "message": "Cognitive complexity 50 exceeds threshold 25 in \"html\"; simplify or extract the function.",
+      "evidence": "Score: 50, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/helper/ssg/ssg.ts|375",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/helper/ssg/ssg.ts",
+      "line": 375,
+      "message": "Cognitive complexity 41 exceeds threshold 25 in \"toSSG\"; simplify or extract the function.",
+      "evidence": "Score: 41, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/jsx/base.ts|217",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/jsx/base.ts",
+      "line": 217,
+      "message": "Cognitive complexity 44 exceeds threshold 25 in \"childrenToStringToBuffer\"; simplify or extract the function.",
+      "evidence": "Score: 44, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/jsx/base.ts|365",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/jsx/base.ts",
+      "line": 365,
+      "message": "Cognitive complexity 29 exceeds threshold 25 in \"toStringToBuffer\"; simplify or extract the function.",
+      "evidence": "Score: 29, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/jsx/dom/intrinsic-element/components.ts|58",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/jsx/dom/intrinsic-element/components.ts",
+      "line": 58,
+      "message": "Cognitive complexity 26 exceeds threshold 25 in \"documentMetadataTag\"; simplify or extract the function.",
+      "evidence": "Score: 26, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/jsx/dom/intrinsic-element/components.ts|128",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/jsx/dom/intrinsic-element/components.ts",
+      "line": 128,
+      "message": "Cognitive complexity 55 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 55, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/jsx/dom/render.ts|517",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/jsx/dom/render.ts",
+      "line": 517,
+      "message": "Cognitive complexity 184 exceeds threshold 25 in \"build\"; simplify or extract the function.",
+      "evidence": "Score: 184, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/jsx/utils.ts|122",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/jsx/utils.ts",
+      "line": 122,
+      "message": "Cognitive complexity 89 exceeds threshold 25 in \"hasUnsafeStyleValue\"; simplify or extract the function.",
+      "evidence": "Score: 89, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/middleware/ip-restriction/index.ts|51",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/middleware/ip-restriction/index.ts",
+      "line": 51,
+      "message": "Cognitive complexity 50 exceeds threshold 25 in \"buildMatcher\"; simplify or extract the function.",
+      "evidence": "Score: 50, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/middleware/method-not-allowed/index.ts|64",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/middleware/method-not-allowed/index.ts",
+      "line": 64,
+      "message": "Cognitive complexity 26 exceeds threshold 25 in \"methodNotAllowed\"; simplify or extract the function.",
+      "evidence": "Score: 26, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/middleware/method-override/index.ts|70",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/middleware/method-override/index.ts",
+      "line": 70,
+      "message": "Cognitive complexity 49 exceeds threshold 25 in \"methodOverride\"; simplify or extract the function.",
+      "evidence": "Score: 49, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/middleware/serve-static/index.ts|57",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/middleware/serve-static/index.ts",
+      "line": 57,
+      "message": "Cognitive complexity 37 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 37, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/router/trie-router/node.ts|86",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/router/trie-router/node.ts",
+      "line": 86,
+      "message": "Cognitive complexity 113 exceeds threshold 25 in \"search\"; simplify or extract the function.",
+      "evidence": "Score: 113, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|src/utils/url.ts|248",
+      "corpus": "hono",
+      "ruleId": "code/high-complexity",
+      "file": "src/utils/url.ts",
+      "line": 248,
+      "message": "Cognitive complexity 57 exceeds threshold 25 in \"_getQueryParam\"; simplify or extract the function.",
+      "evidence": "Score: 57, threshold: 25"
+    },
+    {
+      "id": "deps/unused-dependency|benchmarks/fetch/package.json|4",
+      "corpus": "hono",
+      "ruleId": "deps/unused-dependency",
+      "file": "benchmarks/fetch/package.json",
+      "line": 4,
+      "message": "Dependency `mitata` is never imported, required or referenced by name in scripts of benchmarks/fetch.",
+      "evidence": "mitata"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|691",
+      "corpus": "hono",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 691,
+      "message": "Dependency `@typescript/native-preview` is never imported, required or referenced by name in scripts.",
+      "evidence": "@typescript/native-preview"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|692",
+      "corpus": "hono",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 692,
+      "message": "Dependency `@vitest/coverage-v8` is never imported, required or referenced by name in scripts.",
+      "evidence": "@vitest/coverage-v8"
+    },
+    {
+      "id": "react/god-file|adapters/aws-lambda/src/handler.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "adapters/aws-lambda/src/handler.ts",
+      "line": 1,
+      "message": "Oversized module (685 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "685 LOC"
+    },
+    {
+      "id": "react/god-file|src/adapter/aws-lambda/handler.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 1,
+      "message": "Oversized module (729 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "729 LOC"
+    },
+    {
+      "id": "react/god-file|src/client/types.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/client/types.ts",
+      "line": 1,
+      "message": "Oversized module (394 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "394 LOC"
+    },
+    {
+      "id": "react/god-file|src/context.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/context.ts",
+      "line": 1,
+      "message": "Oversized module (799 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "799 LOC"
+    },
+    {
+      "id": "react/god-file|src/helper/ssg/ssg.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/helper/ssg/ssg.ts",
+      "line": 1,
+      "message": "Oversized module (481 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "481 LOC"
+    },
+    {
+      "id": "react/god-file|src/hono-base.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/hono-base.ts",
+      "line": 1,
+      "message": "Oversized module (565 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "565 LOC"
+    },
+    {
+      "id": "react/god-file|src/jsx/dom/intrinsic-element/components.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/jsx/dom/intrinsic-element/components.ts",
+      "line": 1,
+      "message": "Oversized module (444 lines, 3 hooks; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "444 LOC, 3 React hooks"
+    },
+    {
+      "id": "react/god-file|src/jsx/dom/render.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/jsx/dom/render.ts",
+      "line": 1,
+      "message": "Oversized module (891 lines, 1 hooks; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "891 LOC, 1 React hooks"
+    },
+    {
+      "id": "react/god-file|src/jsx/hooks/index.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/jsx/hooks/index.ts",
+      "line": 1,
+      "message": "Oversized module (438 lines, 7 hooks; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "438 LOC, 7 React hooks"
+    },
+    {
+      "id": "react/god-file|src/jsx/intrinsic-elements.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/jsx/intrinsic-elements.ts",
+      "line": 1,
+      "message": "Oversized module (925 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "925 LOC"
+    },
+    {
+      "id": "react/god-file|src/request.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/request.ts",
+      "line": 1,
+      "message": "Oversized module (521 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "521 LOC"
+    },
+    {
+      "id": "react/god-file|src/types.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/types.ts",
+      "line": 1,
+      "message": "Oversized module (2783 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "2783 LOC"
+    },
+    {
+      "id": "react/god-file|src/utils/headers.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/utils/headers.ts",
+      "line": 1,
+      "message": "Oversized module (356 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "356 LOC"
+    },
+    {
+      "id": "react/god-file|src/utils/ipaddr.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/utils/ipaddr.ts",
+      "line": 1,
+      "message": "Oversized module (375 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "375 LOC"
+    },
+    {
+      "id": "react/god-file|src/utils/url.ts|1",
+      "corpus": "hono",
+      "ruleId": "react/god-file",
+      "file": "src/utils/url.ts",
+      "line": 1,
+      "message": "Oversized module (363 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "363 LOC"
+    },
+    {
+      "id": "slop/redundant-catch|adapters/bun/src/serve-static.ts|22",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "adapters/bun/src/serve-static.ts",
+      "line": 22,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|adapters/deno/src/serve-static.ts|32",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "adapters/deno/src/serve-static.ts",
+      "line": 32,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|src/adapter/bun/serve-static.ts|25",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "src/adapter/bun/serve-static.ts",
+      "line": 25,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|src/adapter/deno/serve-static.ts|35",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "src/adapter/deno/serve-static.ts",
+      "line": 35,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|src/hono-base.ts|383",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "src/hono-base.ts",
+      "line": 383,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|src/jsx/context.ts|57",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "src/jsx/context.ts",
+      "line": 57,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|src/middleware/mount/index.ts|32",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "src/middleware/mount/index.ts",
+      "line": 32,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|src/middleware/timing/timing.ts|33",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "src/middleware/timing/timing.ts",
+      "line": 33,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|src/utils/basic-auth.ts|19",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "src/utils/basic-auth.ts",
+      "line": 19,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|src/utils/mount.ts|97",
+      "corpus": "hono",
+      "ruleId": "slop/redundant-catch",
+      "file": "src/utils/mount.ts",
+      "line": 97,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "ts/no-double-cast|adapters/cloudflare-workers/src/utils.ts|49",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "adapters/cloudflare-workers/src/utils.ts",
+      "line": 49,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "content as unknown as ReadableStream"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/base.ts|151",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/base.ts",
+      "line": 151,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "value as unknown as HtmlEscaped"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/base.ts|228",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/base.ts",
+      "line": 228,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "child as unknown as HtmlEscaped"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/components.ts|88",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/components.ts",
+      "line": 88,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "awaitedFallback as unknown as HtmlEscapedString"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/components.ts|109",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/components.ts",
+      "line": 109,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "children.map(resolveChildEarly) as unknown as HtmlEscapedString[]"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/dom/css.ts|136",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/dom/css.ts",
+      "line": 136,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "c as unknown as CssClassName"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/dom/intrinsic-element/components.ts|236",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/dom/intrinsic-element/components.ts",
+      "line": 236,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "{ tag, type: tag, props: { ...restProps, ref, }, ref, } as unknown as JSXNode & { e?: HTMLElement; p"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/dom/intrinsic-element/components.ts|304",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/dom/intrinsic-element/components.ts",
+      "line": 304,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "{ tag: 'link', props, type: 'link', ref: props.ref, } as unknown as JSXNode"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/dom/intrinsic-element/components.ts|370",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/dom/intrinsic-element/components.ts",
+      "line": 370,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "FormContext as unknown as Function"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/dom/render.ts|618",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/dom/render.ts",
+      "line": 618,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "oldChild as unknown as NodeString"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/intrinsic-element/components.ts|126",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/intrinsic-element/components.ts",
+      "line": 126,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "new JSXNode( 'title', props, toArray(children ?? []) as Child[] ) as unknown as HtmlEscapedString"
+    },
+    {
+      "id": "ts/no-double-cast|src/jsx/streaming.ts|64",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/jsx/streaming.ts",
+      "line": 64,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "{ [DOM_STASH]: [0, []] } as unknown as NodeObject"
+    },
+    {
+      "id": "ts/no-double-cast|src/middleware/secure-headers/secure-headers.ts|284",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/middleware/secure-headers/secure-headers.ts",
+      "line": 284,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "values[1].slice() as unknown as string[]"
+    },
+    {
+      "id": "ts/no-double-cast|src/utils/html.ts|159",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/utils/html.ts",
+      "line": 159,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "str as unknown as string"
+    },
+    {
+      "id": "ts/no-double-cast|src/utils/html.ts|162",
+      "corpus": "hono",
+      "ruleId": "ts/no-double-cast",
+      "file": "src/utils/html.ts",
+      "line": 162,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "str as unknown as Promise<string>"
+    },
+    {
+      "id": "ts/no-explicit-any|src/adapter/cloudflare-pages/handler.ts|58",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/adapter/cloudflare-pages/handler.ts",
+      "line": 58,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "P extends string = any"
+    },
+    {
+      "id": "ts/no-explicit-any|src/adapter/netlify/handler.ts|8",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/adapter/netlify/handler.ts",
+      "line": 8,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "Hono<any, any>"
+    },
+    {
+      "id": "ts/no-explicit-any|src/client/types.ts|285",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/client/types.ts",
+      "line": 285,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "ClientResponse<any, any, any>"
+    },
+    {
+      "id": "ts/no-explicit-any|src/helper/factory/index.ts|29",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/helper/factory/index.ts",
+      "line": 29,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "HandlerResponse<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|src/helper/factory/index.ts|239",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/helper/factory/index.ts",
+      "line": 239,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "HandlerResponse<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|src/helper/factory/index.ts|291",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/helper/factory/index.ts",
+      "line": 291,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "R5 extends HandlerResponse<any> = any"
+    },
+    {
+      "id": "ts/no-explicit-any|src/jsx/dom/client.ts|56",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/jsx/dom/client.ts",
+      "line": 56,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "{ tag: () => { const [_jsxNode, _setJsxNode] = useState(jsxNode) setJsxNode = _setJsxNode return _js"
+    },
+    {
+      "id": "ts/no-explicit-any|src/jsx/dom/components.ts|39",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/jsx/dom/components.ts",
+      "line": 39,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "(({ children, fallback, }: any) => { const res = Fragment({ children }) ;(res as any)[DOM_ERROR_HAND"
+    },
+    {
+      "id": "ts/no-explicit-any|src/jsx/dom/render.ts|30",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/jsx/dom/render.ts",
+      "line": 30,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "FC<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|src/jsx/dom/render.ts|284",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/jsx/dom/render.ts",
+      "line": 284,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "func as any"
+    },
+    {
+      "id": "ts/no-explicit-any|src/jsx/dom/render.ts|528",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/jsx/dom/render.ts",
+      "line": 528,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "children[0] as any"
+    },
+    {
+      "id": "ts/no-explicit-any|src/types.ts|94",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/types.ts",
+      "line": 94,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "HandlerResponse<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|src/types.ts|1118",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/types.ts",
+      "line": 1118,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "MiddlewareHandler<E2, P, any, any>"
+    },
+    {
+      "id": "ts/no-explicit-any|src/types.ts|1984",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/types.ts",
+      "line": 1984,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "R extends HandlerResponse<any> = any"
+    },
+    {
+      "id": "ts/no-explicit-any|src/types.ts|2761",
+      "corpus": "hono",
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/types.ts",
+      "line": 2761,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "TypedResponse<any, any, any>"
+    },
+    {
+      "id": "ts/unused-export|adapters/aws-lambda/src/handler.ts|282",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "adapters/aws-lambda/src/handler.ts",
+      "line": 282,
+      "message": "Exported symbol `EventProcessor` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... EventProcessor"
+    },
+    {
+      "id": "ts/unused-export|adapters/aws-lambda/src/handler.ts|590",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "adapters/aws-lambda/src/handler.ts",
+      "line": 590,
+      "message": "Exported symbol `LatticeV2Processor` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... LatticeV2Processor"
+    },
+    {
+      "id": "ts/unused-export|adapters/cloudflare-workers/test/worker.ts|15",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "adapters/cloudflare-workers/test/worker.ts",
+      "line": 15,
+      "message": "Default export `default` is never imported by any other file.",
+      "evidence": "export default ..."
+    },
+    {
+      "id": "ts/unused-export|runtime-tests/workerd/index.ts|18",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "runtime-tests/workerd/index.ts",
+      "line": 18,
+      "message": "Default export `default` is never imported by any other file.",
+      "evidence": "export default ..."
+    },
+    {
+      "id": "ts/unused-export|src/adapter/aws-lambda/handler.ts|307",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 307,
+      "message": "Exported symbol `EventProcessor` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... EventProcessor"
+    },
+    {
+      "id": "ts/unused-export|src/adapter/aws-lambda/handler.ts|480",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 480,
+      "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... EventV1Processor"
+    },
+    {
+      "id": "ts/unused-export|src/adapter/aws-lambda/handler.ts|627",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 627,
+      "message": "Exported symbol `LatticeV2Processor` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... LatticeV2Processor"
+    },
+    {
+      "id": "ts/unused-export|src/helper/css/common.ts|3",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/helper/css/common.ts",
+      "line": 3,
+      "message": "Exported symbol `isPseudoGlobalSelectorRe` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... isPseudoGlobalSelectorRe"
+    },
+    {
+      "id": "ts/unused-export|src/helper/css/common.ts|10",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/helper/css/common.ts",
+      "line": 10,
+      "message": "Exported symbol `EXTERNAL_CLASS_NAMES` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... EXTERNAL_CLASS_NAMES"
+    },
+    {
+      "id": "ts/unused-export|src/helper/css/common.ts|21",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/helper/css/common.ts",
+      "line": 21,
+      "message": "Exported symbol `IS_CSS_ESCAPED` has zero references; safe to delete.",
+      "evidence": "export ... IS_CSS_ESCAPED"
+    },
+    {
+      "id": "ts/unused-export|src/helper/css/common.ts|143",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/helper/css/common.ts",
+      "line": 143,
+      "message": "Exported symbol `buildStyleString` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... buildStyleString"
+    },
+    {
+      "id": "ts/unused-export|src/jsx/base.ts|87",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/jsx/base.ts",
+      "line": 87,
+      "message": "Exported symbol `booleanAttributes` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... booleanAttributes"
+    },
+    {
+      "id": "ts/unused-export|src/router/reg-exp-router/node.ts|3",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/router/reg-exp-router/node.ts",
+      "line": 3,
+      "message": "Exported symbol `LABEL_REG_EXP_STR` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... LABEL_REG_EXP_STR"
+    },
+    {
+      "id": "ts/unused-export|src/utils/mime.ts|29",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/utils/mime.ts",
+      "line": 29,
+      "message": "Exported symbol `mimes` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... mimes"
+    },
+    {
+      "id": "ts/unused-export|src/utils/url.ts|362",
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/utils/url.ts",
+      "line": 362,
+      "message": "Exported symbol `decodeURIComponent_` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... decodeURIComponent_"
+    },
+    {
+      "id": "ts/unused-file|adapters/cloudflare-workers/test/worker.ts|1",
+      "corpus": "hono",
+      "ruleId": "ts/unused-file",
+      "file": "adapters/cloudflare-workers/test/worker.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|perf-measures/type-check/client.ts|1",
+      "corpus": "hono",
+      "ruleId": "ts/unused-file",
+      "file": "perf-measures/type-check/client.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|runtime-tests/workerd/index.ts|1",
+      "corpus": "hono",
+      "ruleId": "ts/unused-file",
+      "file": "runtime-tests/workerd/index.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-type-export|adapters/aws-lambda/src/types.ts|23",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "adapters/aws-lambda/src/types.ts",
+      "line": 23,
+      "message": "Exported type `ClientContextEnv` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... ClientContextEnv"
+    },
+    {
+      "id": "ts/unused-type-export|src/adapter/aws-lambda/handler.ts|77",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 77,
+      "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... APIGatewayProxyEvent"
+    },
+    {
+      "id": "ts/unused-type-export|src/adapter/aws-lambda/types.ts|14",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/types.ts",
+      "line": 14,
+      "message": "Exported type `ClientContext` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... ClientContext"
+    },
+    {
+      "id": "ts/unused-type-export|src/client/types.ts|232",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/client/types.ts",
+      "line": 232,
+      "message": "Exported type `Response` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... Response"
+    },
+    {
+      "id": "ts/unused-type-export|src/client/types.ts|273",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/client/types.ts",
+      "line": 273,
+      "message": "Exported type `InferRequestOptionsType` has zero references; safe to delete.",
+      "evidence": "export ... InferRequestOptionsType"
+    },
+    {
+      "id": "ts/unused-type-export|src/context.ts|88",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/context.ts",
+      "line": 88,
+      "message": "Exported type `Layout` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... Layout"
+    },
+    {
+      "id": "ts/unused-type-export|src/jsx/dom/render.ts|32",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/jsx/dom/render.ts",
+      "line": 32,
+      "message": "Exported type `ErrorHandler` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... ErrorHandler"
+    },
+    {
+      "id": "ts/unused-type-export|src/router/reg-exp-router/trie.ts|5",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/router/reg-exp-router/trie.ts",
+      "line": 5,
+      "message": "Exported type `ReplacementMap` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... ReplacementMap"
+    },
+    {
+      "id": "ts/unused-type-export|src/utils/basic-auth.ts|7",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/basic-auth.ts",
+      "line": 7,
+      "message": "Exported type `Auth` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... Auth"
+    },
+    {
+      "id": "ts/unused-type-export|src/utils/cookie.ts|31",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/cookie.ts",
+      "line": 31,
+      "message": "Exported type `CookieConstraint` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... CookieConstraint"
+    },
+    {
+      "id": "ts/unused-type-export|src/utils/http-status.ts|52",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/http-status.ts",
+      "line": 52,
+      "message": "Exported type `UnofficialStatusCode` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... UnofficialStatusCode"
+    },
+    {
+      "id": "ts/unused-type-export|src/utils/http-status.ts|71",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/http-status.ts",
+      "line": 71,
+      "message": "Exported type `ContentlessStatusCode` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... ContentlessStatusCode"
+    },
+    {
+      "id": "ts/unused-type-export|src/utils/types.ts|25",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/types.ts",
+      "line": 25,
+      "message": "Exported type `JSONObject` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... JSONObject"
+    },
+    {
+      "id": "ts/unused-type-export|src/utils/types.ts|129",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/types.ts",
+      "line": 129,
+      "message": "Exported type `RequiredKeysOf` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... RequiredKeysOf"
+    },
+    {
+      "id": "ts/unused-type-export|src/validator/validator.ts|28",
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/validator/validator.ts",
+      "line": 28,
+      "message": "Exported type `ExtractValidationResponse` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... ExtractValidationResponse"
+    },
+    {
+      "id": "arch/import-cycle|packages/zod/src/v4/core/core.ts|1",
+      "corpus": "zod",
+      "ruleId": "arch/import-cycle",
+      "file": "packages/zod/src/v4/core/core.ts",
+      "line": 1,
+      "message": "Import cycle detected among 2 file(s).",
+      "evidence": "packages/zod/src/v4/core/core.ts -> packages/zod/src/v4/core/util.ts -> packages/zod/src/v4/core/core.ts"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/compile-includes.ts|26",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/compile-includes.ts",
+      "line": 26,
+      "message": "Duplicate logic block (~93 tokens) matches packages/bench/compile-endswith.ts:30-43.",
+      "evidence": "packages/bench/compile-includes.ts:26-39 <-> packages/bench/compile-endswith.ts:30-43"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/compile-overwrite.ts|37",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/compile-overwrite.ts",
+      "line": 37,
+      "message": "Duplicate logic block (~93 tokens) matches packages/bench/compile-endswith.ts:30-43.",
+      "evidence": "packages/bench/compile-overwrite.ts:37-50 <-> packages/bench/compile-endswith.ts:30-43"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/compile-passthrough.ts|45",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/compile-passthrough.ts",
+      "line": 45,
+      "message": "Duplicate logic block (~82 tokens) matches packages/bench/compile-includes.ts:27-42.",
+      "evidence": "packages/bench/compile-passthrough.ts:45-60 <-> packages/bench/compile-includes.ts:27-42"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/compile-passthrough.ts|138",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/compile-passthrough.ts",
+      "line": 138,
+      "message": "Duplicate logic block (~94 tokens) matches packages/bench/compile-output.ts:149-166.",
+      "evidence": "packages/bench/compile-passthrough.ts:138-155 <-> packages/bench/compile-output.ts:149-166"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/compile-passthrough.ts|205",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/compile-passthrough.ts",
+      "line": 205,
+      "message": "Duplicate logic block (~322 tokens) repeats packages/bench/compile-passthrough.ts:44-68 in the same file.",
+      "evidence": "packages/bench/compile-passthrough.ts:205-236 <-> packages/bench/compile-passthrough.ts:44-68"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/compile-passthrough.ts|261",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/compile-passthrough.ts",
+      "line": 261,
+      "message": "Duplicate logic block (~317 tokens) repeats packages/bench/compile-passthrough.ts:44-68 in the same file.",
+      "evidence": "packages/bench/compile-passthrough.ts:261-291 <-> packages/bench/compile-passthrough.ts:44-68"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/compile-vs-arktype.ts|290",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/compile-vs-arktype.ts",
+      "line": 290,
+      "message": "Duplicate logic block (~99 tokens) matches packages/bench/compile-validate-vs-parse.ts:110-122.",
+      "evidence": "packages/bench/compile-vs-arktype.ts:290-302 <-> packages/bench/compile-validate-vs-parse.ts:110-122"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/compile-vs-arktype.ts|376",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/compile-vs-arktype.ts",
+      "line": 376,
+      "message": "Duplicate logic block (~169 tokens) repeats packages/bench/compile-vs-arktype.ts:310-317 in the same file.",
+      "evidence": "packages/bench/compile-vs-arktype.ts:376-414 <-> packages/bench/compile-vs-arktype.ts:310-317"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/compile-wrapper-cost.ts|115",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/compile-wrapper-cost.ts",
+      "line": 115,
+      "message": "Duplicate logic block (~84 tokens) matches packages/bench/compile-vs-arktype.ts:281-294.",
+      "evidence": "packages/bench/compile-wrapper-cost.ts:115-128 <-> packages/bench/compile-vs-arktype.ts:281-294"
+    },
+    {
+      "id": "code/duplicate-block|packages/bench/validate-vs-safeparse.ts|105",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/bench/validate-vs-safeparse.ts",
+      "line": 105,
+      "message": "Duplicate logic block (~196 tokens) matches packages/bench/validate-abort-sweep.ts:125-147.",
+      "evidence": "packages/bench/validate-vs-safeparse.ts:105-128 <-> packages/bench/validate-abort-sweep.ts:125-147"
+    },
+    {
+      "id": "code/duplicate-block|packages/zod/src/v3/types.ts|825",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/zod/src/v3/types.ts",
+      "line": 825,
+      "message": "Duplicate logic block (~348 tokens) repeats packages/zod/src/v3/types.ts:802-815 in the same file.",
+      "evidence": "packages/zod/src/v3/types.ts:825-877 <-> packages/zod/src/v3/types.ts:802-815"
+    },
+    {
+      "id": "code/duplicate-block|packages/zod/src/v3/types.ts|995",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/zod/src/v3/types.ts",
+      "line": 995,
+      "message": "Duplicate logic block (~247 tokens) repeats packages/zod/src/v3/types.ts:802-815 in the same file.",
+      "evidence": "packages/zod/src/v3/types.ts:995-1034 <-> packages/zod/src/v3/types.ts:802-815"
+    },
+    {
+      "id": "code/duplicate-block|packages/zod/src/v3/types.ts|1066",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/zod/src/v3/types.ts",
+      "line": 1066,
+      "message": "Duplicate logic block (~217 tokens) repeats packages/zod/src/v3/types.ts:802-815 in the same file.",
+      "evidence": "packages/zod/src/v3/types.ts:1066-1092 <-> packages/zod/src/v3/types.ts:802-815"
+    },
+    {
+      "id": "code/duplicate-block|packages/zod/src/v3/types.ts|1574",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/zod/src/v3/types.ts",
+      "line": 1574,
+      "message": "Duplicate logic block (~121 tokens) repeats packages/zod/src/v3/types.ts:802-815 in the same file.",
+      "evidence": "packages/zod/src/v3/types.ts:1574-1595 <-> packages/zod/src/v3/types.ts:802-815"
+    },
+    {
+      "id": "code/duplicate-block|packages/zod/src/v4/core/parse.ts|53",
+      "corpus": "zod",
+      "ruleId": "code/duplicate-block",
+      "file": "packages/zod/src/v4/core/parse.ts",
+      "line": 53,
+      "message": "Duplicate logic block (~129 tokens) repeats packages/zod/src/v4/core/parse.ts:29-44 in the same file.",
+      "evidence": "packages/zod/src/v4/core/parse.ts:53-68 <-> packages/zod/src/v4/core/parse.ts:29-44"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v3/types.ts|3075",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v3/types.ts",
+      "line": 3075,
+      "message": "Cognitive complexity 91 exceeds threshold 25 in \"getDiscriminator\"; simplify or extract the function.",
+      "evidence": "Score: 91, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/core/compile.ts|802",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 802,
+      "message": "Cognitive complexity 31 exceeds threshold 25 in \"generateStringFormatCheck\"; simplify or extract the function.",
+      "evidence": "Score: 31, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/core/memoizer.ts|356",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/core/memoizer.ts",
+      "line": 356,
+      "message": "Cognitive complexity 51 exceeds threshold 25 in \"wrapped\"; simplify or extract the function.",
+      "evidence": "Score: 51, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/az.ts|61",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/az.ts",
+      "line": 61,
+      "message": "Cognitive complexity 40 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 40, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/be.ts|126",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/be.ts",
+      "line": 126,
+      "message": "Cognitive complexity 39 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 39, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/fr-CA.ts|61",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/fr-CA.ts",
+      "line": 61,
+      "message": "Cognitive complexity 41 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 41, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/hi.ts|61",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/hi.ts",
+      "line": 61,
+      "message": "Cognitive complexity 40 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 40, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/hr.ts|75",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/hr.ts",
+      "line": 75,
+      "message": "Cognitive complexity 44 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 44, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/hy.ts|112",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/hy.ts",
+      "line": 112,
+      "message": "Cognitive complexity 39 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 39, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/is.ts|63",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/is.ts",
+      "line": 63,
+      "message": "Cognitive complexity 40 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 40, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/ro.ts|74",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/ro.ts",
+      "line": 74,
+      "message": "Cognitive complexity 36 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 36, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/sv.ts|63",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/sv.ts",
+      "line": 63,
+      "message": "Cognitive complexity 44 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 44, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/ur.ts|64",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/ur.ts",
+      "line": 64,
+      "message": "Cognitive complexity 40 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 40, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/yo.ts|63",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/yo.ts",
+      "line": 63,
+      "message": "Cognitive complexity 36 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 36, threshold: 25"
+    },
+    {
+      "id": "code/high-complexity|packages/zod/src/v4/locales/zh-TW.ts|61",
+      "corpus": "zod",
+      "ruleId": "code/high-complexity",
+      "file": "packages/zod/src/v4/locales/zh-TW.ts",
+      "line": 61,
+      "message": "Cognitive complexity 40 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.",
+      "evidence": "Score: 40, threshold: 25"
+    },
+    {
+      "id": "deps/unlisted-dependency|scripts/chrome-devtools-mcp.mjs|18",
+      "corpus": "zod",
+      "ruleId": "deps/unlisted-dependency",
+      "file": "scripts/chrome-devtools-mcp.mjs",
+      "line": 18,
+      "message": "Import of unlisted package `puppeteer` — add it to package.json dependencies/devDependencies.",
+      "evidence": "import 'puppeteer'"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|21",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 21,
+      "message": "Dependency `@arethetypeswrong/cli` is never imported, required or referenced by name in scripts.",
+      "evidence": "@arethetypeswrong/cli"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|22",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 22,
+      "message": "Dependency `@biomejs/biome` is never imported, required or referenced by name in scripts.",
+      "evidence": "@biomejs/biome"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|33",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 33,
+      "message": "Dependency `globby` is never imported, required or referenced by name in scripts.",
+      "evidence": "globby"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|36",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 36,
+      "message": "Dependency `lint-staged` is never imported, required or referenced by name in scripts.",
+      "evidence": "lint-staged"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|41",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 41,
+      "message": "Dependency `rolldown` is never imported, required or referenced by name in scripts.",
+      "evidence": "rolldown"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|44",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 44,
+      "message": "Dependency `supershy` is never imported, required or referenced by name in scripts.",
+      "evidence": "supershy"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|46",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 46,
+      "message": "Dependency `ts-morph` is never imported, required or referenced by name in scripts.",
+      "evidence": "ts-morph"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|47",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 47,
+      "message": "Dependency `tsdown` is never imported, required or referenced by name in scripts.",
+      "evidence": "tsdown"
+    },
+    {
+      "id": "deps/unused-dependency|package.json|48",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 48,
+      "message": "Dependency `tslib` is never imported, required or referenced by name in scripts.",
+      "evidence": "tslib"
+    },
+    {
+      "id": "deps/unused-dependency|packages/treeshake/package.json|23",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "packages/treeshake/package.json",
+      "line": 23,
+      "message": "Dependency `zod4` is never imported, required or referenced by name in scripts of packages/treeshake.",
+      "evidence": "zod4"
+    },
+    {
+      "id": "deps/unused-dependency|packages/tsc/package.json|10",
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "packages/tsc/package.json",
+      "line": 10,
+      "message": "Dependency `@typescript/analyze-trace` is never imported, required or referenced by name in scripts of packages/tsc.",
+      "evidence": "@typescript/analyze-trace"
+    },
+    {
+      "id": "react/god-file|packages/bench/compile-matrix.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/bench/compile-matrix.ts",
+      "line": 1,
+      "message": "Oversized module (452 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "452 LOC"
+    },
+    {
+      "id": "react/god-file|packages/bench/compile-vs-arktype.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/bench/compile-vs-arktype.ts",
+      "line": 1,
+      "message": "Oversized module (478 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "478 LOC"
+    },
+    {
+      "id": "react/god-file|packages/tsc/generate.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/tsc/generate.ts",
+      "line": 1,
+      "message": "Oversized module (356 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "356 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v3/types.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v3/types.ts",
+      "line": 1,
+      "message": "Oversized module (5150 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "5150 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v4/classic/from-json-schema.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v4/classic/from-json-schema.ts",
+      "line": 1,
+      "message": "Oversized module (944 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "944 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v4/classic/schemas.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v4/classic/schemas.ts",
+      "line": 1,
+      "message": "Oversized module (2941 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "2941 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v4/core/checks.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v4/core/checks.ts",
+      "line": 1,
+      "message": "Oversized module (1267 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "1267 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v4/core/compile.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 1,
+      "message": "Oversized module (2379 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "2379 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v4/core/errors.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v4/core/errors.ts",
+      "line": 1,
+      "message": "Oversized module (544 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "544 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v4/core/memoizer.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v4/core/memoizer.ts",
+      "line": 1,
+      "message": "Oversized module (477 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "477 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v4/core/to-json-schema.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v4/core/to-json-schema.ts",
+      "line": 1,
+      "message": "Oversized module (861 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "861 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v4/core/util.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v4/core/util.ts",
+      "line": 1,
+      "message": "Oversized module (1330 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "1330 LOC"
+    },
+    {
+      "id": "react/god-file|packages/zod/src/v4/mini/schemas.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "packages/zod/src/v4/mini/schemas.ts",
+      "line": 1,
+      "message": "Oversized module (2052 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "2052 LOC"
+    },
+    {
+      "id": "react/god-file|scripts/compile-fuzz.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "scripts/compile-fuzz.ts",
+      "line": 1,
+      "message": "Oversized module (444 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "444 LOC"
+    },
+    {
+      "id": "react/god-file|scripts/triage-signal.ts|1",
+      "corpus": "zod",
+      "ruleId": "react/god-file",
+      "file": "scripts/triage-signal.ts",
+      "line": 1,
+      "message": "Oversized module (701 lines; limits: 350 lines / 15 hooks). Split by domain.",
+      "evidence": "701 LOC"
+    },
+    {
+      "id": "slop/magic-timer|scripts/check-lockstep.ts|62",
+      "corpus": "zod",
+      "ruleId": "slop/magic-timer",
+      "file": "scripts/check-lockstep.ts",
+      "line": 62,
+      "message": "Magic timer delay (30000ms) in setTimeout; extract a named constant with rationale.",
+      "evidence": "setTimeout(r, 30_000)"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/discriminatedUnion.ts|46",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+      "line": 46,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_err) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/object.ts|45",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/object.ts",
+      "line": 45,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_err) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/object.ts|61",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/object.ts",
+      "line": 61,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_err) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/primitives.ts|52",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/primitives.ts",
+      "line": 52,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_e: any) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/primitives.ts|102",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/primitives.ts",
+      "line": 102,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_e: any) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/primitives.ts|125",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/primitives.ts",
+      "line": 125,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_e: any) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/primitives.ts|154",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/primitives.ts",
+      "line": 154,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_e: any) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/string.ts|44",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/string.ts",
+      "line": 44,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_err) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/union.ts|67",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/union.ts",
+      "line": 67,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_err) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v3/benchmarks/union.ts|72",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v3/benchmarks/union.ts",
+      "line": 72,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_err) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v4/core/compile.ts|246",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 246,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v4/core/schemas.ts|404",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v4/core/schemas.ts",
+      "line": 404,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v4/core/schemas.ts|1334",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v4/core/schemas.ts",
+      "line": 1334,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_) {}"
+    },
+    {
+      "id": "slop/redundant-catch|packages/zod/src/v4/core/schemas.ts|1421",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "packages/zod/src/v4/core/schemas.ts",
+      "line": 1421,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch (_) {}"
+    },
+    {
+      "id": "slop/redundant-catch|scripts/compile-fuzz.ts|371",
+      "corpus": "zod",
+      "ruleId": "slop/redundant-catch",
+      "file": "scripts/compile-fuzz.ts",
+      "line": 371,
+      "message": "Empty catch block silently swallows errors without explanation.",
+      "evidence": "catch {}"
+    },
+    {
+      "id": "ts/no-double-cast|packages/bench/memory/indent-leak.ts|79",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/bench/memory/indent-leak.ts",
+      "line": 79,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "union(p, c.branches, c.islands) as unknown as z.ZodType"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v3/types.ts|3888",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v3/types.ts",
+      "line": 3888,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "me._def.returns as unknown as ZodPromise<ZodTypeAny>"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/classic/deep-partial.ts|68",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/classic/deep-partial.ts",
+      "line": 68,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "visit(schema, { object: (s) => (s as schemas.ZodObject).partial(), // Every partialed option now adm"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/classic/schemas.ts|355",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/classic/schemas.ts",
+      "line": 355,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "this as unknown as ZodType"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/classic/schemas.ts|2565",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/classic/schemas.ts",
+      "line": 2565,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "in_ as unknown as core.$ZodType"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/core/compile.ts|823",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 823,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "def as unknown as { alg?: util.JWTAlgorithm }"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/core/compile.ts|847",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 847,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "def as unknown as { normalize?: boolean; hostname?: unknown; protocol?: unknown }"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/core/compile.ts|1139",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 1139,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "schema._zod.def as unknown as StringFormatDef & { format?: string }"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/core/compile.ts|1375",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 1375,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "schema._zod.def as unknown as { innerType: SomeType }"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/core/compile.ts|1663",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 1663,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "schema._zod.def as unknown as { innerType: SomeType }"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/core/compile.ts|1866",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 1866,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "opt._zod.def as unknown as { values: unknown[] }"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/core/compile.ts|1970",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 1970,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "schema._zod.def as unknown as { left: SomeType; right: SomeType }"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/core/compile.ts|2156",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 2156,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "schema._zod.def as unknown as { keyType: SomeType; valueType: SomeType }"
+    },
+    {
+      "id": "ts/no-double-cast|packages/zod/src/v4/core/compile.ts|2283",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "packages/zod/src/v4/core/compile.ts",
+      "line": 2283,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "schema._zod.def as unknown as { fn?: (value: unknown) => boolean }"
+    },
+    {
+      "id": "ts/no-double-cast|scripts/check-comments.ts|131",
+      "corpus": "zod",
+      "ruleId": "ts/no-double-cast",
+      "file": "scripts/check-comments.ts",
+      "line": 131,
+      "message": "Double cast `as unknown as` bypasses TypeScript type safety.",
+      "evidence": "null as unknown as string"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/bench/instanceof.ts|26",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/bench/instanceof.ts",
+      "line": 26,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "x: any"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/bench/memory/survey.ts|33",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/bench/memory/survey.ts",
+      "line": 33,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "() => any"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v3/types.ts|5031",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v3/types.ts",
+      "line": 5031,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "ZodLiteral<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v3/types.ts|5042",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v3/types.ts",
+      "line": 5042,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "ZodReadonly<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v4/core/api.ts|1557",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v4/core/api.ts",
+      "line": 1557,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "new Class({ type: \"success\", innerType, }) as any"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v4/core/json-schema-processors.ts|513",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v4/core/json-schema-processors.ts",
+      "line": 513,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "any[]"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v4/core/parse.ts|78",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v4/core/parse.ts",
+      "line": 78,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "{ success: true, data: result.value } as any"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v4/core/registries.ts|37",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v4/core/registries.ts",
+      "line": 37,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "meta: any = _meta[0]"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v4/core/schemas.ts|122",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v4/core/schemas.ts",
+      "line": 122,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "ParsePayload<any>"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v4/core/schemas.ts|3566",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v4/core/schemas.ts",
+      "line": 3566,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "Map<any, any>"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v4/core/schemas.ts|5214",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v4/core/schemas.ts",
+      "line": 5214,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "input as any"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v4/core/util.ts|661",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v4/core/util.ts",
+      "line": 661,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "cl as any"
+    },
+    {
+      "id": "ts/no-explicit-any|packages/zod/src/v4/mini/schemas.ts|1558",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "packages/zod/src/v4/mini/schemas.ts",
+      "line": 1558,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "new ZodMiniNullable({ type: \"nullable\", innerType: innerType as any as core.$ZodType, }) as any"
+    },
+    {
+      "id": "ts/no-explicit-any|scripts/compile-fuzz.ts|335",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "scripts/compile-fuzz.ts",
+      "line": 335,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "got: any"
+    },
+    {
+      "id": "ts/no-explicit-any|scripts/enable-compile.ts|47",
+      "corpus": "zod",
+      "ruleId": "ts/no-explicit-any",
+      "file": "scripts/enable-compile.ts",
+      "line": 47,
+      "message": "Avoid explicit `any`; use `unknown` or a concrete type.",
+      "evidence": "inst._zod.run as any"
+    },
+    {
+      "id": "ts/unused-export|packages/bench/lazy-box.ts|4",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/lazy-box.ts",
+      "line": 4,
+      "message": "Exported symbol `lazyWithInternalProp` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... lazyWithInternalProp"
+    },
+    {
+      "id": "ts/unused-export|packages/bench/lazy-box.ts|16",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/lazy-box.ts",
+      "line": 16,
+      "message": "Exported symbol `lazyWithScopeProp` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... lazyWithScopeProp"
+    },
+    {
+      "id": "ts/unused-export|packages/bench/lazy-box.ts|31",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/lazy-box.ts",
+      "line": 31,
+      "message": "Exported symbol `lazyWithGetterOverride` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... lazyWithGetterOverride"
+    },
+    {
+      "id": "ts/unused-export|packages/bench/memory/harness.ts|32",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/memory/harness.ts",
+      "line": 32,
+      "message": "Exported symbol `measure` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... measure"
+    },
+    {
+      "id": "ts/unused-export|packages/bench/property-access.ts|49",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/property-access.ts",
+      "line": 49,
+      "message": "Exported symbol `objE` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... objE"
+    },
+    {
+      "id": "ts/unused-export|packages/bench/typia-case/src/index.ts|18",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/typia-case/src/index.ts",
+      "line": 18,
+      "message": "Exported symbol `equals` has zero references; safe to delete.",
+      "evidence": "export ... equals"
+    },
+    {
+      "id": "ts/unused-export|packages/bench/typia-case/src/index.ts|19",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/typia-case/src/index.ts",
+      "line": 19,
+      "message": "Exported symbol `clone` has zero references; safe to delete.",
+      "evidence": "export ... clone"
+    },
+    {
+      "id": "ts/unused-export|packages/treeshake/zod-mini-full.ts|3",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/treeshake/zod-mini-full.ts",
+      "line": 3,
+      "message": "Exported symbol `schema` has zero references; safe to delete.",
+      "evidence": "export ... schema"
+    },
+    {
+      "id": "ts/unused-export|packages/tsc/generate.ts|16",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/tsc/generate.ts",
+      "line": 16,
+      "message": "Exported symbol `VALIBOT` has zero references; safe to delete.",
+      "evidence": "export ... VALIBOT"
+    },
+    {
+      "id": "ts/unused-export|packages/zod/src/v3/tests/language-server.source.ts|19",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 19,
+      "message": "Exported symbol `TestMerge` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... TestMerge"
+    },
+    {
+      "id": "ts/unused-export|packages/zod/src/v3/tests/language-server.source.ts|27",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 27,
+      "message": "Exported symbol `instanceOfTestMerge` has zero references; safe to delete.",
+      "evidence": "export ... instanceOfTestMerge"
+    },
+    {
+      "id": "ts/unused-export|packages/zod/src/v3/tests/language-server.source.ts|34",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 34,
+      "message": "Exported symbol `TestUnion` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... TestUnion"
+    },
+    {
+      "id": "ts/unused-export|packages/zod/src/v3/tests/language-server.source.ts|43",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 43,
+      "message": "Exported symbol `instanceOfTestUnion` has zero references; safe to delete.",
+      "evidence": "export ... instanceOfTestUnion"
+    },
+    {
+      "id": "ts/unused-export|packages/zod/src/v3/tests/language-server.source.ts|60",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 60,
+      "message": "Exported symbol `TestPick` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... TestPick"
+    },
+    {
+      "id": "ts/unused-export|packages/zod/src/v3/tests/language-server.source.ts|74",
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 74,
+      "message": "Exported symbol `instanceOfTestOmit` has zero references; safe to delete.",
+      "evidence": "export ... instanceOfTestOmit"
+    },
+    {
+      "id": "ts/unused-file|packages/bench/boolean.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/boolean.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/bench/compile-array-build.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-array-build.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/bench/compile-overwrite.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-overwrite.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/bench/compile-scaling.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-scaling.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/bench/init.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/init.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/bench/instanceof.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/instanceof.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/bench/memory/breakdown.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/breakdown.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/bench/object-moltar.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/object-moltar.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/bench/safe.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/safe.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/treeshake/zod-default-import.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-default-import.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/treeshake/zod-locale.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-locale.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/treeshake/zod-mini-boolean.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-mini-boolean.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/treeshake/zod3-boolean.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod3-boolean.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/tsc/bench/lots-of-objects.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/tsc/bench/lots-of-objects.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-file|packages/tsc/bench/string.ts|1",
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/tsc/bench/string.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": "no incoming imports"
+    },
+    {
+      "id": "ts/unused-type-export|packages/bench/memory/snapshot.ts|88",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/bench/memory/snapshot.ts",
+      "line": 88,
+      "message": "Exported type `DiffRow` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... DiffRow"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v3/tests/language-server.source.ts|41",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 41,
+      "message": "Exported type `TestUnion` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... TestUnion"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/json-schema-generator.ts|20",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/json-schema-generator.ts",
+      "line": 20,
+      "message": "Exported type `EmitParams` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... EmitParams"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/standard-schema.ts|2",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/standard-schema.ts",
+      "line": 2,
+      "message": "Exported type `StandardTypedV1` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... StandardTypedV1"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|14",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 14,
+      "message": "Exported type `$ZSFString` has zero references; safe to delete.",
+      "evidence": "export ... $ZSFString"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|23",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 23,
+      "message": "Exported type `$ZSFNumber` has zero references; safe to delete.",
+      "evidence": "export ... $ZSFNumber"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|31",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 31,
+      "message": "Exported type `$ZSFBoolean` has zero references; safe to delete.",
+      "evidence": "export ... $ZSFBoolean"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|39",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 39,
+      "message": "Exported type `$ZSFUndefined` has zero references; safe to delete.",
+      "evidence": "export ... $ZSFUndefined"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|52",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 52,
+      "message": "Exported type `$ZSFAny` has zero references; safe to delete.",
+      "evidence": "export ... $ZSFAny"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|57",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 57,
+      "message": "Exported type `$ZSFEnum` has zero references; safe to delete.",
+      "evidence": "export ... $ZSFEnum"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|62",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 62,
+      "message": "Exported type `$ZSFArray` has zero references; safe to delete.",
+      "evidence": "export ... $ZSFArray"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|90",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 90,
+      "message": "Exported type `$ZSFLiteral` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... $ZSFLiteral"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|106",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 106,
+      "message": "Exported type `$ZSFMap` has zero references; safe to delete.",
+      "evidence": "export ... $ZSFMap"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/core/zsf.ts|112",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 112,
+      "message": "Exported type `$ZSFConditional` has zero references; safe to delete.",
+      "evidence": "export ... $ZSFConditional"
+    },
+    {
+      "id": "ts/unused-type-export|packages/zod/src/v4/mini/deep-partial.ts|7",
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/mini/deep-partial.ts",
+      "line": 7,
+      "message": "Exported type `DeepPartial` is used only locally; drop the `export` keyword.",
+      "evidence": "export ... DeepPartial"
+    }
+  ]
+}

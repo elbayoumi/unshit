@@ -36,7 +36,7 @@ function snippet(sf: TS.SourceFile, node: TS.Node): string {
 }
 
 export function isTestFile(relPath: string): boolean {
-  return /\.(test|spec)\.|__tests__|\/tests?\//i.test(relPath);
+  return /\.(test|spec)\.|__tests__|(^|\/)tests?\//i.test(relPath);
 }
 
 function isDictionaryFile(relPath: string): boolean {

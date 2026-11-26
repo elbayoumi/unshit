@@ -45,9 +45,9 @@ To ensure `unshit` never turns into a slow MegaLinter/SonarQube clone:
 
 **Exit Criteria (`v0.2`)** — unmeasured items are *targets*, not claims; measured ones state the measurement:
 - Packed tarball `< 150 KB` (measured: ~104 KB with `npm pack --dry-run`, not yet enforced in CI), zero new runtime dependencies (verified).
-- Target (no benchmark yet): `--changed` findings on changed files match full-scan findings for those files (tested).
-- Target (no benchmark yet): Warm `--changed` run on a 1,000-file repo `< 2s`.
-- Target (no benchmark yet): `arch/import-cycle` has 0 false positives on 3 real repos.
+- Measured (2026-11-26, [roadmap-gates.md](./docs/research/roadmap-gates.md)): `guard --changed` (full scan + changed-file filter; `scan` has no `--changed` flag) findings on changed files matched full-scan findings on 5/5 corpora (hono, zod, execa, fastify, commander.js), 3 seeded edits each, seed 20261129.
+- Measured (2026-11-26, [roadmap-gates.md](./docs/research/roadmap-gates.md)): warm `guard --changed` on a generated 1000-file repo (cache warmed by one full scan, 1 edited file, 7 runs) median 2777.5ms, p95 6933.1ms — **misses `< 2s` target**.
+- Measured (2026-11-26, [roadmap-gates.md](./docs/research/roadmap-gates.md)): `arch/import-cycle` reported 6 cycles across 5 real corpora (hono/zod/execa/fastify/commander.js); manual source audit found 0 false positives (6 TP, 0 FP, 0 unknown).
 - `unshit score .` on itself is Grade A (91 at v0.7.0; point-in-time, not CI-enforced).
 
 ---

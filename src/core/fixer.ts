@@ -16,6 +16,7 @@ import {
 import { runScan } from './scanner.js';
 import { isUnusedExportRule, planUnusedExportFixes } from './fixers/unused-export.js';
 import { isMagicTimerRule, planMagicTimerFixes } from './fixers/magic-timer.js';
+import { isRedundantCatchRule, planRedundantCatchFixes } from './fixers/redundant-catch.js';
 import { groupFindingsByFile, type PlanForFile } from './fixers/plan-by-file.js';
 import type { FixSkip } from './fixers/skip.js';
 import type { ScanResult } from './scanner.js';
@@ -67,6 +68,7 @@ function collectDeterministicPatches(
   const plans: Array<{ matches: (ruleId: string) => boolean; plan: PlanForFile }> = [
     { matches: isUnusedExportRule, plan: planUnusedExportFixes },
     { matches: isMagicTimerRule, plan: planMagicTimerFixes },
+    { matches: isRedundantCatchRule, plan: planRedundantCatchFixes },
   ];
   for (const { matches, plan } of plans) {
     for (const [relPath, findings] of groupFindingsByFile(scan.findings, matches)) {
@@ -88,6 +90,7 @@ function collectDeterministicPatches(
   for (const finding of scan.findings) {
     if (isUnusedExportRule(finding.ruleId)
       || isMagicTimerRule(finding.ruleId)
+      || isRedundantCatchRule(finding.ruleId)
       || isUnusedDependencyRule(finding.ruleId)
       || isUnusedFileRule(finding.ruleId)) continue;
     const detector = detectorMap.get(finding.ruleId);

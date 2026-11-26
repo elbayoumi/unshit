@@ -1,0 +1,557 @@
+{
+  "generatedAt": "2026-11-26T13:50:14.913Z",
+  "seed": 20261129,
+  "node": "v26.7.0",
+  "platform": "darwin",
+  "corpora": [
+    "hono",
+    "zod",
+    "execa",
+    "fastify",
+    "commander.js"
+  ],
+  "gateA_changedParity": [
+    {
+      "corpus": "hono",
+      "edits": [
+        {
+          "file": "src/http-exception.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "src/utils/color.test.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "src/middleware/secure-headers/permissions-policy.ts",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "changedFiles": [
+        "src/http-exception.ts",
+        "src/middleware/secure-headers/permissions-policy.ts",
+        "src/utils/color.test.ts"
+      ],
+      "fullScanFindingCount": 642,
+      "fullScanChangedFindingCount": 0,
+      "guardScopedFindingCount": 0,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 0,
+        "stdout": "unshit guard (changed: 3 files): PASS | score 83 -> 83 | new: 0 | resolved: 0\n",
+        "stderr": ""
+      }
+    },
+    {
+      "corpus": "zod",
+      "edits": [
+        {
+          "file": "packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "packages/zod/src/v4/locales/sv.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "packages/zod/src/v4/core/tests/locales/parity.test.ts",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "changedFiles": [
+        "packages/zod/src/v4/classic/tests/async-parsing.test.ts",
+        "packages/zod/src/v4/core/tests/locales/parity.test.ts",
+        "packages/zod/src/v4/locales/sv.ts"
+      ],
+      "fullScanFindingCount": 1477,
+      "fullScanChangedFindingCount": 1,
+      "guardScopedFindingCount": 1,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 1,
+        "stdout": "unshit guard (changed: 3 files): FAIL | score 62 -> 62 | new: 1 | resolved: 0\n",
+        "stderr": "  NEW [code/high-complexity] packages/zod/src/v4/locales/sv.ts:63 \u2014 Cognitive complexity 44 exceeds threshold 25 in \"anonymous\"; simplify or extract the function.\n"
+      }
+    },
+    {
+      "corpus": "execa",
+      "edits": [
+        {
+          "file": "test/helpers/file-path.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "test-d/stdio/option/final-invalid-full.test-d.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "test/verbose/custom-reject.js",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "changedFiles": [
+        "test-d/stdio/option/final-invalid-full.test-d.ts",
+        "test/helpers/file-path.js",
+        "test/verbose/custom-reject.js"
+      ],
+      "fullScanFindingCount": 35,
+      "fullScanChangedFindingCount": 0,
+      "guardScopedFindingCount": 0,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 0,
+        "stdout": "unshit guard (changed: 3 files): PASS | score 98 -> 98 | new: 0 | resolved: 0\n",
+        "stderr": ""
+      }
+    },
+    {
+      "corpus": "fastify",
+      "edits": [
+        {
+          "file": "test/http2/plain.test.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "test/stream.2.test.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "test/reply-error.test.js",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "changedFiles": [
+        "test/http2/plain.test.js",
+        "test/reply-error.test.js",
+        "test/stream.2.test.js"
+      ],
+      "fullScanFindingCount": 88,
+      "fullScanChangedFindingCount": 0,
+      "guardScopedFindingCount": 0,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 0,
+        "stdout": "unshit guard (changed: 3 files): PASS | score 97 -> 97 | new: 0 | resolved: 0\n",
+        "stderr": ""
+      }
+    },
+    {
+      "corpus": "commander.js",
+      "edits": [
+        {
+          "file": "tests/command.parseOptions.test.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "tests/options.dual-options.test.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "tests/help.style.test.js",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "changedFiles": [
+        "tests/command.parseOptions.test.js",
+        "tests/help.style.test.js",
+        "tests/options.dual-options.test.js"
+      ],
+      "fullScanFindingCount": 15,
+      "fullScanChangedFindingCount": 0,
+      "guardScopedFindingCount": 0,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 0,
+        "stdout": "unshit guard (changed: 3 files): PASS | score 98 -> 98 | new: 0 | resolved: 0\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "gateB_changedLatency": {
+    "filesGenerated": 1000,
+    "warmScanCode": 0,
+    "editedFile": "src/features/feature00/module0000.ts",
+    "runs": [
+      {
+        "ms": 2814.135209,
+        "code": 0
+      },
+      {
+        "ms": 2954.277667,
+        "code": 0
+      },
+      {
+        "ms": 2638.765833,
+        "code": 0
+      },
+      {
+        "ms": 2777.504208,
+        "code": 0
+      },
+      {
+        "ms": 2457.495209,
+        "code": 0
+      },
+      {
+        "ms": 2631.565458,
+        "code": 0
+      },
+      {
+        "ms": 8638.371833,
+        "code": 0
+      }
+    ],
+    "medianMs": 2777.504208,
+    "p95Ms": 6933.143583199995,
+    "minMs": 2457.495209,
+    "maxMs": 8638.371833
+  },
+  "gateC_importCycles": [
+    {
+      "corpus": "hono",
+      "cycleCount": 4,
+      "tp": 4,
+      "fp": 0,
+      "unknown": 0,
+      "findings": [
+        {
+          "file": "src/helper/streaming/index.ts",
+          "evidence": "src/helper/streaming/index.ts -> src/helper/streaming/text.ts -> src/helper/streaming/index.ts",
+          "message": "Import cycle detected among 2 file(s).",
+          "confidence": 1,
+          "verdict": "TP",
+          "reason": "runtime/value import edges found in source (text.ts imports from \"./\")",
+          "parts": [
+            "src/helper/streaming/index.ts",
+            "src/helper/streaming/text.ts",
+            "src/helper/streaming/index.ts"
+          ],
+          "edges": [
+            {
+              "from": "src/helper/streaming/index.ts",
+              "to": "src/helper/streaming/text.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 9,
+                  "text": "export { streamText } from './text'"
+                }
+              ]
+            },
+            {
+              "from": "src/helper/streaming/text.ts",
+              "to": "src/helper/streaming/index.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 4,
+                  "text": "import { stream } from './'"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "file": "src/jsx/base.ts",
+          "evidence": "src/jsx/base.ts -> src/jsx/context.ts -> src/jsx/base.ts",
+          "message": "Import cycle detected among 4 file(s).",
+          "confidence": 1,
+          "verdict": "TP",
+          "reason": "runtime/value import edges found in source",
+          "parts": [
+            "src/jsx/base.ts",
+            "src/jsx/context.ts",
+            "src/jsx/base.ts"
+          ],
+          "edges": [
+            {
+              "from": "src/jsx/base.ts",
+              "to": "src/jsx/context.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 16,
+                  "text": "} from './context'"
+                },
+                {
+                  "line": 17,
+                  "text": "import type { Context } from './context'"
+                }
+              ]
+            },
+            {
+              "from": "src/jsx/context.ts",
+              "to": "src/jsx/base.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 4,
+                  "text": "import { isUntrustedObject, JSXFragmentNode, renderChildren, renderUntrustedObject } from './base'"
+                },
+                {
+                  "line": 210,
+                  "text": "* returns the default value; synchronous components and `use()`-based"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "file": "src/jsx/components.ts",
+          "evidence": "src/jsx/components.ts -> src/jsx/streaming.ts -> src/jsx/components.ts",
+          "message": "Import cycle detected among 2 file(s).",
+          "confidence": 1,
+          "verdict": "TP",
+          "reason": "runtime/value import edges found in source",
+          "parts": [
+            "src/jsx/components.ts",
+            "src/jsx/streaming.ts",
+            "src/jsx/components.ts"
+          ],
+          "edges": [
+            {
+              "from": "src/jsx/components.ts",
+              "to": "src/jsx/streaming.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 10,
+                  "text": "import { StreamingContext } from './streaming'"
+                }
+              ]
+            },
+            {
+              "from": "src/jsx/streaming.ts",
+              "to": "src/jsx/components.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 11,
+                  "text": "import { childrenToString } from './components'"
+                },
+                {
+                  "line": 14,
+                  "text": "import { Suspense as SuspenseDomRenderer } from './dom/components'"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "file": "src/jsx/dom/render.ts",
+          "evidence": "src/jsx/dom/render.ts -> src/jsx/hooks/index.ts -> src/jsx/dom/render.ts",
+          "message": "Import cycle detected among 2 file(s).",
+          "confidence": 1,
+          "verdict": "TP",
+          "reason": "runtime/value import edges found in source (render.ts imports STASH_EFFECT from \"../hooks\")",
+          "parts": [
+            "src/jsx/dom/render.ts",
+            "src/jsx/hooks/index.ts",
+            "src/jsx/dom/render.ts"
+          ],
+          "edges": [
+            {
+              "from": "src/jsx/dom/render.ts",
+              "to": "src/jsx/hooks/index.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 12,
+                  "text": "import type { EffectData } from '../hooks'"
+                },
+                {
+                  "line": 13,
+                  "text": "import { STASH_EFFECT } from '../hooks'"
+                }
+              ]
+            },
+            {
+              "from": "src/jsx/hooks/index.ts",
+              "to": "src/jsx/dom/render.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 3,
+                  "text": "import { buildDataStack, update } from '../dom/render'"
+                },
+                {
+                  "line": 4,
+                  "text": "import type { Context, Node, NodeObject, PendingType, UpdateHook } from '../dom/render'"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "corpus": "zod",
+      "cycleCount": 1,
+      "tp": 1,
+      "fp": 0,
+      "unknown": 0,
+      "findings": [
+        {
+          "file": "packages/zod/src/v4/core/core.ts",
+          "evidence": "packages/zod/src/v4/core/core.ts -> packages/zod/src/v4/core/util.ts -> packages/zod/src/v4/core/core.ts",
+          "message": "Import cycle detected among 2 file(s).",
+          "confidence": 1,
+          "verdict": "TP",
+          "reason": "runtime/value import edges found in source",
+          "parts": [
+            "packages/zod/src/v4/core/core.ts",
+            "packages/zod/src/v4/core/util.ts",
+            "packages/zod/src/v4/core/core.ts"
+          ],
+          "edges": [
+            {
+              "from": "packages/zod/src/v4/core/core.ts",
+              "to": "packages/zod/src/v4/core/util.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 3,
+                  "text": "import type { Class, ProtoOf } from \"./util.js\";"
+                },
+                {
+                  "line": 4,
+                  "text": "import { members as installMembers } from \"./util.js\";"
+                }
+              ]
+            },
+            {
+              "from": "packages/zod/src/v4/core/util.ts",
+              "to": "packages/zod/src/v4/core/core.ts",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 2,
+                  "text": "import { globalConfig } from \"./core.js\";"
+                },
+                {
+                  "line": 3,
+                  "text": "import type { $ZodConfig } from \"./core.js\";"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "corpus": "execa",
+      "cycleCount": 1,
+      "tp": 1,
+      "fp": 0,
+      "unknown": 0,
+      "findings": [
+        {
+          "file": "lib/ipc/forward.js",
+          "evidence": "lib/ipc/forward.js -> lib/ipc/incoming.js -> lib/ipc/graceful.js -> lib/ipc/forward.js",
+          "message": "Import cycle detected among 6 file(s).",
+          "confidence": 1,
+          "verdict": "TP",
+          "reason": "runtime/value import edges found in source",
+          "parts": [
+            "lib/ipc/forward.js",
+            "lib/ipc/incoming.js",
+            "lib/ipc/graceful.js",
+            "lib/ipc/forward.js"
+          ],
+          "edges": [
+            {
+              "from": "lib/ipc/forward.js",
+              "to": "lib/ipc/incoming.js",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 2,
+                  "text": "import {onMessage, onDisconnect} from './incoming.js';"
+                }
+              ]
+            },
+            {
+              "from": "lib/ipc/incoming.js",
+              "to": "lib/ipc/graceful.js",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 6,
+                  "text": "import {handleAbort, abortOnDisconnect} from './graceful.js';"
+                },
+                {
+                  "line": 68,
+                  "text": "// Like `gracefulCancel` messages, only the disconnection from the parent process aborts `getCancelSignal()`."
+                }
+              ]
+            },
+            {
+              "from": "lib/ipc/graceful.js",
+              "to": "lib/ipc/forward.js",
+              "found": true,
+              "typeOnly": false,
+              "hits": [
+                {
+                  "line": 3,
+                  "text": "import {getIpcEmitter} from './forward.js';"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "corpus": "fastify",
+      "cycleCount": 0,
+      "tp": 0,
+      "fp": 0,
+      "unknown": 0,
+      "findings": []
+    },
+    {
+      "corpus": "commander.js",
+      "cycleCount": 0,
+      "tp": 0,
+      "fp": 0,
+      "unknown": 0,
+      "findings": []
+    }
+  ],
+  "summary": {
+    "gateA_allEqual": true,
+    "gateB_medianMs": 2777.504208,
+    "gateB_p95Ms": 6933.143583199995,
+    "gateB_under2s": false,
+    "gateC_totalCycles": 6,
+    "gateC_totalFP": 0,
+    "gateC_totalUnknown": 0
+  }
+}

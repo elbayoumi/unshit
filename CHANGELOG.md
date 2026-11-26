@@ -48,6 +48,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `docs/research/recall-extra.md`: method, measured recall/FP tables, miss analysis, and limitations for the recall-extra benchmark.
 - `tests/recall-extra.test.ts`: fast fixture tests covering each recall-extra injector shape and matcher.
 - `unshit fix` reports how many passes `--apply` took to reach a fixed point (`passes: N` in the summary line, `passes` in `FixSummary`).
+- `unshit fix` now has a deterministic fix for `slop/redundant-catch`. A `try`/`catch` that only rethrows the caught error, with no `finally`, is unwrapped into the try block's statements. The edit uses TypeScript AST positions, keeps comments inside the try block, and dedents by one level. A bare block is kept when the try block declares block-scoped bindings, or when the `try` is not directly in a statement list (for example the body of an `if`). Other shapes are skipped with a reason. The fix is idempotent under the fixed-point loop.
+- Real-world precision audit for sampled findings across hono, zod, execa, fastify, and commander.js: deterministic stratified sampler, manual TP/FP/UNSURE labels, Wilson 95% precision report, and a documented `slop/magic-timer` test-path scope false positive reproducer.
+- `benchmark/roadmap-gates.mjs`: measures the three v0.2 ROADMAP gates marked "no benchmark yet" on read-only temp copies of the public corpora (hono, zod, execa, fastify, commander.js; seed 20261129). Gate (a) compares full-scan findings restricted to changed files against `guard --changed` scope after 3 seeded edits per corpus (5/5 equal). Gate (b) times warm `guard --changed` on a generated 1000-file project (cache warmed, 1 edited file, 7 runs): median 2777.5ms, p95 6933.1ms — misses the `< 2s` target. Gate (c) audits every `arch/import-cycle` finding across the 5 corpora by reading source import statements: 6 cycles, 6 TP, 0 FP, 0 unknown. Writes `benchmark/roadmap-gates-results.json` and `docs/research/roadmap-gates.md`; `tests/roadmap-gates-r13.test.ts` covers normalization/comparison helpers.
 
 ### Fixed
 
@@ -66,6 +69,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `ts/unused-export` / `ts/unused-type-export` deterministic fix skips removing `export` when the symbol has no local read and the effective tsconfig enables `noUnusedLocals` (including extends), preventing TS6133/TS6196 regressions.
 - `ts/unused-file` entry-point detection now discovers package.json manifests from disk (including gitignored manifests) so package `exports`/`main`/`types` targets are not deleted as unused.
 - Recall `code/duplicate-block` matching required only that the evidence name the finding's own file, so any pre-existing clone counted as a hit. A hit now needs the injected copy to be one side of the clone pair.
+- Test-file scoping now recognises a `test/` or `tests/` directory at the start of the path (e.g. `test/io/max-buffer.js`), so `slop/magic-timer`, `ts/no-explicit-any`, `ts/no-double-cast`, `i18n/no-inline-ternary`, `slop/redundant-catch` and `code/high-complexity` no longer report root-level test directories. This was the one false positive in the round-13 precision audit.
 
 ### Changed
 - `benchmark/recall/results.json` and `docs/research/recall.md` regenerated: dev and holdout now 447/447 (100.0%); tokenizer-blind injections dropped to 0. zod `code/duplicate-block` findings rose from 45 to 61 because previously truncated files are now fully tokenized.
@@ -86,6 +90,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Recall benchmark now runs on four corpora (hono, zod, execa, fastify) with a `--projects` option, dev/holdout seeds, and per-project plus pooled Wilson 95% intervals.
 - Recall injector skips entry-point/public-API files for `ts/unused-export`, using the CLI's compiled dead-export analysis, and reports those injections in a separate out-of-scope row.
 - Recall injector restricts injections to files unshit scans and, for duplicate blocks, to files the clone tokenizer accepts. Injections outside the clone-token stream are still scored and only annotated.
+- `ROADMAP.md`: replaced the three v0.2 "Target (no benchmark yet)" exit criteria (changed-findings parity, warm --changed <2s, import-cycle 0 FP on 3 real repos) with measured results and links to `docs/research/roadmap-gates.md`.
 
 ## [0.7.0] - 2026-11-25
 

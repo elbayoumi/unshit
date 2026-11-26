@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-26T13:58:55.618Z",
+  "seed": 20261128,
+  "perRulePerCorpus": 15,
+  "corpora": [
+    "hono",
+    "zod",
+    "execa",
+    "fastify",
+    "commander.js"
+  ],
+  "corpusDir": "/Volumes/data/projects/unshit-bench/corpus",
+  "totalFindings": 2257,
+  "sampledCount": 395,
+  "labeledCount": 395,
+  "counts": {
+    "tp": 394,
+    "fp": 1,
+    "unsure": 0
+  },
+  "pooled": {
+    "tp": 394,
+    "fp": 1,
+    "unsure": 0,
+    "total": 395,
+    "denominator": 395,
+    "precision": 0.9974683544303797,
+    "wilson95": {
+      "low": 0.9858009702512707,
+      "high": 0.9995529625169866,
+      "center": 0.9974683544303797
+    }
+  },
+  "byRule": [
+    {
+      "ruleId": "arch/import-cycle",
+      "tp": 6,
+      "fp": 0,
+      "unsure": 0,
+      "total": 6,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.6096657120978346,
+        "high": 1,
+        "center": 1
+      },
+      "denominator": 6
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "tp": 57,
+      "fp": 0,
+      "unsure": 0,
+      "total": 57,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.9368611651470209,
+        "high": 0.9999999999999998,
+        "center": 1
+      },
+      "denominator": 57
+    },
+    {
+      "ruleId": "code/high-complexity",
+      "tp": 44,
+      "fp": 0,
+      "unsure": 0,
+      "total": 44,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.9197043962415192,
+        "high": 1,
+        "center": 1
+      },
+      "denominator": 44
+    },
+    {
+      "ruleId": "deps/unlisted-dependency",
+      "tp": 1,
+      "fp": 0,
+      "unsure": 0,
+      "total": 1,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.20654931437723745,
+        "high": 1,
+        "center": 1
+      },
+      "denominator": 1
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "tp": 19,
+      "fp": 0,
+      "unsure": 0,
+      "total": 19,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.8318207759473837,
+        "high": 1,
+        "center": 1
+      },
+      "denominator": 19
+    },
+    {
+      "ruleId": "react/god-file",
+      "tp": 50,
+      "fp": 0,
+      "unsure": 0,
+      "total": 50,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.9286524008666414,
+        "high": 1,
+        "center": 1
+      },
+      "denominator": 50
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "tp": 2,
+      "fp": 1,
+      "unsure": 0,
+      "total": 3,
+      "precision": 0.6666666666666666,
+      "wilson95": {
+        "low": 0.20765960080204765,
+        "high": 0.9385080552796037,
+        "center": 0.6666666666666666
+      },
+      "denominator": 3
+    },
+    {
+      "ruleId": "slop/redundant-catch",
+      "tp": 39,
+      "fp": 0,
+      "unsure": 0,
+      "total": 39,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.9103331462924287,
+        "high": 1,
+        "center": 1
+      },
+      "denominator": 39
+    },
+    {
+      "ruleId": "ts/no-double-cast",
+      "tp": 31,
+      "fp": 0,
+      "unsure": 0,
+      "total": 31,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.889744604539564,
+        "high": 1,
+        "center": 1
+      },
+      "denominator": 31
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "tp": 46,
+      "fp": 0,
+      "unsure": 0,
+      "total": 46,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.9229264369144198,
+        "high": 1,
+        "center": 1
+      },
+      "denominator": 46
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "tp": 30,
+      "fp": 0,
+      "unsure": 0,
+      "total": 30,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.8864866068260312,
+        "high": 0.9999999999999999,
+        "center": 1
+      },
+      "denominator": 30
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "tp": 39,
+      "fp": 0,
+      "unsure": 0,
+      "total": 39,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.9103331462924287,
+        "high": 1,
+        "center": 1
+      },
+      "denominator": 39
+    },
+    {
+      "ruleId": "ts/unused-type-export",
+      "tp": 30,
+      "fp": 0,
+      "unsure": 0,
+      "total": 30,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.8864866068260312,
+        "high": 0.9999999999999999,
+        "center": 1
+      },
+      "denominator": 30
+    }
+  ],
+  "byCorpus": [
+    {
+      "corpus": "commander.js",
+      "tp": 15,
+      "fp": 0,
+      "unsure": 0,
+      "total": 15,
+      "denominator": 15,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.7961166989641515,
+        "high": 1,
+        "center": 1
+      }
+    },
+    {
+      "corpus": "execa",
+      "tp": 34,
+      "fp": 1,
+      "unsure": 0,
+      "total": 35,
+      "denominator": 35,
+      "precision": 0.9714285714285714,
+      "wilson95": {
+        "low": 0.8546691276638632,
+        "high": 0.9949385081445556,
+        "center": 0.9714285714285714
+      }
+    },
+    {
+      "corpus": "fastify",
+      "tp": 71,
+      "fp": 0,
+      "unsure": 0,
+      "total": 71,
+      "denominator": 71,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.9486720478031097,
+        "high": 1,
+        "center": 1
+      }
+    },
+    {
+      "corpus": "hono",
+      "tp": 125,
+      "fp": 0,
+      "unsure": 0,
+      "total": 125,
+      "denominator": 125,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.9701846062916737,
+        "high": 1,
+        "center": 1
+      }
+    },
+    {
+      "corpus": "zod",
+      "tp": 149,
+      "fp": 0,
+      "unsure": 0,
+      "total": 149,
+      "denominator": 149,
+      "precision": 1,
+      "wilson95": {
+        "low": 0.9748663821299904,
+        "high": 0.9999999999999999,
+        "center": 1
+      }
+    }
+  ],
+  "falsePositives": [
+    {
+      "id": "slop/magic-timer|test/io/max-buffer.js|25",
+      "corpus": "execa",
+      "ruleId": "slop/magic-timer",
+      "file": "test/io/max-buffer.js",
+      "line": 25,
+      "message": "Magic timer delay (5000ms) in setTimeout; extract a named constant with rationale.",
+      "evidence": "setTimeout(() => { subprocess.kill('SIGKILL'); }, 5000)",
+      "reason": "Reported in a test file (test/io/max-buffer.js) that the detector intended to skip; isTestFile misses leading test/ paths."
+    }
+  ],
+  "unsure": []
+}

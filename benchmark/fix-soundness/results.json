@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-11-26T13:17:48.239Z",
+  "generatedAt": "2026-11-26T13:51:59.782Z",
   "results": [
     {
       "name": "hono",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-hono-SEnIan/hono",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-hono-ljDz6q/hono",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -26,7 +26,7 @@
           "deleted": 2,
           "passes": 2
         },
-        "skips": 30,
+        "skips": 40,
         "passes": 2,
         "output": ""
       },
@@ -65,10 +65,21 @@
         },
         "deps/unused-dependency": {
           "fixed": 2,
-          "skipped": 0,
+          "skipped": 1,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": []
+          "skippedReasons": [
+            "`mitata` still imported (or required) by a scanned file anywhere in the project"
+          ]
+        },
+        "slop/redundant-catch": {
+          "fixed": 0,
+          "skipped": 10,
+          "newCompileErrors": 0,
+          "newCompileErrorDetails": [],
+          "skippedReasons": [
+            "catch parameter is missing or destructured"
+          ]
         },
         "ts/no-explicit-any": {
           "fixed": 5,
@@ -79,24 +90,42 @@
         },
         "ts/unused-export": {
           "fixed": 14,
-          "skipped": 0,
+          "skipped": 5,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": []
+          "skippedReasons": [
+            "could break declaration emit: `EventProcessor` is referenced by the exported signature of `EventV2Processor` (kept conservatively)",
+            "default export: removing only `export` would leave an invalid declaration",
+            "could break declaration emit: `EXTERNAL_CLASS_NAMES` is referenced by the exported signature of `CssClassName` (kept conservatively)",
+            "listed export clause: removing only `export` would delete the re-export"
+          ]
         },
         "ts/unused-file": {
           "fixed": 2,
-          "skipped": 0,
+          "skipped": 1,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": []
+          "skippedReasons": [
+            "protected path (config, test, docs or script directory)"
+          ]
         },
         "ts/unused-type-export": {
           "fixed": 13,
-          "skipped": 0,
+          "skipped": 23,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": []
+          "skippedReasons": [
+            "could break declaration emit: `CognitoIdentity` is referenced by the exported signature of `LambdaContext` (kept conservatively)",
+            "could break declaration emit: `ClientContext` is referenced by the exported signature of `LambdaContext` (kept conservatively)",
+            "could break declaration emit: `ClientContextClient` is referenced by the exported signature of `ClientContext` (kept conservatively)",
+            "could break declaration emit: `ClientContextEnv` is referenced by the exported signature of `ClientContext` (kept conservatively)",
+            "could break declaration emit: `APIGatewayProxyEvent` is referenced by the exported signature of `LambdaEvent` (kept conservatively)",
+            "could break declaration emit: `ALBProxyEvent` is referenced by the exported signature of `LambdaEvent` (kept conservatively)",
+            "could break declaration emit: `Response` is referenced by the exported signature of `ClientResponse` (kept conservatively)",
+            "could break declaration emit: `Renderer` is referenced by the exported signature of `PropsForRenderer` (kept conservatively)",
+            "could break declaration emit: `Layout` is referenced by the exported signature of `Context` (kept conservatively)",
+            "could break declaration emit: `ReplacementMap` is referenced by the exported signature of `Trie` (kept conservatively)"
+          ]
         }
       },
       "remainingFixable": 0,
@@ -106,11 +135,11 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 4419
+      "wallTimeMs": 5325
     },
     {
       "name": "execa",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-execa-pbI3dQ/execa",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-execa-JAJhhi/execa",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -133,7 +162,7 @@
           "deleted": 2,
           "passes": 2
         },
-        "skips": 0,
+        "skips": 13,
         "passes": 2,
         "output": ""
       },
@@ -170,6 +199,16 @@
           "newCompileErrorDetails": [],
           "skippedReasons": []
         },
+        "slop/redundant-catch": {
+          "fixed": 0,
+          "skipped": 13,
+          "newCompileErrors": 0,
+          "newCompileErrorDetails": [],
+          "skippedReasons": [
+            "catch parameter is missing or destructured",
+            "try statement has a finally block"
+          ]
+        },
         "ts/no-double-cast": {
           "fixed": 1,
           "skipped": 0,
@@ -192,11 +231,11 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 4451
+      "wallTimeMs": 12045
     },
     {
       "name": "zod",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-zod-7yxylu/zod",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-zod-bt92rX/zod",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -219,7 +258,7 @@
           "deleted": 120,
           "passes": 7
         },
-        "skips": 94,
+        "skips": 126,
         "passes": 7,
         "output": ""
       },
@@ -258,10 +297,15 @@
         },
         "deps/unused-dependency": {
           "fixed": 11,
-          "skipped": 0,
+          "skipped": 10,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": []
+          "skippedReasons": [
+            "`lint-staged` still referenced by package.json (scripts or config field)",
+            "`zod4` still imported (or required) by a scanned file anywhere in the project",
+            "`zod3` still imported (or required) by a scanned file anywhere in the project",
+            "`execa` still imported (or required) by a scanned file anywhere in the project"
+          ]
         },
         "react/god-file": {
           "fixed": 4,
@@ -270,12 +314,24 @@
           "newCompileErrorDetails": [],
           "skippedReasons": []
         },
-        "slop/redundant-catch": {
-          "fixed": 23,
-          "skipped": 0,
+        "slop/magic-timer": {
+          "fixed": 0,
+          "skipped": 1,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": []
+          "skippedReasons": [
+            "delay literal is not a plain decimal number"
+          ]
+        },
+        "slop/redundant-catch": {
+          "fixed": 23,
+          "skipped": 32,
+          "newCompileErrors": 0,
+          "newCompileErrorDetails": [],
+          "skippedReasons": [
+            "catch parameter is missing or destructured",
+            "catch clause does more than rethrow the caught error"
+          ]
         },
         "ts/no-double-cast": {
           "fixed": 2,
@@ -293,24 +349,48 @@
         },
         "ts/unused-export": {
           "fixed": 20,
-          "skipped": 0,
+          "skipped": 49,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": []
+          "skippedReasons": [
+            "removing export would leave `sink` unused locally (noUnusedLocals)",
+            "removing export would leave `SINK` unused locally (noUnusedLocals)",
+            "removing export would leave `shortestPaths` unused locally (noUnusedLocals)",
+            "removing export would leave `findNodes` unused locally (noUnusedLocals)",
+            "removing export would leave `is` unused locally (noUnusedLocals)",
+            "removing export would leave `equals` unused locally (noUnusedLocals)",
+            "removing export would leave `clone` unused locally (noUnusedLocals)",
+            "removing export would leave `schema` unused locally (noUnusedLocals)",
+            "removing export would leave `VALIBOT` unused locally (noUnusedLocals)",
+            "removing export would leave `filePath` unused locally (noUnusedLocals)"
+          ]
         },
         "ts/unused-file": {
           "fixed": 105,
-          "skipped": 0,
+          "skipped": 2,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": []
+          "skippedReasons": [
+            "protected path (config, test, docs or script directory)"
+          ]
         },
         "ts/unused-type-export": {
           "fixed": 23,
-          "skipped": 0,
+          "skipped": 32,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": []
+          "skippedReasons": [
+            "could break declaration emit: `Measurement` is referenced by the exported signature of `measureStable` (kept conservatively)",
+            "could break declaration emit: `Graph` is referenced by the exported signature of `loadGraph` (kept conservatively)",
+            "could break declaration emit: `DiffRow` is referenced by the exported signature of `diffAllocation` (kept conservatively)",
+            "could break declaration emit: `Test` is referenced by the exported signature of `Test` (kept conservatively)",
+            "could break declaration emit: `TestMerge` is referenced by the exported signature of `TestMerge` (kept conservatively)",
+            "could break declaration emit: `TestUnion` is referenced by the exported signature of `TestUnion` (kept conservatively)",
+            "could break declaration emit: `TestPartial` is referenced by the exported signature of `TestPartial` (kept conservatively)",
+            "could break declaration emit: `TestPick` is referenced by the exported signature of `TestPick` (kept conservatively)",
+            "could break declaration emit: `TestOmit` is referenced by the exported signature of `TestOmit` (kept conservatively)",
+            "could break declaration emit: `DeepPartial` is referenced by the exported signature of `deepPartial` (kept conservatively)"
+          ]
         }
       },
       "remainingFixable": 0,
@@ -320,11 +400,11 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 16964
+      "wallTimeMs": 82289
     },
     {
       "name": "commander.js",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-commander_js-bD7qFw/commander.js",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-commander_js-6OoFWW/commander.js",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -369,7 +449,17 @@
         "fixedStillPresent": 0,
         "fixedStillPresentSample": []
       },
-      "perRule": {},
+      "perRule": {
+        "ts/unused-file": {
+          "fixed": 0,
+          "skipped": 4,
+          "newCompileErrors": 0,
+          "newCompileErrorDetails": [],
+          "skippedReasons": [
+            "protected path (config, test, docs or script directory)"
+          ]
+        }
+      },
       "remainingFixable": 0,
       "remainingFixableSamples": [],
       "syntax": {
@@ -377,11 +467,11 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 1454
+      "wallTimeMs": 2869
     },
     {
       "name": "fastify",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-fastify-FtDgSC/fastify",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-fastify-kwWVAm/fastify",
       "tsconfig": null,
       "typecheck": {
         "before": {
@@ -402,7 +492,7 @@
           "deleted": 0,
           "passes": 2
         },
-        "skips": 20,
+        "skips": 21,
         "passes": 2,
         "output": ""
       },
@@ -438,6 +528,24 @@
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": []
+        },
+        "slop/redundant-catch": {
+          "fixed": 0,
+          "skipped": 1,
+          "newCompileErrors": 0,
+          "newCompileErrorDetails": [],
+          "skippedReasons": [
+            "catch parameter is missing or destructured"
+          ]
+        },
+        "ts/unused-file": {
+          "fixed": 0,
+          "skipped": 20,
+          "newCompileErrors": 0,
+          "newCompileErrorDetails": [],
+          "skippedReasons": [
+            "protected path (config, test, docs or script directory)"
+          ]
         }
       },
       "remainingFixable": 0,
@@ -447,11 +555,11 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 2755
+      "wallTimeMs": 4091
     },
     {
       "name": "scale-1000",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-scale-gflF7o/project",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-scale-jODRQx/project",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -519,7 +627,7 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 4729
+      "wallTimeMs": 6002
     }
   ]
 }
