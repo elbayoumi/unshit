@@ -12,6 +12,7 @@ interface SpecLoc {
   text: string;
   line: number;
   column: number;
+  kind?: 'dynamic-import';
 }
 
 function escapeRegExp(text: string): string {
@@ -99,7 +100,11 @@ function collectSpecsFromAst(sf: ts.SourceFile): SpecLoc[] {
       const arg0 = node.arguments[0];
       const isDynamicImport = node.expression.kind === ts.SyntaxKind.ImportKeyword;
       const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
-      if ((isDynamicImport || isRequire) && arg0 && ts.isStringLiteralLike(arg0)) out.push(specLocFromNode(sf, arg0));
+      if (isDynamicImport && arg0 && ts.isStringLiteralLike(arg0)) {
+        out.push({ ...specLocFromNode(sf, arg0), kind: 'dynamic-import' });
+      } else if (isRequire && arg0 && ts.isStringLiteralLike(arg0)) {
+        out.push(specLocFromNode(sf, arg0));
+      }
     }
     ts.forEachChild(node, visit);
   };
@@ -139,8 +144,15 @@ function collectSpecsFromRegex(content: string): SpecLoc[] {
   return out;
 }
 
+const specCache = new WeakMap<object, SpecLoc[]>();
+
 export function collectModuleSpecs(file: FileEntry): SpecLoc[] {
-  return file.sourceFile ? collectSpecsFromAst(file.sourceFile) : collectSpecsFromRegex(file.content);
+  const key = file.sourceFile ?? file;
+  const cached = specCache.get(key);
+  if (cached) return cached;
+  const specs = file.sourceFile ? collectSpecsFromAst(file.sourceFile) : collectSpecsFromRegex(file.content);
+  specCache.set(key, specs);
+  return specs;
 }
 
 export function collectModuleSpecsFromContext(ctx: DetectorContext): SpecLoc[] {
