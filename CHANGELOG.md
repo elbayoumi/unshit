@@ -65,6 +65,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Fixed
 
+- `ts/unused-file` no longer reports files referenced only by type-only static imports/exports, `*.test-d.*` type-test files, `__tests__/` directories, or files matched by `node --test` glob arguments in package scripts. Package export targets resolving through `dist/`/`build/`/`lib/`/`out/` now also map to `src/` source files, so public package entry points are not reported as unused files or unused exports.
 - Release workflow strips empty `_authToken` placeholders and requires npm >= 11.5.1 so `npm publish --provenance` works with OIDC Trusted Publishing.
 
 ## [0.6.0] - 2026-11-25

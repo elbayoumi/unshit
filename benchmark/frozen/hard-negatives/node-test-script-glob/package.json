@@ -1,0 +1,6 @@
+{
+  "name": "node-test-glob",
+  "scripts": {
+    "test": "node --test \"test/!(helpers)/*.js\""
+  }
+}

@@ -190,6 +190,22 @@ export function extractScriptBlocks(file: FileEntry): Array<{ sourceFile: ts.Sou
   return blocks;
 }
 
+function isValueImport(stmt: ts.ImportDeclaration): boolean {
+  const clause = stmt.importClause;
+  if (!clause) return true; // side-effect import
+  if (clause.isTypeOnly) return false;
+  const namedBindings = clause.namedBindings;
+  if (!namedBindings || !ts.isNamedImports(namedBindings) || clause.name) return true;
+  const elements = namedBindings.elements;
+  return !(elements.length > 0 && elements.every((element) => element.isTypeOnly));
+}
+
+function staticModuleSpecifier(stmt: ts.Statement): ts.Expression | undefined {
+  if (ts.isImportDeclaration(stmt)) return isValueImport(stmt) ? stmt.moduleSpecifier : undefined;
+  if (ts.isExportDeclaration(stmt) && !stmt.isTypeOnly) return stmt.moduleSpecifier;
+  return undefined;
+}
+
 /** Shared static import/export/require extractor for TS/JS files and component script blocks. */
 export function collectTsJsEdges(
   sf: ts.SourceFile,
@@ -200,19 +216,7 @@ export function collectTsJsEdges(
     sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1 + lineOffset;
 
   for (const stmt of sf.statements) {
-    let moduleSpecifier: ts.Expression | undefined;
-    if (ts.isImportDeclaration(stmt)) {
-      const clause = stmt.importClause;
-      if (clause?.isTypeOnly) continue;
-      if (clause?.namedBindings && ts.isNamedImports(clause.namedBindings)) {
-        const elements = clause.namedBindings.elements;
-        if (elements.length > 0 && elements.every((element) => element.isTypeOnly)) continue;
-      }
-      moduleSpecifier = stmt.moduleSpecifier;
-    } else if (ts.isExportDeclaration(stmt)) {
-      if (stmt.isTypeOnly) continue;
-      moduleSpecifier = stmt.moduleSpecifier;
-    }
+    const moduleSpecifier = staticModuleSpecifier(stmt);
     if (!moduleSpecifier || !ts.isStringLiteral(moduleSpecifier)) continue;
     emitSpec(moduleSpecifier.text, lineOf(moduleSpecifier));
   }

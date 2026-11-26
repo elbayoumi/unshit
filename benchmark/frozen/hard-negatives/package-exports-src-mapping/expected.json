@@ -1,0 +1,5 @@
+{
+  "description": "package.json exports pointing at dist files map to src source files as public entry points.",
+  "groundTruth": "The package exports ./dist/index.js but source lives at src/index.ts; exports from src/index.ts are public API.",
+  "expected": []
+}

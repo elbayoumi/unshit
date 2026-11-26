@@ -85,7 +85,8 @@ export function addPkgEntryTargets(
 
   for (const target of targets) {
     const clean = target.replace(/^\.\//, '').replace(/\.(d\.)?[cm]?[jt]sx?$/, '');
-    const variants = [clean, clean.replace(/^(dist|build|lib|out)\//, '')];
+    const stripped = clean.replace(/^(dist|build|lib|out)\//, '');
+    const variants = [clean, stripped, `src/${stripped}`];
     for (const variant of variants) {
       const base = dir ? `${dir}/${variant}` : variant;
       for (const ext of PKG_EXTS) {
@@ -93,6 +94,60 @@ export function addPkgEntryTargets(
         if (files.has(candidate)) entries.add(candidate);
       }
     }
+  }
+}
+
+function scriptGlobToRegExp(glob: string): RegExp | null {
+  try {
+    let re = '^';
+    for (let i = 0; i < glob.length; i++) {
+      const ch = glob[i]!;
+      if (ch === '*') {
+        if (glob[i + 1] === '*') { re += '.*'; i++; }
+        else re += '[^/]*';
+      } else if (ch === '?') re += '[^/]';
+      else if (ch === '!' && glob[i + 1] === '(') {
+        // extglob !(foo|bar) - match one segment not equal to alternatives
+        const end = glob.indexOf(')', i + 2);
+        if (end === -1) return null;
+        const alts = glob.slice(i + 2, end).split('|').map((s) => s.replace(/[.+^${}()|[\]\\]/g, '\\$&'));
+        re += `(?:(?!${alts.join('|')}$)[^/]*)`;
+        i = end;
+      } else if ('+^${}()|[]\\.'.includes(ch)) re += `\\${ch}`;
+      else re += ch;
+    }
+    re += '$';
+    return new RegExp(re);
+  } catch {
+    return null;
+  }
+}
+
+function resolveScriptGlob(dirRel: string, raw: string, fileSet: Set<string>): string[] {
+  const clean = raw.replace(/^['"]|['"]$/g, '');
+  if (!clean || clean.startsWith('-')) return [];
+  if (!/[*?!]/.test(clean)) {
+    const target = resolveSpecToFile(dirRel, clean, fileSet);
+    return target ? [target] : [];
+  }
+  const normalized = clean.replace(/^\.\//, '');
+  const prefix = dirRel ? `${dirRel}/${normalized}` : normalized;
+  const re = scriptGlobToRegExp(prefix);
+  if (!re) return [];
+  const out: string[] = [];
+  for (const f of fileSet) {
+    if (re.test(f)) out.push(f);
+  }
+  return out;
+}
+
+function addNodeTestScriptTargets(entries: Set<string>, files: Set<string>, dir: string, value: string): void {
+  if (!/\bnode\b[ \t]+(?:[^\s&|;]*[ \t]+)*--test\b/.test(value)) return;
+  for (const token of value.matchAll(/(?:^|[\s])("[^"]+"|'[^']+'|[^\s&|;]+)/g)) {
+    const raw = (token[1] ?? '').replace(/^['"]|['"]$/g, '');
+    if (!raw || raw.startsWith('-')) continue;
+    if (!raw.includes('/') && !raw.includes('*') && !/\.[cm]?[jt]sx?$/.test(raw)) continue;
+    for (const t of resolveScriptGlob(dir, raw, files)) entries.add(t);
   }
 }
 
@@ -112,6 +167,7 @@ export function addScriptEntryTargets(
       const target = resolveSpecToFile(dir, raw, files);
       if (target) entries.add(target);
     }
+    addNodeTestScriptTargets(entries, files, dir, value);
   }
 }
 
@@ -132,7 +188,7 @@ export function isFrameworkEntryPath(relPath: string): boolean {
 }
 
 export function isTestConventionEntry(relPath: string): boolean {
-  return /(^|\/)__mocks__\//.test(relPath)
+  return /(^|\/)(__mocks__|__tests__)\//.test(relPath)
     || /(^|\/)(e2e|cypress|playwright)\//.test(relPath)
     || /(^|\/)\.storybook\//.test(relPath)
     || /[^/]*\.stories?\.[cm]?[jt]sx?$/.test(relPath);
@@ -149,7 +205,7 @@ export function isRootEntry(relPath: string): boolean {
   return /^(src\/)?(index|main|cli|app|server|bin)\.[cm]?[jt]sx?$/i.test(relPath)
     || /^(docs|benchmark|benchmarks|examples?|fixtures|__fixtures__)\//.test(relPath)
     || CONFIG_FILE_RE.test(relPath)
-    || /\.(test|spec|d)\.[cm]?[jt]sx?$/.test(relPath)
+    || /\.(test|spec|test-d|d)\.[cm]?[jt]sx?$/.test(relPath)
     || /(^|\/)(bin|scripts)\//.test(relPath);
 }
 
