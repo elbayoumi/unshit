@@ -10,9 +10,11 @@ try {
 const { main } = await import('../dist/src/cli.js');
 
 main(process.argv.slice(2)).then(
-  (code) => process.exit(code),
+  (code) => {
+    process.exitCode = code;
+  },
   (err) => {
     console.error('[unshit] fatal:', err instanceof Error ? err.message : String(err));
-    process.exit(2);
+    process.exitCode = 2;
   },
 );

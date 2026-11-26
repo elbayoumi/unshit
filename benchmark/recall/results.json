@@ -1,0 +1,1051 @@
+{
+  "generatedAt": "2026-11-26T12:37:00.835Z",
+  "corpusProject": "/Volumes/data/projects/unshit-bench/corpus/hono",
+  "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-hono-2ahbQU/hono",
+  "seed": 20261126,
+  "perRule": 20,
+  "beforeCount": 642,
+  "afterCount": 860,
+  "newFindingCount": 229,
+  "injectedCount": 120,
+  "rules": [
+    {
+      "ruleId": "code/duplicate-block",
+      "injected": 20,
+      "found": 20,
+      "recall": 1,
+      "wilson95": {
+        "low": 0.8388748419471806,
+        "high": 1,
+        "center": 1
+      },
+      "misses": []
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "injected": 20,
+      "found": 20,
+      "recall": 1,
+      "wilson95": {
+        "low": 0.8388748419471806,
+        "high": 1,
+        "center": 1
+      },
+      "misses": []
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "injected": 20,
+      "found": 20,
+      "recall": 1,
+      "wilson95": {
+        "low": 0.8388748419471806,
+        "high": 1,
+        "center": 1
+      },
+      "misses": []
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "injected": 20,
+      "found": 20,
+      "recall": 1,
+      "wilson95": {
+        "low": 0.8388748419471806,
+        "high": 1,
+        "center": 1
+      },
+      "misses": []
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "injected": 20,
+      "found": 11,
+      "recall": 0.55,
+      "wilson95": {
+        "low": 0.34208534245034233,
+        "high": 0.7418021417443759,
+        "center": 0.55
+      },
+      "misses": [
+        {
+          "file": "src/router.ts",
+          "line": 104,
+          "marker": "__unshitRecallUnusedExport_5_480024",
+          "kind": "unused-export",
+          "reason": "entry-point file: dead-export analyzer marks STAR consumed by design; export not reported as unused"
+        },
+        {
+          "file": "src/middleware/bearer-auth/index.ts",
+          "line": 235,
+          "marker": "__unshitRecallUnusedExport_6_9290",
+          "kind": "unused-export",
+          "reason": "entry-point file: dead-export analyzer marks STAR consumed by design; export not reported as unused"
+        },
+        {
+          "file": "src/middleware/timeout/index.ts",
+          "line": 59,
+          "marker": "__unshitRecallUnusedExport_11_224641",
+          "kind": "unused-export",
+          "reason": "entry-point file: dead-export analyzer marks STAR consumed by design; export not reported as unused"
+        },
+        {
+          "file": "src/http-exception.ts",
+          "line": 79,
+          "marker": "__unshitRecallUnusedExport_12_808353",
+          "kind": "unused-export",
+          "reason": "entry-point file: dead-export analyzer marks STAR consumed by design; export not reported as unused"
+        },
+        {
+          "file": "adapters/service-worker/src/index.ts",
+          "line": 37,
+          "marker": "__unshitRecallUnusedExport_13_305112",
+          "kind": "unused-export",
+          "reason": "entry-point file: dead-export analyzer marks STAR consumed by design; export not reported as unused"
+        },
+        {
+          "file": "src/middleware/method-override/index.ts",
+          "line": 172,
+          "marker": "__unshitRecallUnusedExport_16_718645",
+          "kind": "unused-export",
+          "reason": "entry-point file: dead-export analyzer marks STAR consumed by design; export not reported as unused"
+        },
+        {
+          "file": "src/jsx/dom/client.ts",
+          "line": 90,
+          "marker": "__unshitRecallUnusedExport_17_643118",
+          "kind": "unused-export",
+          "reason": "entry-point file: dead-export analyzer marks STAR consumed by design; export not reported as unused"
+        },
+        {
+          "file": "src/middleware/jsx-renderer/index.ts",
+          "line": 164,
+          "marker": "__unshitRecallUnusedExport_18_621808",
+          "kind": "unused-export",
+          "reason": "entry-point file: dead-export analyzer marks STAR consumed by design; export not reported as unused"
+        },
+        {
+          "file": "src/middleware/body-limit/index.ts",
+          "line": 108,
+          "marker": "__unshitRecallUnusedExport_19_489305",
+          "kind": "unused-export",
+          "reason": "entry-point file: dead-export analyzer marks STAR consumed by design; export not reported as unused"
+        }
+      ]
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "injected": 20,
+      "found": 20,
+      "recall": 1,
+      "wilson95": {
+        "low": 0.8388748419471806,
+        "high": 1,
+        "center": 1
+      },
+      "misses": []
+    }
+  ],
+  "injections": [
+    {
+      "ruleId": "ts/unused-export",
+      "file": "adapters/netlify/src/handler.ts",
+      "line": 11,
+      "marker": "__unshitRecallUnusedExport_0_78744",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/utils/buffer.ts",
+      "line": 118,
+      "marker": "__unshitRecallUnusedExport_1_284999",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/bun/serve-static.ts",
+      "line": 36,
+      "marker": "__unshitRecallUnusedExport_2_439915",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/helper/ssg/utils.ts",
+      "line": 119,
+      "marker": "__unshitRecallUnusedExport_3_257987",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/jsx/dom/render.ts",
+      "line": 891,
+      "marker": "__unshitRecallUnusedExport_4_825409",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/router.ts",
+      "line": 104,
+      "marker": "__unshitRecallUnusedExport_5_480024",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/middleware/bearer-auth/index.ts",
+      "line": 235,
+      "marker": "__unshitRecallUnusedExport_6_9290",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "adapters/cloudflare-workers/src/serve-static.ts",
+      "line": 43,
+      "marker": "__unshitRecallUnusedExport_7_873683",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/utils/jwt/jwt.ts",
+      "line": 311,
+      "marker": "__unshitRecallUnusedExport_8_180020",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "adapters/cloudflare-workers/src/websocket.ts",
+      "line": 54,
+      "marker": "__unshitRecallUnusedExport_9_364554",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/utils/encode.ts",
+      "line": 35,
+      "marker": "__unshitRecallUnusedExport_10_774921",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/middleware/timeout/index.ts",
+      "line": 59,
+      "marker": "__unshitRecallUnusedExport_11_224641",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/http-exception.ts",
+      "line": 79,
+      "marker": "__unshitRecallUnusedExport_12_808353",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "adapters/service-worker/src/index.ts",
+      "line": 37,
+      "marker": "__unshitRecallUnusedExport_13_305112",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/netlify/conninfo.ts",
+      "line": 59,
+      "marker": "__unshitRecallUnusedExport_14_785859",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/cloudflare-workers/conninfo.ts",
+      "line": 11,
+      "marker": "__unshitRecallUnusedExport_15_910640",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/middleware/method-override/index.ts",
+      "line": 172,
+      "marker": "__unshitRecallUnusedExport_16_718645",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/jsx/dom/client.ts",
+      "line": 90,
+      "marker": "__unshitRecallUnusedExport_17_643118",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/middleware/jsx-renderer/index.ts",
+      "line": 164,
+      "marker": "__unshitRecallUnusedExport_18_621808",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-export",
+      "file": "src/middleware/body-limit/index.ts",
+      "line": 108,
+      "marker": "__unshitRecallUnusedExport_19_489305",
+      "kind": "unused-export"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_0_629334.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_0_629334.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_1_238782.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_1_238782.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_2_28634.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_2_28634.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_3_978098.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_3_978098.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_4_516211.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_4_516211.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_5_84471.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_5_84471.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_6_740215.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_6_740215.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_7_324485.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_7_324485.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_8_416961.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_8_416961.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_9_664453.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_9_664453.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_10_395073.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_10_395073.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_11_593387.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_11_593387.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_12_906876.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_12_906876.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_13_830398.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_13_830398.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_14_568289.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_14_568289.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_15_445791.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_15_445791.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_16_684116.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_16_684116.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_17_130213.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_17_130213.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_18_281909.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_18_281909.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "ts/unused-file",
+      "file": "src/__unshit_recall_unused_file_19_998332.ts",
+      "line": 1,
+      "marker": "__unshit_recall_unused_file_19_998332.ts",
+      "kind": "unused-file"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 715,
+      "marker": "@unshit-recall/unused-dep-0-50914",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 716,
+      "marker": "@unshit-recall/unused-dep-1-541534",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 717,
+      "marker": "@unshit-recall/unused-dep-2-353157",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 718,
+      "marker": "@unshit-recall/unused-dep-3-361732",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 719,
+      "marker": "@unshit-recall/unused-dep-4-562245",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 720,
+      "marker": "@unshit-recall/unused-dep-5-328966",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 721,
+      "marker": "@unshit-recall/unused-dep-6-480169",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 722,
+      "marker": "@unshit-recall/unused-dep-7-543695",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 723,
+      "marker": "@unshit-recall/unused-dep-8-408738",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 724,
+      "marker": "@unshit-recall/unused-dep-9-683298",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 725,
+      "marker": "@unshit-recall/unused-dep-10-253523",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 726,
+      "marker": "@unshit-recall/unused-dep-11-776333",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 727,
+      "marker": "@unshit-recall/unused-dep-12-855180",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 728,
+      "marker": "@unshit-recall/unused-dep-13-794280",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 729,
+      "marker": "@unshit-recall/unused-dep-14-396538",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 730,
+      "marker": "@unshit-recall/unused-dep-15-670355",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 731,
+      "marker": "@unshit-recall/unused-dep-16-515932",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 732,
+      "marker": "@unshit-recall/unused-dep-17-221801",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 733,
+      "marker": "@unshit-recall/unused-dep-18-546235",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 734,
+      "marker": "@unshit-recall/unused-dep-19-62086",
+      "kind": "unused-dependency"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/adapter/cloudflare-workers/serve-static-module.ts",
+      "line": 13,
+      "marker": "__unshitRecallAny_0_347709",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "adapters/bun/src/ssg.ts",
+      "line": 28,
+      "marker": "__unshitRecallAny_1_600552",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/adapter/netlify/index.ts",
+      "line": 11,
+      "marker": "__unshitRecallAny_2_634080",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/middleware/powered-by/index.ts",
+      "line": 36,
+      "marker": "__unshitRecallAny_3_5582",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "adapters/cloudflare-workers/src/utils.ts",
+      "line": 51,
+      "marker": "__unshitRecallAny_4_900825",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/utils/accept.ts",
+      "line": 269,
+      "marker": "__unshitRecallAny_5_911447",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/jsx/children.ts",
+      "line": 21,
+      "marker": "__unshitRecallAny_6_843741",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/middleware/timing/timing.ts",
+      "line": 263,
+      "marker": "__unshitRecallAny_7_651572",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "adapters/lambda-edge/src/handler.ts",
+      "line": 247,
+      "marker": "__unshitRecallAny_8_668609",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/types.ts",
+      "line": 2783,
+      "marker": "__unshitRecallAny_9_313522",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/adapter/netlify/conninfo.ts",
+      "line": 60,
+      "marker": "__unshitRecallAny_10_105303",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/preset/tiny.ts",
+      "line": 21,
+      "marker": "__unshitRecallAny_11_281755",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/helper/adapter/index.ts",
+      "line": 91,
+      "marker": "__unshitRecallAny_12_376485",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/helper/streaming/index.ts",
+      "line": 10,
+      "marker": "__unshitRecallAny_13_366419",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/hono-base.ts",
+      "line": 565,
+      "marker": "__unshitRecallAny_14_645897",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/adapter/deno/ssg.ts",
+      "line": 30,
+      "marker": "__unshitRecallAny_15_767451",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/utils/cookie.ts",
+      "line": 282,
+      "marker": "__unshitRecallAny_16_458085",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/router/reg-exp-router/index.ts",
+      "line": 8,
+      "marker": "__unshitRecallAny_17_762545",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/jsx/base.ts",
+      "line": 540,
+      "marker": "__unshitRecallAny_18_132488",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/adapter/deno/websocket.ts",
+      "line": 42,
+      "marker": "__unshitRecallAny_19_343951",
+      "kind": "no-explicit-any"
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/jsx/dom/jsx-runtime.ts",
+      "line": 9,
+      "marker": "__unshitRecallTimer_0",
+      "kind": "magic-timer",
+      "delay": 5690
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "adapters/aws-lambda/src/types.ts",
+      "line": 174,
+      "marker": "__unshitRecallTimer_1",
+      "kind": "magic-timer",
+      "delay": 5332
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/http-exception.ts",
+      "line": 80,
+      "marker": "__unshitRecallTimer_2",
+      "kind": "magic-timer",
+      "delay": 1321
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/router/reg-exp-router/trie.ts",
+      "line": 87,
+      "marker": "__unshitRecallTimer_3",
+      "kind": "magic-timer",
+      "delay": 7167
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/middleware/bearer-auth/index.ts",
+      "line": 236,
+      "marker": "__unshitRecallTimer_4",
+      "kind": "magic-timer",
+      "delay": 1603
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/jsx/intrinsic-element/common.ts",
+      "line": 24,
+      "marker": "__unshitRecallTimer_5",
+      "kind": "magic-timer",
+      "delay": 9248
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/adapter/netlify/handler.ts",
+      "line": 14,
+      "marker": "__unshitRecallTimer_6",
+      "kind": "magic-timer",
+      "delay": 9726
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/middleware/trailing-slash/index.ts",
+      "line": 159,
+      "marker": "__unshitRecallTimer_7",
+      "kind": "magic-timer",
+      "delay": 4576
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/router.ts",
+      "line": 105,
+      "marker": "__unshitRecallTimer_8",
+      "kind": "magic-timer",
+      "delay": 7155
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/jsx/dom/server.ts",
+      "line": 77,
+      "marker": "__unshitRecallTimer_9",
+      "kind": "magic-timer",
+      "delay": 5686
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/adapter/deno/conninfo.ts",
+      "line": 19,
+      "marker": "__unshitRecallTimer_10",
+      "kind": "magic-timer",
+      "delay": 4888
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/utils/color.ts",
+      "line": 57,
+      "marker": "__unshitRecallTimer_11",
+      "kind": "magic-timer",
+      "delay": 8188
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/client/types.ts",
+      "line": 394,
+      "marker": "__unshitRecallTimer_12",
+      "kind": "magic-timer",
+      "delay": 5482
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/utils/mime.ts",
+      "line": 96,
+      "marker": "__unshitRecallTimer_13",
+      "kind": "magic-timer",
+      "delay": 1996
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/client/fetch-result-please.ts",
+      "line": 96,
+      "marker": "__unshitRecallTimer_14",
+      "kind": "magic-timer",
+      "delay": 7666
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/router/utils.ts",
+      "line": 2,
+      "marker": "__unshitRecallTimer_15",
+      "kind": "magic-timer",
+      "delay": 8934
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "adapters/deno/src/index.ts",
+      "line": 10,
+      "marker": "__unshitRecallTimer_16",
+      "kind": "magic-timer",
+      "delay": 4463
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "adapters/deno/src/websocket.ts",
+      "line": 39,
+      "marker": "__unshitRecallTimer_17",
+      "kind": "magic-timer",
+      "delay": 2658
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "src/jsx/dom/render.ts",
+      "line": 892,
+      "marker": "__unshitRecallTimer_18",
+      "kind": "magic-timer",
+      "delay": 5547
+    },
+    {
+      "ruleId": "slop/magic-timer",
+      "file": "adapters/deno/src/conninfo.ts",
+      "line": 18,
+      "marker": "__unshitRecallTimer_19",
+      "kind": "magic-timer",
+      "delay": 4324
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/router/linear-router/router.ts",
+      "sourceFile": "adapters/cloudflare-workers/src/utils.ts",
+      "line": 153,
+      "sourceLine": 52,
+      "marker": "__unshitRecallDup_0",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/router/linear-router/index.ts",
+      "sourceFile": "adapters/deno/src/serve-static.ts",
+      "line": 7,
+      "sourceLine": 43,
+      "marker": "__unshitRecallDup_1",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/middleware/bearer-auth/index.ts",
+      "sourceFile": "src/utils/jwt/index.ts",
+      "line": 237,
+      "sourceLine": 8,
+      "marker": "__unshitRecallDup_2",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/deno/serve-static.ts",
+      "sourceFile": "adapters/bun/src/index.ts",
+      "line": 46,
+      "sourceLine": 12,
+      "marker": "__unshitRecallDup_3",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/jsx/streaming.ts",
+      "sourceFile": "src/adapter/vercel/handler.ts",
+      "line": 232,
+      "sourceLine": 12,
+      "marker": "__unshitRecallDup_4",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/http-exception.ts",
+      "sourceFile": "src/adapter/cloudflare-workers/websocket.ts",
+      "line": 81,
+      "sourceLine": 57,
+      "marker": "__unshitRecallDup_5",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/jsx/intrinsic-element/components.ts",
+      "sourceFile": "src/adapter/aws-lambda/types.ts",
+      "line": 211,
+      "sourceLine": 202,
+      "marker": "__unshitRecallDup_6",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/utils/compress.ts",
+      "sourceFile": "src/middleware/timing/index.ts",
+      "line": 11,
+      "sourceLine": 9,
+      "marker": "__unshitRecallDup_7",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/utils/types.ts",
+      "sourceFile": "adapters/bun/src/server.ts",
+      "line": 146,
+      "sourceLine": 15,
+      "marker": "__unshitRecallDup_8",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/adapter/service-worker/types.ts",
+      "sourceFile": "src/validator/index.ts",
+      "line": 18,
+      "sourceLine": 9,
+      "marker": "__unshitRecallDup_9",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "adapters/netlify/src/index.ts",
+      "sourceFile": "src/adapter/cloudflare-workers/serve-static-module.ts",
+      "line": 7,
+      "sourceLine": 14,
+      "marker": "__unshitRecallDup_10",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/helper/factory/index.ts",
+      "sourceFile": "src/utils/jwt/jwa.ts",
+      "line": 376,
+      "sourceLine": 38,
+      "marker": "__unshitRecallDup_11",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/client/fetch-result-please.ts",
+      "sourceFile": "src/jsx/dom/hooks/index.ts",
+      "line": 97,
+      "sourceLine": 117,
+      "marker": "__unshitRecallDup_12",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/jsx/components.ts",
+      "sourceFile": "src/middleware/mount/index.ts",
+      "line": 260,
+      "sourceLine": 111,
+      "marker": "__unshitRecallDup_13",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "adapters/vercel/src/conninfo.ts",
+      "sourceFile": "src/hono-base.ts",
+      "line": 9,
+      "sourceLine": 566,
+      "marker": "__unshitRecallDup_14",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/context.ts",
+      "sourceFile": "adapters/service-worker/src/handler.ts",
+      "line": 799,
+      "sourceLine": 38,
+      "marker": "__unshitRecallDup_15",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/utils/buffer.ts",
+      "sourceFile": "src/types.ts",
+      "line": 119,
+      "sourceLine": 2784,
+      "marker": "__unshitRecallDup_16",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/helper/ssg/plugins.ts",
+      "sourceFile": "src/adapter/netlify/mod.ts",
+      "line": 73,
+      "sourceLine": 3,
+      "marker": "__unshitRecallDup_17",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/jsx/dom/intrinsic-element/components.ts",
+      "sourceFile": "src/helper/ssg/ssg.ts",
+      "line": 444,
+      "sourceLine": 481,
+      "marker": "__unshitRecallDup_18",
+      "kind": "duplicate-block"
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/jsx/dom/server.ts",
+      "sourceFile": "adapters/aws-lambda/src/types.ts",
+      "line": 78,
+      "sourceLine": 175,
+      "marker": "__unshitRecallDup_19",
+      "kind": "duplicate-block"
+    }
+  ]
+}
