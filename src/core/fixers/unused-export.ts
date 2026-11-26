@@ -1,5 +1,7 @@
 import ts from 'typescript';
 import type { FileEntry, Finding, Patch, TextEdit } from '../../contracts.js';
+import type { FixSkip } from './skip.js';
+import { skipCollector } from './skip.js';
 
 const RULES = new Set(['ts/unused-export', 'ts/unused-type-export']);
 
@@ -7,16 +9,9 @@ export function isUnusedExportRule(ruleId: string): boolean {
   return RULES.has(ruleId);
 }
 
-interface UnusedExportSkip {
-  file: string;
-  ruleId: string;
-  line: number;
-  reason: string;
-}
-
 interface UnusedExportPlan {
   patches: Patch[];
-  skipped: UnusedExportSkip[];
+  skipped: FixSkip[];
 }
 
 interface Declaration {
@@ -237,12 +232,9 @@ function pruneProtectedCandidates(
  * stays exported references its name in an emitted signature.
  */
 export function planUnusedExportFixes(file: FileEntry, findings: Finding[]): UnusedExportPlan {
-  const skipped: UnusedExportSkip[] = [];
+  const { skipped, skip } = skipCollector(file.relPath);
   if (findings.length === 0) return { patches: [], skipped };
 
-  const skip = (finding: Finding, reason: string): void => {
-    skipped.push({ file: file.relPath, ruleId: finding.ruleId, line: finding.span.line, reason });
-  };
   const sf = file.sourceFile;
   const isDeclarationFile = /\.d\.[cm]?ts$/.test(file.relPath);
   if (!sf || isDeclarationFile || !/\.[cm]?[jt]sx?$/.test(file.relPath)) {

@@ -14,20 +14,15 @@ import {
   type UnusedFileDeletion,
 } from './fixers/unused-file.js';
 import { isUnusedExportRule, planUnusedExportFixes } from './fixers/unused-export.js';
+import { isMagicTimerRule, planMagicTimerFixes } from './fixers/magic-timer.js';
+import { groupFindingsByFile, type PlanForFile } from './fixers/plan-by-file.js';
+import type { FixSkip } from './fixers/skip.js';
 import type { ScanResult } from './scanner.js';
 
 interface FixOptions {
   apply: boolean;
   ai: boolean;
   maxAiFiles?: number;
-}
-
-/** A fix that was deliberately not made, with the reason. */
-interface FixSkip {
-  file: string;
-  ruleId: string;
-  line: number;
-  reason: string;
 }
 
 interface FixSummary {
@@ -66,19 +61,18 @@ function collectDeterministicPatches(
 ): { patches: Patch[]; patchesByFile: FilePatches } {
   const patches: Patch[] = [];
 
-  const unusedByFile = new Map<string, Finding[]>();
-  for (const finding of scan.findings) {
-    if (!isUnusedExportRule(finding.ruleId)) continue;
-    const list = unusedByFile.get(finding.file) ?? [];
-    list.push(finding);
-    unusedByFile.set(finding.file, list);
-  }
-  for (const [relPath, findings] of unusedByFile) {
-    const file = fileMap.get(relPath);
-    if (!file) continue;
-    const plan = planUnusedExportFixes(file, findings);
-    patches.push(...plan.patches);
-    skipped.push(...plan.skipped);
+  const plans: Array<{ matches: (ruleId: string) => boolean; plan: PlanForFile }> = [
+    { matches: isUnusedExportRule, plan: planUnusedExportFixes },
+    { matches: isMagicTimerRule, plan: planMagicTimerFixes },
+  ];
+  for (const { matches, plan } of plans) {
+    for (const [relPath, findings] of groupFindingsByFile(scan.findings, matches)) {
+      const file = fileMap.get(relPath);
+      if (!file) continue;
+      const result = plan(file, findings);
+      patches.push(...result.patches);
+      skipped.push(...result.skipped);
+    }
   }
 
   const dependencyFindings = scan.findings.filter((f) => isUnusedDependencyRule(f.ruleId));
@@ -90,6 +84,7 @@ function collectDeterministicPatches(
 
   for (const finding of scan.findings) {
     if (isUnusedExportRule(finding.ruleId)
+      || isMagicTimerRule(finding.ruleId)
       || isUnusedDependencyRule(finding.ruleId)
       || isUnusedFileRule(finding.ruleId)) continue;
     const detector = detectorMap.get(finding.ruleId);
