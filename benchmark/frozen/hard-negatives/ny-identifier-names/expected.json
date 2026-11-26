@@ -1,0 +1,8 @@
+{
+  "description": "Identifiers that merely contain the letters \"any\" are not AnyKeyword tokens.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": []
+}

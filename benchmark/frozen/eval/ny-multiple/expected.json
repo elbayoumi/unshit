@@ -1,0 +1,27 @@
+{
+  "description": "One function uses explicit any in its parameter, return type and a local variable.",
+  "groundTruth": "There are three distinct AnyKeyword nodes in the same file, each reported at its own column.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/mixed.ts",
+      "symbol": "1:23",
+      "reason": "The first parameter annotation uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/mixed.ts",
+      "symbol": "1:29",
+      "reason": "The return type annotation uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    },
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/mixed.ts",
+      "symbol": "2:15",
+      "reason": "The local variable annotation uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    }
+  ]
+}

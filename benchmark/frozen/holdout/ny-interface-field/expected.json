@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for ts/no-explicit-any: ny interface field.",
+  "groundTruth": "The interface member type uses an explicit `any` keyword instead of `unknown` or a concrete type.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/record.ts",
+      "symbol": "3:9",
+      "reason": "The interface member type uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    }
+  ]
+}

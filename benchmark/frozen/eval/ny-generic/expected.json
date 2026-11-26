@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for ts/no-explicit-any: ny generic.",
+  "groundTruth": "The generic type argument uses an explicit `any` keyword instead of `unknown` or a concrete type.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/collection.ts",
+      "symbol": "1:19",
+      "reason": "The generic type argument uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    }
+  ]
+}

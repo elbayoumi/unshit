@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for ts/no-explicit-any: ny jsx.",
+  "groundTruth": "The JSX component prop type uses an explicit `any` keyword instead of `unknown` or a concrete type.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/widget.tsx",
+      "symbol": "1:39",
+      "reason": "The JSX component prop type uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    }
+  ]
+}

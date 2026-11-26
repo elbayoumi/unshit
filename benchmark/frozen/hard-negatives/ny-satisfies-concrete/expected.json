@@ -1,0 +1,8 @@
+{
+  "description": "A satisfies clause keeps a concrete type without any.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": []
+}

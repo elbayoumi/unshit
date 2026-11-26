@@ -1,0 +1,15 @@
+{
+  "description": "An event handler accepts an untyped `any` parameter.",
+  "groundTruth": "The AST contains exactly one AnyKeyword, in the parameter type annotation.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/handler.ts",
+      "symbol": "1:23",
+      "reason": "The parameter annotation uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    }
+  ]
+}
