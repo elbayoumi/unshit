@@ -41,6 +41,8 @@ interface FixSummary {
   /** Files a `ts/unused-file` fix would delete (dry run) or deleted (apply). */
   deletions: string[];
   deletedCount: number;
+  /** Number of scan/fix passes performed (1 for dry run). */
+  passes: number;
 }
 
 function applyEdits(content: string, patches: Patch[]): string {
@@ -217,6 +219,7 @@ async function applyDeterministicToFixedPoint(
   diff: string;
   appliedCount: number;
   deletedCount: number;
+  passes: number;
 }> {
   const initialDirty = await gitDirtyFiles(scan.rootDir);
   const deterministicPatches: Patch[] = [];
@@ -224,9 +227,11 @@ async function applyDeterministicToFixedPoint(
   let diff = '';
   let appliedCount = 0;
   let deletedCount = 0;
+  let passes = 0;
 
   let currentScan = scan;
   for (let round = 0; round < MAX_ROUNDS; round++) {
+    passes += 1;
     const detectorMap = new Map(currentScan.detectors.map((d) => [d.id, d]));
     const fileMap = new Map(currentScan.files.map((f) => [f.relPath, f]));
     const manifestSet = new Set(currentScan.manifests ?? []);
@@ -274,7 +279,7 @@ async function applyDeterministicToFixedPoint(
     currentScan = await runScan(currentScan.rootDir, currentScan.config, [], { noCache: true });
   }
 
-  return { deterministicPatches, deletions, diff, appliedCount, deletedCount };
+  return { deterministicPatches, deletions, diff, appliedCount, deletedCount, passes };
 }
 
 async function runDeterministicDryRun(
@@ -286,6 +291,7 @@ async function runDeterministicDryRun(
   diff: string;
   appliedCount: number;
   deletedCount: number;
+  passes: number;
 }> {
   const fileMap = new Map(scan.files.map((f) => [f.relPath, f]));
   const manifestSet = new Set(scan.manifests ?? []);
@@ -299,6 +305,7 @@ async function runDeterministicDryRun(
     diff,
     appliedCount: 0,
     deletedCount: 0,
+    passes: 1,
   };
 }
 
@@ -332,5 +339,6 @@ export async function runFix(scan: ScanResult, opts: FixOptions): Promise<FixSum
     skipped,
     deletions: outcome.deletions,
     deletedCount: outcome.deletedCount,
+    passes: outcome.passes,
   };
 }

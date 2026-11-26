@@ -112,8 +112,8 @@ function insertAtLine(filePath, lineNumber1Based, text) {
   return idx + 1;
 }
 
-function injectLinePerFile(work, files, n, rand, extRe, build) {
-  const candidates = files.filter((f) => extRe.test(f) && !/\.d\.ts$/.test(f));
+export function injectLinePerFile(work, files, n, rand, extRe, build, skipFiles = null) {
+  const candidates = files.filter((f) => extRe.test(f) && !/\.d\.ts$/.test(f) && !(skipFiles && skipFiles.has(f)));
   const picked = pickN(candidates, n, rand);
   const injections = [];
   for (let i = 0; i < picked.length; i++) {
@@ -125,11 +125,13 @@ function injectLinePerFile(work, files, n, rand, extRe, build) {
   return injections;
 }
 
-export function injectUnusedExports(work, files, n, rand) {
+export function injectUnusedExports(work, files, n, rand, options = {}) {
+  // `skipFiles` is derived from unshit's own dead-export analysis (STAR-consumed
+  // entry points / public API) by the benchmark runner, not from heuristics here.
   return injectLinePerFile(work, files, n, rand, /\.(ts|tsx|js|jsx|mjs|cjs)$/, (i, r) => {
     const marker = `__unshitRecallUnusedExport_${i}_${Math.floor(r() * 1e6)}`;
     return { text: `export function ${marker}(v) { return v + ${i}; }`, meta: { ruleId: 'ts/unused-export', marker, kind: 'unused-export' } };
-  });
+  }, options.skipFiles ?? null);
 }
 
 export function injectUnusedFiles(work, n, rand) {
@@ -212,8 +214,13 @@ function duplicateBlockSource(i) {
   ].join('\n');
 }
 
-export function injectDuplicateBlocks(work, files, n, rand) {
-  const candidates = files.filter((f) => /\.(ts|tsx|js|jsx|mjs|cjs)$/.test(f) && !/\.d\.ts$/.test(f));
+export function injectDuplicateBlocks(work, files, n, rand, options = {}) {
+  // `cloneFiles` comes from unshit's compiled clone tokenizer/filter, so we
+  // never inject a duplicate into a file the detector skips by design.
+  const allowed = options.cloneFiles ?? null;
+  const candidates = files.filter((f) => /\.(ts|tsx|js|jsx|mjs|cjs)$/.test(f)
+    && !/\.d\.ts$/.test(f)
+    && (!allowed || allowed.has(f)));
   const picked = pickN(candidates, Math.min(n * 2, candidates.length), rand);
   const injections = [];
   for (let i = 0; i < n && i * 2 + 1 < picked.length; i++) {
@@ -236,24 +243,38 @@ export function injectDuplicateBlocks(work, files, n, rand) {
   return injections;
 }
 
-export function injectAll(work, seed, counts) {
+export function injectAll(work, seed, counts, options = {}) {
   const rand = mulberry32(seed);
-  const files = listSourceFiles(work);
+  const files = options.files ?? listSourceFiles(work);
   const injections = [];
-  injections.push(...injectUnusedExports(work, files, counts.unusedExport ?? 20, rand));
+  // Callers that know unshit's entry-point set pass it in; without it the
+  // legacy (unfiltered) behavior is preserved for unit tests.
+  injections.push(...injectUnusedExports(work, files, counts.unusedExport ?? 20, rand, options));
   // refresh file list for unused-file targets? files list unchanged; unused-file creates new files
   injections.push(...injectUnusedFiles(work, counts.unusedFile ?? 20, rand));
   injections.push(...injectUnusedDependencies(work, counts.unusedDependency ?? 20, rand));
   injections.push(...injectExplicitAny(work, files, counts.noExplicitAny ?? 20, rand));
   injections.push(...injectMagicTimers(work, files, counts.magicTimer ?? 20, rand));
-  injections.push(...injectDuplicateBlocks(work, files, counts.duplicateBlock ?? 20, rand));
+  injections.push(...injectDuplicateBlocks(work, files, counts.duplicateBlock ?? 20, rand, options));
   return injections;
+}
+
+const DUP_BLOCK_LINES = duplicateBlockSource(0).split('\n').length;
+
+function cloneSides(evidence) {
+  const out = [];
+  for (const part of String(evidence ?? '').split(' <-> ')) {
+    const m = /^(.*):(\d+)-(\d+)$/.exec(part.trim());
+    if (m) out.push({ file: m[1], start: Number(m[2]), end: Number(m[3]) });
+  }
+  return out;
 }
 
 export function findingMatchesInjection(finding, inj) {
   if (finding.ruleId !== inj.ruleId) return false;
   switch (inj.kind) {
     case 'unused-export':
+    case 'entry-point-unused-export':
       return finding.file === inj.file && (String(finding.message).includes(inj.marker) || String(finding.evidence).includes(inj.marker));
     case 'unused-file':
       return finding.file === inj.file;
@@ -264,8 +285,12 @@ export function findingMatchesInjection(finding, inj) {
     case 'magic-timer':
       return finding.file === inj.file && Math.abs((finding.span?.line ?? -999) - inj.line) <= 3;
     case 'duplicate-block':
-      return (finding.file === inj.file || finding.file === inj.sourceFile) &&
-        (String(finding.evidence).includes(inj.sourceFile) || String(finding.evidence).includes(inj.file) || String(finding.message).includes(inj.marker) || String(finding.evidence).includes(inj.marker));
+      // Evidence is `a:s-e <-> b:s-e`. The injected copy in the target file must
+      // itself be one side of the clone pair. Matching on file names alone was
+      // vacuous: evidence always names finding.file, so any pre-existing clone
+      // in either file used to count as a hit.
+      return cloneSides(finding.evidence).some((side) => side.file === inj.file
+        && side.start <= inj.line + DUP_BLOCK_LINES && side.end >= inj.line);
     default:
       return false;
   }
@@ -274,7 +299,17 @@ export function findingMatchesInjection(finding, inj) {
 export function evaluateRecall(injections, afterFindings) {
   const byRule = new Map();
   for (const inj of injections) {
-    const row = byRule.get(inj.ruleId) ?? { ruleId: inj.ruleId, injected: 0, found: 0, misses: [], hits: [] };
+    // Out-of-scope injections are reported in their own row so the detector's
+    // scope boundary stays visible instead of being hidden in the denominator.
+    const ruleId = inj.reportRuleId ?? inj.ruleId;
+    const row = byRule.get(ruleId) ?? {
+      ruleId,
+      injected: 0,
+      found: 0,
+      misses: [],
+      hits: [],
+      outOfScope: Boolean(inj.outOfScope),
+    };
     row.injected += 1;
     const match = afterFindings.find((f) => findingMatchesInjection(f, inj));
     if (match) {
@@ -283,7 +318,7 @@ export function evaluateRecall(injections, afterFindings) {
     } else {
       row.misses.push({ injection: inj, reason: 'no matching finding after injection' });
     }
-    byRule.set(inj.ruleId, row);
+    byRule.set(ruleId, row);
   }
   const rules = [...byRule.values()].map((r) => {
     const w = wilson95(r.found, r.injected);

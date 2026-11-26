@@ -1,0 +1,2672 @@
+{
+  "generatedAt": "2026-11-26T13:19:16.948Z",
+  "corpusDir": "/Volumes/data/projects/unshit-bench/corpus",
+  "seeds": [
+    20261126,
+    20261127
+  ],
+  "perRule": 15,
+  "negPerRule": 10,
+  "projects": [
+    {
+      "name": "hono",
+      "path": "/Volumes/data/projects/unshit-bench/corpus/hono",
+      "reactTsx": false,
+      "seeds": [
+        {
+          "seed": 20261126,
+          "positives": {
+            "beforeCount": 642,
+            "afterCount": 782,
+            "injectedCount": 90,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "injected": 15,
+                "found": 9,
+                "recall": 0.6,
+                "wilson95": {
+                  "low": 0.357468301206246,
+                  "high": 0.8017550385865841,
+                  "center": 0.6
+                },
+                "misses": [
+                  {
+                    "file": "src/types.ts",
+                    "line": 2813,
+                    "marker": "__unshitRecallUnusedType_1_678669",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "src/adapter/netlify/mod.ts",
+                    "line": 3,
+                    "marker": "__unshitRecallUnusedType_2_91860",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "src/jsx/hooks/index.ts",
+                    "line": 438,
+                    "marker": "__unshitRecallUnusedType_5_441037",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "src/helper/accepts/index.ts",
+                    "line": 7,
+                    "marker": "__unshitRecallUnusedType_9_626906",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "adapters/deno/src/index.ts",
+                    "line": 10,
+                    "marker": "__unshitRecallUnusedType_11_674617",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "src/adapter/aws-lambda/index.ts",
+                    "line": 19,
+                    "marker": "__unshitRecallUnusedType_13_972920",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  }
+                ]
+              }
+            ]
+          },
+          "negatives": {
+            "beforeCount": 642,
+            "afterCount": 711,
+            "injectedCount": 60,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              }
+            ]
+          }
+        },
+        {
+          "seed": 20261127,
+          "positives": {
+            "beforeCount": 642,
+            "afterCount": 779,
+            "injectedCount": 90,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "injected": 15,
+                "found": 9,
+                "recall": 0.6,
+                "wilson95": {
+                  "low": 0.357468301206246,
+                  "high": 0.8017550385865841,
+                  "center": 0.6
+                },
+                "misses": [
+                  {
+                    "file": "src/middleware/compress/index.ts",
+                    "line": 176,
+                    "marker": "__unshitRecallUnusedType_0_450920",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "src/jsx/dom/server.ts",
+                    "line": 77,
+                    "marker": "__unshitRecallUnusedType_1_687557",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "src/middleware/language/index.ts",
+                    "line": 13,
+                    "marker": "__unshitRecallUnusedType_3_565193",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "src/helper/testing/index.ts",
+                    "line": 29,
+                    "marker": "__unshitRecallUnusedType_4_870171",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "src/jsx/types.ts",
+                    "line": 41,
+                    "marker": "__unshitRecallUnusedType_10_63548",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "src/middleware/etag/index.ts",
+                    "line": 136,
+                    "marker": "__unshitRecallUnusedType_14_592025",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  }
+                ]
+              }
+            ]
+          },
+          "negatives": {
+            "beforeCount": 642,
+            "afterCount": 707,
+            "injectedCount": 60,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "zod",
+      "path": "/Volumes/data/projects/unshit-bench/corpus/zod",
+      "reactTsx": false,
+      "seeds": [
+        {
+          "seed": 20261126,
+          "positives": {
+            "beforeCount": 1477,
+            "afterCount": 1617,
+            "injectedCount": 90,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "injected": 15,
+                "found": 11,
+                "recall": 0.7333333333333333,
+                "wilson95": {
+                  "low": 0.4804956594401943,
+                  "high": 0.8910254667430761,
+                  "center": 0.7333333333333333
+                },
+                "misses": [
+                  {
+                    "file": "packages/zod/src/v4/core/checks.ts",
+                    "line": 1268,
+                    "marker": "__unshitRecallUnusedType_1_678496",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "packages/zod/src/v4/classic/schemas.ts",
+                    "line": 2941,
+                    "marker": "__unshitRecallUnusedType_2_384957",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "scripts/check-versions.ts",
+                    "line": 97,
+                    "marker": "__unshitRecallUnusedType_8_65642",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "packages/zod/src/v4/classic/errors.ts",
+                    "line": 98,
+                    "marker": "__unshitRecallUnusedType_10_260471",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  }
+                ]
+              }
+            ]
+          },
+          "negatives": {
+            "beforeCount": 1477,
+            "afterCount": 1533,
+            "injectedCount": 60,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              }
+            ]
+          }
+        },
+        {
+          "seed": 20261127,
+          "positives": {
+            "beforeCount": 1477,
+            "afterCount": 1630,
+            "injectedCount": 90,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "injected": 15,
+                "found": 12,
+                "recall": 0.8,
+                "wilson95": {
+                  "low": 0.5481455128483065,
+                  "high": 0.9295245065301844,
+                  "center": 0.8
+                },
+                "misses": [
+                  {
+                    "file": "packages/zod/src/v4/classic/external.ts",
+                    "line": 59,
+                    "marker": "__unshitRecallUnusedType_1_885302",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "packages/zod/src/v4/mini/parse.ts",
+                    "line": 17,
+                    "marker": "__unshitRecallUnusedType_4_428915",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "packages/zod/src/v4/mini/checks.ts",
+                    "line": 34,
+                    "marker": "__unshitRecallUnusedType_12_554014",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  }
+                ]
+              }
+            ]
+          },
+          "negatives": {
+            "beforeCount": 1477,
+            "afterCount": 1537,
+            "injectedCount": 60,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "execa",
+      "path": "/Volumes/data/projects/unshit-bench/corpus/execa",
+      "reactTsx": false,
+      "seeds": [
+        {
+          "seed": 20261126,
+          "positives": {
+            "beforeCount": 35,
+            "afterCount": 139,
+            "injectedCount": 90,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "injected": 15,
+                "found": 0,
+                "recall": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.20388330103584862,
+                  "center": 0
+                },
+                "misses": [
+                  {
+                    "file": "test-d/stdio/option/generator-only-object-mode.test-d.ts",
+                    "line": 45,
+                    "marker": "__unshitRecallUnusedType_0_749643",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/methods/script-stdin.test-d.ts",
+                    "line": 47,
+                    "marker": "__unshitRecallUnusedType_1_319906",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/methods/script.test-d.ts",
+                    "line": 66,
+                    "marker": "__unshitRecallUnusedType_2_802583",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/pipe.test-d.ts",
+                    "line": 43,
+                    "marker": "__unshitRecallUnusedType_3_66860",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/convert/transform-stream.test-d.ts",
+                    "line": 33,
+                    "marker": "__unshitRecallUnusedType_4_526763",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/generator-object-mode-invalid.test-d.ts",
+                    "line": 51,
+                    "marker": "__unshitRecallUnusedType_5_592247",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/methods/node.test-d.ts",
+                    "line": 65,
+                    "marker": "__unshitRecallUnusedType_6_918789",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/pipe-inherit.test-d.ts",
+                    "line": 30,
+                    "marker": "__unshitRecallUnusedType_7_395803",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/ipc/get-one.test-d.ts",
+                    "line": 71,
+                    "marker": "__unshitRecallUnusedType_8_519909",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/methods/main-sync.test-d.ts",
+                    "line": 56,
+                    "marker": "__unshitRecallUnusedType_9_825472",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/subprocess/subprocess.test-d.ts",
+                    "line": 59,
+                    "marker": "__unshitRecallUnusedType_10_359260",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/return/result-main.test-d.ts",
+                    "line": 105,
+                    "marker": "__unshitRecallUnusedType_11_311703",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/generator-binary.test-d.ts",
+                    "line": 50,
+                    "marker": "__unshitRecallUnusedType_12_858035",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/array.test-d.ts",
+                    "line": 15,
+                    "marker": "__unshitRecallUnusedType_13_491235",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/convert/duplex.test-d.ts",
+                    "line": 33,
+                    "marker": "__unshitRecallUnusedType_14_624423",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  }
+                ]
+              }
+            ]
+          },
+          "negatives": {
+            "beforeCount": 35,
+            "afterCount": 79,
+            "injectedCount": 60,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              }
+            ]
+          }
+        },
+        {
+          "seed": 20261127,
+          "positives": {
+            "beforeCount": 35,
+            "afterCount": 123,
+            "injectedCount": 90,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "injected": 15,
+                "found": 0,
+                "recall": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.20388330103584862,
+                  "center": 0
+                },
+                "misses": [
+                  {
+                    "file": "test-d/subprocess/input-native.test-d.ts",
+                    "line": 85,
+                    "marker": "__unshitRecallUnusedType_0_637840",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/generator-string.test-d.ts",
+                    "line": 65,
+                    "marker": "__unshitRecallUnusedType_1_167476",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/generator-string-full.test-d.ts",
+                    "line": 49,
+                    "marker": "__unshitRecallUnusedType_2_481153",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/web-transform.test-d.ts",
+                    "line": 46,
+                    "marker": "__unshitRecallUnusedType_3_446662",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/web-transform-instance.test-d.ts",
+                    "line": 47,
+                    "marker": "__unshitRecallUnusedType_4_115651",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/file-append.test-d.ts",
+                    "line": 45,
+                    "marker": "__unshitRecallUnusedType_5_414794",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/array-binary.test-d.ts",
+                    "line": 33,
+                    "marker": "__unshitRecallUnusedType_6_340801",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/uint-array.test-d.ts",
+                    "line": 43,
+                    "marker": "__unshitRecallUnusedType_7_309671",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/generator-binary-invalid.test-d.ts",
+                    "line": 50,
+                    "marker": "__unshitRecallUnusedType_8_283113",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/ipc/get-each.test-d.ts",
+                    "line": 49,
+                    "marker": "__unshitRecallUnusedType_9_809144",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/final-invalid-full.test-d.ts",
+                    "line": 53,
+                    "marker": "__unshitRecallUnusedType_10_159081",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/ipc-options-union.test-d.ts",
+                    "line": 102,
+                    "marker": "__unshitRecallUnusedType_11_233507",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/option/process-stdout.test-d.ts",
+                    "line": 45,
+                    "marker": "__unshitRecallUnusedType_12_609461",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/stdio/direction.test-d.ts",
+                    "line": 42,
+                    "marker": "__unshitRecallUnusedType_13_486488",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  },
+                  {
+                    "file": "test-d/arguments/specific.test-d.ts",
+                    "line": 177,
+                    "marker": "__unshitRecallUnusedType_14_374603",
+                    "kind": "unused-type-export",
+                    "reason": "no matching finding after injection"
+                  }
+                ]
+              }
+            ]
+          },
+          "negatives": {
+            "beforeCount": 35,
+            "afterCount": 82,
+            "injectedCount": 60,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "hono: react/god-file marked not measurable (no .tsx/.jsx files in corpus).",
+    "zod: react/god-file marked not measurable (no .tsx/.jsx files in corpus).",
+    "execa: react/god-file marked not measurable (no .tsx/.jsx files in corpus)."
+  ],
+  "projectAggregates": [
+    {
+      "name": "hono",
+      "recall": [
+        {
+          "ruleId": "arch/import-cycle",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "code/high-complexity",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "deps/unlisted-dependency",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "slop/redundant-catch",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "ts/no-double-cast",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "ts/unused-type-export",
+          "injected": 30,
+          "found": 18,
+          "misses": [
+            {
+              "file": "src/types.ts",
+              "line": 2813,
+              "marker": "__unshitRecallUnusedType_1_678669",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/adapter/netlify/mod.ts",
+              "line": 3,
+              "marker": "__unshitRecallUnusedType_2_91860",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/jsx/hooks/index.ts",
+              "line": 438,
+              "marker": "__unshitRecallUnusedType_5_441037",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/helper/accepts/index.ts",
+              "line": 7,
+              "marker": "__unshitRecallUnusedType_9_626906",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "adapters/deno/src/index.ts",
+              "line": 10,
+              "marker": "__unshitRecallUnusedType_11_674617",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/adapter/aws-lambda/index.ts",
+              "line": 19,
+              "marker": "__unshitRecallUnusedType_13_972920",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/middleware/compress/index.ts",
+              "line": 176,
+              "marker": "__unshitRecallUnusedType_0_450920",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/jsx/dom/server.ts",
+              "line": 77,
+              "marker": "__unshitRecallUnusedType_1_687557",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/middleware/language/index.ts",
+              "line": 13,
+              "marker": "__unshitRecallUnusedType_3_565193",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/helper/testing/index.ts",
+              "line": 29,
+              "marker": "__unshitRecallUnusedType_4_870171",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/jsx/types.ts",
+              "line": 41,
+              "marker": "__unshitRecallUnusedType_10_63548",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "src/middleware/etag/index.ts",
+              "line": 136,
+              "marker": "__unshitRecallUnusedType_14_592025",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            }
+          ],
+          "hits": [],
+          "recall": 0.6,
+          "wilson95": {
+            "low": 0.42320360253322475,
+            "high": 0.7540937188319815,
+            "center": 0.6
+          }
+        }
+      ],
+      "falsePositives": [
+        {
+          "ruleId": "arch/import-cycle",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "code/high-complexity",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "deps/unlisted-dependency",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "slop/redundant-catch",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "ts/no-double-cast",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "ts/unused-type-export",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "zod",
+      "recall": [
+        {
+          "ruleId": "arch/import-cycle",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "code/high-complexity",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "deps/unlisted-dependency",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "slop/redundant-catch",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "ts/no-double-cast",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "ts/unused-type-export",
+          "injected": 30,
+          "found": 23,
+          "misses": [
+            {
+              "file": "packages/zod/src/v4/core/checks.ts",
+              "line": 1268,
+              "marker": "__unshitRecallUnusedType_1_678496",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "packages/zod/src/v4/classic/schemas.ts",
+              "line": 2941,
+              "marker": "__unshitRecallUnusedType_2_384957",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "scripts/check-versions.ts",
+              "line": 97,
+              "marker": "__unshitRecallUnusedType_8_65642",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "packages/zod/src/v4/classic/errors.ts",
+              "line": 98,
+              "marker": "__unshitRecallUnusedType_10_260471",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "packages/zod/src/v4/classic/external.ts",
+              "line": 59,
+              "marker": "__unshitRecallUnusedType_1_885302",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "packages/zod/src/v4/mini/parse.ts",
+              "line": 17,
+              "marker": "__unshitRecallUnusedType_4_428915",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "packages/zod/src/v4/mini/checks.ts",
+              "line": 34,
+              "marker": "__unshitRecallUnusedType_12_554014",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            }
+          ],
+          "hits": [],
+          "recall": 0.7666666666666667,
+          "wilson95": {
+            "low": 0.5907167384187784,
+            "high": 0.8820761185551049,
+            "center": 0.7666666666666667
+          }
+        }
+      ],
+      "falsePositives": [
+        {
+          "ruleId": "arch/import-cycle",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "code/high-complexity",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "deps/unlisted-dependency",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "slop/redundant-catch",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "ts/no-double-cast",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "ts/unused-type-export",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "execa",
+      "recall": [
+        {
+          "ruleId": "arch/import-cycle",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "code/high-complexity",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "deps/unlisted-dependency",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "slop/redundant-catch",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "ts/no-double-cast",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "ts/unused-type-export",
+          "injected": 30,
+          "found": 0,
+          "misses": [
+            {
+              "file": "test-d/stdio/option/generator-only-object-mode.test-d.ts",
+              "line": 45,
+              "marker": "__unshitRecallUnusedType_0_749643",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/methods/script-stdin.test-d.ts",
+              "line": 47,
+              "marker": "__unshitRecallUnusedType_1_319906",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/methods/script.test-d.ts",
+              "line": 66,
+              "marker": "__unshitRecallUnusedType_2_802583",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/pipe.test-d.ts",
+              "line": 43,
+              "marker": "__unshitRecallUnusedType_3_66860",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/convert/transform-stream.test-d.ts",
+              "line": 33,
+              "marker": "__unshitRecallUnusedType_4_526763",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/generator-object-mode-invalid.test-d.ts",
+              "line": 51,
+              "marker": "__unshitRecallUnusedType_5_592247",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/methods/node.test-d.ts",
+              "line": 65,
+              "marker": "__unshitRecallUnusedType_6_918789",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/pipe-inherit.test-d.ts",
+              "line": 30,
+              "marker": "__unshitRecallUnusedType_7_395803",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/ipc/get-one.test-d.ts",
+              "line": 71,
+              "marker": "__unshitRecallUnusedType_8_519909",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/methods/main-sync.test-d.ts",
+              "line": 56,
+              "marker": "__unshitRecallUnusedType_9_825472",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/subprocess/subprocess.test-d.ts",
+              "line": 59,
+              "marker": "__unshitRecallUnusedType_10_359260",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/return/result-main.test-d.ts",
+              "line": 105,
+              "marker": "__unshitRecallUnusedType_11_311703",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/generator-binary.test-d.ts",
+              "line": 50,
+              "marker": "__unshitRecallUnusedType_12_858035",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/array.test-d.ts",
+              "line": 15,
+              "marker": "__unshitRecallUnusedType_13_491235",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/convert/duplex.test-d.ts",
+              "line": 33,
+              "marker": "__unshitRecallUnusedType_14_624423",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/subprocess/input-native.test-d.ts",
+              "line": 85,
+              "marker": "__unshitRecallUnusedType_0_637840",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/generator-string.test-d.ts",
+              "line": 65,
+              "marker": "__unshitRecallUnusedType_1_167476",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/generator-string-full.test-d.ts",
+              "line": 49,
+              "marker": "__unshitRecallUnusedType_2_481153",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/web-transform.test-d.ts",
+              "line": 46,
+              "marker": "__unshitRecallUnusedType_3_446662",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/web-transform-instance.test-d.ts",
+              "line": 47,
+              "marker": "__unshitRecallUnusedType_4_115651",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/file-append.test-d.ts",
+              "line": 45,
+              "marker": "__unshitRecallUnusedType_5_414794",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/array-binary.test-d.ts",
+              "line": 33,
+              "marker": "__unshitRecallUnusedType_6_340801",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/uint-array.test-d.ts",
+              "line": 43,
+              "marker": "__unshitRecallUnusedType_7_309671",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/generator-binary-invalid.test-d.ts",
+              "line": 50,
+              "marker": "__unshitRecallUnusedType_8_283113",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/ipc/get-each.test-d.ts",
+              "line": 49,
+              "marker": "__unshitRecallUnusedType_9_809144",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/final-invalid-full.test-d.ts",
+              "line": 53,
+              "marker": "__unshitRecallUnusedType_10_159081",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/ipc-options-union.test-d.ts",
+              "line": 102,
+              "marker": "__unshitRecallUnusedType_11_233507",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/option/process-stdout.test-d.ts",
+              "line": 45,
+              "marker": "__unshitRecallUnusedType_12_609461",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/stdio/direction.test-d.ts",
+              "line": 42,
+              "marker": "__unshitRecallUnusedType_13_486488",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            },
+            {
+              "file": "test-d/arguments/specific.test-d.ts",
+              "line": 177,
+              "marker": "__unshitRecallUnusedType_14_374603",
+              "kind": "unused-type-export",
+              "reason": "no matching finding after injection"
+            }
+          ],
+          "hits": [],
+          "recall": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.11351339317396876,
+            "center": 0
+          }
+        }
+      ],
+      "falsePositives": [
+        {
+          "ruleId": "arch/import-cycle",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "code/high-complexity",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "deps/unlisted-dependency",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "slop/redundant-catch",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "ts/no-double-cast",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        },
+        {
+          "ruleId": "ts/unused-type-export",
+          "negatives": 20,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.16112515805281938,
+            "center": 0
+          }
+        }
+      ]
+    }
+  ],
+  "pooled": {
+    "recall": [
+      {
+        "ruleId": "arch/import-cycle",
+        "injected": 90,
+        "found": 90,
+        "misses": [],
+        "hits": [],
+        "recall": 1,
+        "wilson95": {
+          "low": 0.9590643744356734,
+          "high": 1,
+          "center": 1
+        }
+      },
+      {
+        "ruleId": "code/high-complexity",
+        "injected": 90,
+        "found": 90,
+        "misses": [],
+        "hits": [],
+        "recall": 1,
+        "wilson95": {
+          "low": 0.9590643744356734,
+          "high": 1,
+          "center": 1
+        }
+      },
+      {
+        "ruleId": "deps/unlisted-dependency",
+        "injected": 90,
+        "found": 90,
+        "misses": [],
+        "hits": [],
+        "recall": 1,
+        "wilson95": {
+          "low": 0.9590643744356734,
+          "high": 1,
+          "center": 1
+        }
+      },
+      {
+        "ruleId": "slop/redundant-catch",
+        "injected": 90,
+        "found": 90,
+        "misses": [],
+        "hits": [],
+        "recall": 1,
+        "wilson95": {
+          "low": 0.9590643744356734,
+          "high": 1,
+          "center": 1
+        }
+      },
+      {
+        "ruleId": "ts/no-double-cast",
+        "injected": 90,
+        "found": 90,
+        "misses": [],
+        "hits": [],
+        "recall": 1,
+        "wilson95": {
+          "low": 0.9590643744356734,
+          "high": 1,
+          "center": 1
+        }
+      },
+      {
+        "ruleId": "ts/unused-type-export",
+        "injected": 90,
+        "found": 41,
+        "misses": [
+          {
+            "file": "src/types.ts",
+            "line": 2813,
+            "marker": "__unshitRecallUnusedType_1_678669",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/adapter/netlify/mod.ts",
+            "line": 3,
+            "marker": "__unshitRecallUnusedType_2_91860",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/jsx/hooks/index.ts",
+            "line": 438,
+            "marker": "__unshitRecallUnusedType_5_441037",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/helper/accepts/index.ts",
+            "line": 7,
+            "marker": "__unshitRecallUnusedType_9_626906",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "adapters/deno/src/index.ts",
+            "line": 10,
+            "marker": "__unshitRecallUnusedType_11_674617",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/adapter/aws-lambda/index.ts",
+            "line": 19,
+            "marker": "__unshitRecallUnusedType_13_972920",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/middleware/compress/index.ts",
+            "line": 176,
+            "marker": "__unshitRecallUnusedType_0_450920",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/jsx/dom/server.ts",
+            "line": 77,
+            "marker": "__unshitRecallUnusedType_1_687557",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/middleware/language/index.ts",
+            "line": 13,
+            "marker": "__unshitRecallUnusedType_3_565193",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/helper/testing/index.ts",
+            "line": 29,
+            "marker": "__unshitRecallUnusedType_4_870171",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/jsx/types.ts",
+            "line": 41,
+            "marker": "__unshitRecallUnusedType_10_63548",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "src/middleware/etag/index.ts",
+            "line": 136,
+            "marker": "__unshitRecallUnusedType_14_592025",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "packages/zod/src/v4/core/checks.ts",
+            "line": 1268,
+            "marker": "__unshitRecallUnusedType_1_678496",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "packages/zod/src/v4/classic/schemas.ts",
+            "line": 2941,
+            "marker": "__unshitRecallUnusedType_2_384957",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "scripts/check-versions.ts",
+            "line": 97,
+            "marker": "__unshitRecallUnusedType_8_65642",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "packages/zod/src/v4/classic/errors.ts",
+            "line": 98,
+            "marker": "__unshitRecallUnusedType_10_260471",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "packages/zod/src/v4/classic/external.ts",
+            "line": 59,
+            "marker": "__unshitRecallUnusedType_1_885302",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "packages/zod/src/v4/mini/parse.ts",
+            "line": 17,
+            "marker": "__unshitRecallUnusedType_4_428915",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "packages/zod/src/v4/mini/checks.ts",
+            "line": 34,
+            "marker": "__unshitRecallUnusedType_12_554014",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/generator-only-object-mode.test-d.ts",
+            "line": 45,
+            "marker": "__unshitRecallUnusedType_0_749643",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/methods/script-stdin.test-d.ts",
+            "line": 47,
+            "marker": "__unshitRecallUnusedType_1_319906",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/methods/script.test-d.ts",
+            "line": 66,
+            "marker": "__unshitRecallUnusedType_2_802583",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/pipe.test-d.ts",
+            "line": 43,
+            "marker": "__unshitRecallUnusedType_3_66860",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/convert/transform-stream.test-d.ts",
+            "line": 33,
+            "marker": "__unshitRecallUnusedType_4_526763",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/generator-object-mode-invalid.test-d.ts",
+            "line": 51,
+            "marker": "__unshitRecallUnusedType_5_592247",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/methods/node.test-d.ts",
+            "line": 65,
+            "marker": "__unshitRecallUnusedType_6_918789",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/pipe-inherit.test-d.ts",
+            "line": 30,
+            "marker": "__unshitRecallUnusedType_7_395803",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/ipc/get-one.test-d.ts",
+            "line": 71,
+            "marker": "__unshitRecallUnusedType_8_519909",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/methods/main-sync.test-d.ts",
+            "line": 56,
+            "marker": "__unshitRecallUnusedType_9_825472",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/subprocess/subprocess.test-d.ts",
+            "line": 59,
+            "marker": "__unshitRecallUnusedType_10_359260",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/return/result-main.test-d.ts",
+            "line": 105,
+            "marker": "__unshitRecallUnusedType_11_311703",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/generator-binary.test-d.ts",
+            "line": 50,
+            "marker": "__unshitRecallUnusedType_12_858035",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/array.test-d.ts",
+            "line": 15,
+            "marker": "__unshitRecallUnusedType_13_491235",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/convert/duplex.test-d.ts",
+            "line": 33,
+            "marker": "__unshitRecallUnusedType_14_624423",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/subprocess/input-native.test-d.ts",
+            "line": 85,
+            "marker": "__unshitRecallUnusedType_0_637840",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/generator-string.test-d.ts",
+            "line": 65,
+            "marker": "__unshitRecallUnusedType_1_167476",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/generator-string-full.test-d.ts",
+            "line": 49,
+            "marker": "__unshitRecallUnusedType_2_481153",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/web-transform.test-d.ts",
+            "line": 46,
+            "marker": "__unshitRecallUnusedType_3_446662",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/web-transform-instance.test-d.ts",
+            "line": 47,
+            "marker": "__unshitRecallUnusedType_4_115651",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/file-append.test-d.ts",
+            "line": 45,
+            "marker": "__unshitRecallUnusedType_5_414794",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/array-binary.test-d.ts",
+            "line": 33,
+            "marker": "__unshitRecallUnusedType_6_340801",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/uint-array.test-d.ts",
+            "line": 43,
+            "marker": "__unshitRecallUnusedType_7_309671",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/generator-binary-invalid.test-d.ts",
+            "line": 50,
+            "marker": "__unshitRecallUnusedType_8_283113",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/ipc/get-each.test-d.ts",
+            "line": 49,
+            "marker": "__unshitRecallUnusedType_9_809144",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/final-invalid-full.test-d.ts",
+            "line": 53,
+            "marker": "__unshitRecallUnusedType_10_159081",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/ipc-options-union.test-d.ts",
+            "line": 102,
+            "marker": "__unshitRecallUnusedType_11_233507",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/option/process-stdout.test-d.ts",
+            "line": 45,
+            "marker": "__unshitRecallUnusedType_12_609461",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/stdio/direction.test-d.ts",
+            "line": 42,
+            "marker": "__unshitRecallUnusedType_13_486488",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          },
+          {
+            "file": "test-d/arguments/specific.test-d.ts",
+            "line": 177,
+            "marker": "__unshitRecallUnusedType_14_374603",
+            "kind": "unused-type-export",
+            "reason": "no matching finding after injection"
+          }
+        ],
+        "hits": [],
+        "recall": 0.45555555555555555,
+        "wilson95": {
+          "low": 0.3565961690755778,
+          "high": 0.5581536643079179,
+          "center": 0.45555555555555555
+        }
+      }
+    ],
+    "falsePositives": [
+      {
+        "ruleId": "arch/import-cycle",
+        "negatives": 60,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.06017185214208986,
+          "center": 0
+        }
+      },
+      {
+        "ruleId": "code/high-complexity",
+        "negatives": 60,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.06017185214208986,
+          "center": 0
+        }
+      },
+      {
+        "ruleId": "deps/unlisted-dependency",
+        "negatives": 60,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.06017185214208986,
+          "center": 0
+        }
+      },
+      {
+        "ruleId": "slop/redundant-catch",
+        "negatives": 60,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.06017185214208986,
+          "center": 0
+        }
+      },
+      {
+        "ruleId": "ts/no-double-cast",
+        "negatives": 60,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.06017185214208986,
+          "center": 0
+        }
+      },
+      {
+        "ruleId": "ts/unused-type-export",
+        "negatives": 60,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.06017185214208986,
+          "center": 0
+        }
+      }
+    ]
+  }
+}

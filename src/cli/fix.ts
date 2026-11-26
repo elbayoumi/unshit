@@ -52,7 +52,7 @@ async function runFixCommand(scan: ScanResult, rest: string[], apply: boolean, a
     console.log(`  SKIP [${skip.ruleId}] ${skip.file}:${skip.line} — ${skip.reason}`);
   }
   console.log(
-    `unshit fix (${summary.dryRun ? 'dry-run' : 'applied'}): ${summary.deterministicPatches.length} deterministic patches (${summary.appliedCount} applied), deletions: ${summary.deletions.length} (${summary.deletedCount} deleted), skipped: ${summary.skipped.length}, AI attempted: ${summary.aiAttempted.length}, reverted: ${summary.aiReverted.length}`,
+    `unshit fix (${summary.dryRun ? 'dry-run' : 'applied'}): ${summary.deterministicPatches.length} deterministic patches (${summary.appliedCount} applied), deletions: ${summary.deletions.length} (${summary.deletedCount} deleted), skipped: ${summary.skipped.length}, AI attempted: ${summary.aiAttempted.length}, reverted: ${summary.aiReverted.length}, passes: ${summary.passes}`,
   );
   return summary.aiReverted.length > 0 ? 1 : 0;
 }

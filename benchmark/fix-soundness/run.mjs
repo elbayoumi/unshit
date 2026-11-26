@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
+import { generateProject } from '../scale-project.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '..', '..');
@@ -95,11 +96,11 @@ function diffFindings(before, after) {
   return fixed;
 }
 
-const parseSkips = (out) => [...out.matchAll(/^\s*SKIP \[([^\]]+)\] ([^:]+):(\d+) — (.*)$/gm)].map((m) => ({ ruleId: m[1], file: m[2], line: Number(m[3]), reason: m[4] }));
 function parseApplied(out) {
   const m = out.match(/(\d+) deterministic patches \((\d+) applied\)/);
   const d = out.match(/deletions: (\d+) \((\d+) deleted\)/);
-  return { patches: m ? Number(m[1]) : 0, applied: m ? Number(m[2]) : 0, deletions: d ? Number(d[1]) : 0, deleted: d ? Number(d[2]) : 0 };
+  const p = out.match(/passes: (\d+)/);
+  return { patches: m ? Number(m[1]) : 0, applied: m ? Number(m[2]) : 0, deletions: d ? Number(d[1]) : 0, deleted: d ? Number(d[2]) : 0, passes: p ? Number(p[1]) : 0 };
 }
 const groupByRule = (items) => items.reduce((m, it) => { const a = m.get(it.ruleId) ?? []; a.push(it); m.set(it.ruleId, a); return m; }, new Map());
 
@@ -113,12 +114,50 @@ function setupWorkdir(name) {
   return { tmpBase, work };
 }
 
-function checkIdempotency(work) {
+function setupScaleWorkdir(count, seed) {
+  const tmpBase = mkdtempSync(join(tmpdir(), `unshit-fs-scale-`));
+  const work = join(tmpBase, 'project');
+  generateProject(work, count, seed);
+  return { tmpBase, work };
+}
+
+function isDetFixable(f) {
+  const id = f.ruleId;
+  if (id === 'ts/unused-export' || id === 'ts/unused-type-export' || id === 'slop/magic-timer' || id === 'deps/unused-dependency' || id === 'ts/unused-file') return true;
+  if (id === 'ts/no-explicit-any' && f.fixability === 'safe') return true;
+  if (id === 'slop/redundant-catch' && f.fixability === 'safe') return true;
+  return false;
+}
+
+function syntaxCheck(work, changedFiles) {
+  let checked = 0, failed = 0;
+  const failures = [];
+  for (const rel of changedFiles) {
+    if (!/\.(ts|tsx|js)$/i.test(rel)) continue;
+    const abs = join(work, rel);
+    if (!existsSync(abs)) continue;
+    checked += 1;
+    let content = '';
+    try { content = readFileSync(abs, 'utf8'); } catch { continue; }
+    const out = ts.transpileModule(content, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext, jsx: ts.JsxEmit.Preserve } });
+    if (out.diagnostics && out.diagnostics.length > 0) {
+      failed += 1;
+      failures.push({ file: rel, diagnostics: out.diagnostics.slice(0, 3).map((d) => ts.flattenDiagnosticMessageText(d.messageText, '\n')) });
+    }
+  }
+  return { checked, failed, failures: failures.slice(0, 20) };
+}
+
+async function checkIdempotency(work, cfg) {
   sh('git', ['add', '-A'], { cwd: work });
   sh('git', ['commit', '-q', '-m', 'after-fix1', '--no-gpg-sign', '--allow-empty'], { cwd: work });
-  const fix2 = runFixApply(work);
-  const out = `${fix2.out || ''}\n${fix2.err || ''}`;
-  const applied = parseApplied(out);
+  const { loadConfig } = await import(join(REPO_ROOT, 'dist', 'src', 'config.js'));
+  const { runScan: runScanLib } = await import(join(REPO_ROOT, 'dist', 'src', 'core', 'scanner.js'));
+  const { runFix: runFixLib } = await import(join(REPO_ROOT, 'dist', 'src', 'core', 'fixer.js'));
+  const c = cfg || await loadConfig(work);
+  const scan2 = await runScanLib(work, c, [], { noCache: true });
+  const fix2 = await runFixLib(scan2, { apply: true, ai: false });
+  const applied = { patches: fix2.deterministicPatches.length, applied: fix2.appliedCount, deletions: fix2.deletions.length, deleted: fix2.deletedCount, passes: fix2.passes };
   const changed = sh('git', ['diff', '--name-only'], { cwd: work }).out.split('\n').map((s) => s.trim()).filter(Boolean);
   return { ok: changed.length === 0 && applied.applied === 0 && applied.deleted === 0, secondApply: applied, changedFilesAfterSecond: changed.slice(0, 20) };
 }
@@ -158,8 +197,9 @@ function buildPerRule(fixedByRule, skipsByRule, newErrorsByRule) {
   return perRule;
 }
 
-function analyzeProject(name) {
-  const setup = setupWorkdir(name);
+async function analyzeProject(name, setupFn) {
+  const start = Date.now();
+  const setup = setupFn();
   if (setup.error) return { name, error: setup.error };
   const { tmpBase, work } = setup;
   try {
@@ -171,12 +211,19 @@ function analyzeProject(name) {
     sh('git', ['config', 'user.name', 'test'], { cwd: work });
     sh('git', ['add', '-A'], { cwd: work });
     sh('git', ['commit', '-q', '-m', 'before', '--no-gpg-sign'], { cwd: work });
-    const fix1 = runFixApply(work);
-    const fixOutput = `${fix1.out || ''}\n${fix1.err || ''}`;
+    const { loadConfig } = await import(join(REPO_ROOT, 'dist', 'src', 'config.js'));
+    const { runScan: runScanLib } = await import(join(REPO_ROOT, 'dist', 'src', 'core', 'scanner.js'));
+    const { runFix: runFixLib } = await import(join(REPO_ROOT, 'dist', 'src', 'core', 'fixer.js'));
+    const cfg = await loadConfig(work);
+    const scan1 = await runScanLib(work, cfg, [], { noCache: true });
+    const fixResult = await runFixLib(scan1, { apply: true, ai: false });
     const afterTsc = tscDiagnostics(work, tsconfigPath);
     let afterScan; try { afterScan = scanJson(work); } catch (e) { afterScan = { findings: [], error: String(e) }; }
     const changedFiles = new Set(sh('git', ['diff', '--name-only'], { cwd: work }).out.split('\n').map((s) => s.trim()).filter(Boolean));
-    const idempotency = checkIdempotency(work);
+    const idempotency = await checkIdempotency(work, cfg);
+    const skipKeys = new Set((fixResult.skipped || []).map((sk) => `${sk.ruleId}|${sk.file}|${sk.line}`));
+    const remainingFixableFindings = (afterScan.findings || []).filter((f) => isDetFixable(f) && !skipKeys.has(`${f.ruleId}|${f.file}|${f.span?.line}`));
+    const syntax = syntaxCheck(work, changedFiles);
     const fixedFindings = diffFindings(beforeScan.findings || [], afterScan.findings || []);
     const newTscErrors = (beforeTsc.ok && afterTsc.ok) ? diffDiagnostics(beforeTsc.diagnostics, afterTsc.diagnostics) : [];
     const { newErrorsByRule, unattributed } = attributeErrors(newTscErrors, fixedFindings, changedFiles);
@@ -185,9 +232,13 @@ function analyzeProject(name) {
     return {
       name, workdir: work, tsconfig: tsconfigPath ? tsconfigPath.slice(work.length + 1) : null,
       typecheck: { before: beforeTsc.ok ? { count: beforeTsc.count, files: beforeTsc.fileNames } : { error: beforeTsc.reason }, after: afterTsc.ok ? { count: afterTsc.count, files: afterTsc.fileNames } : { error: afterTsc.reason }, newErrors: newTscErrors.length, unattributedNewErrors: unattributed.slice(0, 20) },
-      fix: { exitCode: fix1.ok ? 0 : 1, applied: parseApplied(fixOutput), skips: parseSkips(fixOutput).length, output: fixOutput.slice(0, 4000) },
+      fix: { exitCode: 0, applied: { patches: fixResult.deterministicPatches.length, applied: fixResult.appliedCount, deletions: fixResult.deletions.length, deleted: fixResult.deletedCount, passes: fixResult.passes }, skips: (fixResult.skipped || []).length, passes: fixResult.passes, output: '' },
       idempotency, rescan: { beforeFindings: (beforeScan.findings || []).length, afterFindings: (afterScan.findings || []).length, fixedFindings: fixedFindings.length, fixedStillPresent: stillPresent.length, fixedStillPresentSample: stillPresent.slice(0, 10).map((f) => ({ ruleId: f.ruleId, file: f.file, line: f.span?.line, message: f.message })) },
-      perRule: buildPerRule(groupByRule(fixedFindings), groupByRule(parseSkips(fixOutput)), newErrorsByRule),
+      perRule: buildPerRule(groupByRule(fixedFindings), groupByRule(fixResult.skipped || []), newErrorsByRule),
+      remainingFixable: remainingFixableFindings.length,
+      remainingFixableSamples: remainingFixableFindings.slice(0, 10).map((f) => ({ ruleId: f.ruleId, file: f.file, line: f.span?.line, message: f.message })),
+      syntax,
+      wallTimeMs: Date.now() - start,
     };
   } finally {
     if (process.env.FS_KEEP) console.error(`KEEP ${tmpBase}`);
@@ -196,12 +247,12 @@ function analyzeProject(name) {
 }
 
 function mdSummary(results) {
-  const lines = ['## Summary', '', '| Project | tsconfig | tsc before | tsc after | new tsc errors | fixed findings | skipped | idempotent | fixed still present |', '|---|---|---:|---:|---:|---:|---:|:---:|---:|'];
+  const lines = ['## Summary', '', '| Project | tsconfig | tsc before | tsc after | new tsc errors | fixed findings | skipped | passes | idempotent | syntax failed | remaining fixable | time ms |', '|---|---|---:|---:|---:|---:|---:|---:|:---:|---:|---:|---:|'];
   for (const r of results) {
-    if (r.error) { lines.push(`| ${r.name} | - | - | - | - | - | - | - | ERROR: ${r.error} |`); continue; }
+    if (r.error) { lines.push(`| ${r.name} | - | - | - | - | - | - | - | - | - | ERROR: ${r.error} | - |`); continue; }
     const b = r.typecheck.before.count ?? r.typecheck.before.error ?? '?';
     const a = r.typecheck.after.count ?? r.typecheck.after.error ?? '?';
-    lines.push(`| ${r.name} | ${r.tsconfig ?? 'none'} | ${b} | ${a} | ${r.typecheck.newErrors} | ${r.rescan.fixedFindings} | ${r.fix.skips} | ${r.idempotency.ok ? 'yes' : 'NO'} | ${r.rescan.fixedStillPresent} |`);
+    lines.push(`| ${r.name} | ${r.tsconfig ?? 'none'} | ${b} | ${a} | ${r.typecheck.newErrors} | ${r.rescan.fixedFindings} | ${r.fix.skips} | ${r.fix.passes} | ${r.idempotency.ok ? 'yes' : 'NO'} | ${r.syntax.failed} | ${r.remainingFixable} | ${r.wallTimeMs} |`);
   }
   lines.push('');
   return lines;
@@ -224,7 +275,9 @@ function mdProject(r) {
   if (r.error) return [...lines, `Error: ${r.error}`, ''];
   const t = r.typecheck;
   lines.push(t.before.error ? `Typecheck: ${t.before.error}` : `Typecheck: ${t.before.count} -> ${t.after.count} (${t.newErrors} new, ${t.unattributedNewErrors.length} unattributed)`);
-  lines.push(`Idempotent: ${r.idempotency.ok}. Fixed findings reappearing: ${r.rescan.fixedStillPresent}.`, '', '| Rule | fixed | skipped | new compile errors | notes |', '|---|---:|---:|---:|---|', ...mdRuleRows(r.perRule));
+  lines.push(`Idempotent: ${r.idempotency.ok}. Fixed findings reappearing: ${r.rescan.fixedStillPresent}.`);
+  lines.push(`Passes: ${r.fix.passes}. Remaining fixable not fixed: ${r.remainingFixable}. Syntax checked/failed: ${r.syntax.checked}/${r.syntax.failed}. Wall time: ${r.wallTimeMs}ms.`);
+  lines.push('', '| Rule | fixed | skipped | new compile errors | notes |', '|---|---:|---:|---:|---|', ...mdRuleRows(r.perRule));
   if (r.typecheck.unattributedNewErrors.length) {
     lines.push('', 'Unattributed new diagnostics (file changed or diagnostic moved):');
     for (const d of r.typecheck.unattributedNewErrors.slice(0, 10)) lines.push(`- ${d.file}:${d.line} TS${d.code} ${d.message}`);
@@ -242,14 +295,19 @@ function renderMarkdown(results) {
   ].join('\n');
 }
 
-function main() {
+async function main() {
   if (!existsSync(BIN)) { console.error('missing bin/unshit.js'); process.exit(2); }
-  const results = PROJECTS.map((name) => {
-    console.error(`==> ${name}`);
-    const r = analyzeProject(name);
-    console.error(r.error ? `  ERROR: ${r.error}` : `  fixed=${r.rescan.fixedFindings} skipped=${r.fix.skips} newTsc=${r.typecheck.newErrors} idempotent=${r.idempotency.ok}`);
-    return r;
-  });
+  const jobs = [
+    ...PROJECTS.map((name) => ({ name, setup: () => setupWorkdir(name) })),
+    { name: 'scale-1000', setup: () => setupScaleWorkdir(1000, 20261126) },
+  ];
+  const results = [];
+  for (const job of jobs) {
+    console.error(`==> ${job.name}`);
+    const r = await analyzeProject(job.name, job.setup);
+    console.error(r.error ? `  ERROR: ${r.error}` : `  fixed=${r.rescan.fixedFindings} skipped=${r.fix.skips} newTsc=${r.typecheck.newErrors} idempotent=${r.idempotency.ok} remaining=${r.remainingFixable} syntaxFailed=${r.syntax.failed} passes=${r.fix.passes} time=${r.wallTimeMs}ms`);
+    results.push(r);
+  }
   const outJson = join(HERE, 'results.json');
   const outMd = join(REPO_ROOT, 'docs', 'research', 'fix-soundness.md');
   mkdirSync(dirname(outJson), { recursive: true });
@@ -260,7 +318,10 @@ function main() {
   console.error(`Wrote ${outMd}`);
   const totalNew = results.reduce((s, r) => s + (r.typecheck?.newErrors ?? 0), 0);
   const totalFixed = results.reduce((s, r) => s + (r.rescan?.fixedFindings ?? 0), 0);
-  console.log(`RESULT: ${totalNew === 0 ? 'PASS' : 'WARN'} fixed=${totalFixed} newTscErrors=${totalNew}`);
+  const totalSyntaxFailed = results.reduce((s, r) => s + (r.syntax?.failed ?? 0), 0);
+  const allIdempotent = results.every((r) => r.idempotency?.ok);
+  const pass = totalNew === 0 && allIdempotent && totalSyntaxFailed === 0;
+  console.log(`RESULT: ${pass ? 'PASS' : 'WARN'} fixed=${totalFixed} newTscErrors=${totalNew} syntaxFailed=${totalSyntaxFailed} idempotent=${allIdempotent}`);
 }
 
-main();
+main().catch((e) => { console.error(e); process.exit(1); });

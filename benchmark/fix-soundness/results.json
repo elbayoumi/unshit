@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-11-26T12:45:08.629Z",
+  "generatedAt": "2026-11-26T13:17:48.239Z",
   "results": [
     {
       "name": "hono",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-hono-OoNjkf/hono",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-hono-SEnIan/hono",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -23,10 +23,12 @@
           "patches": 28,
           "applied": 28,
           "deletions": 2,
-          "deleted": 2
+          "deleted": 2,
+          "passes": 2
         },
         "skips": 30,
-        "output": "  SKIP [ts/unused-export] adapters/aws-lambda/src/handler.ts:282 — could break declaration emit: `EventProcessor` is referenced by the exported signature of `EventV2Processor` (kept conservatively)\n  SKIP [ts/unused-type-export] adapters/aws-lambda/src/types.ts:3 — could break declaration emit: `CognitoIdentity` is referenced by the exported signature of `LambdaContext` (kept conservatively)\n  SKIP [ts/unused-type-export] adapters/aws-lambda/src/types.ts:8 — could break declaration emit: `ClientContext` is referenced by the exported signature of `LambdaContext` (kept conservatively)\n  SKIP [ts/unused-type-export] adapters/aws-lambda/src/types.ts:15 — could break declaration emit: `ClientContextClient` is referenced by the exported signature of `ClientContext` (kept conservatively)\n  SKIP [ts/unused-type-export] adapters/aws-lambda/src/types.ts:23 — could break declaration emit: `ClientContextEnv` is referenced by the exported signature of `ClientContext` (kept conservatively)\n  SKIP [ts/unused-export] adapters/cloudflare-workers/test/worker.ts:15 — default export: removing only `export` would leave an invalid declaration\n  SKIP [ts/unused-export] runtime-tests/workerd/index.ts:18 — default export: removing only `export` would leave an invalid declaration\n  SKIP [ts/unused-type-export] src/adapter/aws-lambda/handler.ts:77 — could break declaration emit: `APIGatewayProxyEvent` is referenced by the exported signature of `LambdaEvent` (kept conservatively)\n  SKIP [ts/unused-type-export] src/adapter/aws-lambda/handler.ts:101 — could break declaration emit: `ALBProxyEvent` is referenced by the exported signature of `LambdaEvent` (kept conservatively)\n  SKIP [ts/unused-type-export] src/adapter/aws-lambda/types.ts:6 — could break declaration emit: `CognitoIdentity` is referenced by the exported signature of `LambdaContext` (kept conservatively)\n  SKIP [ts/unused-type-export] src/adapter/aws-lambda/types.ts:14 — could break declaration emit: `ClientContext` is referenced by the exported signature of `LambdaContext` (kept conservatively)\n  SKIP [ts/unused-type-export] src/adapter/aws-lambda/types.ts:24 — could break declaration emit: `ClientContextClient` is referenced by the exported signature of `ClientContext` (kept conservatively)\n  SKIP [ts/unused-type-export] src/adapter/aws-lambda/types.ts:35 — could break declaration emit: `ClientContextEnv` is referenced by the exported signature of `ClientContext` (kept conservatively)\n  SKIP [ts/unused-type-export] src/client/types.ts:232 — could break declaration emit: `Response` is referenced by the exported signature of `ClientResponse` (kept conservatively)\n  SKIP [ts/unused-type-export] src/context.ts:78 — could break declaration emit: `Renderer` is referenced by the exported signature of `PropsForRenderer` (kept conservatively)\n  SKIP [ts/unused-type-export] src/context.ts:88 — could break declaration emit: `Layout` is referenced by the exported signature of `Context` (kept conservatively)\n  SKIP [ts/unused-export] src/helper/css/common.ts:10 — could break declaration emit: `EXTERNAL_CLASS_NAMES` is referenced by the exported signature of `CssClassName` (kept conservatively)\n  SKIP [ts/unused-type-export] src/router/reg-exp-router/trie.ts:5 — could break declaration emit: `ReplacementMap` is referenced by the exported signature of `Trie` (kept conservatively)\n  SKIP [ts/unused-type-export] src/utils/basic-auth.ts:7 — could break declaration emit: `Auth` is referenced by the exported signature of `auth` (kept conservatively)\n  SKIP [ts/unused-type-export] src/utils/http-status.ts:6 — could break declaration emit: `InfoStatusCode` is referenced by the exported signature of `StatusCode` (kept conservatively)\n  SKIP [ts/unused-type-export] src/utils/http-status.ts:8 — could break declaration emit: `DeprecatedStatusCode` is referenced by the exported signature of `RedirectStatusCode` (kept conservatively)\n  SKIP [ts/unused-type-export] src/utils/http-status.ts:52 — could break declaration em"
+        "passes": 2,
+        "output": ""
       },
       "idempotency": {
         "ok": true,
@@ -34,7 +36,8 @@
           "patches": 0,
           "applied": 0,
           "deletions": 0,
-          "deleted": 0
+          "deleted": 0,
+          "passes": 1
         },
         "changedFilesAfterSecond": []
       },
@@ -62,12 +65,10 @@
         },
         "deps/unused-dependency": {
           "fixed": 2,
-          "skipped": 1,
+          "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "`mitata` still imported (or required) by a scanned file anywhere in the project"
-          ]
+          "skippedReasons": []
         },
         "ts/no-explicit-any": {
           "fixed": 5,
@@ -78,48 +79,38 @@
         },
         "ts/unused-export": {
           "fixed": 14,
-          "skipped": 5,
+          "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "could break declaration emit: `EventProcessor` is referenced by the exported signature of `EventV2Processor` (kept conservatively)",
-            "default export: removing only `export` would leave an invalid declaration",
-            "could break declaration emit: `EXTERNAL_CLASS_NAMES` is referenced by the exported signature of `CssClassName` (kept conservatively)",
-            "listed export clause: removing only `export` would delete the re-export"
-          ]
+          "skippedReasons": []
         },
         "ts/unused-file": {
           "fixed": 2,
-          "skipped": 1,
+          "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "protected path (config, test, docs or script directory)"
-          ]
+          "skippedReasons": []
         },
         "ts/unused-type-export": {
           "fixed": 13,
-          "skipped": 23,
+          "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "could break declaration emit: `CognitoIdentity` is referenced by the exported signature of `LambdaContext` (kept conservatively)",
-            "could break declaration emit: `ClientContext` is referenced by the exported signature of `LambdaContext` (kept conservatively)",
-            "could break declaration emit: `ClientContextClient` is referenced by the exported signature of `ClientContext` (kept conservatively)",
-            "could break declaration emit: `ClientContextEnv` is referenced by the exported signature of `ClientContext` (kept conservatively)",
-            "could break declaration emit: `APIGatewayProxyEvent` is referenced by the exported signature of `LambdaEvent` (kept conservatively)",
-            "could break declaration emit: `ALBProxyEvent` is referenced by the exported signature of `LambdaEvent` (kept conservatively)",
-            "could break declaration emit: `Response` is referenced by the exported signature of `ClientResponse` (kept conservatively)",
-            "could break declaration emit: `Renderer` is referenced by the exported signature of `PropsForRenderer` (kept conservatively)",
-            "could break declaration emit: `Layout` is referenced by the exported signature of `Context` (kept conservatively)",
-            "could break declaration emit: `ReplacementMap` is referenced by the exported signature of `Trie` (kept conservatively)"
-          ]
+          "skippedReasons": []
         }
-      }
+      },
+      "remainingFixable": 0,
+      "remainingFixableSamples": [],
+      "syntax": {
+        "checked": 18,
+        "failed": 0,
+        "failures": []
+      },
+      "wallTimeMs": 4419
     },
     {
       "name": "execa",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-execa-tFcBcu/execa",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-execa-pbI3dQ/execa",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -139,10 +130,12 @@
           "patches": 2,
           "applied": 2,
           "deletions": 2,
-          "deleted": 2
+          "deleted": 2,
+          "passes": 2
         },
         "skips": 0,
-        "output": "unshit fix (applied): 2 deterministic patches (2 applied), deletions: 2 (2 deleted), skipped: 0, AI attempted: 0, reverted: 0\n\n"
+        "passes": 2,
+        "output": ""
       },
       "idempotency": {
         "ok": true,
@@ -150,7 +143,8 @@
           "patches": 0,
           "applied": 0,
           "deletions": 0,
-          "deleted": 0
+          "deleted": 0,
+          "passes": 1
         },
         "changedFilesAfterSecond": []
       },
@@ -190,11 +184,19 @@
           "newCompileErrorDetails": [],
           "skippedReasons": []
         }
-      }
+      },
+      "remainingFixable": 0,
+      "remainingFixableSamples": [],
+      "syntax": {
+        "checked": 1,
+        "failed": 0,
+        "failures": []
+      },
+      "wallTimeMs": 4451
     },
     {
       "name": "zod",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-zod-2MHVC7/zod",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-zod-7yxylu/zod",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -214,10 +216,12 @@
           "patches": 53,
           "applied": 53,
           "deletions": 120,
-          "deleted": 120
+          "deleted": 120,
+          "passes": 7
         },
         "skips": 94,
-        "output": "  SKIP [ts/unused-export] packages/bench/bench-invalid.ts:73 — removing export would leave `sink` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/bench/compile-wrapper-cost.ts:16 — removing export would leave `SINK` unused locally (noUnusedLocals)\n  SKIP [ts/unused-type-export] packages/bench/memory/harness.ts:21 — could break declaration emit: `Measurement` is referenced by the exported signature of `measureStable` (kept conservatively)\n  SKIP [ts/unused-type-export] packages/bench/memory/retainers.ts:26 — could break declaration emit: `Graph` is referenced by the exported signature of `loadGraph` (kept conservatively)\n  SKIP [ts/unused-export] packages/bench/memory/retainers.ts:97 — removing export would leave `shortestPaths` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/bench/memory/retainers.ts:118 — removing export would leave `findNodes` unused locally (noUnusedLocals)\n  SKIP [ts/unused-type-export] packages/bench/memory/snapshot.ts:88 — could break declaration emit: `DiffRow` is referenced by the exported signature of `diffAllocation` (kept conservatively)\n  SKIP [ts/unused-export] packages/bench/typia-case/src/index.ts:17 — removing export would leave `is` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/bench/typia-case/src/index.ts:18 — removing export would leave `equals` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/bench/typia-case/src/index.ts:19 — removing export would leave `clone` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/treeshake/zod-full.ts:3 — removing export would leave `schema` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/treeshake/zod-mini-full.ts:3 — removing export would leave `schema` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/treeshake/zod3-full.ts:3 — removing export would leave `schema` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/tsc/generate.ts:16 — removing export would leave `VALIBOT` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:3 — removing export would leave `filePath` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:13 — removing export would leave `instanceOfTest` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:27 — removing export would leave `instanceOfTestMerge` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:43 — removing export would leave `instanceOfTestUnion` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:54 — removing export would leave `instanceOfTestPartial` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:64 — removing export would leave `instanceOfTestPick` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:74 — removing export would leave `instanceOfTestOmit` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:7 — could break declaration emit: `Test` is referenced by the exported signature of `instanceOfTest` (kept conservatively)\n  SKIP [ts/unused-type-export] packages/zod/src/v3/tests/language-server.source.ts:11 — could break declaration emit: `Test` is referenced by the exported signature of `Test` (kept conservatively)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:19 — could break declaration emit: `TestMerge` is referenced by the exported signature of `instanceOfTestMerge` (kept conservatively)\n  SKIP [ts/unused-type-export] packages/zod/src/v3/tests/language-server.source.ts:25 — could break declaration emit: `TestMerge` is referenced by the exported signature of `TestMerge` (kept conserv"
+        "passes": 7,
+        "output": ""
       },
       "idempotency": {
         "ok": true,
@@ -225,7 +229,8 @@
           "patches": 0,
           "applied": 0,
           "deletions": 0,
-          "deleted": 0
+          "deleted": 0,
+          "passes": 1
         },
         "changedFilesAfterSecond": []
       },
@@ -253,15 +258,10 @@
         },
         "deps/unused-dependency": {
           "fixed": 11,
-          "skipped": 10,
+          "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "`lint-staged` still referenced by package.json (scripts or config field)",
-            "`zod4` still imported (or required) by a scanned file anywhere in the project",
-            "`zod3` still imported (or required) by a scanned file anywhere in the project",
-            "`execa` still imported (or required) by a scanned file anywhere in the project"
-          ]
+          "skippedReasons": []
         },
         "react/god-file": {
           "fixed": 4,
@@ -269,15 +269,6 @@
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": []
-        },
-        "slop/magic-timer": {
-          "fixed": 0,
-          "skipped": 1,
-          "newCompileErrors": 0,
-          "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "delay literal is not a plain decimal number"
-          ]
         },
         "slop/redundant-catch": {
           "fixed": 23,
@@ -302,54 +293,38 @@
         },
         "ts/unused-export": {
           "fixed": 20,
-          "skipped": 49,
+          "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "removing export would leave `sink` unused locally (noUnusedLocals)",
-            "removing export would leave `SINK` unused locally (noUnusedLocals)",
-            "removing export would leave `shortestPaths` unused locally (noUnusedLocals)",
-            "removing export would leave `findNodes` unused locally (noUnusedLocals)",
-            "removing export would leave `is` unused locally (noUnusedLocals)",
-            "removing export would leave `equals` unused locally (noUnusedLocals)",
-            "removing export would leave `clone` unused locally (noUnusedLocals)",
-            "removing export would leave `schema` unused locally (noUnusedLocals)",
-            "removing export would leave `VALIBOT` unused locally (noUnusedLocals)",
-            "removing export would leave `filePath` unused locally (noUnusedLocals)"
-          ]
+          "skippedReasons": []
         },
         "ts/unused-file": {
           "fixed": 105,
-          "skipped": 2,
+          "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "protected path (config, test, docs or script directory)"
-          ]
+          "skippedReasons": []
         },
         "ts/unused-type-export": {
           "fixed": 23,
-          "skipped": 32,
+          "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "could break declaration emit: `Measurement` is referenced by the exported signature of `measureStable` (kept conservatively)",
-            "could break declaration emit: `Graph` is referenced by the exported signature of `loadGraph` (kept conservatively)",
-            "could break declaration emit: `DiffRow` is referenced by the exported signature of `diffAllocation` (kept conservatively)",
-            "could break declaration emit: `Test` is referenced by the exported signature of `Test` (kept conservatively)",
-            "could break declaration emit: `TestMerge` is referenced by the exported signature of `TestMerge` (kept conservatively)",
-            "could break declaration emit: `TestUnion` is referenced by the exported signature of `TestUnion` (kept conservatively)",
-            "could break declaration emit: `TestPartial` is referenced by the exported signature of `TestPartial` (kept conservatively)",
-            "could break declaration emit: `TestPick` is referenced by the exported signature of `TestPick` (kept conservatively)",
-            "could break declaration emit: `TestOmit` is referenced by the exported signature of `TestOmit` (kept conservatively)",
-            "could break declaration emit: `DeepPartial` is referenced by the exported signature of `deepPartial` (kept conservatively)"
-          ]
+          "skippedReasons": []
         }
-      }
+      },
+      "remainingFixable": 0,
+      "remainingFixableSamples": [],
+      "syntax": {
+        "checked": 2,
+        "failed": 0,
+        "failures": []
+      },
+      "wallTimeMs": 16964
     },
     {
       "name": "commander.js",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-commander_js-y4LaFo/commander.js",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-commander_js-bD7qFw/commander.js",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -369,10 +344,12 @@
           "patches": 0,
           "applied": 0,
           "deletions": 0,
-          "deleted": 0
+          "deleted": 0,
+          "passes": 1
         },
         "skips": 4,
-        "output": "  SKIP [ts/unused-file] tests/fixtures-extensions/pm-try-cjs.cjs:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] tests/fixtures-extensions/pm-try-mjs.mjs:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] tests/fixtures-extensions/pm-try-ts.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] tests/fixtures-extensions/pm.js:1 — protected path (config, test, docs or script directory)\nunshit fix (applied): 0 deterministic patches (0 applied), deletions: 0 (0 deleted), skipped: 4, AI attempted: 0, reverted: 0\n\n"
+        "passes": 1,
+        "output": ""
       },
       "idempotency": {
         "ok": true,
@@ -380,7 +357,8 @@
           "patches": 0,
           "applied": 0,
           "deletions": 0,
-          "deleted": 0
+          "deleted": 0,
+          "passes": 1
         },
         "changedFilesAfterSecond": []
       },
@@ -391,17 +369,157 @@
         "fixedStillPresent": 0,
         "fixedStillPresentSample": []
       },
+      "perRule": {},
+      "remainingFixable": 0,
+      "remainingFixableSamples": [],
+      "syntax": {
+        "checked": 0,
+        "failed": 0,
+        "failures": []
+      },
+      "wallTimeMs": 1454
+    },
+    {
+      "name": "fastify",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-fastify-FtDgSC/fastify",
+      "tsconfig": null,
+      "typecheck": {
+        "before": {
+          "error": "no tsconfig found"
+        },
+        "after": {
+          "error": "no tsconfig found"
+        },
+        "newErrors": 0,
+        "unattributedNewErrors": []
+      },
+      "fix": {
+        "exitCode": 0,
+        "applied": {
+          "patches": 5,
+          "applied": 5,
+          "deletions": 0,
+          "deleted": 0,
+          "passes": 2
+        },
+        "skips": 20,
+        "passes": 2,
+        "output": ""
+      },
+      "idempotency": {
+        "ok": true,
+        "secondApply": {
+          "patches": 0,
+          "applied": 0,
+          "deletions": 0,
+          "deleted": 0,
+          "passes": 1
+        },
+        "changedFilesAfterSecond": []
+      },
+      "rescan": {
+        "beforeFindings": 88,
+        "afterFindings": 83,
+        "fixedFindings": 5,
+        "fixedStillPresent": 0,
+        "fixedStillPresentSample": []
+      },
       "perRule": {
-        "ts/unused-file": {
-          "fixed": 0,
-          "skipped": 4,
+        "deps/unused-dependency": {
+          "fixed": 4,
+          "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "protected path (config, test, docs or script directory)"
-          ]
+          "skippedReasons": []
+        },
+        "slop/magic-timer": {
+          "fixed": 1,
+          "skipped": 0,
+          "newCompileErrors": 0,
+          "newCompileErrorDetails": [],
+          "skippedReasons": []
         }
-      }
+      },
+      "remainingFixable": 0,
+      "remainingFixableSamples": [],
+      "syntax": {
+        "checked": 1,
+        "failed": 0,
+        "failures": []
+      },
+      "wallTimeMs": 2755
+    },
+    {
+      "name": "scale-1000",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-scale-gflF7o/project",
+      "tsconfig": "tsconfig.json",
+      "typecheck": {
+        "before": {
+          "count": 3363,
+          "files": 1000
+        },
+        "after": {
+          "count": 3363,
+          "files": 1000
+        },
+        "newErrors": 0,
+        "unattributedNewErrors": []
+      },
+      "fix": {
+        "exitCode": 0,
+        "applied": {
+          "patches": 468,
+          "applied": 468,
+          "deletions": 0,
+          "deleted": 0,
+          "passes": 2
+        },
+        "skips": 0,
+        "passes": 2,
+        "output": ""
+      },
+      "idempotency": {
+        "ok": true,
+        "secondApply": {
+          "patches": 0,
+          "applied": 0,
+          "deletions": 0,
+          "deleted": 0,
+          "passes": 1
+        },
+        "changedFilesAfterSecond": []
+      },
+      "rescan": {
+        "beforeFindings": 2221,
+        "afterFindings": 1742,
+        "fixedFindings": 830,
+        "fixedStillPresent": 0,
+        "fixedStillPresentSample": []
+      },
+      "perRule": {
+        "code/duplicate-block": {
+          "fixed": 362,
+          "skipped": 0,
+          "newCompileErrors": 0,
+          "newCompileErrorDetails": [],
+          "skippedReasons": []
+        },
+        "ts/unused-type-export": {
+          "fixed": 468,
+          "skipped": 0,
+          "newCompileErrors": 0,
+          "newCompileErrorDetails": [],
+          "skippedReasons": []
+        }
+      },
+      "remainingFixable": 0,
+      "remainingFixableSamples": [],
+      "syntax": {
+        "checked": 468,
+        "failed": 0,
+        "failures": []
+      },
+      "wallTimeMs": 4729
     }
   ]
 }

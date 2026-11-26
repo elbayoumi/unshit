@@ -41,6 +41,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `benchmark/scan-speed.mjs` and `docs/research/scan-speed.md`: reproducible full-scan wall-time benchmark (median of 5, warm FS, `--no-cache` and cache-enabled) on copies of the corpus projects and this repo. The five TypeScript AST detectors now share a single memoized walk per source file instead of five (`ts-ast.ts`); findings are byte-identical on every corpus copy and on the repo itself.
 - Scan-speed follow-up: module-specifier collection (`deps-shared.ts`), dynamic-import targets (`unused-file.ts`) and entry-point discovery (`dead-exports/entries.ts`) are now memoized per file/context, so repeated cross-file passes reuse one walk instead of re-parsing the same ASTs and re-walking directories. A new `tests/scan-walk-sharing.test.ts` guards call-pattern parity and memoization; all findings remain unchanged.
 - `benchmark/scale-bench.mjs` + `benchmark/scale-project.mjs` and `docs/research/scan-scale.md`: seeded generator for byte-identical 200/1000-file TypeScript projects in a fresh temp dir, with median-of-5 no-cache and cache-enabled scan timings and an findings SHA-256. Measured on this machine (Node v26.7.0, Apple M5 Pro): 221.4 ms at 200 files and 629.8 ms at 1000 files, both under the 1.5 s / 3 s charter budgets; no detector changes were needed. `tests/scan-scale.test.ts` covers generator determinism and small-project scans.
+- `benchmark/recall-extra/`: seeded mutation-injection recall benchmark for `ts/no-double-cast`, `slop/redundant-catch`, `code/high-complexity`, `react/god-file`, `arch/import-cycle`, `ts/unused-type-export`, and `deps/unlisted-dependency`. Includes per-rule positive injections, hard-negative near-misses (FP sanity), Wilson 95% intervals, per-project and pooled reporting, and committed `results.json`.
+- `docs/research/recall-extra.md`: method, measured recall/FP tables, miss analysis, and limitations for the recall-extra benchmark.
+- `tests/recall-extra.test.ts`: fast fixture tests covering each recall-extra injector shape and matcher.
+- `unshit fix` reports how many passes `--apply` took to reach a fixed point (`passes: N` in the summary line, `passes` in `FixSummary`).
 
 ### Fixed
 
@@ -56,6 +60,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `ts/no-explicit-any` deterministic fix now skips catch bindings that are read in the catch body (changing `any` to `unknown` would break property access); unused catch bindings are still auto-fixed.
 - `ts/unused-export` / `ts/unused-type-export` deterministic fix skips removing `export` when the symbol has no local read and the effective tsconfig enables `noUnusedLocals` (including extends), preventing TS6133/TS6196 regressions.
 - `ts/unused-file` entry-point detection now discovers package.json manifests from disk (including gitignored manifests) so package `exports`/`main`/`types` targets are not deleted as unused.
+- Recall `code/duplicate-block` matching required only that the evidence name the finding's own file, so any pre-existing clone counted as a hit. A hit now needs the injected copy to be one side of the clone pair.
 
 ### Changed
 - `unshit hook --stdin`: CLI dispatch is now lazy (hook loads only hook-path modules), hook-eligible detectors load without the full detector registry, `typescript` is loaded on demand via `createRequire` only when a TS/JS parse is needed, and `bin/unshit.js` enables Node's V8 compile cache. Warm-hook p95 for a `src/core/scanner.ts` Write payload dropped from ~125ms to ~50ms (p50 ~44ms, 35 runs, warm cache); bare `node -e 0` floor measured ~12ms on this machine.
@@ -69,6 +74,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `src/cli.ts` is now a thin entry point with explicit dispatch tables; command handlers live in small `src/cli/*.ts` modules loaded by the same lazy `import()` paths as before, so CLI output and hook latency are unchanged and adding a command is a one-line table entry.
 - `src/core/import-graph.ts` is now a thin re-export facade over a new `src/core/import-graph/` module directory (constants, types, util, ts, dart, python, rust, graph); behaviour and scan output are unchanged.
 - `src/detectors/dead-exports.ts` split into cohesive modules under `src/detectors/dead-exports/` (entries, usage analysis, handlers, reporting) with the two high-complexity functions refactored into helpers; public exports unchanged and behaviour identical.
+- `benchmark/fix-soundness/run.mjs` now checks idempotence, remaining fixable findings, the syntax of changed files, and a 1000-file generated project; per-rule skips come from the fix result.
+- Recall benchmark now runs on four corpora (hono, zod, execa, fastify) with a `--projects` option, dev/holdout seeds, and per-project plus pooled Wilson 95% intervals.
+- Recall injector skips entry-point/public-API files for `ts/unused-export`, using the CLI's compiled dead-export analysis, and reports those injections in a separate out-of-scope row.
+- Recall injector restricts injections to files unshit scans and, for duplicate blocks, to files the clone tokenizer accepts. Injections outside the clone-token stream are still scored and only annotated.
 
 ## [0.7.0] - 2026-11-25
 
