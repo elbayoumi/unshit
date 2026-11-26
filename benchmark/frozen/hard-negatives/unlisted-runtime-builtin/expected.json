@@ -1,0 +1,5 @@
+{
+  "description": "Runtime builtin module specifiers are not unlisted dependencies.",
+  "groundTruth": "bun:test and @std/assert are runtime builtins, not npm packages.",
+  "expected": []
+}

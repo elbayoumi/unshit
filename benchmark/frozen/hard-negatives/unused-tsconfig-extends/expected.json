@@ -1,0 +1,5 @@
+{
+  "description": "Dependencies referenced via tsconfig extends are not unused.",
+  "groundTruth": "fastify-tsconfig is referenced by tsconfig files; left-pad is truly unused.",
+  "expected": []
+}

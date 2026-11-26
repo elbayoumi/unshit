@@ -66,7 +66,7 @@ function processTsSource(
 function collectEdges(state: GraphState): void {
   const { ctx, rootDir, fileSet } = state;
   for (const file of ctx.files) {
-    if (!TS_EXTS.has(file.ext) || !file.sourceFile) continue;
+    if (!TS_EXTS.has(file.ext) || !file.sourceFile || file.relPath.endsWith('.d.ts')) continue;
     processTsSource(state, file.relPath, file.absPath, file.sourceFile, 0);
   }
   for (const file of ctx.files) {

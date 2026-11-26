@@ -38,6 +38,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `react/god-file` skips Python `test_*.py`, `tests/`, `migrations/` and generated `.g.dart` / `_pb2.py` files, and applies a 2x line limit to Rust/Dart/Python.
 - `arch/import-cycle`: Python `from . import sibling` no longer adds a package `__init__` edge that produced false cycles.
 - `css/duplicate-selector` only compares within one file and ignores `:root`/`:host`/`html`/`body`/`*`.
+- `deps/unlisted-dependency`: recognizes runtime builtins (`bun:`, `deno:`, `jsr:`, `@std/*`) and skips `examples/`; `deps/unused-dependency`: scoped package names in scripts are now matched, and dependencies referenced by owned config/manifest files (e.g. tsconfig `extends`) count as used. `code/duplicate-block`: skips `.test-d.ts` and `locales/` directories. `arch/import-cycle`: ignores `.d.ts` declaration files. Added hard-negative cases and unit tests.
 - Default excludes add `.dart_tool`, and `static/lib` / `static/vendor` directories are skipped at any depth; generated `.g.dart`, `.freezed.dart` and `_pb2.py` files are skipped. `cloneMinTokens` default raised from 45 to 80 to cut `code/duplicate-block` noise.
 - Default excludes now also skip `benchmark/frozen`, `docs/`, `research/`, `fixtures/` and `__fixtures__/` at any depth, so docs/research benchmark fixtures produce no findings.
 

@@ -69,10 +69,14 @@ export function packageName(spec: string): string | null {
 
 const BUILTINS = new Set(builtinModules.map((name) => name.split('/')[0] ?? name));
 
-/** Bare specifier = not relative, not absolute, not `#` imports, not `node:` builtin. */
+const RUNTIME_BUILTIN_PROTOCOLS = new Set(['node', 'bun', 'deno', 'jsr', 'cloudflare', 'workerd', 'edge-runtime']);
+
+/** Bare specifier = not relative, not absolute, not `#` imports, not a runtime builtin. */
 export function isBareSpec(spec: string): boolean {
   if (!spec) return false;
-  if (spec.startsWith('.') || spec.startsWith('/') || spec.startsWith('#') || spec.startsWith('node:')) return false;
+  if (spec.startsWith('.') || spec.startsWith('/') || spec.startsWith('#')) return false;
+  const protocol = /^([a-z][a-z0-9+.-]*):/i.exec(spec)?.[1]?.toLowerCase();
+  if (protocol && RUNTIME_BUILTIN_PROTOCOLS.has(protocol)) return false;
   return !BUILTINS.has(spec.split('/')[0] ?? spec);
 }
 
@@ -168,8 +172,7 @@ export function isCommonTooling(name: string): boolean {
 
 export function scriptsReference(scripts: Record<string, unknown> | undefined, name: string): boolean {
   if (!scripts) return false;
-  const re = new RegExp(`\\b${escapeRegExp(name)}\\b`);
-  return Object.values(scripts).some((value) => typeof value === 'string' && re.test(value));
+  return Object.values(scripts).some((value) => typeof value === 'string' && value.includes(name));
 }
 
 /** Dep referenced by name in a root config-file name, e.g. `xo.config.js` → dep `xo`. */

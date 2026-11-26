@@ -258,6 +258,28 @@ test('deps/unused-dependency spares packages referenced only by CI workflow scri
   });
 });
 
+test('deps/unused-dependency spares a dependency referenced by a tsconfig manifest', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'demo', devDependencies: { 'tsconfig-pkg': '^1.0.0', 'left-pad': '^1.0.0' } }, null, 2),
+    'tsconfig.json': JSON.stringify({ extends: 'tsconfig-pkg' }, null, 2),
+    'src/a.ts': 'export const a = 1;\n',
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    const hits = findingsFor(scan, 'deps/unused-dependency').map((f) => f.evidence);
+    assert.deepEqual(hits, ['left-pad']);
+  });
+});
+
+test('deps/unlisted-dependency ignores runtime builtin specifiers for bun and deno', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'demo' }, null, 2),
+    'src/a.ts': "import { test } from 'bun:test';\nimport { assertEquals } from '@std/assert';\nexport const a = 1;\n",
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    assert.equal(findingsFor(scan, 'deps/unlisted-dependency').length, 0);
+  });
+});
+
 test('deps/unused-dependency spares packages referenced only by tailwind/postcss configs, flagging nearby dead deps', async () => {
   const packageJson = JSON.stringify({
     name: 'demo',

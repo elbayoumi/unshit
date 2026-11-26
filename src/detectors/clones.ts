@@ -193,7 +193,8 @@ export const duplicateBlockDetector: Detector = {
     const logicByFile = new Map<string, number[]>();
 
     for (const file of ctx.files) {
-      if (!isTsLikeFile(file) || /\.(test|spec|d)\./.test(file.relPath)) continue;
+      if (!isTsLikeFile(file) || /\.(test|spec|d)([-.]|$)/.test(file.relPath)) continue;
+      if (/(^|\/)(locales?|i18n)\//.test(file.relPath)) continue;
       const tokens = tokenize(file);
       if (tokens.length < windowSize) continue;
       const logicPrefix = buildLogicPrefix(tokens);

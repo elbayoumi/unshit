@@ -219,6 +219,19 @@ test('multiset evaluateGuard detects second identical finding in the same file',
   );
 });
 
+test('arch/import-cycle ignores .d.ts declaration files', async () => {
+  await withTempProject(
+    {
+      'a.d.ts': `import { B } from './b.js';\nexport type A = B;\n`,
+      'b.d.ts': `import { A } from './a.js';\nexport type B = A;\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+      assert.equal(scan.findings.filter((f) => f.ruleId === 'arch/import-cycle').length, 0);
+    },
+  );
+});
+
 test('arch/import-cycle and arch/layer-violation detect cycles and layer breaches (skipping type-only)', async () => {
   await withTempProject(
     {
@@ -500,6 +513,19 @@ const pad1 = 1;
       const clones = scan.findings.filter((f) => f.ruleId === 'code/duplicate-block');
       assert.ok(clones.length >= 1, 'expected the JSX-heavy cross-file clone to be caught');
       assert.ok(clones.some((f) => f.file === 'b.tsx'), 'expected a finding on the second file');
+    },
+  );
+});
+
+test('code/duplicate-block ignores .test-d.ts files', async () => {
+  await withTempProject(
+    {
+      'a.test-d.ts': `export function one(v: number[]) {\n  if (!v) return [];\n  return v.map((x) => x + 1);\n}\nexport function two(w: number[]) {\n  if (!w) return [];\n  return w.map((x) => x + 1);\n}\n`,
+      'b.test-d.ts': `export function one(v: number[]) {\n  if (!v) return [];\n  return v.map((x) => x + 1);\n}\n`,
+    },
+    async (dir) => {
+      const scan = await runScan(dir, { ...DEFAULT_CONFIG, cloneMinTokens: 25 });
+      assert.equal(scan.findings.filter((f) => f.ruleId === 'code/duplicate-block').length, 0);
     },
   );
 });
