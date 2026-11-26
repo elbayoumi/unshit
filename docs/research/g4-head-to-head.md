@@ -4,7 +4,7 @@ Measured on 2026-11-26. Raw tool outputs (gzipped) are stored under `docs/resear
 
 ## Method
 
-For each of the five corpus projects, every tool was run **3 times** in its closest equivalent mode; the reported wall-clock time is the **median** of the 3 runs. Exit codes and raw finding counts are recorded from the final run. No precision/recall claim is made: only raw counts are reported, and overlapping categories are shown side by side. No hand-verified sample was taken for this report.
+For each of the five corpus projects, every tool was run **3 times** in its closest equivalent mode; the reported wall-clock time is the **median** of the 3 runs. Exit codes and raw finding counts are recorded from the final run. No precision/recall claim is made: only raw counts are reported, and overlapping categories are shown side by side. A hand-verified precision sample for `ts/unused-export`, `ts/unused-file` and `deps/unused-dependency` is reported separately in `docs/research/g4-precision-sample-3.md`.
 
 Commands:
 
@@ -54,21 +54,21 @@ Counts:
 
 | Project | unshit ms | unshit findings | knip ms | knip findings | jscpd ms | jscpd clones | depcruise ms | depcruise violations | oxlint ms | oxlint diags | biome ms | biome diags |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| hono | 646 | 733 | 314 | 273 | 73 | 699 | 1346 | 179 | 38 | 115 | 183 | 2004 |
-| execa | 550 | 472 | 214 | 150 | 50 | 6 | 557 | 239 | 40 | 62 | 73 | 276 |
-| zod | 897 | 2004 | 308 | 417 | 72 | 251 | 1386 | 690 | 40 | 242 | 28 | 0 |
-| commander.js | 218 | 19 | 171 | 57 | 39 | 14 | 266 | 57 | 33 | 65 | 48 | 162 |
-| fastify | 467 | 91 | 263 | 75 | 62 | 518 | 462 | 167 | 38 | 1346 | 434 | 5667 |
+| hono | 706 | 642 | 340 | 273 | 80 | 699 | 1498 | 179 | 41 | 115 | 198 | 2004 |
+| execa | 534 | 35 | 243 | 150 | 56 | 6 | 601 | 239 | 40 | 62 | 77 | 276 |
+| zod | 803 | 1482 | 345 | 417 | 78 | 251 | 1530 | 690 | 42 | 242 | 32 | 0 |
+| commander.js | 238 | 15 | 181 | 57 | 39 | 14 | 286 | 57 | 35 | 65 | 51 | 162 |
+| fastify | 491 | 88 | 274 | 75 | 63 | 518 | 497 | 167 | 41 | 1346 | 467 | 5667 |
 
 ### Overlapping categories, side by side
 
 | Project | unused exports (unshit / knip) | unused files (unshit / knip) | unused deps (unshit / knip) | unlisted deps (unshit / knip) | duplicate blocks (unshit / jscpd) | import cycles (unshit / depcruise) |
 |---|---:|---:|---:|---:|---:|---:|
-| hono | 107 / 52 | 31 / 173 | 4 / 15 | 9 / 0 | 23 / 699 | 4 / 7 |
-| execa | 8 / 2 | 283 / 129 | 1 / 4 | 0 / 0 | 159 / 6 | 1 / 7 |
-| zod | 68 / 14 | 117 / 338 | 15 / 56 | 1 / 1 | 557 / 251 | 1 / 1 |
-| commander.js | 0 / 0 | 5 / 51 | 0 / 2 | 3 / 0 | 1 / 14 | 0 / 0 |
-| fastify | 0 / 37 | 20 / 17 | 6 / 10 | 0 / 0 | 15 / 518 | 1 / 0 |
+| hono | 54 / 52 | 3 / 173 | 3 / 15 | 0 / 0 | 23 / 699 | 4 / 7 |
+| execa | 0 / 2 | 2 / 129 | 1 / 4 | 0 / 0 | 11 / 6 | 1 / 7 |
+| zod | 68 / 14 | 111 / 338 | 11 / 56 | 1 / 1 | 45 / 251 | 1 / 1 |
+| commander.js | 0 / 0 | 4 / 51 | 0 / 2 | 0 / 0 | 1 / 14 | 0 / 0 |
+| fastify | 0 / 37 | 20 / 17 | 4 / 10 | 0 / 0 | 15 / 518 | 0 / 0 |
 
 ## Honest limitations
 
@@ -78,7 +78,7 @@ Counts:
 - jscpd was restricted to the formats unshit scans (`typescript,tsx,javascript,jsx,css,scss,rust,python,dart`) at `--min-tokens 80`, matching unshit's default `cloneMinTokens`. Other jscpd defaults (e.g. full default format set) give different counts.
 - Counts are not comparable one-to-one: the tools differ in scope, entry-point models, and rule sets. unshit does **not** replace a linter; oxlint/biome report style and correctness rules unshit does not attempt. Do not read these numbers as precision/recall.
 - Wall-clock times are medians of 3 runs on one machine and include each tool's own caching; they are not rigorous benchmarks.
-- No hand-verified sample was taken for this report, so no precision/recall or disagreement verdicts are claimed.
+- A hand-verified precision sample (50 `ts/unused-export`, 50 `ts/unused-file`, 19 of the available 30 requested `deps/unused-dependency` findings) is reported in `docs/research/g4-precision-sample-3.md`. Only 19 `deps/unused-dependency` findings existed across the corpus, so all were verified (a census of that category). No recall claim is made.
 
 ## Raw output files (SHA-256)
 
@@ -86,72 +86,72 @@ All files are stored gzipped under `docs/research/g4-raw/`. Hashes are of the st
 
 | File | SHA-256 |
 |---|---|
-| `commander.js/biome.json.gz` | `86c2b599ea44aa4796d25b8918ac9d9f818a472059fddb3127929e1ba992c5c0` |
-| `commander.js/biome.stderr.txt.gz` | `5f047514f884ad60e26f0f1dea8d0ed2a9e61599b4b990d670586d13f459f95a` |
-| `commander.js/depcruise.json.gz` | `b93a545c2b1db4eb3535e638ab3b4878741de5d37f9182ce3235f056805622c1` |
-| `commander.js/depcruise.stderr.txt.gz` | `653004dfc64fb022655d5906c26fd7002b986a3c2e7db30977dad9f8e5830e88` |
-| `commander.js/jscpd-report.json.gz` | `07bcbbf416ec46615256c1d5bed180208ddf2305bd3ff0c85b541940b1271f2f` |
-| `commander.js/jscpd.stderr.txt.gz` | `bd97f9934fa05e32e3d9b87a6e5084828474beec05d8971fb726c3a6c28b0685` |
-| `commander.js/jscpd.stdout.txt.gz` | `c349a70977757895bcdac1cbb9368bed1866f59e2cd4f416d12b2d0e361e0071` |
-| `commander.js/knip.json.gz` | `cac840c7ed29c8953714ab0673296e57cdf911586ef40f26467b53932590bf7f` |
-| `commander.js/knip.stderr.txt.gz` | `e862449f422cb593f2e587da72be29b70a371c914a3e91b389aa5ae4f257bdd7` |
-| `commander.js/oxlint.json.gz` | `a791824e4c5ff962e23ee6f7810824e92e9df7886512ec67eeb0c6abefec92dd` |
-| `commander.js/oxlint.stderr.txt.gz` | `01f2a94d415459aeff4a1b5456e4105cf90af0c49c9996baab97725c5f0fcb77` |
-| `commander.js/unshit.json.gz` | `4210bbf67d9e16048462721dfff797a85ba0b77e2307bbc304eb07d1c4a556af` |
-| `commander.js/unshit.stderr.txt.gz` | `2222dc2eab084936d70d0abf7303d0fb07d13e48a9a9500ffc2e974bc2bed123` |
-| `execa/biome.json.gz` | `bc32de3edf7656a7535722f49c8064f84d04dab087330e7b8d761d72eea453ff` |
-| `execa/biome.stderr.txt.gz` | `924ef393c8e96866473159cfb83f3bd72139c1f2d0fb66b7448f5e0b1237cdd5` |
-| `execa/depcruise.json.gz` | `00681b76be0ed9270a342a62ad49e6842dde8fb5bb56c09cd2e729ee49f8afd0` |
-| `execa/depcruise.stderr.txt.gz` | `7294fd9c19f05fcf950f0b722621c06a431fb9e2cf83619f61c82ae4d6d9650e` |
-| `execa/jscpd-report.json.gz` | `6de81cde7224f3a0aea77b2c6cc92a8fa96e9d895889549aab529603eaf0c2b6` |
-| `execa/jscpd.stderr.txt.gz` | `0ea212f948d9172a97d1a64c3464109bfe928e310fc4d4e079dd39d15a12fa10` |
-| `execa/jscpd.stdout.txt.gz` | `f9fef96d2ab28933526f74f993aa8ec61e0021dcb37bdef9aff964da9d261153` |
-| `execa/knip.json.gz` | `831bc695514a6eb97bea87c22054da973d4e9d1d11859efa6a70ea0ebaeea672` |
-| `execa/knip.stderr.txt.gz` | `e0ceaec8b81946eb70078d2ed971cedf7fee6aa27d32255522a8b97975f32970` |
-| `execa/oxlint.json.gz` | `958ce6c01fc9f4dfa1d307b751ae45816169c122fdf3f21ece103b770b4ee953` |
-| `execa/oxlint.stderr.txt.gz` | `87824104bf0f6e01d5463be8d0ead59c069b9f146254de17bbc0f7d22c24d634` |
-| `execa/unshit.json.gz` | `0d1fc071a07b1750268014e99a9c1f769aa74c5c5deb58b6f7c0833d3a53e340` |
-| `execa/unshit.stderr.txt.gz` | `b38fb9f26c378a3495fdd57058ef4caa1a1161480c66430d266ac8d9cf58dbb8` |
-| `fastify/biome.json.gz` | `5033b934e5f81f51cbdd0bc7570808eb9ff0ed60661ffb805e9dd3647573f7da` |
-| `fastify/biome.stderr.txt.gz` | `c85f51b02f5c5862680b045ebbdecac55d5728cb7de8775c48879e672a254ce2` |
-| `fastify/depcruise.json.gz` | `294f411d18f214b03eded0532fe771400aef4be2f6190df729d5fe8029f19b5d` |
-| `fastify/depcruise.stderr.txt.gz` | `6bae5ce04ed3f6996641d875ca8ed18e7df8e157ada33705c3729e9b9e1b5dcc` |
-| `fastify/jscpd-report.json.gz` | `0e8e1f3940f652a66dc1883485369884bcbb040d7397c70b8ab113fa19242049` |
-| `fastify/jscpd.stderr.txt.gz` | `dc86c1a1bf1c41b005c545567d76140c7fb1a510df27686c8b9dbd2d1880a82c` |
-| `fastify/jscpd.stdout.txt.gz` | `d7746a814789afd932e1fb51ac18818a068dcc885b9cfcb8a0aeb55eebe2900b` |
-| `fastify/knip.json.gz` | `ac24a81219cfdc4d3312c278c0946e066cb79cc7815b2098c9d3b413ac2a985f` |
-| `fastify/knip.stderr.txt.gz` | `6931d939b43f82df2ddf5a7bfbd42b9b42e2e2f8685a822c18b7209593910f4a` |
-| `fastify/oxlint.json.gz` | `e3f4b857db30e9a38d7c1334095f0c768288b5ecba1441d660c04fc06c30848c` |
-| `fastify/oxlint.stderr.txt.gz` | `1be5c137b7299a85cff5882b88bf1a274bcf0831f0e1893f223eb8dbc1e87d5c` |
-| `fastify/unshit.json.gz` | `f3b33d37ce73060762bd1be3ab47d15dab16397d30d736f255150b32731666af` |
-| `fastify/unshit.stderr.txt.gz` | `d49ff8108e63d40fef65e494fb4bb5f4ea4fce48278ff56b83a4a98686a26c3b` |
-| `hono/biome.json.gz` | `2a20489bd1bf4f48927c66da909a7a333acf75f21bcada2ec7986c8f1e4a8ace` |
-| `hono/biome.stderr.txt.gz` | `43cd0059817764444e38d9e67d2a986c780587bc2231103b1a4d843a29cd12e7` |
-| `hono/depcruise.json.gz` | `1554c8e63413c993d9f20b35c6387ee0506b1f8dc6ff1f4e3bd044d62262417a` |
-| `hono/depcruise.stderr.txt.gz` | `04dc265c8f11138580df5bc25f3bee047e5e0d116a31bc765f3232048ba17247` |
-| `hono/jscpd-report.json.gz` | `648f5619a16b2d45f3ccbf9470ce68dc29a78150d5ce261c7d9efb3f6258df85` |
-| `hono/jscpd.stderr.txt.gz` | `ef0abbde852d025c9c5227db2f314da97c8fd81b48755b013edff03716743b87` |
-| `hono/jscpd.stdout.txt.gz` | `b8bfe8ac646a651061ea5cbd27ad65bbf1238b405c8b68b99d192ea2307505ec` |
-| `hono/knip.json.gz` | `06074b332c39f19cf05f41d6c7d3a1d0c7f624a022912a2ef1ebc1fb38c7ef3f` |
-| `hono/knip.stderr.txt.gz` | `7fc79bd9db0dcdf64ab1081b83aad11a3a9e237cbc50aee19bcc0007d5fc7e0e` |
-| `hono/oxlint.json.gz` | `826889fa591a3f1b4d97de2631c00f389805373facc8ee51ed8475b6a583a52e` |
-| `hono/oxlint.stderr.txt.gz` | `ba296a3a383b74099208ade4783cd59a497189948cb515b3bde7bf4652b55721` |
-| `hono/unshit.json.gz` | `867a250f49481abd7535fa99ee805b1d4e84ae3a9f8081d9c83eded34a576fe0` |
-| `hono/unshit.stderr.txt.gz` | `e75423e927b0c4bde60fcd1368acaf4986acd4421d385d27106336ee5a091add` |
-| `zod/biome.json.gz` | `9750eeae6a694f7702e8d90f80d314cdce753dfa73454aa0e8fa619148de4845` |
-| `zod/biome.stderr.txt.gz` | `4470fd62e8d7af5d3bee414b5834d1e83ec52971b92024dc8e07b55506684f1b` |
-| `zod/depcruise.json.gz` | `5f8117d611a82e37a5e75e2301ed6d17768432c1c626688bffe74799fc19efca` |
-| `zod/depcruise.stderr.txt.gz` | `f13643a4e568cab387c8490f24e53591e8e7f51f3ffccf3dc938432a6a0baf12` |
-| `zod/jscpd-report.json.gz` | `f6711da546826429199a620a68629b2d27bae551c7844c2b64aa186e8d6a7497` |
-| `zod/jscpd.stderr.txt.gz` | `bc78d1f141498709008365c73feb7fdba1e71eabb7837325c3ea352d912f3b2d` |
-| `zod/jscpd.stdout.txt.gz` | `865ba77b18ef2171cd953fa3f22b0439a603e95661edf8375717eb0349ee914b` |
-| `zod/knip.json.gz` | `8e7528f3a0838fac3a3c12ed67896c1abfecb700fcc64d32ccdc3af14b4930a5` |
-| `zod/knip.stderr.txt.gz` | `2a7238adfee03cf8d0cd610fa0d3c600fdee8c8d05716eef3b991704f051ef07` |
-| `zod/oxlint.json.gz` | `3b4a4c20244eb86e8c41269a05476cc70f3758f84f076b8131529b5b83a7e7b4` |
-| `zod/oxlint.stderr.txt.gz` | `6ffcf295727a61921ecf12f9f98c344735f1c6fe516f584329e4d323ce558ebd` |
-| `zod/unshit.json.gz` | `9a8bc2563321f03e29dbad22471211d5f434f4ac4108a5f352e9f4a6562bcf1c` |
-| `zod/unshit.stderr.txt.gz` | `7db14feb44e4c794b4a16b89f2805cefef077b05a4adc7b3fe8bc92db033155e` |
+| `commander.js/biome.json.gz` | `a0bed932ac15375241f0d4aeef257b01b4ce28e88304c6a7654e76e3e0e4729d` |
+| `commander.js/biome.stderr.txt.gz` | `299177ebe409acbe49df91605578d6a0998993846eb64bb11b38b6a31e29f10c` |
+| `commander.js/depcruise.json.gz` | `8527c1d7e9d7c1c37697de3e6fbb984e21cebd7146b7ef664c9bec8d347f7937` |
+| `commander.js/depcruise.stderr.txt.gz` | `4399d2b989116ec1a3f48729efcc2938349e0867e58de1cab7c6f4c14bdcc659` |
+| `commander.js/jscpd-report.json.gz` | `d27cbf7c1b1c98fd45a95bc77bf1af49d68010e7b66d43ad12dd86f6d6b25dec` |
+| `commander.js/jscpd.stderr.txt.gz` | `2adc1e664f13d1b9f0dad67081867576fb967d87cf59b128acc32dbc2b6e8fa4` |
+| `commander.js/jscpd.stdout.txt.gz` | `26b15e2a1f1bef4ea875e72347f87d34edc52eee663a2d1cf1c965cb15405acf` |
+| `commander.js/knip.json.gz` | `531d5cadaaaf334f17e75aef956b66e010dc49d5e9af144eba7072e5685fef6d` |
+| `commander.js/knip.stderr.txt.gz` | `43a0281f009f07d8fb7039d47a3253fac2a0a02c605c8e1a8aff7dc0fb1595cf` |
+| `commander.js/oxlint.json.gz` | `3035c937ed34cc1965899feef9462fbec3fde5cf42a099f4a976bc7b4c1de44b` |
+| `commander.js/oxlint.stderr.txt.gz` | `35e437469658d0ac939d535b9c2385118675587968e80524cf6c59a93a919f64` |
+| `commander.js/unshit.json.gz` | `70108adaa2a032803d1cd010fe8a8cbe8fe622017d44f5be23e87495d452023f` |
+| `commander.js/unshit.stderr.txt.gz` | `c03bca1a76dcdeed442cc87f756fd9a974e6eb7f32df074ec79bd2f87626f6af` |
+| `execa/biome.json.gz` | `fdb2c18527142a46bac074930394dfbbb20872452fd64e0d0e617b3ddbdd53a7` |
+| `execa/biome.stderr.txt.gz` | `d2b543ab1127eca7cb7824f32438cea83b373f9961169f0ec95969b4026cc19b` |
+| `execa/depcruise.json.gz` | `40ba7e88df848e2870295b0130245fd52258be2e451771c3d434459d91e24dc3` |
+| `execa/depcruise.stderr.txt.gz` | `dd22a55aa40536e4c0d043e264d36f4166ccec37df154a18afb026f474a21367` |
+| `execa/jscpd-report.json.gz` | `3736189cef68a19487e8abc5819224f4f2517567c70091ce847d43bfa876bbd9` |
+| `execa/jscpd.stderr.txt.gz` | `2d3f0b4e91e8cf3c0b45cb065427c9e1580c6c434e7604b6c0f8aac6f49b2969` |
+| `execa/jscpd.stdout.txt.gz` | `b86c3913bd7d36cc8b9854644f1227c2c5e1b20c298dd8450833ff63bb4682b7` |
+| `execa/knip.json.gz` | `b35b40f1edc2164b3b4d28258d1cd08824f19ce22ef3efde57a6ecb492ead83e` |
+| `execa/knip.stderr.txt.gz` | `f78f51e7f23a76f3e85087c62341721181dec5b3144c988603e61bce35d4a8a9` |
+| `execa/oxlint.json.gz` | `e104942f5a340e4ca02ef1ec5c643ee7976b5b57fdeae91442d420a318b78244` |
+| `execa/oxlint.stderr.txt.gz` | `86af9691c83ee8bd49fb4cf9303ca728a719d931c55a588500e739976bf0459f` |
+| `execa/unshit.json.gz` | `c8993255c31c21011e217fcbef7011c07a4ffa9df07cbf2d09cea5fed1f2d36b` |
+| `execa/unshit.stderr.txt.gz` | `0caa6773a92cb54f549dca1875a8a21f40811a551f1322b407c3cb1eec0aab51` |
+| `fastify/biome.json.gz` | `67c9097027f5c704b42d88fa18afd55afac64dbd18a2012b18d3d99b1512a547` |
+| `fastify/biome.stderr.txt.gz` | `92331f1999d9a50af02bc738b6890e540339821deaac31f9034a2361ca846985` |
+| `fastify/depcruise.json.gz` | `0fb23dd006222116a6cc11ab9e5b0ecd9b1f0f62482db48e60dd143d0d56c66d` |
+| `fastify/depcruise.stderr.txt.gz` | `c5f5323c6dc7bbe8ba3b83499291166654fc744efb521813a1de8e53f11e40f7` |
+| `fastify/jscpd-report.json.gz` | `6150e7c65964accab2c43c1bdb6eeda1f3dadabb8b0b0cd3166f73b21fadac85` |
+| `fastify/jscpd.stderr.txt.gz` | `4fbb02733db1950f23b513de9ccd5b4dd0117dd3fc505e3b913d9de5df77fc1e` |
+| `fastify/jscpd.stdout.txt.gz` | `67a0037e5f02eb77a8e8afd0f7f0ee371628b29ae7bce98ccb5ea2d5e5058285` |
+| `fastify/knip.json.gz` | `6c95dd9faf1e9bbeecc830757daa1286c87058a1431f1de4cb5c6386ad92b490` |
+| `fastify/knip.stderr.txt.gz` | `33dbab53426b298dd93abb8279bd2b95d661075402301b79a416bada0856271c` |
+| `fastify/oxlint.json.gz` | `94ac0436dd650e19b0fce2a67f834ced10ee2aadce013df85719eb06cc4e1c2a` |
+| `fastify/oxlint.stderr.txt.gz` | `6dcee375340f62420fd685cefa7ca9fbaeeeb9db7815ef4bd07d4d5fe16e63e6` |
+| `fastify/unshit.json.gz` | `8d9c877ad1915f3389417ee54fd311dc2d26afba03de43925f2813e63e48f0c4` |
+| `fastify/unshit.stderr.txt.gz` | `4f14941d242c01706ef8c514810721efd6a21cdb0e9906f097c247700ea790bb` |
+| `hono/biome.json.gz` | `e0c174c6558ce3ae5c8d09ec50b9fe4623421756b6f2c5b699f55ff3a711428a` |
+| `hono/biome.stderr.txt.gz` | `b6a8098815f0169a84759befd9d098a2a248cab5b79de1016b37a0bd8aa3a7ae` |
+| `hono/depcruise.json.gz` | `55f5ba60b11d94534575af1e69415799bed962e0da3dbb35ee408d3b9b54c156` |
+| `hono/depcruise.stderr.txt.gz` | `8cd09f05e6b9a01b143149220d7a92e5a96106f0ffb79d787715bfe264ca017b` |
+| `hono/jscpd-report.json.gz` | `fbb6024f63b61a235681e78d1c6dc6b26946fc5b72c1a79a51514bb02998b2b5` |
+| `hono/jscpd.stderr.txt.gz` | `e3110285cba08d47f528cc32da442596575228095b7226412ac47ae672e71fee` |
+| `hono/jscpd.stdout.txt.gz` | `47d9f6352aff461765574927a8a37c0286d6fad826b20c75d20eba7ce1b63677` |
+| `hono/knip.json.gz` | `f129e356972c970c61a2798df46d879ea144c239aab44858985f8541923568a7` |
+| `hono/knip.stderr.txt.gz` | `2d26bc1e0c6425ee54e962e993efedd9e4c08d8cde6497f0c41c77c67505e451` |
+| `hono/oxlint.json.gz` | `99ff65c5414fb09f22571d805e181992b2db18275cf70e6751aee9adf2113bea` |
+| `hono/oxlint.stderr.txt.gz` | `6513017bfc9993aaf8477e86eba6856d2d7c8944496c0564dc13c4599a79d2d9` |
+| `hono/unshit.json.gz` | `b05de5c551a33ad94c89f493ed8818435d41cb9d55fc5f04d8eb22a4c912683a` |
+| `hono/unshit.stderr.txt.gz` | `dde2249d7648a57867b99e286d96e89f59b9ab48bc99d96b1ab716283fd59f88` |
+| `zod/biome.json.gz` | `fe8b7d006ed1631864e3da49244c98ec6841a828d28de34b91a87aacd011a91a` |
+| `zod/biome.stderr.txt.gz` | `8e0dbcae59a0c3438b257ca8645b796d5a84d844dc67c94f6f4f802e397d6c5a` |
+| `zod/depcruise.json.gz` | `84ab26996e8fa020e6f71b0453afe4740d2648407d03121188a608801234e1ac` |
+| `zod/depcruise.stderr.txt.gz` | `4a70d60cbb8df07a77cd7fb57f212150169c8bff31073e56187f8ad9194292cc` |
+| `zod/jscpd-report.json.gz` | `5e1d2c5ba0cce454385a4f6288d483f5f0add53ad9dcc0281fe7e74b9042c030` |
+| `zod/jscpd.stderr.txt.gz` | `3e8b13b4531ca46cfcb3e01467472395650089ce45cc0b33a0b3177251803d6d` |
+| `zod/jscpd.stdout.txt.gz` | `69e7ab5bffbcf952019d81141eecc23b7ff0ae5f46b1c8adbab3573d64b950d6` |
+| `zod/knip.json.gz` | `421b15b7f6be146c4e4f5213aa7f6141431c03c607d2d249491c5cab35d4a278` |
+| `zod/knip.stderr.txt.gz` | `0c4cbb7e60459989bf58af431c383df5a69396144f38d89f00de741837637bb7` |
+| `zod/oxlint.json.gz` | `92171de577441cd0ee5c2d0adca6b41fcf8e1dd3ed89beba6214768389623c4b` |
+| `zod/oxlint.stderr.txt.gz` | `af5d296c080b2564c5a8417a4b9d4330c2364c39980a8d51129fd9eeef3cf8bb` |
+| `zod/unshit.json.gz` | `50a643fb98209f4f7d6c3fb61ad193c99c10d80fa5245f6fa1dbf852461e0d9e` |
+| `zod/unshit.stderr.txt.gz` | `7ae68cf4eac4e6015f3598bc0732c36e1d2199f243b10ef007c2727b2de06188` |
 
 ## Self-score
 
-After adding `benchmark/g4/run.mjs` and this report, `node bin/unshit.js scan . --format json` reports score 100/100 with 0 findings. `pnpm run typecheck`, `pnpm test` (189 tests), `pnpm run build`, and `node benchmark/frozen/run.mjs` (`RESULT: PASS`) all pass.
+After adding `benchmark/g4/run.mjs` and this report, `node bin/unshit.js scan . --format json` reports score 100/100 with 0 findings. `pnpm run typecheck`, `pnpm test` (210 tests), `pnpm run build`, and `node benchmark/frozen/run.mjs` (`RESULT: PASS`) all pass.
