@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for code/high-complexity: hc callback pipeline.",
+  "groundTruth": "The pipeline combines a step loop, nested guards and a cleanup loop in one function.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/pipeline.ts",
+      "symbol": "pipe",
+      "reason": "The pipeline combines a step loop, nested guards and a cleanup loop in one function."
+    }
+  ]
+}

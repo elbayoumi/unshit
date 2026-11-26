@@ -1,0 +1,8 @@
+{
+  "description": "Frozen hard-negatives case for code/high-complexity: hc declaration file.",
+  "groundTruth": "No function exceeds the configured complexity ceiling.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": []
+}

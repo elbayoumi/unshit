@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/high-complexity: hc generic resolve.",
+  "groundTruth": "Generic config resolution mixes early returns, a counted loop and two logical-operator sequences.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/resolve.ts",
+      "symbol": "resolveConfig",
+      "reason": "Generic config resolution mixes early returns, a counted loop and two logical-operator sequences."
+    }
+  ]
+}

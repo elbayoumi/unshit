@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/high-complexity: hc submit handler.",
+  "groundTruth": "The arrow handler has nested age checks, a character loop and multiple logical-operator sequences.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/submit.ts",
+      "symbol": "handleSubmit",
+      "reason": "The arrow handler has nested age checks, a character loop and multiple logical-operator sequences."
+    }
+  ]
+}

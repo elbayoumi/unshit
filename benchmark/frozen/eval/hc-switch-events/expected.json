@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/high-complexity: hc switch events.",
+  "groundTruth": "The switch branches add nesting penalties and the default branch adds a logical-operator sequence.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/events.ts",
+      "symbol": "classify",
+      "reason": "The switch branches add nesting penalties and the default branch adds a logical-operator sequence."
+    }
+  ]
+}

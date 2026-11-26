@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for code/high-complexity: hc nested guard.",
+  "groundTruth": "Three levels of nesting plus a loop and logical conditions make authorization expensive to reason about.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/guard.ts",
+      "symbol": "authorize",
+      "reason": "Three levels of nesting plus a loop and logical conditions make authorization expensive to reason about."
+    }
+  ]
+}

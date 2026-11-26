@@ -1,0 +1,21 @@
+{
+  "description": "Frozen eval case for code/high-complexity: hc two parsers.",
+  "groundTruth": "Parsing branches over each token plus post-processing conditions exceed the ceiling on their own. Serialization is a second independently complex function in the same file.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/parsers.ts",
+      "symbol": "parse",
+      "reason": "Parsing branches over each token plus post-processing conditions exceed the ceiling on their own."
+    },
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/parsers.ts",
+      "symbol": "serialize",
+      "reason": "Serialization is a second independently complex function in the same file."
+    }
+  ]
+}
