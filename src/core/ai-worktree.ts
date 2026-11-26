@@ -1,3 +1,4 @@
+import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Finding } from '../contracts.js';
 import type { ScanResult } from './scanner.js';
@@ -137,28 +138,50 @@ export async function runAiFixesInWorktrees(
     .slice(0, maxFiles);
   if (entries.length === 0) return outcome;
 
+  const unshitDir = join(scan.rootDir, '.unshit');
+  const lockPath = join(unshitDir, 'lock');
+  await mkdir(unshitDir, { recursive: true });
+
+  let lockAcquired = false;
   let baseSha = '';
   try {
-    const { stdout } = await git(['rev-parse', 'HEAD'], scan.rootDir);
-    baseSha = stdout.trim();
-  } catch {
-    outcome.messages.push(NO_HEAD_MESSAGE);
-    return outcome;
-  }
-  const state: AiRunState = {
-    rootDir: scan.rootDir,
-    runId: `ai-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    baseSha,
-    config: scan.config,
-    outcome,
-  };
-  try {
-    for (const [index, [relPath, findings]] of entries.entries()) {
-      outcome.attempted.push(relPath);
-      await runOneFile(state, relPath, findings, index);
+    try {
+      await writeFile(lockPath, `${process.pid}\n`, { flag: 'wx' });
+      lockAcquired = true;
+    } catch (err) {
+      const code = (err as NodeJS.ErrnoException)?.code;
+      if (code === 'EEXIST') {
+        throw new Error('Swarm fix already running: lockfile exists');
+      }
+      throw err;
     }
+
+    try {
+      const { stdout } = await git(['rev-parse', 'HEAD'], scan.rootDir);
+      baseSha = stdout.trim();
+    } catch {
+      outcome.messages.push(NO_HEAD_MESSAGE);
+      return outcome;
+    }
+    const state: AiRunState = {
+      rootDir: scan.rootDir,
+      runId: `ai-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      baseSha,
+      config: scan.config,
+      outcome,
+    };
+    try {
+      for (const [index, [relPath, findings]] of entries.entries()) {
+        outcome.attempted.push(relPath);
+        await runOneFile(state, relPath, findings, index);
+      }
+    } finally {
+      await cleanupWorktrees(scan.rootDir);
+    }
+    return outcome;
   } finally {
-    await cleanupWorktrees(scan.rootDir);
+    if (lockAcquired) {
+      await rm(lockPath, { force: true }).catch(() => {});
+    }
   }
-  return outcome;
 }
