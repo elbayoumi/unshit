@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/high-complexity: hc route matcher.",
+  "groundTruth": "The class method combines nested path checks, a loop and logical/ternary conditions.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/matcher.ts",
+      "symbol": "match",
+      "reason": "The class method combines nested path checks, a loop and logical/ternary conditions."
+    }
+  ]
+}

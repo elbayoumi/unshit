@@ -1,0 +1,8 @@
+{
+  "description": "Long import lists look identical but imports are blanked before tokenization.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": []
+}

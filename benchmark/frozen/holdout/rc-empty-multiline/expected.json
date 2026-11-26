@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for slop/redundant-catch: rc empty multiline.",
+  "groundTruth": "Blank lines are not statements and not a comment; the catch remains empty.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/silent.ts",
+      "symbol": "4:5",
+      "reason": "Blank lines are not statements and not a comment; the catch remains empty."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for ts/no-explicit-any: ny generic constraint.",
+  "groundTruth": "The generic constraint uses an explicit `any` keyword instead of `unknown` or a concrete type.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/constraint.ts",
+      "symbol": "1:25",
+      "reason": "The generic constraint uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/high-complexity: hc inventory sync.",
+  "groundTruth": "A loop, nested success check and a recovery catch with its own branch make this async sync function complex.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/inventory.ts",
+      "symbol": "syncInventory",
+      "reason": "A loop, nested success check and a recovery catch with its own branch make this async sync function complex."
+    }
+  ]
+}

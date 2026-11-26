@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/high-complexity: hc validate request.",
+  "groundTruth": "Guard clauses, a loop with a nested condition and two logical-operator sequences make the validator genuinely hard to follow.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/validate.ts",
+      "symbol": "validate",
+      "reason": "Guard clauses, a loop with a nested condition and two logical-operator sequences make the validator genuinely hard to follow."
+    }
+  ]
+}

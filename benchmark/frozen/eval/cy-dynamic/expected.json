@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for arch/import-cycle: cy dynamic.",
+  "groundTruth": "a lazily imports b while b statically imports a, so the dependency graph is circular.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/a.ts",
+      "symbol": "src/a.ts -> src/b.ts -> src/a.ts",
+      "reason": "a lazily imports b while b statically imports a, so the dependency graph is circular."
+    }
+  ]
+}

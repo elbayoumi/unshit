@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for code/duplicate-block: dup loop parsers.",
+  "groundTruth": "Both parsers share the same nested-loop skipping and trimming token window.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/tsv.ts",
+      "symbol": "src/csv.ts -> src/tsv.ts",
+      "reason": "Both parsers share the same nested-loop skipping and trimming token window."
+    }
+  ]
+}

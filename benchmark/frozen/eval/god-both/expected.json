@@ -1,0 +1,15 @@
+{
+  "description": "An oversized component also calls too many hooks.",
+  "groundTruth": "The detector emits one finding per file even when both thresholds are exceeded.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/checkout.tsx",
+      "symbol": null,
+      "reason": "Both the 40+ line count and the six hooks exceed the project limits, producing one finding per file."
+    }
+  ]
+}

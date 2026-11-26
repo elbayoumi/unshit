@@ -1,0 +1,8 @@
+{
+  "description": "An empty catch with an explicit rationale is intentional, not slop.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": []
+}

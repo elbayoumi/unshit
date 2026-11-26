@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for slop/redundant-catch: rc generic function.",
+  "groundTruth": "A generic wrapper with a rethrow-only catch is still flagged.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/generic.ts",
+      "symbol": "2:3",
+      "reason": "A generic wrapper with a rethrow-only catch is still flagged."
+    }
+  ]
+}

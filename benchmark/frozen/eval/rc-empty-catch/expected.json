@@ -1,0 +1,15 @@
+{
+  "description": "A config reader swallows every failure with an empty catch.",
+  "groundTruth": "The catch block has zero statements and no explanatory comment.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/sync.ts",
+      "symbol": "4:5",
+      "reason": "The catch block is empty and carries no comment, so the error is silently swallowed."
+    }
+  ]
+}

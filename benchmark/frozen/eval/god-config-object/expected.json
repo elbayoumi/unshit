@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for react/god-file: god config object.",
+  "groundTruth": "Long configuration and copy objects are still source files above the line ceiling.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/messages.ts",
+      "symbol": null,
+      "reason": "Long configuration and copy objects are still source files above the line ceiling."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "description": "Custom hook-like names are not the eight built-in React hook calls.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": []
+}

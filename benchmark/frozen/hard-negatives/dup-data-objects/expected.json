@@ -1,0 +1,8 @@
+{
+  "description": "Similar dictionary data has no logic tokens and must not count as duplicated logic.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": []
+}

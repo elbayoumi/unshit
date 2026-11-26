@@ -1,0 +1,15 @@
+{
+  "description": "A short component calls six React hooks against a limit of four.",
+  "groundTruth": "Line count is small but state-hook density exceeds the configured ceiling.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/filters.tsx",
+      "symbol": null,
+      "reason": "The component calls more than the four allowed React hooks, so it should be split."
+    }
+  ]
+}

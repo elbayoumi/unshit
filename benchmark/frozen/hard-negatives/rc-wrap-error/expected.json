@@ -1,0 +1,8 @@
+{
+  "description": "The catch adds a domain error with a cause instead of rethrowing verbatim.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": []
+}

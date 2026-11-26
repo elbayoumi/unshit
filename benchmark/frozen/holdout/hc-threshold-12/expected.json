@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for code/high-complexity: hc threshold 12.",
+  "groundTruth": "With the project threshold raised to 12 this deeply branched router still exceeds it.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/threshold.ts",
+      "symbol": "route",
+      "reason": "With the project threshold raised to 12 this deeply branched router still exceeds it."
+    }
+  ]
+}

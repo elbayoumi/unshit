@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for react/god-file: god dashboard.",
+  "groundTruth": "A 55-line dashboard with five hooks breaches both project limits.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/board.tsx",
+      "symbol": null,
+      "reason": "A 55-line dashboard with five hooks breaches both project limits."
+    }
+  ]
+}

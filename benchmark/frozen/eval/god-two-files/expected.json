@@ -1,0 +1,21 @@
+{
+  "description": "Frozen eval case for react/god-file: god two files.",
+  "groundTruth": "The module runs past the project’s 30-line ceiling even though its logic is simple. The module runs past the project’s 30-line ceiling even though its logic is simple.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/orders.tsx",
+      "symbol": null,
+      "reason": "The module runs past the project’s 30-line ceiling even though its logic is simple."
+    },
+    {
+      "ruleId": "react/god-file",
+      "file": "src/returns.tsx",
+      "symbol": null,
+      "reason": "The module runs past the project’s 30-line ceiling even though its logic is simple."
+    }
+  ]
+}

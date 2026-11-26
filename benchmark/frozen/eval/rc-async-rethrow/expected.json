@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for slop/redundant-catch: rc async rethrow.",
+  "groundTruth": "Awaiting the result does not make the catch meaningful: it rethrows the original error.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/fetcher.ts",
+      "symbol": "3:3",
+      "reason": "Awaiting the result does not make the catch meaningful: it rethrows the original error."
+    }
+  ]
+}

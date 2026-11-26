@@ -1,0 +1,8 @@
+{
+  "description": "A JSDoc brace annotation inside a comment is not a TypeScript any type.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": []
+}

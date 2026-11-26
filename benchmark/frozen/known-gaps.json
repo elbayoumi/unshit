@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "suite": "holdout",
+      "case": "cy-lazy-three",
+      "ruleId": "arch/import-cycle",
+      "file": "src/a.ts",
+      "symbol": "src/a.ts -> src/b.ts -> src/c.ts -> src/a.ts",
+      "reason": "collectTsJsEdges in src/core/import-graph/ts.ts records static imports, export-from and require, but not dynamic import() edges, so the a -> b lazy edge is invisible to Tarjan SCC. See KNOWN-GAPS.md."
+    }
+  ]
+}

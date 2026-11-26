@@ -1,0 +1,15 @@
+{
+  "description": "A parser catches its own error only to rethrow it unchanged.",
+  "groundTruth": "The single catch statement rethrows the exact caught identifier and there is no finally block.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/rethrow.ts",
+      "symbol": "2:3",
+      "reason": "The catch block only rethrows the same caught identifier; it adds no handling and can be removed."
+    }
+  ]
+}

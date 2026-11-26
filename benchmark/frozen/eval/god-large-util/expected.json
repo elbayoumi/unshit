@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for react/god-file: god large util.",
+  "groundTruth": "The heuristic is not React-only: this 45-line utility module also breaches the line ceiling.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/money.ts",
+      "symbol": null,
+      "reason": "The heuristic is not React-only: this 45-line utility module also breaches the line ceiling."
+    }
+  ]
+}

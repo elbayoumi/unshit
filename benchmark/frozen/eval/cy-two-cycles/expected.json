@@ -1,0 +1,21 @@
+{
+  "description": "Frozen eval case for arch/import-cycle: cy two cycles.",
+  "groundTruth": "The first strongly connected component is a <-> b. The second, independent strongly connected component is c <-> d.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/a.ts",
+      "symbol": "src/a.ts -> src/b.ts -> src/a.ts",
+      "reason": "The first strongly connected component is a <-> b."
+    },
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/c.ts",
+      "symbol": "src/c.ts -> src/d.ts -> src/c.ts",
+      "reason": "The second, independent strongly connected component is c <-> d."
+    }
+  ]
+}

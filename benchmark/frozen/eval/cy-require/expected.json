@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for arch/import-cycle: cy require.",
+  "groundTruth": "CommonJS require calls form the same kind of two-node cycle as ES imports.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/a.cjs",
+      "symbol": "src/a.cjs -> src/b.cjs -> src/a.cjs",
+      "reason": "CommonJS require calls form the same kind of two-node cycle as ES imports."
+    }
+  ]
+}

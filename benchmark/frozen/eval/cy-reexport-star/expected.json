@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for arch/import-cycle: cy reexport star.",
+  "groundTruth": "Mutual export-star declarations create a re-export cycle.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/a.ts",
+      "symbol": "src/a.ts -> src/b.ts -> src/a.ts",
+      "reason": "Mutual export-star declarations create a re-export cycle."
+    }
+  ]
+}

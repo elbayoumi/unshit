@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for ts/no-explicit-any: ny catch.",
+  "groundTruth": "The catch binding uses an explicit `any` keyword instead of `unknown` or a concrete type.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/boundary.ts",
+      "symbol": "4:19",
+      "reason": "The catch binding uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    }
+  ]
+}

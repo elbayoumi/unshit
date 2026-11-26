@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for arch/import-cycle: cy cross dir.",
+  "groundTruth": "A feature service and a shared guard import each other across directories.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/features/orders/service.ts",
+      "symbol": "src/features/orders/service.ts -> src/shared/guards.ts -> src/features/orders/service.ts",
+      "reason": "A feature service and a shared guard import each other across directories."
+    }
+  ]
+}

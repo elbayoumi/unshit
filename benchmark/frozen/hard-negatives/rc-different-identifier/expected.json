@@ -1,0 +1,8 @@
+{
+  "description": "The rethrown identifier differs from the catch binding; a rename is not a pure rethrow.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": []
+}

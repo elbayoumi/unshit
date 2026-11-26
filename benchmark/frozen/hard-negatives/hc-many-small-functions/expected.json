@@ -1,0 +1,8 @@
+{
+  "description": "Frozen hard-negatives case for code/high-complexity: hc many small functions.",
+  "groundTruth": "No function exceeds the configured complexity ceiling.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": []
+}

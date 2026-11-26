@@ -1,0 +1,8 @@
+{
+  "description": "A JSX-heavy component that still stays under 30 lines.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": []
+}

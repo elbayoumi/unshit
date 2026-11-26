@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for react/god-file: god form.",
+  "groundTruth": "Seven field/effect hooks in one form component trip the density heuristic.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/form.tsx",
+      "symbol": null,
+      "reason": "Seven field/effect hooks in one form component trip the density heuristic."
+    }
+  ]
+}

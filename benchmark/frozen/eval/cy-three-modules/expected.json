@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for arch/import-cycle: cy three modules.",
+  "groundTruth": "The a -> b -> c -> a chain closes a three-file import cycle.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/a.ts",
+      "symbol": "src/a.ts -> src/b.ts -> src/c.ts -> src/a.ts",
+      "reason": "The a -> b -> c -> a chain closes a three-file import cycle."
+    }
+  ]
+}

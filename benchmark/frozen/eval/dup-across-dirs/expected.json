@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/duplicate-block: dup across dirs.",
+  "groundTruth": "The session reader was duplicated across feature directories.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/web/session.ts",
+      "symbol": "src/admin/session.ts -> src/web/session.ts",
+      "reason": "The session reader was duplicated across feature directories."
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+import './catalogA';
+import './catalogB';

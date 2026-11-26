@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for ts/no-explicit-any: ny variable.",
+  "groundTruth": "The variable annotation uses an explicit `any` keyword instead of `unknown` or a concrete type.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/state.ts",
+      "symbol": "1:14",
+      "reason": "The variable annotation uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for ts/no-explicit-any: ny cast.",
+  "groundTruth": "The `as any` cast removes all type checking from the value.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/cast.ts",
+      "symbol": "2:22",
+      "reason": "The `as any` cast removes all type checking from the value."
+    }
+  ]
+}

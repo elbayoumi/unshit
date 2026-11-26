@@ -1,0 +1,8 @@
+{
+  "description": "The catch supplies a fallback value, so it handles the error.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": []
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for slop/redundant-catch: rc class method.",
+  "groundTruth": "The catch block is empty and carries no comment, so the error is silently swallowed.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/repository.ts",
+      "symbol": "5:7",
+      "reason": "The catch block is empty and carries no comment, so the error is silently swallowed."
+    }
+  ]
+}

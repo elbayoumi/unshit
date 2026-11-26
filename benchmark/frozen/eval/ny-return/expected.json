@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for ts/no-explicit-any: ny return.",
+  "groundTruth": "The return type uses an explicit `any` keyword instead of `unknown` or a concrete type.",
+  "rules": [
+    "ts/no-explicit-any"
+  ],
+  "expected": [
+    {
+      "ruleId": "ts/no-explicit-any",
+      "file": "src/lookup.ts",
+      "symbol": "1:31",
+      "reason": "The return type uses an explicit `any` keyword instead of `unknown` or a concrete type."
+    }
+  ]
+}

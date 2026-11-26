@@ -1,0 +1,15 @@
+{
+  "description": "A rethrow catch sits next to a finally block, so unwrapping it is less mechanical.",
+  "groundTruth": "The redundant rethrow is still reported, anchored at the catch clause because a finally block prevents automatic unwrapping.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/cleanup.ts",
+      "symbol": "4:5",
+      "reason": "The catch only rethrows; the finally block exists but adds no handling to the catch itself."
+    }
+  ]
+}

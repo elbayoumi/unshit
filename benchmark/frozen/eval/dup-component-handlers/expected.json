@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/duplicate-block: dup component handlers.",
+  "groundTruth": "The event-handler logic is identical in both React components even though the surrounding JSX differs.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/profile.tsx",
+      "symbol": "src/checkout.tsx -> src/profile.tsx",
+      "reason": "The event-handler logic is identical in both React components even though the surrounding JSX differs."
+    }
+  ]
+}

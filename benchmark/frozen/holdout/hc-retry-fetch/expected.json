@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for code/high-complexity: hc retry fetch.",
+  "groundTruth": "Retry logic nests a loop, success check, catch branch and final guard clauses.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/retry.ts",
+      "symbol": "retryFetch",
+      "reason": "Retry logic nests a loop, success check, catch branch and final guard clauses."
+    }
+  ]
+}

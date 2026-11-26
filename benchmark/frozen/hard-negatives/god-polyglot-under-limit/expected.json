@@ -1,0 +1,8 @@
+{
+  "description": "A non-TS module inside the doubled 60-line allowance.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": []
+}

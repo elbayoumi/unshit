@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for slop/redundant-catch: rc nested finally.",
+  "groundTruth": "A nested finally does not add handling inside the catch, which only rethrows.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/layered.ts",
+      "symbol": "4:5",
+      "reason": "A nested finally does not add handling inside the catch, which only rethrows."
+    }
+  ]
+}

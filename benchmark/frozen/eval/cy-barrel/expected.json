@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for arch/import-cycle: cy barrel.",
+  "groundTruth": "The barrel re-exports the widget while the widget imports the barrel back.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/features/barrel.ts",
+      "symbol": "src/features/barrel.ts -> src/features/widget.ts -> src/features/barrel.ts",
+      "reason": "The barrel re-exports the widget while the widget imports the barrel back."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for code/duplicate-block: dup auth guards.",
+  "groundTruth": "The two guards repeat the same ordered checks, only the required role is normalized away.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/editor.ts",
+      "symbol": "src/admin.ts -> src/editor.ts",
+      "reason": "The two guards repeat the same ordered checks, only the required role is normalized away."
+    }
+  ]
+}

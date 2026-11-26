@@ -1,0 +1,29 @@
+export function Panel() {
+  const cell0 = <td>0</td>;
+  const cell1 = <td>1</td>;
+  const cell2 = <td>2</td>;
+  const cell3 = <td>3</td>;
+  const cell4 = <td>4</td>;
+  const cell5 = <td>5</td>;
+  const cell6 = <td>6</td>;
+  const cell7 = <td>7</td>;
+  const cell8 = <td>8</td>;
+  const cell9 = <td>9</td>;
+  const cell10 = <td>10</td>;
+  const cell11 = <td>11</td>;
+  const cell12 = <td>12</td>;
+  const cell13 = <td>13</td>;
+  const cell14 = <td>14</td>;
+  const cell15 = <td>15</td>;
+  const cell16 = <td>16</td>;
+  const cell17 = <td>17</td>;
+  const cell18 = <td>18</td>;
+  const cell19 = <td>19</td>;
+  const cell20 = <td>20</td>;
+  const cell21 = <td>21</td>;
+  const cell22 = <td>22</td>;
+  const cell23 = <td>23</td>;
+  const cell24 = <td>24</td>;
+  const cell25 = <td>25</td>;
+  return <table>{cell0}</table>;
+}

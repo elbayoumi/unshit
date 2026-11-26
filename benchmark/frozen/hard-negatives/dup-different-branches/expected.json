@@ -1,0 +1,8 @@
+{
+  "description": "Same identifiers and similar checks, but the branch order changes the token sequence.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": []
+}

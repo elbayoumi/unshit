@@ -1,0 +1,15 @@
+{
+  "description": "The same validation logic is copy-pasted into two modules with renamed identifiers.",
+  "groundTruth": "One token window of at least 24 tokens with >=3 logic tokens is shared by the two modules; the detector reports the later file once.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/user.ts",
+      "symbol": "src/account.ts -> src/user.ts",
+      "reason": "Both validators have the same token sequence after identifier normalization: guard, banned/trusted check, active return."
+    }
+  ]
+}

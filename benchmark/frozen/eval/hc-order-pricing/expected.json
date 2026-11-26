@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/high-complexity: hc order pricing.",
+  "groundTruth": "Nested for/if plus a coupon condition and a retry loop put this pricing function above the configured complexity ceiling.",
+  "rules": [
+    "code/high-complexity"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/high-complexity",
+      "file": "src/pricing.ts",
+      "symbol": "priceOrder",
+      "reason": "Nested for/if plus a coupon condition and a retry loop put this pricing function above the configured complexity ceiling."
+    }
+  ]
+}

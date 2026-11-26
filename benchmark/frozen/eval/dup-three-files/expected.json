@@ -1,0 +1,21 @@
+{
+  "description": "Frozen eval case for code/duplicate-block: dup three files.",
+  "groundTruth": "beta repeats alpha’s normalization block verbatim modulo identifiers. gamma repeats the same block as alpha as well.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/beta.ts",
+      "symbol": "src/alpha.ts -> src/beta.ts",
+      "reason": "beta repeats alpha’s normalization block verbatim modulo identifiers."
+    },
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/gamma.ts",
+      "symbol": "src/alpha.ts -> src/gamma.ts",
+      "reason": "gamma repeats the same block as alpha as well."
+    }
+  ]
+}

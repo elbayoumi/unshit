@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for arch/import-cycle: cy self import.",
+  "groundTruth": "The module imports its own runtime export, a one-node cycle.",
+  "rules": [
+    "arch/import-cycle"
+  ],
+  "expected": [
+    {
+      "ruleId": "arch/import-cycle",
+      "file": "src/cache.ts",
+      "symbol": "src/cache.ts -> src/cache.ts",
+      "reason": "The module imports its own runtime export, a one-node cycle."
+    }
+  ]
+}

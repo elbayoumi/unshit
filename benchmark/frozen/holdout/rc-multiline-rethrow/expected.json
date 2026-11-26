@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for slop/redundant-catch: rc multiline rethrow.",
+  "groundTruth": "Formatting the catch header across lines does not change its rethrow-only body.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/formatted.ts",
+      "symbol": "2:3",
+      "reason": "Formatting the catch header across lines does not change its rethrow-only body."
+    }
+  ]
+}

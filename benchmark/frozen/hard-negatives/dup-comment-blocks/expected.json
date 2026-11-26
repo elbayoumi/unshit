@@ -1,0 +1,8 @@
+{
+  "description": "Comments are stripped by the tokenizer, so identical prose is not a clone.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": []
+}
