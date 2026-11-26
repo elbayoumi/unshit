@@ -235,6 +235,10 @@ Expose `unshit_scan`, `unshit_score`, `unshit_guard`, `unshit_check_patch`, `uns
 
 ---
 
+## Benchmarks
+
+A reproducible head-to-head against knip, jscpd, dependency-cruiser, oxlint and biome on five real repositories is documented in [docs/research/g4-head-to-head.md](./docs/research/g4-head-to-head.md). Measured (median of 3 runs): unshit found 107/52/68/0/0 unused-export findings vs knip's 52/2/14/0/37 across hono/execa/zod/commander.js/fastify; unshit found fewer unused files than knip on hono/execa/zod (31/283/117 vs 173/129/338) but more on fastify (20 vs 17); duplicate-block counts were 23/159/557/1/15 vs jscpd's 699/6/251/14/518; import-cycle counts were 4/1/1/0/1 vs dependency-cruiser's 7/7/1/0/0. Counts are not comparable one-to-one (tools differ in scope); see the report's limitations section. Raw outputs: `docs/research/g4-raw/`.
+
 ## Development & Architecture
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started and [RELEASING.md](./RELEASING.md) for how versions are shipped.

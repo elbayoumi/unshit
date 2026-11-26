@@ -1,0 +1,764 @@
+[
+  {
+    "project": "hono",
+    "path": "/Volumes/data/projects/unshit-bench/corpus/hono",
+    "sha": "9c2f2948498434506f9ebc77a213bf67a2da5603",
+    "tools": {
+      "unshit": {
+        "ms": 647.188084,
+        "runs": [
+          694.7680419999999,
+          647.188084,
+          635.0114169999999
+        ],
+        "exitCode": 0,
+        "rawFile": "unshit.json",
+        "total": 733,
+        "unusedExports": 107,
+        "unusedFiles": 31,
+        "unusedDependencies": 4,
+        "unlistedDependencies": 9,
+        "duplicateBlocks": 23,
+        "importCycles": 4,
+        "highComplexity": 34,
+        "godFiles": 18,
+        "byRule": {
+          "react/god-file": 18,
+          "ts/unused-type-export": 62,
+          "ts/unused-export": 45,
+          "ts/unused-file": 31,
+          "ts/no-explicit-any": 459,
+          "deps/unlisted-dependency": 9,
+          "slop/redundant-catch": 10,
+          "ts/no-double-cast": 34,
+          "deps/unused-dependency": 4,
+          "code/duplicate-block": 23,
+          "code/high-complexity": 34,
+          "arch/import-cycle": 4
+        }
+      },
+      "knip": {
+        "ms": 327.3042089999999,
+        "runs": [
+          396.236709,
+          317.6087499999999,
+          327.3042089999999
+        ],
+        "exitCode": 2,
+        "rawFile": "knip.json",
+        "total": 273,
+        "issues": 202,
+        "unusedFiles": 173,
+        "unusedExports": 52,
+        "unusedExportsOnly": 26,
+        "unusedTypes": 26,
+        "unusedDependencies": 15,
+        "unusedDependenciesOnly": 0,
+        "unusedDevDependencies": 15,
+        "unlisted": 0,
+        "unresolved": 0,
+        "binaries": 33,
+        "stderrPreview": "ERROR: Error loading vite.config.ts (Cannot find module 'rolldown')\nERROR: Please fix or visit https://knip.dev/reference/known-issues\nERROR: Error loading vitest.config.ts (Cannot find module 'vitest/config')\nERROR: Please fix or visit https://knip.dev/reference/known-issues\nERROR: Error loading adapters/cloudflare-workers/vite.config.ts (Cannot find module 'vite-plus')\nERROR: Please fix or visit https://knip.dev/reference/known-issues\nERROR: Error loading adapters/service-worker/vite.config.ts"
+      },
+      "jscpd": {
+        "ms": 75.59058300000015,
+        "runs": [
+          89.78366599999981,
+          75.59058300000015,
+          74.14191600000004
+        ],
+        "exitCode": 0,
+        "rawFile": "jscpd-report.json",
+        "stdoutFile": "jscpd.stdout.txt",
+        "clones": 699,
+        "duplicatedLines": 14678,
+        "duplicatedTokens": 100243,
+        "sources": 376
+      },
+      "depcruise": {
+        "ms": 1323.7687500000002,
+        "runs": [
+          1397.8401670000003,
+          1323.1846670000004,
+          1323.7687500000002
+        ],
+        "exitCode": 0,
+        "rawFile": "depcruise.json",
+        "total": 179,
+        "modules": 534,
+        "dependencies": 1009,
+        "importCycles": 7,
+        "orphans": 18,
+        "unresolvable": 154,
+        "byRule": {
+          "no-circular": 7,
+          "not-to-unresolvable": 154,
+          "no-orphans": 18
+        }
+      },
+      "oxlint": {
+        "ms": 41.219333000000006,
+        "runs": [
+          59.07429200000024,
+          41.219333000000006,
+          41.0502919999999
+        ],
+        "exitCode": 0,
+        "rawFile": "oxlint.json",
+        "total": 115,
+        "bySeverity": {
+          "warning": 115
+        },
+        "files": 462,
+        "rules": 96
+      },
+      "biome": {
+        "ms": 181.89591699999983,
+        "runs": [
+          219.07433300000048,
+          175.62975000000006,
+          181.89591699999983
+        ],
+        "exitCode": 1,
+        "rawFile": "biome.json",
+        "total": 2004,
+        "diagnostics": 2004,
+        "errors": 458,
+        "warnings": 1192,
+        "infos": 354
+      }
+    },
+    "overlap": {
+      "unusedExports": {
+        "unshit": 107,
+        "knip": 52
+      },
+      "unusedFiles": {
+        "unshit": 31,
+        "knip": 173
+      },
+      "unusedDependencies": {
+        "unshit": 4,
+        "knip": 15
+      },
+      "unlistedDependencies": {
+        "unshit": 9,
+        "knip": 0
+      },
+      "duplicateCode": {
+        "unshit": 23,
+        "jscpd": 699
+      },
+      "importCycles": {
+        "unshit": 4,
+        "depcruise": 7
+      }
+    }
+  },
+  {
+    "project": "execa",
+    "path": "/Volumes/data/projects/unshit-bench/corpus/execa",
+    "sha": "6f856d55bd3ea8b3f240a7fc4502d2ac50697eec",
+    "tools": {
+      "unshit": {
+        "ms": 556.8515829999997,
+        "runs": [
+          604.7777499999993,
+          554.4601250000014,
+          556.8515829999997
+        ],
+        "exitCode": 0,
+        "rawFile": "unshit.json",
+        "total": 472,
+        "unusedExports": 8,
+        "unusedFiles": 283,
+        "unusedDependencies": 1,
+        "unlistedDependencies": 0,
+        "duplicateBlocks": 159,
+        "importCycles": 1,
+        "highComplexity": 1,
+        "godFiles": 2,
+        "byRule": {
+          "slop/redundant-catch": 13,
+          "arch/import-cycle": 1,
+          "code/duplicate-block": 159,
+          "code/high-complexity": 1,
+          "deps/unused-dependency": 1,
+          "ts/unused-file": 283,
+          "ts/no-double-cast": 1,
+          "ts/no-explicit-any": 2,
+          "ts/unused-export": 8,
+          "slop/magic-timer": 1,
+          "react/god-file": 2
+        }
+      },
+      "knip": {
+        "ms": 229.37291699999878,
+        "runs": [
+          238.88854100000026,
+          221.73058300000048,
+          229.37291699999878
+        ],
+        "exitCode": 1,
+        "rawFile": "knip.json",
+        "total": 150,
+        "issues": 135,
+        "unusedFiles": 129,
+        "unusedExports": 2,
+        "unusedExportsOnly": 0,
+        "unusedTypes": 2,
+        "unusedDependencies": 4,
+        "unusedDependenciesOnly": 0,
+        "unusedDevDependencies": 4,
+        "unlisted": 0,
+        "unresolved": 0,
+        "binaries": 15
+      },
+      "jscpd": {
+        "ms": 50.62512499999866,
+        "runs": [
+          52.361291000001074,
+          50.62512499999866,
+          49.94091700000172
+        ],
+        "exitCode": 0,
+        "rawFile": "jscpd-report.json",
+        "stdoutFile": "jscpd.stdout.txt",
+        "clones": 6,
+        "duplicatedLines": 98,
+        "duplicatedTokens": 844,
+        "sources": 447
+      },
+      "depcruise": {
+        "ms": 553.5245410000007,
+        "runs": [
+          560.9225829999996,
+          551.5065830000003,
+          553.5245410000007
+        ],
+        "exitCode": 0,
+        "rawFile": "depcruise.json",
+        "total": 239,
+        "modules": 790,
+        "dependencies": 2377,
+        "importCycles": 7,
+        "orphans": 16,
+        "unresolvable": 216,
+        "byRule": {
+          "no-circular": 7,
+          "not-to-unresolvable": 216,
+          "no-orphans": 16
+        }
+      },
+      "oxlint": {
+        "ms": 36.32533400000102,
+        "runs": [
+          37.291417000000365,
+          36.32533400000102,
+          35.954249999998865
+        ],
+        "exitCode": 0,
+        "rawFile": "oxlint.json",
+        "total": 62,
+        "bySeverity": {
+          "warning": 62
+        },
+        "files": 639,
+        "rules": 96
+      },
+      "biome": {
+        "ms": 74.76124999999956,
+        "runs": [
+          74.76124999999956,
+          76.9633329999997,
+          73.50179199999911
+        ],
+        "exitCode": 1,
+        "rawFile": "biome.json",
+        "total": 276,
+        "diagnostics": 276,
+        "errors": 16,
+        "warnings": 227,
+        "infos": 33
+      }
+    },
+    "overlap": {
+      "unusedExports": {
+        "unshit": 8,
+        "knip": 2
+      },
+      "unusedFiles": {
+        "unshit": 283,
+        "knip": 129
+      },
+      "unusedDependencies": {
+        "unshit": 1,
+        "knip": 4
+      },
+      "unlistedDependencies": {
+        "unshit": 0,
+        "knip": 0
+      },
+      "duplicateCode": {
+        "unshit": 159,
+        "jscpd": 6
+      },
+      "importCycles": {
+        "unshit": 1,
+        "depcruise": 7
+      }
+    }
+  },
+  {
+    "project": "zod",
+    "path": "/Volumes/data/projects/unshit-bench/corpus/zod",
+    "sha": "d40c329910436e528d3c26cb1b9179e05abebf05",
+    "tools": {
+      "unshit": {
+        "ms": 844.1800000000003,
+        "runs": [
+          888.1662080000006,
+          839.1602500000008,
+          844.1800000000003
+        ],
+        "exitCode": 0,
+        "rawFile": "unshit.json",
+        "total": 2004,
+        "unusedExports": 68,
+        "unusedFiles": 117,
+        "unusedDependencies": 15,
+        "unlistedDependencies": 1,
+        "duplicateBlocks": 557,
+        "importCycles": 1,
+        "highComplexity": 103,
+        "godFiles": 19,
+        "byRule": {
+          "ts/unused-file": 117,
+          "deps/unused-dependency": 15,
+          "ts/no-explicit-any": 1045,
+          "ts/unused-export": 34,
+          "code/duplicate-block": 557,
+          "react/god-file": 19,
+          "ts/no-double-cast": 45,
+          "ts/unused-type-export": 34,
+          "slop/redundant-catch": 32,
+          "code/high-complexity": 103,
+          "arch/import-cycle": 1,
+          "slop/magic-timer": 1,
+          "deps/unlisted-dependency": 1
+        }
+      },
+      "knip": {
+        "ms": 306.39841700000034,
+        "runs": [
+          310.8367080000007,
+          300.1200829999998,
+          306.39841700000034
+        ],
+        "exitCode": 2,
+        "rawFile": "knip.json",
+        "total": 417,
+        "issues": 353,
+        "unusedFiles": 338,
+        "unusedExports": 14,
+        "unusedExportsOnly": 9,
+        "unusedTypes": 5,
+        "unusedDependencies": 56,
+        "unusedDependenciesOnly": 4,
+        "unusedDevDependencies": 52,
+        "unlisted": 1,
+        "unresolved": 0,
+        "binaries": 2,
+        "stderrPreview": "ERROR: Error loading vitest.config.ts (Cannot find module 'vitest/config')\nERROR: Please fix or visit https://knip.dev/reference/known-issues\nERROR: Error loading packages/resolution/vitest.config.ts (Cannot find module 'vitest/config')\nERROR: Please fix or visit https://knip.dev/reference/known-issues\nERROR: Error loading packages/mini/vitest.config.ts (Cannot find module 'vitest/config')\nERROR: Please fix or visit https://knip.dev/reference/known-issues\nERROR: Error loading packages/docs/vites"
+      },
+      "jscpd": {
+        "ms": 70.88724999999977,
+        "runs": [
+          70.88724999999977,
+          71.28549999999996,
+          68.33454200000051
+        ],
+        "exitCode": 0,
+        "rawFile": "jscpd-report.json",
+        "stdoutFile": "jscpd.stdout.txt",
+        "clones": 251,
+        "duplicatedLines": 6321,
+        "duplicatedTokens": 48435,
+        "sources": 470
+      },
+      "depcruise": {
+        "ms": 1370.8149159999994,
+        "runs": [
+          1387.0416670000013,
+          1358.2347499999996,
+          1370.8149159999994
+        ],
+        "exitCode": 0,
+        "rawFile": "depcruise.json",
+        "total": 690,
+        "modules": 639,
+        "dependencies": 1225,
+        "importCycles": 1,
+        "orphans": 14,
+        "unresolvable": 675,
+        "byRule": {
+          "no-circular": 1,
+          "not-to-unresolvable": 675,
+          "no-orphans": 14
+        }
+      },
+      "oxlint": {
+        "ms": 40.47283299999981,
+        "runs": [
+          42.07300000000032,
+          40.47283299999981,
+          40.22929099999965
+        ],
+        "exitCode": 0,
+        "rawFile": "oxlint.json",
+        "total": 242,
+        "bySeverity": {
+          "warning": 242
+        },
+        "files": 527,
+        "rules": 96
+      },
+      "biome": {
+        "ms": 27.968417000000045,
+        "runs": [
+          32.507792000000336,
+          27.261333000002196,
+          27.968417000000045
+        ],
+        "exitCode": 1,
+        "rawFile": "biome.json",
+        "total": 0,
+        "error": "unparseable"
+      }
+    },
+    "overlap": {
+      "unusedExports": {
+        "unshit": 68,
+        "knip": 14
+      },
+      "unusedFiles": {
+        "unshit": 117,
+        "knip": 338
+      },
+      "unusedDependencies": {
+        "unshit": 15,
+        "knip": 56
+      },
+      "unlistedDependencies": {
+        "unshit": 1,
+        "knip": 1
+      },
+      "duplicateCode": {
+        "unshit": 557,
+        "jscpd": 251
+      },
+      "importCycles": {
+        "unshit": 1,
+        "depcruise": 1
+      }
+    }
+  },
+  {
+    "project": "commander.js",
+    "path": "/Volumes/data/projects/unshit-bench/corpus/commander.js",
+    "sha": "a5a7dc084d4d2b7932e85ca049c5204e50a2c721",
+    "tools": {
+      "unshit": {
+        "ms": 216.5890419999996,
+        "runs": [
+          235.4809580000001,
+          215.11116599999878,
+          216.5890419999996
+        ],
+        "exitCode": 0,
+        "rawFile": "unshit.json",
+        "total": 19,
+        "unusedExports": 0,
+        "unusedFiles": 5,
+        "unusedDependencies": 0,
+        "unlistedDependencies": 3,
+        "duplicateBlocks": 1,
+        "importCycles": 0,
+        "highComplexity": 2,
+        "godFiles": 5,
+        "byRule": {
+          "deps/unlisted-dependency": 3,
+          "react/god-file": 5,
+          "code/high-complexity": 2,
+          "code/duplicate-block": 1,
+          "ts/unused-file": 5,
+          "ts/no-explicit-any": 3
+        }
+      },
+      "knip": {
+        "ms": 167.34204200000022,
+        "runs": [
+          167.34204200000022,
+          167.37895800000115,
+          165.53462500000023
+        ],
+        "exitCode": 1,
+        "rawFile": "knip.json",
+        "total": 57,
+        "issues": 52,
+        "unusedFiles": 51,
+        "unusedExports": 0,
+        "unusedExportsOnly": 0,
+        "unusedTypes": 0,
+        "unusedDependencies": 2,
+        "unusedDependenciesOnly": 0,
+        "unusedDevDependencies": 2,
+        "unlisted": 0,
+        "unresolved": 0,
+        "binaries": 4
+      },
+      "jscpd": {
+        "ms": 36.50775000000067,
+        "runs": [
+          36.876250000001164,
+          34.78270799999882,
+          36.50775000000067
+        ],
+        "exitCode": 0,
+        "rawFile": "jscpd-report.json",
+        "stdoutFile": "jscpd.stdout.txt",
+        "clones": 14,
+        "duplicatedLines": 279,
+        "duplicatedTokens": 1759,
+        "sources": 153
+      },
+      "depcruise": {
+        "ms": 264.4300000000003,
+        "runs": [
+          262.6447500000031,
+          264.4300000000003,
+          267.48062500000015
+        ],
+        "exitCode": 0,
+        "rawFile": "depcruise.json",
+        "total": 57,
+        "modules": 190,
+        "dependencies": 438,
+        "importCycles": 0,
+        "orphans": 11,
+        "unresolvable": 46,
+        "byRule": {
+          "not-to-unresolvable": 46,
+          "no-orphans": 11
+        }
+      },
+      "oxlint": {
+        "ms": 31.43929200000275,
+        "runs": [
+          31.821208000001207,
+          31.24949999999808,
+          31.43929200000275
+        ],
+        "exitCode": 0,
+        "rawFile": "oxlint.json",
+        "total": 65,
+        "bySeverity": {
+          "warning": 65
+        },
+        "files": 171,
+        "rules": 96
+      },
+      "biome": {
+        "ms": 49.40458299999955,
+        "runs": [
+          50.735375000000204,
+          49.40458299999955,
+          49.37266699999964
+        ],
+        "exitCode": 1,
+        "rawFile": "biome.json",
+        "total": 162,
+        "diagnostics": 162,
+        "errors": 6,
+        "warnings": 105,
+        "infos": 51
+      }
+    },
+    "overlap": {
+      "unusedExports": {
+        "unshit": 0,
+        "knip": 0
+      },
+      "unusedFiles": {
+        "unshit": 5,
+        "knip": 51
+      },
+      "unusedDependencies": {
+        "unshit": 0,
+        "knip": 2
+      },
+      "unlistedDependencies": {
+        "unshit": 3,
+        "knip": 0
+      },
+      "duplicateCode": {
+        "unshit": 1,
+        "jscpd": 14
+      },
+      "importCycles": {
+        "unshit": 0,
+        "depcruise": 0
+      }
+    }
+  },
+  {
+    "project": "fastify",
+    "path": "/Volumes/data/projects/unshit-bench/corpus/fastify",
+    "sha": "f5757f12298e95210a3e35d81559961b284ad6f1",
+    "tools": {
+      "unshit": {
+        "ms": 462.2355839999982,
+        "runs": [
+          492.30620799999815,
+          462.2355839999982,
+          454.0296249999992
+        ],
+        "exitCode": 0,
+        "rawFile": "unshit.json",
+        "total": 91,
+        "unusedExports": 0,
+        "unusedFiles": 20,
+        "unusedDependencies": 6,
+        "unlistedDependencies": 0,
+        "duplicateBlocks": 15,
+        "importCycles": 1,
+        "highComplexity": 11,
+        "godFiles": 13,
+        "byRule": {
+          "arch/import-cycle": 1,
+          "react/god-file": 13,
+          "code/duplicate-block": 15,
+          "code/high-complexity": 11,
+          "deps/unused-dependency": 6,
+          "slop/magic-timer": 1,
+          "ts/unused-file": 20,
+          "slop/redundant-catch": 1,
+          "ts/no-explicit-any": 23
+        }
+      },
+      "knip": {
+        "ms": 261.0565000000024,
+        "runs": [
+          260.9917080000014,
+          261.0565000000024,
+          263.5410840000004
+        ],
+        "exitCode": 1,
+        "rawFile": "knip.json",
+        "total": 75,
+        "issues": 32,
+        "unusedFiles": 17,
+        "unusedExports": 37,
+        "unusedExportsOnly": 14,
+        "unusedTypes": 23,
+        "unusedDependencies": 10,
+        "unusedDependenciesOnly": 0,
+        "unusedDevDependencies": 10,
+        "unlisted": 0,
+        "unresolved": 1,
+        "binaries": 10
+      },
+      "jscpd": {
+        "ms": 59.24462499999936,
+        "runs": [
+          59.24462499999936,
+          59.40029200000208,
+          58.012666999999055
+        ],
+        "exitCode": 0,
+        "rawFile": "jscpd-report.json",
+        "stdoutFile": "jscpd.stdout.txt",
+        "clones": 518,
+        "duplicatedLines": 10352,
+        "duplicatedTokens": 61243,
+        "sources": 282
+      },
+      "depcruise": {
+        "ms": 462.6505419999994,
+        "runs": [
+          463.286415999999,
+          456.29829099999915,
+          462.6505419999994
+        ],
+        "exitCode": 0,
+        "rawFile": "depcruise.json",
+        "total": 167,
+        "modules": 370,
+        "dependencies": 1042,
+        "importCycles": 0,
+        "orphans": 0,
+        "unresolvable": 167,
+        "byRule": {
+          "not-to-unresolvable": 167
+        }
+      },
+      "oxlint": {
+        "ms": 36.16854200000307,
+        "runs": [
+          36.16854200000307,
+          35.58891700000095,
+          36.78050000000076
+        ],
+        "exitCode": 0,
+        "rawFile": "oxlint.json",
+        "total": 1346,
+        "bySeverity": {
+          "warning": 1346
+        },
+        "files": 305,
+        "rules": 96
+      },
+      "biome": {
+        "ms": 427.8694159999977,
+        "runs": [
+          420.2532080000019,
+          427.8694159999977,
+          439.1163329999981
+        ],
+        "exitCode": 1,
+        "rawFile": "biome.json",
+        "total": 5667,
+        "diagnostics": 5667,
+        "errors": 202,
+        "warnings": 4988,
+        "infos": 477
+      }
+    },
+    "overlap": {
+      "unusedExports": {
+        "unshit": 0,
+        "knip": 37
+      },
+      "unusedFiles": {
+        "unshit": 20,
+        "knip": 17
+      },
+      "unusedDependencies": {
+        "unshit": 6,
+        "knip": 10
+      },
+      "unlistedDependencies": {
+        "unshit": 0,
+        "knip": 0
+      },
+      "duplicateCode": {
+        "unshit": 15,
+        "jscpd": 518
+      },
+      "importCycles": {
+        "unshit": 1,
+        "depcruise": 0
+      }
+    }
+  }
+]
