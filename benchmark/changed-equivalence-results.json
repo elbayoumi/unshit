@@ -1,0 +1,240 @@
+{
+  "generatedAt": "2026-11-26T19:54:34.323Z",
+  "node": "v26.7.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "seed": 20261129,
+  "corpora": [
+    "hono",
+    "zod",
+    "execa",
+    "fastify",
+    "commander.js",
+    "unshit-self"
+  ],
+  "beforeAfter": [
+    {
+      "target": "hono",
+      "beforeCount": 642,
+      "afterCount": 642,
+      "equal": true,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "target": "zod",
+      "beforeCount": 1493,
+      "afterCount": 1493,
+      "equal": true,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "target": "execa",
+      "beforeCount": 32,
+      "afterCount": 32,
+      "equal": true,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "target": "fastify",
+      "beforeCount": 64,
+      "afterCount": 64,
+      "equal": true,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "target": "commander.js",
+      "beforeCount": 15,
+      "afterCount": 15,
+      "equal": true,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "target": "unshit-self",
+      "beforeCount": 10,
+      "afterCount": 10,
+      "equal": true,
+      "missing": [],
+      "extra": []
+    }
+  ],
+  "changedGuard": [
+    {
+      "target": "hono",
+      "edits": [
+        {
+          "file": "src/http-exception.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "src/utils/color.test.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "src/middleware/secure-headers/permissions-policy.ts",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "fullScanFindingCount": 642,
+      "changedFindingCount": 0,
+      "blockingChangedFindingCount": 0,
+      "guardReportedCount": 0,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 0
+      }
+    },
+    {
+      "target": "zod",
+      "edits": [
+        {
+          "file": "packages/zod/src/v4/classic/tests/assignability.test.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "packages/zod/src/v4/locales/sl.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "packages/zod/src/v4/core/tests/locales/nl.test.ts",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "fullScanFindingCount": 1493,
+      "changedFindingCount": 1,
+      "blockingChangedFindingCount": 1,
+      "guardReportedCount": 1,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 1
+      }
+    },
+    {
+      "target": "execa",
+      "edits": [
+        {
+          "file": "test/fixtures/ipc-iterate-ref.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "test/stdio/lines-mixed.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "test/helpers/override-promise.js",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "fullScanFindingCount": 32,
+      "changedFindingCount": 0,
+      "blockingChangedFindingCount": 0,
+      "guardReportedCount": 0,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 0
+      }
+    },
+    {
+      "target": "fastify",
+      "edits": [
+        {
+          "file": "test/http2/plain.test.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "test/stream.2.test.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "test/reply-error.test.js",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "fullScanFindingCount": 64,
+      "changedFindingCount": 0,
+      "blockingChangedFindingCount": 0,
+      "guardReportedCount": 0,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 0
+      }
+    },
+    {
+      "target": "commander.js",
+      "edits": [
+        {
+          "file": "tests/command.parseOptions.test.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "tests/options.dual-options.test.js",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "tests/help.style.test.js",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "fullScanFindingCount": 15,
+      "changedFindingCount": 0,
+      "blockingChangedFindingCount": 0,
+      "guardReportedCount": 0,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 0
+      }
+    },
+    {
+      "target": "unshit-self",
+      "edits": [
+        {
+          "file": "benchmark/frozen/hard-negatives/type-used-import/src/types.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "src/detectors/dead-exports/utils.ts",
+          "kind": "append-comment-marker"
+        },
+        {
+          "file": "integrations/opencode-unshit-plugin.ts",
+          "kind": "append-comment-marker"
+        }
+      ],
+      "changedFileCount": 3,
+      "fullScanFindingCount": 10,
+      "changedFindingCount": 0,
+      "blockingChangedFindingCount": 0,
+      "guardReportedCount": 0,
+      "equal": true,
+      "missing": [],
+      "extra": [],
+      "guardCli": {
+        "code": 0
+      }
+    }
+  ],
+  "summary": {
+    "beforeAfterAllEqual": true,
+    "changedGuardAllEqual": true,
+    "allEqual": true
+  }
+}

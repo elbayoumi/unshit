@@ -46,29 +46,24 @@ export interface ScanOptions {
   deep?: boolean;
 }
 
-/**
- * Runs all enabled detectors read-only and returns deterministically sorted findings.
- */
-export async function runScan(
-  rootDir: string,
-  config: UnshitConfig,
-  extraDetectors: Detector[] = [],
-  options: ScanOptions = {},
-): Promise<ScanResult> {
-  const { files, manifests } = await collectWorkspace(rootDir, config);
-  const disabled = new Set(config.disabledRules);
-  const detectors = [...BUILTIN_DETECTORS, ...extraDetectors].filter((d) => !disabled.has(d.id));
-  const fileMap = new Map(files.map((f) => [f.relPath, f]));
-
+function splitDetectors(detectors: Detector[]): { cacheable: Detector[]; crossFile: Detector[] } {
   const cacheable: Detector[] = [];
   const crossFile: Detector[] = [];
   for (const detector of detectors) {
     (isCacheableDetector(detector) ? cacheable : crossFile).push(detector);
   }
+  return { cacheable, crossFile };
+}
 
-  const cache = new FindingCache(rootDir, config, { noCache: options.noCache });
+function runPerFileDetectors(
+  files: FileEntry[],
+  manifests: string[] | undefined,
+  rootDir: string,
+  config: UnshitConfig,
+  cacheable: Detector[],
+  cache: FindingCache,
+): Finding[] {
   const raw: Finding[] = [];
-
   for (const file of files) {
     const contentHash = hashContent(file.content);
     const cached = cache.get(contentHash, file.relPath);
@@ -82,13 +77,22 @@ export async function runScan(
     }
     const ctx: DetectorContext = { rootDir, config, files: [file], manifests };
     const fileFindings: Finding[] = [];
-    for (const detector of cacheable) {
-      fileFindings.push(...detector.detect(ctx));
-    }
+    for (const detector of cacheable) fileFindings.push(...detector.detect(ctx));
     cache.set(contentHash, fileFindings);
     raw.push(...fileFindings);
   }
+  return raw;
+}
 
+async function runCrossFileDetectors(
+  raw: Finding[],
+  files: FileEntry[],
+  manifests: string[] | undefined,
+  rootDir: string,
+  config: UnshitConfig,
+  crossFile: Detector[],
+  options: ScanOptions,
+): Promise<void> {
   let syntacticUnused: Detector[] = [];
   let crossFileRun = crossFile;
   if (options.deep) {
@@ -96,17 +100,20 @@ export async function runScan(
     crossFileRun = crossFile.filter((d) => !DEEP_UNUSED_RULES.has(d.id));
   }
 
+  if (crossFileRun.length === 0 && !options.deep) return;
+
+  const crossFileFindings: Finding[] = [];
   if (crossFileRun.length > 0) {
     const ctx: DetectorContext = { rootDir, config, files, manifests };
-    for (const detector of crossFileRun) {
-      raw.push(...detector.detect(ctx));
-    }
+    for (const detector of crossFileRun) crossFileFindings.push(...detector.detect(ctx));
   }
-
   if (options.deep) {
-    await applyDeepUnusedExports(raw, syntacticUnused, rootDir, config, files, manifests);
+    await applyDeepUnusedExports(crossFileFindings, syntacticUnused, rootDir, config, files, manifests);
   }
+  raw.push(...crossFileFindings);
+}
 
+function dedupeAndSort(raw: Finding[], fileMap: Map<string, FileEntry>): Finding[] {
   const seen = new Set<string>();
   const findings: Finding[] = [];
   for (const f of raw) {
@@ -117,13 +124,35 @@ export async function runScan(
     seen.add(key);
     findings.push(f);
   }
-
   findings.sort((a, b) =>
     a.file.localeCompare(b.file)
     || a.span.line - b.span.line
     || a.span.column - b.span.column
     || a.ruleId.localeCompare(b.ruleId),
   );
+  return findings;
+}
 
+/**
+ * Runs all enabled detectors read-only and returns deterministically sorted findings.
+ */
+export async function runScan(
+  rootDir: string,
+  config: UnshitConfig,
+  extraDetectors: Detector[] = [],
+  options: ScanOptions = {},
+): Promise<ScanResult> {
+  const { files, manifests } = await collectWorkspace(rootDir, config);
+  const disabled = new Set(config.disabledRules);
+  const detectors = [...BUILTIN_DETECTORS, ...extraDetectors].filter((d) => !disabled.has(d.id));
+  const fileMap = new Map(files.map((f) => [f.relPath, f]));
+  const { cacheable, crossFile } = splitDetectors(detectors);
+
+  const cache = new FindingCache(rootDir, config, { noCache: options.noCache });
+  const raw = runPerFileDetectors(files, manifests, rootDir, config, cacheable, cache);
+  await runCrossFileDetectors(raw, files, manifests, rootDir, config, crossFile, options);
+  cache.flush();
+
+  const findings = dedupeAndSort(raw, fileMap);
   return { rootDir, config, files, manifests, findings, detectors };
 }

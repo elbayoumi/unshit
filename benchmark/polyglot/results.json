@@ -1,0 +1,2839 @@
+{
+  "generatedAt": "2026-11-26T19:52:41.647Z",
+  "generator": "benchmark/polyglot/generate.mjs",
+  "seedList": [
+    20261126,
+    20261127
+  ],
+  "perRule": 15,
+  "negPerRule": 10,
+  "rules": [
+    {
+      "ruleId": "rust/no-unwrap",
+      "label": "Rust `.unwrap()`"
+    },
+    {
+      "ruleId": "python/no-bare-except",
+      "label": "Python bare `except:`"
+    },
+    {
+      "ruleId": "dart/no-dynamic-or-print",
+      "label": "Dart `dynamic` / `print()`"
+    },
+    {
+      "ruleId": "css/no-important",
+      "label": "CSS `!important`"
+    },
+    {
+      "ruleId": "css/design-drift",
+      "label": "CSS hardcoded colors"
+    },
+    {
+      "ruleId": "css/duplicate-selector",
+      "label": "CSS duplicate selectors"
+    }
+  ],
+  "notes": [
+    "Synthetic corpus only: no real-world polyglot project was used (none is available offline and nothing was downloaded).",
+    "Base projects are generated per seed; positives and negatives are injected into fresh copies of that base.",
+    "Recall and FP rows are matched by ruleId + file + exact 1-based line.",
+    "Two positive variants are known misses (Rust `.unwrap ()`, SCSS nested `&:hover` expansion) and one design-drift negative is a known false positive (`rgb(var(--x) / 0.5)`); they are kept so the gaps stay visible."
+  ],
+  "base": {
+    "perSeed": [
+      {
+        "seed": 20261126,
+        "files": 131,
+        "lines": {
+          "rust": 683,
+          "python": 486,
+          "dart": 501,
+          "css": 399
+        },
+        "findingsByRule": {
+          "rust/no-unwrap": 0,
+          "python/no-bare-except": 0,
+          "dart/no-dynamic-or-print": 0,
+          "css/no-important": 0,
+          "css/design-drift": 0,
+          "css/duplicate-selector": 0
+        },
+        "findings": []
+      },
+      {
+        "seed": 20261127,
+        "files": 131,
+        "lines": {
+          "rust": 683,
+          "python": 486,
+          "dart": 501,
+          "css": 399
+        },
+        "findingsByRule": {
+          "rust/no-unwrap": 0,
+          "python/no-bare-except": 0,
+          "dart/no-dynamic-or-print": 0,
+          "css/no-important": 0,
+          "css/design-drift": 0,
+          "css/duplicate-selector": 0
+        },
+        "findings": []
+      }
+    ],
+    "pooledFindings": [],
+    "totalFindings": 0
+  },
+  "seeds": [
+    {
+      "seed": 20261126,
+      "base": {
+        "findingsByRule": {
+          "rust/no-unwrap": 0,
+          "python/no-bare-except": 0,
+          "dart/no-dynamic-or-print": 0,
+          "css/no-important": 0,
+          "css/design-drift": 0,
+          "css/duplicate-selector": 0
+        },
+        "total": 0
+      },
+      "positives": {
+        "injected": 90,
+        "findings": 90,
+        "rules": [
+          {
+            "ruleId": "css/design-drift",
+            "injected": 15,
+            "found": 15,
+            "recall": 1,
+            "wilson95": {
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
+            },
+            "misses": [],
+            "hits": [
+              {
+                "file": "styles/motion.css",
+                "line": 10,
+                "variant": "hex-6",
+                "findingLine": 10
+              },
+              {
+                "file": "styles/dark.css",
+                "line": 12,
+                "variant": "hex-3",
+                "findingLine": 12
+              },
+              {
+                "file": "styles/avatars.css",
+                "line": 15,
+                "variant": "hex-8",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/tokens.css",
+                "line": 24,
+                "variant": "rgba",
+                "findingLine": 24
+              },
+              {
+                "file": "styles/tables.css",
+                "line": 15,
+                "variant": "rgb",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/dashboard.css",
+                "line": 16,
+                "variant": "hsl",
+                "findingLine": 16
+              },
+              {
+                "file": "styles/progress.css",
+                "line": 12,
+                "variant": "hsla",
+                "findingLine": 12
+              },
+              {
+                "file": "styles/navigation.css",
+                "line": 15,
+                "variant": "gradient",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/responsive.css",
+                "line": 18,
+                "variant": "border",
+                "findingLine": 18
+              },
+              {
+                "file": "styles/forms.css",
+                "line": 17,
+                "variant": "fill",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/accessibility.css",
+                "line": 15,
+                "variant": "rgba-white",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/badges.css",
+                "line": 12,
+                "variant": "hex-uppercase",
+                "findingLine": 12
+              },
+              {
+                "file": "styles/auth.css",
+                "line": 20,
+                "variant": "hex-short-magenta",
+                "findingLine": 20
+              },
+              {
+                "file": "styles/base.css",
+                "line": 26,
+                "variant": "caret",
+                "findingLine": 26
+              },
+              {
+                "file": "styles/lists.css",
+                "line": 17,
+                "variant": "hex-black",
+                "findingLine": 17
+              }
+            ]
+          },
+          {
+            "ruleId": "css/duplicate-selector",
+            "injected": 15,
+            "found": 14,
+            "recall": 0.9333333333333333,
+            "wilson95": {
+              "low": 0.7018347012621998,
+              "high": 0.9881331045067315,
+              "center": 0.9333333333333333
+            },
+            "misses": [
+              {
+                "file": "styles/theme.scss",
+                "line": 19,
+                "variant": "nested-expansion",
+                "marker": ".theme-card:hover",
+                "reason": "the detector compares raw selector text; it does not expand nested `&:hover`"
+              }
+            ],
+            "hits": [
+              {
+                "file": "styles/cards.css",
+                "line": 21,
+                "variant": "repeat-top-level",
+                "findingLine": 21
+              },
+              {
+                "file": "styles/badges.css",
+                "line": 14,
+                "variant": "repeat-top-level",
+                "findingLine": 14
+              },
+              {
+                "file": "styles/typography.css",
+                "line": 13,
+                "variant": "repeat-top-level",
+                "findingLine": 13
+              },
+              {
+                "file": "styles/avatars.css",
+                "line": 17,
+                "variant": "repeat-top-level",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/footer.css",
+                "line": 12,
+                "variant": "repeat-top-level",
+                "findingLine": 12
+              },
+              {
+                "file": "styles/modals.css",
+                "line": 16,
+                "variant": "repeat-top-level",
+                "findingLine": 16
+              },
+              {
+                "file": "styles/buttons.css",
+                "line": 25,
+                "variant": "repeat-top-level",
+                "findingLine": 25
+              },
+              {
+                "file": "styles/navigation.css",
+                "line": 17,
+                "variant": "repeat-top-level",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/dark.css",
+                "line": 14,
+                "variant": "repeat-top-level",
+                "findingLine": 14
+              },
+              {
+                "file": "styles/tooltips.css",
+                "line": 17,
+                "variant": "repeat-top-level",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/header.css",
+                "line": 14,
+                "variant": "repeat-top-level",
+                "findingLine": 14
+              },
+              {
+                "file": "styles/base.css",
+                "line": 28,
+                "variant": "repeat-top-level",
+                "findingLine": 28
+              },
+              {
+                "file": "styles/sidebar.css",
+                "line": 10,
+                "variant": "repeat-top-level",
+                "findingLine": 10
+              },
+              {
+                "file": "styles/lists.css",
+                "line": 19,
+                "variant": "repeat-top-level",
+                "findingLine": 19
+              }
+            ]
+          },
+          {
+            "ruleId": "css/no-important",
+            "injected": 15,
+            "found": 15,
+            "recall": 1,
+            "wilson95": {
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
+            },
+            "misses": [],
+            "hits": [
+              {
+                "file": "styles/layout.css",
+                "line": 15,
+                "variant": "plain",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/header.css",
+                "line": 12,
+                "variant": "spaced-bang",
+                "findingLine": 12
+              },
+              {
+                "file": "styles/grid.css",
+                "line": 13,
+                "variant": "uppercase",
+                "findingLine": 13
+              },
+              {
+                "file": "styles/cards.css",
+                "line": 18,
+                "variant": "in-media",
+                "findingLine": 18
+              },
+              {
+                "file": "styles/alerts.css",
+                "line": 15,
+                "variant": "in-supports",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/base.css",
+                "line": 22,
+                "variant": "in-layer",
+                "findingLine": 22
+              },
+              {
+                "file": "styles/avatars.css",
+                "line": 12,
+                "variant": "two-on-one-line",
+                "findingLine": 12
+              },
+              {
+                "file": "styles/footer.css",
+                "line": 10,
+                "variant": "hardcoded-color",
+                "findingLine": 10
+              },
+              {
+                "file": "styles/responsive.css",
+                "line": 15,
+                "variant": "grid",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/theme.scss",
+                "line": 17,
+                "variant": "transition",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/dark.css",
+                "line": 9,
+                "variant": "display",
+                "findingLine": 9
+              },
+              {
+                "file": "styles/auth.css",
+                "line": 17,
+                "variant": "font-size",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/lists.css",
+                "line": 13,
+                "variant": "scss-nested",
+                "findingLine": 13
+              },
+              {
+                "file": "styles/tooltips.css",
+                "line": 14,
+                "variant": "scss-amp",
+                "findingLine": 14
+              },
+              {
+                "file": "styles/tokens.css",
+                "line": 21,
+                "variant": "visibility",
+                "findingLine": 21
+              }
+            ]
+          },
+          {
+            "ruleId": "dart/no-dynamic-or-print",
+            "injected": 15,
+            "found": 15,
+            "recall": 1,
+            "wilson95": {
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
+            },
+            "misses": [],
+            "hits": [
+              {
+                "file": "lib/theme/text_styles.dart",
+                "line": 10,
+                "variant": "dynamic-var",
+                "findingLine": 10
+              },
+              {
+                "file": "lib/models/product.dart",
+                "line": 16,
+                "variant": "list-dynamic",
+                "findingLine": 16
+              },
+              {
+                "file": "lib/services/api_client.dart",
+                "line": 30,
+                "variant": "future-dynamic",
+                "findingLine": 30
+              },
+              {
+                "file": "lib/theme/colors.dart",
+                "line": 11,
+                "variant": "dynamic-param",
+                "findingLine": 11
+              },
+              {
+                "file": "lib/screens/home_screen.dart",
+                "line": 20,
+                "variant": "dynamic-function",
+                "findingLine": 20
+              },
+              {
+                "file": "lib/utils/validators.dart",
+                "line": 18,
+                "variant": "dynamic-return",
+                "findingLine": 18
+              },
+              {
+                "file": "lib/screens/detail_screen.dart",
+                "line": 15,
+                "variant": "print-literal",
+                "findingLine": 15
+              },
+              {
+                "file": "lib/services/auth_service.dart",
+                "line": 20,
+                "variant": "print-value",
+                "findingLine": 20
+              },
+              {
+                "file": "lib/widgets/button.dart",
+                "line": 15,
+                "variant": "print-encode",
+                "findingLine": 15
+              },
+              {
+                "file": "lib/widgets/empty_state.dart",
+                "line": 17,
+                "variant": "print-in-if",
+                "findingLine": 17
+              },
+              {
+                "file": "lib/services/cache_service.dart",
+                "line": 31,
+                "variant": "print-in-method",
+                "findingLine": 31
+              },
+              {
+                "file": "lib/main.dart",
+                "line": 10,
+                "variant": "print-in-callback",
+                "findingLine": 10
+              },
+              {
+                "file": "lib/services/logger.dart",
+                "line": 17,
+                "variant": "dynamic-await",
+                "findingLine": 17
+              },
+              {
+                "file": "lib/api/endpoints.dart",
+                "line": 10,
+                "variant": "dynamic-cache",
+                "findingLine": 10
+              },
+              {
+                "file": "lib/utils/formatters.dart",
+                "line": 16,
+                "variant": "print-warn",
+                "findingLine": 16
+              }
+            ]
+          },
+          {
+            "ruleId": "python/no-bare-except",
+            "injected": 15,
+            "found": 15,
+            "recall": 1,
+            "wilson95": {
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
+            },
+            "misses": [],
+            "hits": [
+              {
+                "file": "src/summit/scheduler.py",
+                "line": 33,
+                "variant": "except-pass",
+                "findingLine": 33
+              },
+              {
+                "file": "src/summit/serializers.py",
+                "line": 21,
+                "variant": "except-return-none",
+                "findingLine": 21
+              },
+              {
+                "file": "src/summit/dates.py",
+                "line": 15,
+                "variant": "except-continue",
+                "findingLine": 15
+              },
+              {
+                "file": "src/summit/events.py",
+                "line": 19,
+                "variant": "spaced-colon",
+                "findingLine": 19
+              },
+              {
+                "file": "src/summit/files.py",
+                "line": 13,
+                "variant": "noqa",
+                "findingLine": 13
+              },
+              {
+                "file": "src/summit/api.py",
+                "line": 17,
+                "variant": "print-traceback",
+                "findingLine": 17
+              },
+              {
+                "file": "src/summit/cli.py",
+                "line": 23,
+                "variant": "re-raise",
+                "findingLine": 23
+              },
+              {
+                "file": "src/summit/__init__.py",
+                "line": 9,
+                "variant": "log-warning",
+                "findingLine": 9
+              },
+              {
+                "file": "src/summit/repository.py",
+                "line": 26,
+                "variant": "return-list",
+                "findingLine": 26
+              },
+              {
+                "file": "src/summit/settings.py",
+                "line": 17,
+                "variant": "append-failure",
+                "findingLine": 17
+              },
+              {
+                "file": "src/summit/auth.py",
+                "line": 19,
+                "variant": "class-method",
+                "findingLine": 19
+              },
+              {
+                "file": "src/summit/cache.py",
+                "line": 24,
+                "variant": "async-function",
+                "findingLine": 24
+              },
+              {
+                "file": "src/summit/config.py",
+                "line": 22,
+                "variant": "raise-wrapped",
+                "findingLine": 22
+              },
+              {
+                "file": "src/summit/http_client.py",
+                "line": 17,
+                "variant": "sys-exit",
+                "findingLine": 17
+              },
+              {
+                "file": "src/summit/pagination.py",
+                "line": 20,
+                "variant": "except-return-dict",
+                "findingLine": 20
+              }
+            ]
+          },
+          {
+            "ruleId": "rust/no-unwrap",
+            "injected": 15,
+            "found": 14,
+            "recall": 0.9333333333333333,
+            "wilson95": {
+              "low": 0.7018347012621998,
+              "high": 0.9881331045067315,
+              "center": 0.9333333333333333
+            },
+            "misses": [
+              {
+                "file": "src/env.rs",
+                "line": 15,
+                "variant": "spaced-call",
+                "marker": "inj_14",
+                "reason": "the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list"
+              }
+            ],
+            "hits": [
+              {
+                "file": "src/auth.rs",
+                "line": 14,
+                "variant": "file-open",
+                "findingLine": 14
+              },
+              {
+                "file": "src/error.rs",
+                "line": 31,
+                "variant": "read-to-string",
+                "findingLine": 31
+              },
+              {
+                "file": "src/validation.rs",
+                "line": 18,
+                "variant": "env-var",
+                "findingLine": 18
+              },
+              {
+                "file": "src/util.rs",
+                "line": 23,
+                "variant": "json-from-str",
+                "findingLine": 23
+              },
+              {
+                "file": "src/logging.rs",
+                "line": 12,
+                "variant": "config-load",
+                "findingLine": 12
+              },
+              {
+                "file": "src/routes.rs",
+                "line": 18,
+                "variant": "strip-suffix",
+                "findingLine": 18
+              },
+              {
+                "file": "src/worker.rs",
+                "line": 20,
+                "variant": "iterator-next",
+                "findingLine": 20
+              },
+              {
+                "file": "src/pagination.rs",
+                "line": 21,
+                "variant": "parse-literal",
+                "findingLine": 21
+              },
+              {
+                "file": "src/report.rs",
+                "line": 30,
+                "variant": "chain-map",
+                "findingLine": 30
+              },
+              {
+                "file": "src/lib.rs",
+                "line": 34,
+                "variant": "slice-get",
+                "findingLine": 34
+              },
+              {
+                "file": "src/handlers.rs",
+                "line": 14,
+                "variant": "from-utf8",
+                "findingLine": 14
+              },
+              {
+                "file": "src/model.rs",
+                "line": 25,
+                "variant": "checked-sub",
+                "findingLine": 25
+              },
+              {
+                "file": "src/ids.rs",
+                "line": 15,
+                "variant": "header-get",
+                "findingLine": 15
+              },
+              {
+                "file": "src/feature_flags.rs",
+                "line": 19,
+                "variant": "id-parse",
+                "findingLine": 19
+              }
+            ]
+          }
+        ]
+      },
+      "negatives": {
+        "injected": 60,
+        "findings": 3,
+        "rules": [
+          {
+            "ruleId": "css/design-drift",
+            "negatives": 10,
+            "falsePositives": 1,
+            "fpRate": 0.1,
+            "wilson95": {
+              "low": 0.017876213095072868,
+              "high": 0.4041500267952385,
+              "center": 0.1
+            },
+            "fps": [
+              {
+                "file": "styles/forms.css",
+                "line": 17,
+                "variant": "rgb-var-channels",
+                "marker": "neg_rgb_colors_0",
+                "finding": {
+                  "ruleId": "css/design-drift",
+                  "file": "styles/forms.css",
+                  "line": 17,
+                  "message": "Hardcoded color `rgb(                 / 0.5)`."
+                }
+              }
+            ]
+          },
+          {
+            "ruleId": "css/duplicate-selector",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          },
+          {
+            "ruleId": "css/no-important",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          },
+          {
+            "ruleId": "dart/no-dynamic-or-print",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          },
+          {
+            "ruleId": "python/no-bare-except",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          },
+          {
+            "ruleId": "rust/no-unwrap",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          }
+        ]
+      }
+    },
+    {
+      "seed": 20261127,
+      "base": {
+        "findingsByRule": {
+          "rust/no-unwrap": 0,
+          "python/no-bare-except": 0,
+          "dart/no-dynamic-or-print": 0,
+          "css/no-important": 0,
+          "css/design-drift": 0,
+          "css/duplicate-selector": 0
+        },
+        "total": 0
+      },
+      "positives": {
+        "injected": 90,
+        "findings": 90,
+        "rules": [
+          {
+            "ruleId": "css/design-drift",
+            "injected": 15,
+            "found": 15,
+            "recall": 1,
+            "wilson95": {
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
+            },
+            "misses": [],
+            "hits": [
+              {
+                "file": "styles/tokens.css",
+                "line": 21,
+                "variant": "hex-6",
+                "findingLine": 21
+              },
+              {
+                "file": "styles/typography.css",
+                "line": 14,
+                "variant": "hex-3",
+                "findingLine": 14
+              },
+              {
+                "file": "styles/modals.css",
+                "line": 22,
+                "variant": "hex-8",
+                "findingLine": 22
+              },
+              {
+                "file": "styles/accessibility.css",
+                "line": 18,
+                "variant": "rgba",
+                "findingLine": 18
+              },
+              {
+                "file": "styles/utilities.css",
+                "line": 16,
+                "variant": "rgb",
+                "findingLine": 16
+              },
+              {
+                "file": "styles/dark.css",
+                "line": 14,
+                "variant": "hsl",
+                "findingLine": 14
+              },
+              {
+                "file": "styles/layout.css",
+                "line": 15,
+                "variant": "hsla",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/progress.css",
+                "line": 12,
+                "variant": "gradient",
+                "findingLine": 12
+              },
+              {
+                "file": "styles/footer.css",
+                "line": 13,
+                "variant": "border",
+                "findingLine": 13
+              },
+              {
+                "file": "styles/forms.css",
+                "line": 17,
+                "variant": "fill",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/responsive.css",
+                "line": 20,
+                "variant": "rgba-white",
+                "findingLine": 20
+              },
+              {
+                "file": "styles/navigation.css",
+                "line": 15,
+                "variant": "hex-uppercase",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/settings.css",
+                "line": 16,
+                "variant": "hex-short-magenta",
+                "findingLine": 16
+              },
+              {
+                "file": "styles/buttons.css",
+                "line": 26,
+                "variant": "caret",
+                "findingLine": 26
+              },
+              {
+                "file": "styles/lists.css",
+                "line": 17,
+                "variant": "hex-black",
+                "findingLine": 17
+              }
+            ]
+          },
+          {
+            "ruleId": "css/duplicate-selector",
+            "injected": 15,
+            "found": 14,
+            "recall": 0.9333333333333333,
+            "wilson95": {
+              "low": 0.7018347012621998,
+              "high": 0.9881331045067315,
+              "center": 0.9333333333333333
+            },
+            "misses": [
+              {
+                "file": "styles/theme.scss",
+                "line": 22,
+                "variant": "nested-expansion",
+                "marker": ".theme-card:hover",
+                "reason": "the detector compares raw selector text; it does not expand nested `&:hover`"
+              }
+            ],
+            "hits": [
+              {
+                "file": "styles/accessibility.css",
+                "line": 20,
+                "variant": "repeat-top-level",
+                "findingLine": 20
+              },
+              {
+                "file": "styles/progress.css",
+                "line": 14,
+                "variant": "repeat-top-level",
+                "findingLine": 14
+              },
+              {
+                "file": "styles/modals.css",
+                "line": 24,
+                "variant": "repeat-top-level",
+                "findingLine": 24
+              },
+              {
+                "file": "styles/tables.css",
+                "line": 14,
+                "variant": "repeat-top-level",
+                "findingLine": 14
+              },
+              {
+                "file": "styles/dashboard.css",
+                "line": 18,
+                "variant": "repeat-top-level",
+                "findingLine": 18
+              },
+              {
+                "file": "styles/alerts.css",
+                "line": 13,
+                "variant": "repeat-top-level",
+                "findingLine": 13
+              },
+              {
+                "file": "styles/theme.scss",
+                "line": 19,
+                "variant": "repeat-top-level",
+                "findingLine": 19
+              },
+              {
+                "file": "styles/forms.css",
+                "line": 19,
+                "variant": "repeat-top-level",
+                "findingLine": 19
+              },
+              {
+                "file": "styles/navigation.css",
+                "line": 17,
+                "variant": "repeat-top-level",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/settings.css",
+                "line": 18,
+                "variant": "repeat-top-level",
+                "findingLine": 18
+              },
+              {
+                "file": "styles/auth.css",
+                "line": 16,
+                "variant": "repeat-top-level",
+                "findingLine": 16
+              },
+              {
+                "file": "styles/lists.css",
+                "line": 19,
+                "variant": "repeat-top-level",
+                "findingLine": 19
+              },
+              {
+                "file": "styles/layout.css",
+                "line": 17,
+                "variant": "repeat-top-level",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/avatars.css",
+                "line": 11,
+                "variant": "repeat-top-level",
+                "findingLine": 11
+              }
+            ]
+          },
+          {
+            "ruleId": "css/no-important",
+            "injected": 15,
+            "found": 15,
+            "recall": 1,
+            "wilson95": {
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
+            },
+            "misses": [],
+            "hits": [
+              {
+                "file": "styles/dashboard.css",
+                "line": 16,
+                "variant": "plain",
+                "findingLine": 16
+              },
+              {
+                "file": "styles/utilities.css",
+                "line": 13,
+                "variant": "spaced-bang",
+                "findingLine": 13
+              },
+              {
+                "file": "styles/tooltips.css",
+                "line": 13,
+                "variant": "uppercase",
+                "findingLine": 13
+              },
+              {
+                "file": "styles/responsive.css",
+                "line": 16,
+                "variant": "in-media",
+                "findingLine": 16
+              },
+              {
+                "file": "styles/dark.css",
+                "line": 10,
+                "variant": "in-supports",
+                "findingLine": 10
+              },
+              {
+                "file": "styles/modals.css",
+                "line": 18,
+                "variant": "in-layer",
+                "findingLine": 18
+              },
+              {
+                "file": "styles/accessibility.css",
+                "line": 15,
+                "variant": "two-on-one-line",
+                "findingLine": 15
+              },
+              {
+                "file": "styles/grid.css",
+                "line": 13,
+                "variant": "hardcoded-color",
+                "findingLine": 13
+              },
+              {
+                "file": "styles/footer.css",
+                "line": 10,
+                "variant": "grid",
+                "findingLine": 10
+              },
+              {
+                "file": "styles/base.css",
+                "line": 21,
+                "variant": "transition",
+                "findingLine": 21
+              },
+              {
+                "file": "styles/sidebar.css",
+                "line": 11,
+                "variant": "display",
+                "findingLine": 11
+              },
+              {
+                "file": "styles/theme.scss",
+                "line": 17,
+                "variant": "font-size",
+                "findingLine": 17
+              },
+              {
+                "file": "styles/settings.css",
+                "line": 12,
+                "variant": "scss-nested",
+                "findingLine": 12
+              },
+              {
+                "file": "styles/lists.css",
+                "line": 13,
+                "variant": "scss-amp",
+                "findingLine": 13
+              },
+              {
+                "file": "styles/badges.css",
+                "line": 12,
+                "variant": "visibility",
+                "findingLine": 12
+              }
+            ]
+          },
+          {
+            "ruleId": "dart/no-dynamic-or-print",
+            "injected": 15,
+            "found": 15,
+            "recall": 1,
+            "wilson95": {
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
+            },
+            "misses": [],
+            "hits": [
+              {
+                "file": "lib/utils/validators.dart",
+                "line": 18,
+                "variant": "dynamic-var",
+                "findingLine": 18
+              },
+              {
+                "file": "lib/services/cache_service.dart",
+                "line": 29,
+                "variant": "list-dynamic",
+                "findingLine": 29
+              },
+              {
+                "file": "lib/widgets/card.dart",
+                "line": 16,
+                "variant": "future-dynamic",
+                "findingLine": 16
+              },
+              {
+                "file": "lib/models/order.dart",
+                "line": 14,
+                "variant": "dynamic-param",
+                "findingLine": 14
+              },
+              {
+                "file": "lib/services/logger.dart",
+                "line": 16,
+                "variant": "dynamic-function",
+                "findingLine": 16
+              },
+              {
+                "file": "lib/services/api_client.dart",
+                "line": 30,
+                "variant": "dynamic-return",
+                "findingLine": 30
+              },
+              {
+                "file": "lib/models/json.dart",
+                "line": 10,
+                "variant": "print-literal",
+                "findingLine": 10
+              },
+              {
+                "file": "lib/widgets/avatar.dart",
+                "line": 14,
+                "variant": "print-value",
+                "findingLine": 14
+              },
+              {
+                "file": "lib/config.dart",
+                "line": 13,
+                "variant": "print-encode",
+                "findingLine": 13
+              },
+              {
+                "file": "lib/models/user.dart",
+                "line": 19,
+                "variant": "print-in-if",
+                "findingLine": 19
+              },
+              {
+                "file": "lib/theme/text_styles.dart",
+                "line": 12,
+                "variant": "print-in-method",
+                "findingLine": 12
+              },
+              {
+                "file": "lib/app.dart",
+                "line": 20,
+                "variant": "print-in-callback",
+                "findingLine": 20
+              },
+              {
+                "file": "lib/main.dart",
+                "line": 9,
+                "variant": "dynamic-await",
+                "findingLine": 9
+              },
+              {
+                "file": "lib/screens/home_screen.dart",
+                "line": 20,
+                "variant": "dynamic-cache",
+                "findingLine": 20
+              },
+              {
+                "file": "lib/repositories/user_repository.dart",
+                "line": 16,
+                "variant": "print-warn",
+                "findingLine": 16
+              }
+            ]
+          },
+          {
+            "ruleId": "python/no-bare-except",
+            "injected": 15,
+            "found": 15,
+            "recall": 1,
+            "wilson95": {
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
+            },
+            "misses": [],
+            "hits": [
+              {
+                "file": "src/summit/repository.py",
+                "line": 26,
+                "variant": "except-pass",
+                "findingLine": 26
+              },
+              {
+                "file": "src/summit/auth.py",
+                "line": 18,
+                "variant": "except-return-none",
+                "findingLine": 18
+              },
+              {
+                "file": "src/summit/worker.py",
+                "line": 22,
+                "variant": "except-continue",
+                "findingLine": 22
+              },
+              {
+                "file": "src/summit/events.py",
+                "line": 19,
+                "variant": "spaced-colon",
+                "findingLine": 19
+              },
+              {
+                "file": "src/summit/service.py",
+                "line": 32,
+                "variant": "noqa",
+                "findingLine": 32
+              },
+              {
+                "file": "src/summit/serializers.py",
+                "line": 21,
+                "variant": "print-traceback",
+                "findingLine": 21
+              },
+              {
+                "file": "src/summit/text.py",
+                "line": 10,
+                "variant": "re-raise",
+                "findingLine": 10
+              },
+              {
+                "file": "src/summit/api.py",
+                "line": 17,
+                "variant": "log-warning",
+                "findingLine": 17
+              },
+              {
+                "file": "src/summit/files.py",
+                "line": 13,
+                "variant": "return-list",
+                "findingLine": 13
+              },
+              {
+                "file": "src/summit/utils.py",
+                "line": 17,
+                "variant": "append-failure",
+                "findingLine": 17
+              },
+              {
+                "file": "src/summit/retry.py",
+                "line": 23,
+                "variant": "class-method",
+                "findingLine": 23
+              },
+              {
+                "file": "src/summit/cache.py",
+                "line": 24,
+                "variant": "async-function",
+                "findingLine": 24
+              },
+              {
+                "file": "src/summit/health.py",
+                "line": 11,
+                "variant": "raise-wrapped",
+                "findingLine": 11
+              },
+              {
+                "file": "src/summit/models.py",
+                "line": 24,
+                "variant": "sys-exit",
+                "findingLine": 24
+              },
+              {
+                "file": "src/summit/settings.py",
+                "line": 17,
+                "variant": "except-return-dict",
+                "findingLine": 17
+              }
+            ]
+          },
+          {
+            "ruleId": "rust/no-unwrap",
+            "injected": 15,
+            "found": 14,
+            "recall": 0.9333333333333333,
+            "wilson95": {
+              "low": 0.7018347012621998,
+              "high": 0.9881331045067315,
+              "center": 0.9333333333333333
+            },
+            "misses": [
+              {
+                "file": "src/cli.rs",
+                "line": 15,
+                "variant": "spaced-call",
+                "marker": "inj_14",
+                "reason": "the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list"
+              }
+            ],
+            "hits": [
+              {
+                "file": "src/auth.rs",
+                "line": 14,
+                "variant": "file-open",
+                "findingLine": 14
+              },
+              {
+                "file": "src/queue.rs",
+                "line": 24,
+                "variant": "read-to-string",
+                "findingLine": 24
+              },
+              {
+                "file": "src/api.rs",
+                "line": 12,
+                "variant": "env-var",
+                "findingLine": 12
+              },
+              {
+                "file": "src/config.rs",
+                "line": 30,
+                "variant": "json-from-str",
+                "findingLine": 30
+              },
+              {
+                "file": "src/ids.rs",
+                "line": 14,
+                "variant": "config-load",
+                "findingLine": 14
+              },
+              {
+                "file": "src/util.rs",
+                "line": 23,
+                "variant": "strip-suffix",
+                "findingLine": 23
+              },
+              {
+                "file": "src/time.rs",
+                "line": 15,
+                "variant": "iterator-next",
+                "findingLine": 15
+              },
+              {
+                "file": "src/model.rs",
+                "line": 24,
+                "variant": "parse-literal",
+                "findingLine": 24
+              },
+              {
+                "file": "src/lib.rs",
+                "line": 36,
+                "variant": "chain-map",
+                "findingLine": 36
+              },
+              {
+                "file": "src/service.rs",
+                "line": 42,
+                "variant": "slice-get",
+                "findingLine": 42
+              },
+              {
+                "file": "src/format.rs",
+                "line": 15,
+                "variant": "from-utf8",
+                "findingLine": 15
+              },
+              {
+                "file": "src/state.rs",
+                "line": 29,
+                "variant": "checked-sub",
+                "findingLine": 29
+              },
+              {
+                "file": "src/handlers.rs",
+                "line": 14,
+                "variant": "header-get",
+                "findingLine": 14
+              },
+              {
+                "file": "src/pagination.rs",
+                "line": 22,
+                "variant": "id-parse",
+                "findingLine": 22
+              }
+            ]
+          }
+        ]
+      },
+      "negatives": {
+        "injected": 60,
+        "findings": 3,
+        "rules": [
+          {
+            "ruleId": "css/design-drift",
+            "negatives": 10,
+            "falsePositives": 1,
+            "fpRate": 0.1,
+            "wilson95": {
+              "low": 0.017876213095072868,
+              "high": 0.4041500267952385,
+              "center": 0.1
+            },
+            "fps": [
+              {
+                "file": "styles/forms.css",
+                "line": 17,
+                "variant": "rgb-var-channels",
+                "marker": "neg_rgb_colors_0",
+                "finding": {
+                  "ruleId": "css/design-drift",
+                  "file": "styles/forms.css",
+                  "line": 17,
+                  "message": "Hardcoded color `rgb(                 / 0.5)`."
+                }
+              }
+            ]
+          },
+          {
+            "ruleId": "css/duplicate-selector",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          },
+          {
+            "ruleId": "css/no-important",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          },
+          {
+            "ruleId": "dart/no-dynamic-or-print",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          },
+          {
+            "ruleId": "python/no-bare-except",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          },
+          {
+            "ruleId": "rust/no-unwrap",
+            "negatives": 10,
+            "falsePositives": 0,
+            "fpRate": 0,
+            "wilson95": {
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
+            },
+            "fps": []
+          }
+        ]
+      }
+    }
+  ],
+  "pooled": {
+    "recall": [
+      {
+        "ruleId": "css/design-drift",
+        "injected": 30,
+        "found": 30,
+        "misses": [],
+        "hits": [
+          {
+            "file": "styles/motion.css",
+            "line": 10,
+            "variant": "hex-6",
+            "findingLine": 10
+          },
+          {
+            "file": "styles/dark.css",
+            "line": 12,
+            "variant": "hex-3",
+            "findingLine": 12
+          },
+          {
+            "file": "styles/avatars.css",
+            "line": 15,
+            "variant": "hex-8",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/tokens.css",
+            "line": 24,
+            "variant": "rgba",
+            "findingLine": 24
+          },
+          {
+            "file": "styles/tables.css",
+            "line": 15,
+            "variant": "rgb",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/dashboard.css",
+            "line": 16,
+            "variant": "hsl",
+            "findingLine": 16
+          },
+          {
+            "file": "styles/progress.css",
+            "line": 12,
+            "variant": "hsla",
+            "findingLine": 12
+          },
+          {
+            "file": "styles/navigation.css",
+            "line": 15,
+            "variant": "gradient",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/responsive.css",
+            "line": 18,
+            "variant": "border",
+            "findingLine": 18
+          },
+          {
+            "file": "styles/forms.css",
+            "line": 17,
+            "variant": "fill",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/accessibility.css",
+            "line": 15,
+            "variant": "rgba-white",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/badges.css",
+            "line": 12,
+            "variant": "hex-uppercase",
+            "findingLine": 12
+          },
+          {
+            "file": "styles/auth.css",
+            "line": 20,
+            "variant": "hex-short-magenta",
+            "findingLine": 20
+          },
+          {
+            "file": "styles/base.css",
+            "line": 26,
+            "variant": "caret",
+            "findingLine": 26
+          },
+          {
+            "file": "styles/lists.css",
+            "line": 17,
+            "variant": "hex-black",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/tokens.css",
+            "line": 21,
+            "variant": "hex-6",
+            "findingLine": 21
+          },
+          {
+            "file": "styles/typography.css",
+            "line": 14,
+            "variant": "hex-3",
+            "findingLine": 14
+          },
+          {
+            "file": "styles/modals.css",
+            "line": 22,
+            "variant": "hex-8",
+            "findingLine": 22
+          },
+          {
+            "file": "styles/accessibility.css",
+            "line": 18,
+            "variant": "rgba",
+            "findingLine": 18
+          },
+          {
+            "file": "styles/utilities.css",
+            "line": 16,
+            "variant": "rgb",
+            "findingLine": 16
+          },
+          {
+            "file": "styles/dark.css",
+            "line": 14,
+            "variant": "hsl",
+            "findingLine": 14
+          },
+          {
+            "file": "styles/layout.css",
+            "line": 15,
+            "variant": "hsla",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/progress.css",
+            "line": 12,
+            "variant": "gradient",
+            "findingLine": 12
+          },
+          {
+            "file": "styles/footer.css",
+            "line": 13,
+            "variant": "border",
+            "findingLine": 13
+          },
+          {
+            "file": "styles/forms.css",
+            "line": 17,
+            "variant": "fill",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/responsive.css",
+            "line": 20,
+            "variant": "rgba-white",
+            "findingLine": 20
+          },
+          {
+            "file": "styles/navigation.css",
+            "line": 15,
+            "variant": "hex-uppercase",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/settings.css",
+            "line": 16,
+            "variant": "hex-short-magenta",
+            "findingLine": 16
+          },
+          {
+            "file": "styles/buttons.css",
+            "line": 26,
+            "variant": "caret",
+            "findingLine": 26
+          },
+          {
+            "file": "styles/lists.css",
+            "line": 17,
+            "variant": "hex-black",
+            "findingLine": 17
+          }
+        ],
+        "recall": 1,
+        "wilson95": {
+          "low": 0.8864866068260312,
+          "high": 0.9999999999999999,
+          "center": 1
+        }
+      },
+      {
+        "ruleId": "css/duplicate-selector",
+        "injected": 30,
+        "found": 28,
+        "misses": [
+          {
+            "file": "styles/theme.scss",
+            "line": 19,
+            "variant": "nested-expansion",
+            "marker": ".theme-card:hover",
+            "reason": "the detector compares raw selector text; it does not expand nested `&:hover`"
+          },
+          {
+            "file": "styles/theme.scss",
+            "line": 22,
+            "variant": "nested-expansion",
+            "marker": ".theme-card:hover",
+            "reason": "the detector compares raw selector text; it does not expand nested `&:hover`"
+          }
+        ],
+        "hits": [
+          {
+            "file": "styles/cards.css",
+            "line": 21,
+            "variant": "repeat-top-level",
+            "findingLine": 21
+          },
+          {
+            "file": "styles/badges.css",
+            "line": 14,
+            "variant": "repeat-top-level",
+            "findingLine": 14
+          },
+          {
+            "file": "styles/typography.css",
+            "line": 13,
+            "variant": "repeat-top-level",
+            "findingLine": 13
+          },
+          {
+            "file": "styles/avatars.css",
+            "line": 17,
+            "variant": "repeat-top-level",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/footer.css",
+            "line": 12,
+            "variant": "repeat-top-level",
+            "findingLine": 12
+          },
+          {
+            "file": "styles/modals.css",
+            "line": 16,
+            "variant": "repeat-top-level",
+            "findingLine": 16
+          },
+          {
+            "file": "styles/buttons.css",
+            "line": 25,
+            "variant": "repeat-top-level",
+            "findingLine": 25
+          },
+          {
+            "file": "styles/navigation.css",
+            "line": 17,
+            "variant": "repeat-top-level",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/dark.css",
+            "line": 14,
+            "variant": "repeat-top-level",
+            "findingLine": 14
+          },
+          {
+            "file": "styles/tooltips.css",
+            "line": 17,
+            "variant": "repeat-top-level",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/header.css",
+            "line": 14,
+            "variant": "repeat-top-level",
+            "findingLine": 14
+          },
+          {
+            "file": "styles/base.css",
+            "line": 28,
+            "variant": "repeat-top-level",
+            "findingLine": 28
+          },
+          {
+            "file": "styles/sidebar.css",
+            "line": 10,
+            "variant": "repeat-top-level",
+            "findingLine": 10
+          },
+          {
+            "file": "styles/lists.css",
+            "line": 19,
+            "variant": "repeat-top-level",
+            "findingLine": 19
+          },
+          {
+            "file": "styles/accessibility.css",
+            "line": 20,
+            "variant": "repeat-top-level",
+            "findingLine": 20
+          },
+          {
+            "file": "styles/progress.css",
+            "line": 14,
+            "variant": "repeat-top-level",
+            "findingLine": 14
+          },
+          {
+            "file": "styles/modals.css",
+            "line": 24,
+            "variant": "repeat-top-level",
+            "findingLine": 24
+          },
+          {
+            "file": "styles/tables.css",
+            "line": 14,
+            "variant": "repeat-top-level",
+            "findingLine": 14
+          },
+          {
+            "file": "styles/dashboard.css",
+            "line": 18,
+            "variant": "repeat-top-level",
+            "findingLine": 18
+          },
+          {
+            "file": "styles/alerts.css",
+            "line": 13,
+            "variant": "repeat-top-level",
+            "findingLine": 13
+          },
+          {
+            "file": "styles/theme.scss",
+            "line": 19,
+            "variant": "repeat-top-level",
+            "findingLine": 19
+          },
+          {
+            "file": "styles/forms.css",
+            "line": 19,
+            "variant": "repeat-top-level",
+            "findingLine": 19
+          },
+          {
+            "file": "styles/navigation.css",
+            "line": 17,
+            "variant": "repeat-top-level",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/settings.css",
+            "line": 18,
+            "variant": "repeat-top-level",
+            "findingLine": 18
+          },
+          {
+            "file": "styles/auth.css",
+            "line": 16,
+            "variant": "repeat-top-level",
+            "findingLine": 16
+          },
+          {
+            "file": "styles/lists.css",
+            "line": 19,
+            "variant": "repeat-top-level",
+            "findingLine": 19
+          },
+          {
+            "file": "styles/layout.css",
+            "line": 17,
+            "variant": "repeat-top-level",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/avatars.css",
+            "line": 11,
+            "variant": "repeat-top-level",
+            "findingLine": 11
+          }
+        ],
+        "recall": 0.9333333333333333,
+        "wilson95": {
+          "low": 0.7867654163738308,
+          "high": 0.9815229762087295,
+          "center": 0.9333333333333333
+        }
+      },
+      {
+        "ruleId": "css/no-important",
+        "injected": 30,
+        "found": 30,
+        "misses": [],
+        "hits": [
+          {
+            "file": "styles/layout.css",
+            "line": 15,
+            "variant": "plain",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/header.css",
+            "line": 12,
+            "variant": "spaced-bang",
+            "findingLine": 12
+          },
+          {
+            "file": "styles/grid.css",
+            "line": 13,
+            "variant": "uppercase",
+            "findingLine": 13
+          },
+          {
+            "file": "styles/cards.css",
+            "line": 18,
+            "variant": "in-media",
+            "findingLine": 18
+          },
+          {
+            "file": "styles/alerts.css",
+            "line": 15,
+            "variant": "in-supports",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/base.css",
+            "line": 22,
+            "variant": "in-layer",
+            "findingLine": 22
+          },
+          {
+            "file": "styles/avatars.css",
+            "line": 12,
+            "variant": "two-on-one-line",
+            "findingLine": 12
+          },
+          {
+            "file": "styles/footer.css",
+            "line": 10,
+            "variant": "hardcoded-color",
+            "findingLine": 10
+          },
+          {
+            "file": "styles/responsive.css",
+            "line": 15,
+            "variant": "grid",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/theme.scss",
+            "line": 17,
+            "variant": "transition",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/dark.css",
+            "line": 9,
+            "variant": "display",
+            "findingLine": 9
+          },
+          {
+            "file": "styles/auth.css",
+            "line": 17,
+            "variant": "font-size",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/lists.css",
+            "line": 13,
+            "variant": "scss-nested",
+            "findingLine": 13
+          },
+          {
+            "file": "styles/tooltips.css",
+            "line": 14,
+            "variant": "scss-amp",
+            "findingLine": 14
+          },
+          {
+            "file": "styles/tokens.css",
+            "line": 21,
+            "variant": "visibility",
+            "findingLine": 21
+          },
+          {
+            "file": "styles/dashboard.css",
+            "line": 16,
+            "variant": "plain",
+            "findingLine": 16
+          },
+          {
+            "file": "styles/utilities.css",
+            "line": 13,
+            "variant": "spaced-bang",
+            "findingLine": 13
+          },
+          {
+            "file": "styles/tooltips.css",
+            "line": 13,
+            "variant": "uppercase",
+            "findingLine": 13
+          },
+          {
+            "file": "styles/responsive.css",
+            "line": 16,
+            "variant": "in-media",
+            "findingLine": 16
+          },
+          {
+            "file": "styles/dark.css",
+            "line": 10,
+            "variant": "in-supports",
+            "findingLine": 10
+          },
+          {
+            "file": "styles/modals.css",
+            "line": 18,
+            "variant": "in-layer",
+            "findingLine": 18
+          },
+          {
+            "file": "styles/accessibility.css",
+            "line": 15,
+            "variant": "two-on-one-line",
+            "findingLine": 15
+          },
+          {
+            "file": "styles/grid.css",
+            "line": 13,
+            "variant": "hardcoded-color",
+            "findingLine": 13
+          },
+          {
+            "file": "styles/footer.css",
+            "line": 10,
+            "variant": "grid",
+            "findingLine": 10
+          },
+          {
+            "file": "styles/base.css",
+            "line": 21,
+            "variant": "transition",
+            "findingLine": 21
+          },
+          {
+            "file": "styles/sidebar.css",
+            "line": 11,
+            "variant": "display",
+            "findingLine": 11
+          },
+          {
+            "file": "styles/theme.scss",
+            "line": 17,
+            "variant": "font-size",
+            "findingLine": 17
+          },
+          {
+            "file": "styles/settings.css",
+            "line": 12,
+            "variant": "scss-nested",
+            "findingLine": 12
+          },
+          {
+            "file": "styles/lists.css",
+            "line": 13,
+            "variant": "scss-amp",
+            "findingLine": 13
+          },
+          {
+            "file": "styles/badges.css",
+            "line": 12,
+            "variant": "visibility",
+            "findingLine": 12
+          }
+        ],
+        "recall": 1,
+        "wilson95": {
+          "low": 0.8864866068260312,
+          "high": 0.9999999999999999,
+          "center": 1
+        }
+      },
+      {
+        "ruleId": "dart/no-dynamic-or-print",
+        "injected": 30,
+        "found": 30,
+        "misses": [],
+        "hits": [
+          {
+            "file": "lib/theme/text_styles.dart",
+            "line": 10,
+            "variant": "dynamic-var",
+            "findingLine": 10
+          },
+          {
+            "file": "lib/models/product.dart",
+            "line": 16,
+            "variant": "list-dynamic",
+            "findingLine": 16
+          },
+          {
+            "file": "lib/services/api_client.dart",
+            "line": 30,
+            "variant": "future-dynamic",
+            "findingLine": 30
+          },
+          {
+            "file": "lib/theme/colors.dart",
+            "line": 11,
+            "variant": "dynamic-param",
+            "findingLine": 11
+          },
+          {
+            "file": "lib/screens/home_screen.dart",
+            "line": 20,
+            "variant": "dynamic-function",
+            "findingLine": 20
+          },
+          {
+            "file": "lib/utils/validators.dart",
+            "line": 18,
+            "variant": "dynamic-return",
+            "findingLine": 18
+          },
+          {
+            "file": "lib/screens/detail_screen.dart",
+            "line": 15,
+            "variant": "print-literal",
+            "findingLine": 15
+          },
+          {
+            "file": "lib/services/auth_service.dart",
+            "line": 20,
+            "variant": "print-value",
+            "findingLine": 20
+          },
+          {
+            "file": "lib/widgets/button.dart",
+            "line": 15,
+            "variant": "print-encode",
+            "findingLine": 15
+          },
+          {
+            "file": "lib/widgets/empty_state.dart",
+            "line": 17,
+            "variant": "print-in-if",
+            "findingLine": 17
+          },
+          {
+            "file": "lib/services/cache_service.dart",
+            "line": 31,
+            "variant": "print-in-method",
+            "findingLine": 31
+          },
+          {
+            "file": "lib/main.dart",
+            "line": 10,
+            "variant": "print-in-callback",
+            "findingLine": 10
+          },
+          {
+            "file": "lib/services/logger.dart",
+            "line": 17,
+            "variant": "dynamic-await",
+            "findingLine": 17
+          },
+          {
+            "file": "lib/api/endpoints.dart",
+            "line": 10,
+            "variant": "dynamic-cache",
+            "findingLine": 10
+          },
+          {
+            "file": "lib/utils/formatters.dart",
+            "line": 16,
+            "variant": "print-warn",
+            "findingLine": 16
+          },
+          {
+            "file": "lib/utils/validators.dart",
+            "line": 18,
+            "variant": "dynamic-var",
+            "findingLine": 18
+          },
+          {
+            "file": "lib/services/cache_service.dart",
+            "line": 29,
+            "variant": "list-dynamic",
+            "findingLine": 29
+          },
+          {
+            "file": "lib/widgets/card.dart",
+            "line": 16,
+            "variant": "future-dynamic",
+            "findingLine": 16
+          },
+          {
+            "file": "lib/models/order.dart",
+            "line": 14,
+            "variant": "dynamic-param",
+            "findingLine": 14
+          },
+          {
+            "file": "lib/services/logger.dart",
+            "line": 16,
+            "variant": "dynamic-function",
+            "findingLine": 16
+          },
+          {
+            "file": "lib/services/api_client.dart",
+            "line": 30,
+            "variant": "dynamic-return",
+            "findingLine": 30
+          },
+          {
+            "file": "lib/models/json.dart",
+            "line": 10,
+            "variant": "print-literal",
+            "findingLine": 10
+          },
+          {
+            "file": "lib/widgets/avatar.dart",
+            "line": 14,
+            "variant": "print-value",
+            "findingLine": 14
+          },
+          {
+            "file": "lib/config.dart",
+            "line": 13,
+            "variant": "print-encode",
+            "findingLine": 13
+          },
+          {
+            "file": "lib/models/user.dart",
+            "line": 19,
+            "variant": "print-in-if",
+            "findingLine": 19
+          },
+          {
+            "file": "lib/theme/text_styles.dart",
+            "line": 12,
+            "variant": "print-in-method",
+            "findingLine": 12
+          },
+          {
+            "file": "lib/app.dart",
+            "line": 20,
+            "variant": "print-in-callback",
+            "findingLine": 20
+          },
+          {
+            "file": "lib/main.dart",
+            "line": 9,
+            "variant": "dynamic-await",
+            "findingLine": 9
+          },
+          {
+            "file": "lib/screens/home_screen.dart",
+            "line": 20,
+            "variant": "dynamic-cache",
+            "findingLine": 20
+          },
+          {
+            "file": "lib/repositories/user_repository.dart",
+            "line": 16,
+            "variant": "print-warn",
+            "findingLine": 16
+          }
+        ],
+        "recall": 1,
+        "wilson95": {
+          "low": 0.8864866068260312,
+          "high": 0.9999999999999999,
+          "center": 1
+        }
+      },
+      {
+        "ruleId": "python/no-bare-except",
+        "injected": 30,
+        "found": 30,
+        "misses": [],
+        "hits": [
+          {
+            "file": "src/summit/scheduler.py",
+            "line": 33,
+            "variant": "except-pass",
+            "findingLine": 33
+          },
+          {
+            "file": "src/summit/serializers.py",
+            "line": 21,
+            "variant": "except-return-none",
+            "findingLine": 21
+          },
+          {
+            "file": "src/summit/dates.py",
+            "line": 15,
+            "variant": "except-continue",
+            "findingLine": 15
+          },
+          {
+            "file": "src/summit/events.py",
+            "line": 19,
+            "variant": "spaced-colon",
+            "findingLine": 19
+          },
+          {
+            "file": "src/summit/files.py",
+            "line": 13,
+            "variant": "noqa",
+            "findingLine": 13
+          },
+          {
+            "file": "src/summit/api.py",
+            "line": 17,
+            "variant": "print-traceback",
+            "findingLine": 17
+          },
+          {
+            "file": "src/summit/cli.py",
+            "line": 23,
+            "variant": "re-raise",
+            "findingLine": 23
+          },
+          {
+            "file": "src/summit/__init__.py",
+            "line": 9,
+            "variant": "log-warning",
+            "findingLine": 9
+          },
+          {
+            "file": "src/summit/repository.py",
+            "line": 26,
+            "variant": "return-list",
+            "findingLine": 26
+          },
+          {
+            "file": "src/summit/settings.py",
+            "line": 17,
+            "variant": "append-failure",
+            "findingLine": 17
+          },
+          {
+            "file": "src/summit/auth.py",
+            "line": 19,
+            "variant": "class-method",
+            "findingLine": 19
+          },
+          {
+            "file": "src/summit/cache.py",
+            "line": 24,
+            "variant": "async-function",
+            "findingLine": 24
+          },
+          {
+            "file": "src/summit/config.py",
+            "line": 22,
+            "variant": "raise-wrapped",
+            "findingLine": 22
+          },
+          {
+            "file": "src/summit/http_client.py",
+            "line": 17,
+            "variant": "sys-exit",
+            "findingLine": 17
+          },
+          {
+            "file": "src/summit/pagination.py",
+            "line": 20,
+            "variant": "except-return-dict",
+            "findingLine": 20
+          },
+          {
+            "file": "src/summit/repository.py",
+            "line": 26,
+            "variant": "except-pass",
+            "findingLine": 26
+          },
+          {
+            "file": "src/summit/auth.py",
+            "line": 18,
+            "variant": "except-return-none",
+            "findingLine": 18
+          },
+          {
+            "file": "src/summit/worker.py",
+            "line": 22,
+            "variant": "except-continue",
+            "findingLine": 22
+          },
+          {
+            "file": "src/summit/events.py",
+            "line": 19,
+            "variant": "spaced-colon",
+            "findingLine": 19
+          },
+          {
+            "file": "src/summit/service.py",
+            "line": 32,
+            "variant": "noqa",
+            "findingLine": 32
+          },
+          {
+            "file": "src/summit/serializers.py",
+            "line": 21,
+            "variant": "print-traceback",
+            "findingLine": 21
+          },
+          {
+            "file": "src/summit/text.py",
+            "line": 10,
+            "variant": "re-raise",
+            "findingLine": 10
+          },
+          {
+            "file": "src/summit/api.py",
+            "line": 17,
+            "variant": "log-warning",
+            "findingLine": 17
+          },
+          {
+            "file": "src/summit/files.py",
+            "line": 13,
+            "variant": "return-list",
+            "findingLine": 13
+          },
+          {
+            "file": "src/summit/utils.py",
+            "line": 17,
+            "variant": "append-failure",
+            "findingLine": 17
+          },
+          {
+            "file": "src/summit/retry.py",
+            "line": 23,
+            "variant": "class-method",
+            "findingLine": 23
+          },
+          {
+            "file": "src/summit/cache.py",
+            "line": 24,
+            "variant": "async-function",
+            "findingLine": 24
+          },
+          {
+            "file": "src/summit/health.py",
+            "line": 11,
+            "variant": "raise-wrapped",
+            "findingLine": 11
+          },
+          {
+            "file": "src/summit/models.py",
+            "line": 24,
+            "variant": "sys-exit",
+            "findingLine": 24
+          },
+          {
+            "file": "src/summit/settings.py",
+            "line": 17,
+            "variant": "except-return-dict",
+            "findingLine": 17
+          }
+        ],
+        "recall": 1,
+        "wilson95": {
+          "low": 0.8864866068260312,
+          "high": 0.9999999999999999,
+          "center": 1
+        }
+      },
+      {
+        "ruleId": "rust/no-unwrap",
+        "injected": 30,
+        "found": 28,
+        "misses": [
+          {
+            "file": "src/env.rs",
+            "line": 15,
+            "variant": "spaced-call",
+            "marker": "inj_14",
+            "reason": "the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list"
+          },
+          {
+            "file": "src/cli.rs",
+            "line": 15,
+            "variant": "spaced-call",
+            "marker": "inj_14",
+            "reason": "the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list"
+          }
+        ],
+        "hits": [
+          {
+            "file": "src/auth.rs",
+            "line": 14,
+            "variant": "file-open",
+            "findingLine": 14
+          },
+          {
+            "file": "src/error.rs",
+            "line": 31,
+            "variant": "read-to-string",
+            "findingLine": 31
+          },
+          {
+            "file": "src/validation.rs",
+            "line": 18,
+            "variant": "env-var",
+            "findingLine": 18
+          },
+          {
+            "file": "src/util.rs",
+            "line": 23,
+            "variant": "json-from-str",
+            "findingLine": 23
+          },
+          {
+            "file": "src/logging.rs",
+            "line": 12,
+            "variant": "config-load",
+            "findingLine": 12
+          },
+          {
+            "file": "src/routes.rs",
+            "line": 18,
+            "variant": "strip-suffix",
+            "findingLine": 18
+          },
+          {
+            "file": "src/worker.rs",
+            "line": 20,
+            "variant": "iterator-next",
+            "findingLine": 20
+          },
+          {
+            "file": "src/pagination.rs",
+            "line": 21,
+            "variant": "parse-literal",
+            "findingLine": 21
+          },
+          {
+            "file": "src/report.rs",
+            "line": 30,
+            "variant": "chain-map",
+            "findingLine": 30
+          },
+          {
+            "file": "src/lib.rs",
+            "line": 34,
+            "variant": "slice-get",
+            "findingLine": 34
+          },
+          {
+            "file": "src/handlers.rs",
+            "line": 14,
+            "variant": "from-utf8",
+            "findingLine": 14
+          },
+          {
+            "file": "src/model.rs",
+            "line": 25,
+            "variant": "checked-sub",
+            "findingLine": 25
+          },
+          {
+            "file": "src/ids.rs",
+            "line": 15,
+            "variant": "header-get",
+            "findingLine": 15
+          },
+          {
+            "file": "src/feature_flags.rs",
+            "line": 19,
+            "variant": "id-parse",
+            "findingLine": 19
+          },
+          {
+            "file": "src/auth.rs",
+            "line": 14,
+            "variant": "file-open",
+            "findingLine": 14
+          },
+          {
+            "file": "src/queue.rs",
+            "line": 24,
+            "variant": "read-to-string",
+            "findingLine": 24
+          },
+          {
+            "file": "src/api.rs",
+            "line": 12,
+            "variant": "env-var",
+            "findingLine": 12
+          },
+          {
+            "file": "src/config.rs",
+            "line": 30,
+            "variant": "json-from-str",
+            "findingLine": 30
+          },
+          {
+            "file": "src/ids.rs",
+            "line": 14,
+            "variant": "config-load",
+            "findingLine": 14
+          },
+          {
+            "file": "src/util.rs",
+            "line": 23,
+            "variant": "strip-suffix",
+            "findingLine": 23
+          },
+          {
+            "file": "src/time.rs",
+            "line": 15,
+            "variant": "iterator-next",
+            "findingLine": 15
+          },
+          {
+            "file": "src/model.rs",
+            "line": 24,
+            "variant": "parse-literal",
+            "findingLine": 24
+          },
+          {
+            "file": "src/lib.rs",
+            "line": 36,
+            "variant": "chain-map",
+            "findingLine": 36
+          },
+          {
+            "file": "src/service.rs",
+            "line": 42,
+            "variant": "slice-get",
+            "findingLine": 42
+          },
+          {
+            "file": "src/format.rs",
+            "line": 15,
+            "variant": "from-utf8",
+            "findingLine": 15
+          },
+          {
+            "file": "src/state.rs",
+            "line": 29,
+            "variant": "checked-sub",
+            "findingLine": 29
+          },
+          {
+            "file": "src/handlers.rs",
+            "line": 14,
+            "variant": "header-get",
+            "findingLine": 14
+          },
+          {
+            "file": "src/pagination.rs",
+            "line": 22,
+            "variant": "id-parse",
+            "findingLine": 22
+          }
+        ],
+        "recall": 0.9333333333333333,
+        "wilson95": {
+          "low": 0.7867654163738308,
+          "high": 0.9815229762087295,
+          "center": 0.9333333333333333
+        }
+      }
+    ],
+    "falsePositives": [
+      {
+        "ruleId": "css/design-drift",
+        "negatives": 20,
+        "falsePositives": 2,
+        "fps": [
+          {
+            "file": "styles/forms.css",
+            "line": 17,
+            "variant": "rgb-var-channels",
+            "marker": "neg_rgb_colors_0",
+            "finding": {
+              "ruleId": "css/design-drift",
+              "file": "styles/forms.css",
+              "line": 17,
+              "message": "Hardcoded color `rgb(                 / 0.5)`."
+            }
+          },
+          {
+            "file": "styles/forms.css",
+            "line": 17,
+            "variant": "rgb-var-channels",
+            "marker": "neg_rgb_colors_0",
+            "finding": {
+              "ruleId": "css/design-drift",
+              "file": "styles/forms.css",
+              "line": 17,
+              "message": "Hardcoded color `rgb(                 / 0.5)`."
+            }
+          }
+        ],
+        "fpRate": 0.1,
+        "wilson95": {
+          "low": 0.027866481213768224,
+          "high": 0.3010336452284873,
+          "center": 0.1
+        }
+      },
+      {
+        "ruleId": "css/duplicate-selector",
+        "negatives": 20,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.16112515805281938,
+          "center": 0
+        }
+      },
+      {
+        "ruleId": "css/no-important",
+        "negatives": 20,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.16112515805281938,
+          "center": 0
+        }
+      },
+      {
+        "ruleId": "dart/no-dynamic-or-print",
+        "negatives": 20,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.16112515805281938,
+          "center": 0
+        }
+      },
+      {
+        "ruleId": "python/no-bare-except",
+        "negatives": 20,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.16112515805281938,
+          "center": 0
+        }
+      },
+      {
+        "ruleId": "rust/no-unwrap",
+        "negatives": 20,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.16112515805281938,
+          "center": 0
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,4691 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-26T20:17:22.853Z",
+  "corpora": [
+    "hono",
+    "zod",
+    "execa",
+    "fastify",
+    "commander.js"
+  ],
+  "corpusDir": "/Volumes/data/projects/unshit-bench/corpus",
+  "rules": [
+    "ts/unused-export",
+    "ts/unused-type-export",
+    "ts/unused-file",
+    "deps/unused-dependency"
+  ],
+  "method": {
+    "independence": "lib.mjs imports nothing from src/ or dist/; verdicts come from a fresh walk plus regex text search",
+    "scanCommand": "node bin/unshit.js scan <tmp-copy> --format json --no-cache",
+    "unsurePolicy": "lower = all UNSURE are false positives; upper = all UNSURE are true positives"
+  },
+  "scanStats": [
+    {
+      "corpus": "hono",
+      "score": {
+        "score": 83,
+        "grade": "B",
+        "totalFiles": 427,
+        "totalLines": 96257,
+        "totalFindings": 642,
+        "byCategory": {
+          "css": 0,
+          "types": 493,
+          "i18n": 0,
+          "architecture": 56,
+          "slop": 10,
+          "duplication": 23,
+          "dead-code": 60
+        },
+        "bySeverity": {
+          "error": 0,
+          "warn": 565,
+          "info": 77
+        }
+      },
+      "totalFindings": 642,
+      "trackedFindings": 60,
+      "byRule": {
+        "ts/unused-export": 18,
+        "ts/unused-type-export": 36,
+        "ts/unused-file": 3,
+        "deps/unused-dependency": 3
+      }
+    },
+    {
+      "corpus": "zod",
+      "score": {
+        "score": 62,
+        "grade": "C",
+        "totalFiles": 468,
+        "totalLines": 101515,
+        "totalFindings": 1486,
+        "byCategory": {
+          "css": 0,
+          "types": 1090,
+          "i18n": 0,
+          "architecture": 123,
+          "slop": 33,
+          "duplication": 61,
+          "dead-code": 179
+        },
+        "bySeverity": {
+          "error": 0,
+          "warn": 1357,
+          "info": 129
+        }
+      },
+      "totalFindings": 1486,
+      "trackedFindings": 178,
+      "byRule": {
+        "ts/unused-file": 101,
+        "deps/unused-dependency": 10,
+        "ts/unused-export": 33,
+        "ts/unused-type-export": 34
+      }
+    },
+    {
+      "corpus": "execa",
+      "score": {
+        "score": 99,
+        "grade": "A",
+        "totalFiles": 454,
+        "totalLines": 44342,
+        "totalFindings": 32,
+        "byCategory": {
+          "css": 0,
+          "types": 3,
+          "i18n": 0,
+          "architecture": 4,
+          "slop": 11,
+          "duplication": 11,
+          "dead-code": 3
+        },
+        "bySeverity": {
+          "error": 0,
+          "warn": 21,
+          "info": 11
+        }
+      },
+      "totalFindings": 32,
+      "trackedFindings": 3,
+      "byRule": {
+        "deps/unused-dependency": 1,
+        "ts/unused-file": 2
+      }
+    },
+    {
+      "corpus": "fastify",
+      "score": {
+        "score": 98,
+        "grade": "A",
+        "totalFiles": 298,
+        "totalLines": 81603,
+        "totalFindings": 62,
+        "byCategory": {
+          "css": 0,
+          "types": 0,
+          "i18n": 0,
+          "architecture": 24,
+          "slop": 1,
+          "duplication": 15,
+          "dead-code": 22
+        },
+        "bySeverity": {
+          "error": 0,
+          "warn": 46,
+          "info": 16
+        }
+      },
+      "totalFindings": 62,
+      "trackedFindings": 22,
+      "byRule": {
+        "deps/unused-dependency": 4,
+        "ts/unused-file": 18
+      }
+    },
+    {
+      "corpus": "commander.js",
+      "score": {
+        "score": 98,
+        "grade": "A",
+        "totalFiles": 161,
+        "totalLines": 21078,
+        "totalFindings": 15,
+        "byCategory": {
+          "css": 0,
+          "types": 3,
+          "i18n": 0,
+          "architecture": 7,
+          "slop": 0,
+          "duplication": 1,
+          "dead-code": 4
+        },
+        "bySeverity": {
+          "error": 0,
+          "warn": 14,
+          "info": 1
+        }
+      },
+      "totalFindings": 15,
+      "trackedFindings": 4,
+      "byRule": {
+        "ts/unused-file": 4
+      }
+    }
+  ],
+  "pooled": {
+    "confirmed": 205,
+    "contradicted": 2,
+    "unsure": 60,
+    "total": 267,
+    "precisionLower": 0.7677902621722846,
+    "precisionUpper": 0.9925093632958801,
+    "precisionConfirmedOnly": 0.9903381642512077,
+    "wilson95": {
+      "lowerBoundLow": 0.7135622717853043,
+      "upperBoundHigh": 0.9979433879306039,
+      "confirmedOnlyLow": 0.9654623784086972,
+      "confirmedOnlyHigh": 0.9973463648785384
+    }
+  },
+  "perRule": [
+    {
+      "name": "deps/unused-dependency",
+      "confirmed": 7,
+      "contradicted": 1,
+      "unsure": 10,
+      "total": 18,
+      "precisionLower": 0.3888888888888889,
+      "precisionUpper": 0.9444444444444444,
+      "precisionConfirmedOnly": 0.875,
+      "wilson95": {
+        "lowerBoundLow": 0.20305246572163624,
+        "upperBoundHigh": 0.990124809021697,
+        "confirmedOnlyLow": 0.5291118177871464,
+        "confirmedOnlyHigh": 0.9775825085499433
+      }
+    },
+    {
+      "name": "ts/unused-export",
+      "confirmed": 28,
+      "contradicted": 0,
+      "unsure": 23,
+      "total": 51,
+      "precisionLower": 0.5490196078431373,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.41384708550368815,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.8793566952341542,
+        "confirmedOnlyHigh": 0.9999999999999999
+      }
+    },
+    {
+      "name": "ts/unused-file",
+      "confirmed": 122,
+      "contradicted": 1,
+      "unsure": 5,
+      "total": 128,
+      "precisionLower": 0.953125,
+      "precisionUpper": 0.9921875,
+      "precisionConfirmedOnly": 0.991869918699187,
+      "wilson95": {
+        "lowerBoundLow": 0.9015024775490568,
+        "upperBoundHigh": 0.9986195681071257,
+        "confirmedOnlyLow": 0.9553833739906696,
+        "confirmedOnlyHigh": 0.9985633964501233
+      }
+    },
+    {
+      "name": "ts/unused-type-export",
+      "confirmed": 48,
+      "contradicted": 0,
+      "unsure": 22,
+      "total": 70,
+      "precisionLower": 0.6857142857142857,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.5697286201420141,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.9258998703338824,
+        "confirmedOnlyHigh": 0.9999999999999999
+      }
+    }
+  ],
+  "perCorpus": [
+    {
+      "name": "commander.js",
+      "confirmed": 4,
+      "contradicted": 0,
+      "unsure": 0,
+      "total": 4,
+      "precisionLower": 1,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.5101091635454027,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.5101091635454027,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "name": "execa",
+      "confirmed": 3,
+      "contradicted": 0,
+      "unsure": 0,
+      "total": 3,
+      "precisionLower": 1,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.43850296824495455,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.43850296824495455,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "name": "fastify",
+      "confirmed": 22,
+      "contradicted": 0,
+      "unsure": 0,
+      "total": 22,
+      "precisionLower": 1,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.8513451253913791,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.8513451253913791,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "name": "hono",
+      "confirmed": 27,
+      "contradicted": 2,
+      "unsure": 31,
+      "total": 60,
+      "precisionLower": 0.45,
+      "precisionUpper": 0.9666666666666667,
+      "precisionConfirmedOnly": 0.9310344827586207,
+      "wilson95": {
+        "lowerBoundLow": 0.3309365440675524,
+        "upperBoundHigh": 0.9908106807438021,
+        "confirmedOnlyLow": 0.7803541984972431,
+        "confirmedOnlyHigh": 0.9808787338305667
+      }
+    },
+    {
+      "name": "zod",
+      "confirmed": 149,
+      "contradicted": 0,
+      "unsure": 29,
+      "total": 178,
+      "precisionLower": 0.8370786516853933,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.7758122544632188,
+        "upperBoundHigh": 0.9999999999999999,
+        "confirmedOnlyLow": 0.9748663821299904,
+        "confirmedOnlyHigh": 0.9999999999999999
+      }
+    }
+  ],
+  "perCorpusRule": [
+    {
+      "corpus": "commander.js",
+      "ruleId": "ts/unused-file",
+      "confirmed": 4,
+      "contradicted": 0,
+      "unsure": 0,
+      "total": 4,
+      "precisionLower": 1,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.5101091635454027,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.5101091635454027,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "execa",
+      "ruleId": "deps/unused-dependency",
+      "confirmed": 1,
+      "contradicted": 0,
+      "unsure": 0,
+      "total": 1,
+      "precisionLower": 1,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.20654931437723745,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.20654931437723745,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "execa",
+      "ruleId": "ts/unused-file",
+      "confirmed": 2,
+      "contradicted": 0,
+      "unsure": 0,
+      "total": 2,
+      "precisionLower": 1,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.34238022750665303,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.34238022750665303,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "deps/unused-dependency",
+      "confirmed": 4,
+      "contradicted": 0,
+      "unsure": 0,
+      "total": 4,
+      "precisionLower": 1,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.5101091635454027,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.5101091635454027,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "confirmed": 18,
+      "contradicted": 0,
+      "unsure": 0,
+      "total": 18,
+      "precisionLower": 1,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.8241207763533425,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.8241207763533425,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "deps/unused-dependency",
+      "confirmed": 0,
+      "contradicted": 1,
+      "unsure": 2,
+      "total": 3,
+      "precisionLower": 0,
+      "precisionUpper": 0.6666666666666666,
+      "precisionConfirmedOnly": 0,
+      "wilson95": {
+        "lowerBoundLow": 0,
+        "upperBoundHigh": 0.9385080552796037,
+        "confirmedOnlyLow": 0,
+        "confirmedOnlyHigh": 0.7934506856227626
+      }
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "confirmed": 7,
+      "contradicted": 0,
+      "unsure": 11,
+      "total": 18,
+      "precisionLower": 0.3888888888888889,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.20305246572163624,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.6456695649333126,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-file",
+      "confirmed": 2,
+      "contradicted": 1,
+      "unsure": 0,
+      "total": 3,
+      "precisionLower": 0.6666666666666666,
+      "precisionUpper": 0.6666666666666666,
+      "precisionConfirmedOnly": 0.6666666666666666,
+      "wilson95": {
+        "lowerBoundLow": 0.20765960080204765,
+        "upperBoundHigh": 0.9385080552796037,
+        "confirmedOnlyLow": 0.20765960080204765,
+        "confirmedOnlyHigh": 0.9385080552796037
+      }
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "confirmed": 18,
+      "contradicted": 0,
+      "unsure": 18,
+      "total": 36,
+      "precisionLower": 0.5,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.34474325409626827,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.8241207763533425,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "confirmed": 2,
+      "contradicted": 0,
+      "unsure": 8,
+      "total": 10,
+      "precisionLower": 0.2,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.05668215145437519,
+        "upperBoundHigh": 0.9999999999999999,
+        "confirmedOnlyLow": 0.34238022750665303,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "confirmed": 21,
+      "contradicted": 0,
+      "unsure": 12,
+      "total": 33,
+      "precisionLower": 0.6363636363636364,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.466161783022664,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.8453609810751531,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "confirmed": 96,
+      "contradicted": 0,
+      "unsure": 5,
+      "total": 101,
+      "precisionLower": 0.9504950495049505,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.8893057492703144,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.9615244121423243,
+        "confirmedOnlyHigh": 1
+      }
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "confirmed": 30,
+      "contradicted": 0,
+      "unsure": 4,
+      "total": 34,
+      "precisionLower": 0.8823529411764706,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
+      "wilson95": {
+        "lowerBoundLow": 0.7337915722962817,
+        "upperBoundHigh": 0.9999999999999999,
+        "confirmedOnlyLow": 0.8864866068260312,
+        "confirmedOnlyHigh": 0.9999999999999999
+      }
+    }
+  ],
+  "contradictions": [
+    {
+      "corpus": "hono",
+      "ruleId": "deps/unused-dependency",
+      "file": "benchmarks/fetch/package.json",
+      "line": 4,
+      "message": "Dependency `mitata` is never imported, required or referenced by name in scripts of benchmarks/fetch.",
+      "evidence": [
+        {
+          "file": "benchmarks/fetch/bench.mts",
+          "line": 17,
+          "text": "import './ts-resolve.mjs' import { run, bench, measure } from 'mitata'"
+        }
+      ],
+      "symbol": "mitata",
+      "verdict": "CONTRADICTED",
+      "reason": "Package `mitata` is imported/required by a file in its package scope"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-file",
+      "file": "runtime-tests/workerd/index.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [
+        {
+          "file": "runtime-tests/workerd/index.test.ts",
+          "line": 8,
+          "text": "worker = await unstable_dev('./runtime-tests/workerd/index.ts', {"
+        },
+        {
+          "file": "runtime-tests/workerd/index.test.ts",
+          "line": 44,
+          "text": "worker = await unstable_dev('./runtime-tests/workerd/index.ts', {"
+        }
+      ],
+      "symbol": null,
+      "verdict": "CONTRADICTED",
+      "reason": "Literal path reference to `runtime-tests/workerd/index.ts` in a script/config/code file"
+    }
+  ],
+  "verdicts": [
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "adapters/aws-lambda/src/handler.ts",
+      "line": 282,
+      "message": "Exported symbol `EventProcessor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/handler.test.ts",
+          "line": 135,
+          "text": "describe('EventProcessor.createResult with contentTypesAsBinary', () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.test.ts",
+          "line": 209,
+          "text": "describe('EventProcessor.createRequest', () => {"
+        },
+        {
+          "file": "src/adapter/aws-lambda/handler.test.ts",
+          "line": 135,
+          "text": "describe('EventProcessor.createResult with contentTypesAsBinary', () => {"
+        },
+        {
+          "file": "src/adapter/aws-lambda/handler.test.ts",
+          "line": 209,
+          "text": "describe('EventProcessor.createRequest', () => {"
+        },
+        {
+          "file": "src/adapter/aws-lambda/handler.ts",
+          "line": 307,
+          "text": "export abstract class EventProcessor<E extends LambdaEvent> {"
+        }
+      ],
+      "symbol": "EventProcessor",
+      "verdict": "UNSURE",
+      "reason": "Name `EventProcessor` occurs 10 time(s) outside the declaration, but none could be attributed to an import from `adapters/aws-lambda/src/handler.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "adapters/aws-lambda/src/handler.ts",
+      "line": 590,
+      "message": "Exported symbol `LatticeV2Processor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "src/adapter/aws-lambda/handler.ts",
+          "line": 627,
+          "text": "export class LatticeV2Processor extends EventProcessor<LatticeProxyEventV2> {"
+        },
+        {
+          "file": "src/adapter/aws-lambda/handler.ts",
+          "line": 666,
+          "text": "const latticeV2Processor: LatticeV2Processor = new LatticeV2Processor()"
+        }
+      ],
+      "symbol": "LatticeV2Processor",
+      "verdict": "UNSURE",
+      "reason": "Name `LatticeV2Processor` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `adapters/aws-lambda/src/handler.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "adapters/aws-lambda/src/types.ts",
+      "line": 3,
+      "message": "Exported type `CognitoIdentity` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "src/adapter/aws-lambda/types.ts",
+          "line": 6,
+          "text": "export interface CognitoIdentity {"
+        },
+        {
+          "file": "src/adapter/aws-lambda/types.ts",
+          "line": 57,
+          "text": "identity?: CognitoIdentity | undefined"
+        }
+      ],
+      "symbol": "CognitoIdentity",
+      "verdict": "UNSURE",
+      "reason": "Name `CognitoIdentity` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `adapters/aws-lambda/src/types.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "adapters/aws-lambda/src/types.ts",
+      "line": 8,
+      "message": "Exported type `ClientContext` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "src/adapter/aws-lambda/types.ts",
+          "line": 14,
+          "text": "export interface ClientContext {"
+        },
+        {
+          "file": "src/adapter/aws-lambda/types.ts",
+          "line": 58,
+          "text": "clientContext?: ClientContext | undefined"
+        }
+      ],
+      "symbol": "ClientContext",
+      "verdict": "UNSURE",
+      "reason": "Name `ClientContext` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `adapters/aws-lambda/src/types.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "adapters/aws-lambda/src/types.ts",
+      "line": 15,
+      "message": "Exported type `ClientContextClient` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "src/adapter/aws-lambda/types.ts",
+          "line": 15,
+          "text": "client: ClientContextClient"
+        },
+        {
+          "file": "src/adapter/aws-lambda/types.ts",
+          "line": 24,
+          "text": "export interface ClientContextClient {"
+        }
+      ],
+      "symbol": "ClientContextClient",
+      "verdict": "UNSURE",
+      "reason": "Name `ClientContextClient` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `adapters/aws-lambda/src/types.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "adapters/aws-lambda/src/types.ts",
+      "line": 23,
+      "message": "Exported type `ClientContextEnv` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "src/adapter/aws-lambda/types.ts",
+          "line": 18,
+          "text": "env: ClientContextEnv"
+        },
+        {
+          "file": "src/adapter/aws-lambda/types.ts",
+          "line": 35,
+          "text": "export interface ClientContextEnv {"
+        }
+      ],
+      "symbol": "ClientContextEnv",
+      "verdict": "UNSURE",
+      "reason": "Name `ClientContextEnv` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `adapters/aws-lambda/src/types.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "adapters/cloudflare-workers/src/utils.ts",
+      "line": 5,
+      "message": "Exported type `KVAssetOptions` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "src/adapter/cloudflare-workers/utils.ts",
+          "line": 8,
+          "text": "export type KVAssetOptions = {"
+        },
+        {
+          "file": "src/adapter/cloudflare-workers/utils.ts",
+          "line": 19,
+          "text": "options?: KVAssetOptions"
+        }
+      ],
+      "symbol": "KVAssetOptions",
+      "verdict": "UNSURE",
+      "reason": "Name `KVAssetOptions` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `adapters/cloudflare-workers/src/utils.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-file",
+      "file": "adapters/cloudflare-workers/test/worker.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `adapters/cloudflare-workers/test/worker.ts` outside the file itself"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "adapters/cloudflare-workers/test/worker.ts",
+      "line": 15,
+      "message": "Default export `default` is never imported by any other file.",
+      "evidence": [
+        {
+          "file": "README.md",
+          "line": 31,
+          "text": "export default app"
+        },
+        {
+          "file": "adapters/aws-lambda/package.json",
+          "line": 13,
+          "text": "\"default\": \"./dist/index.js\""
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 717,
+          "text": "it('Should handle a GET request and return a 200 response if cookies match (ALBProxyEvent) with default headers', async () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 767,
+          "text": "it('Should handle a POST request and return a 200 response with cookies (ALBProxyEvent) with default headers', async () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/vite.config.ts",
+          "line": 4,
+          "text": "export default defineConfig({"
+        }
+      ],
+      "symbol": "default",
+      "verdict": "UNSURE",
+      "reason": "The word \"default\" occurs in corpus text, but no default import of the file could be resolved; ambiguous by construction"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "deps/unused-dependency",
+      "file": "benchmarks/fetch/package.json",
+      "line": 4,
+      "message": "Dependency `mitata` is never imported, required or referenced by name in scripts of benchmarks/fetch.",
+      "evidence": [
+        {
+          "file": "benchmarks/fetch/bench.mts",
+          "line": 17,
+          "text": "import './ts-resolve.mjs' import { run, bench, measure } from 'mitata'"
+        }
+      ],
+      "symbol": "mitata",
+      "verdict": "CONTRADICTED",
+      "reason": "Package `mitata` is imported/required by a file in its package scope"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 691,
+      "message": "Dependency `@typescript/native-preview` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 181,
+          "text": "'@typescript/native-preview':"
+        }
+      ],
+      "symbol": "@typescript/native-preview",
+      "verdict": "UNSURE",
+      "reason": "Package `@typescript/native-preview` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 692,
+      "message": "Dependency `@vitest/coverage-v8` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 184,
+          "text": "'@vitest/coverage-v8':"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 5334,
+          "text": "'@vitest/coverage-v8': 5.0.1"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 5354,
+          "text": "'@vitest/coverage-v8':"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 9780,
+          "text": "- '@vitest/coverage-v8'"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 9844,
+          "text": "'@vitest/coverage-v8': 5.0.1(@vitest/browser@5.0.1)(vitest@5.0.1)"
+        }
+      ],
+      "symbol": "@vitest/coverage-v8",
+      "verdict": "UNSURE",
+      "reason": "Package `@vitest/coverage-v8` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-file",
+      "file": "perf-measures/type-check/client.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `perf-measures/type-check/client.ts` outside the file itself"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-file",
+      "file": "runtime-tests/workerd/index.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [
+        {
+          "file": "runtime-tests/workerd/index.test.ts",
+          "line": 8,
+          "text": "worker = await unstable_dev('./runtime-tests/workerd/index.ts', {"
+        },
+        {
+          "file": "runtime-tests/workerd/index.test.ts",
+          "line": 44,
+          "text": "worker = await unstable_dev('./runtime-tests/workerd/index.ts', {"
+        }
+      ],
+      "symbol": null,
+      "verdict": "CONTRADICTED",
+      "reason": "Literal path reference to `runtime-tests/workerd/index.ts` in a script/config/code file"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "runtime-tests/workerd/index.ts",
+      "line": 18,
+      "message": "Default export `default` is never imported by any other file.",
+      "evidence": [
+        {
+          "file": "README.md",
+          "line": 31,
+          "text": "export default app"
+        },
+        {
+          "file": "adapters/aws-lambda/package.json",
+          "line": 13,
+          "text": "\"default\": \"./dist/index.js\""
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 717,
+          "text": "it('Should handle a GET request and return a 200 response if cookies match (ALBProxyEvent) with default headers', async () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 767,
+          "text": "it('Should handle a POST request and return a 200 response with cookies (ALBProxyEvent) with default headers', async () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/vite.config.ts",
+          "line": 4,
+          "text": "export default defineConfig({"
+        }
+      ],
+      "symbol": "default",
+      "verdict": "UNSURE",
+      "reason": "The word \"default\" occurs in corpus text, but no default import of the file could be resolved; ambiguous by construction"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 77,
+      "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 25,
+          "text": "| APIGatewayProxyEvent"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 65,
+          "text": "export interface APIGatewayProxyEvent {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 449,
+          "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 450,
+          "text": "protected getPath(event: APIGatewayProxyEvent): string {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 454,
+          "text": "protected getMethod(event: APIGatewayProxyEvent): string {"
+        }
+      ],
+      "symbol": "APIGatewayProxyEvent",
+      "verdict": "UNSURE",
+      "reason": "Name `APIGatewayProxyEvent` occurs 15 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 101,
+      "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 27,
+          "text": "| ALBProxyEvent"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 86,
+          "text": "export interface ALBProxyEvent {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 509,
+          "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 510,
+          "text": "protected getHeaders(event: ALBProxyEvent): Headers {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 532,
+          "text": "protected getPath(event: ALBProxyEvent): string {"
+        }
+      ],
+      "symbol": "ALBProxyEvent",
+      "verdict": "UNSURE",
+      "reason": "Name `ALBProxyEvent` occurs 21 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 307,
+      "message": "Exported symbol `EventProcessor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/handler.test.ts",
+          "line": 135,
+          "text": "describe('EventProcessor.createResult with contentTypesAsBinary', () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.test.ts",
+          "line": 209,
+          "text": "describe('EventProcessor.createRequest', () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 282,
+          "text": "export abstract class EventProcessor<E extends LambdaEvent> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 410,
+          "text": "export class EventV2Processor extends EventProcessor<APIGatewayProxyEventV2> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 449,
+          "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
+        }
+      ],
+      "symbol": "EventProcessor",
+      "verdict": "UNSURE",
+      "reason": "Name `EventProcessor` occurs 10 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 438,
+      "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 410,
+          "text": "export class EventV2Processor extends EventProcessor<APIGatewayProxyEventV2> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 447,
+          "text": "const v2Processor: EventV2Processor = new EventV2Processor()"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 9,
+          "text": "EventV2Processor,"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1072,
+          "text": "it('Should return EventV2Processor for an APIGatewayProxyEventV2 event', () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1085,
+          "text": "expect(processor).toBeInstanceOf(EventV2Processor)"
+        }
+      ],
+      "symbol": "EventV2Processor",
+      "verdict": "UNSURE",
+      "reason": "Name `EventV2Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 480,
+      "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 449,
+          "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 507,
+          "text": "const v1Processor: EventV1Processor = new EventV1Processor()"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 8,
+          "text": "EventV1Processor,"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1058,
+          "text": "it('Should return EventV1Processor for an event without requestContext', () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1069,
+          "text": "expect(processor).toBeInstanceOf(EventV1Processor)"
+        }
+      ],
+      "symbol": "EventV1Processor",
+      "verdict": "UNSURE",
+      "reason": "Name `EventV1Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 543,
+      "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 509,
+          "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 588,
+          "text": "const albProcessor: ALBProcessor = new ALBProcessor()"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 7,
+          "text": "ALBProcessor,"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1040,
+          "text": "it('Should return ALBProcessor for an ALBProxyEvent event', () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1055,
+          "text": "expect(processor).toBeInstanceOf(ALBProcessor)"
+        }
+      ],
+      "symbol": "ALBProcessor",
+      "verdict": "UNSURE",
+      "reason": "Name `ALBProcessor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 627,
+      "message": "Exported symbol `LatticeV2Processor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 590,
+          "text": "export class LatticeV2Processor extends EventProcessor<LatticeProxyEventV2> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 629,
+          "text": "const latticeV2Processor: LatticeV2Processor = new LatticeV2Processor()"
+        }
+      ],
+      "symbol": "LatticeV2Processor",
+      "verdict": "UNSURE",
+      "reason": "Name `LatticeV2Processor` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/types.ts",
+      "line": 6,
+      "message": "Exported type `CognitoIdentity` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/types.ts",
+          "line": 3,
+          "text": "export interface CognitoIdentity {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/types.ts",
+          "line": 44,
+          "text": "identity?: CognitoIdentity | undefined"
+        }
+      ],
+      "symbol": "CognitoIdentity",
+      "verdict": "UNSURE",
+      "reason": "Name `CognitoIdentity` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/types.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/types.ts",
+      "line": 14,
+      "message": "Exported type `ClientContext` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/types.ts",
+          "line": 8,
+          "text": "export interface ClientContext {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/types.ts",
+          "line": 45,
+          "text": "clientContext?: ClientContext | undefined"
+        }
+      ],
+      "symbol": "ClientContext",
+      "verdict": "UNSURE",
+      "reason": "Name `ClientContext` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/types.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/types.ts",
+      "line": 24,
+      "message": "Exported type `ClientContextClient` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/types.ts",
+          "line": 9,
+          "text": "client: ClientContextClient"
+        },
+        {
+          "file": "adapters/aws-lambda/src/types.ts",
+          "line": 15,
+          "text": "export interface ClientContextClient {"
+        }
+      ],
+      "symbol": "ClientContextClient",
+      "verdict": "UNSURE",
+      "reason": "Name `ClientContextClient` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/types.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/types.ts",
+      "line": 35,
+      "message": "Exported type `ClientContextEnv` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/types.ts",
+          "line": 12,
+          "text": "env: ClientContextEnv"
+        },
+        {
+          "file": "adapters/aws-lambda/src/types.ts",
+          "line": 23,
+          "text": "export interface ClientContextEnv {"
+        }
+      ],
+      "symbol": "ClientContextEnv",
+      "verdict": "UNSURE",
+      "reason": "Name `ClientContextEnv` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/types.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/cloudflare-workers/utils.ts",
+      "line": 8,
+      "message": "Exported type `KVAssetOptions` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/cloudflare-workers/src/utils.ts",
+          "line": 5,
+          "text": "export type KVAssetOptions = {"
+        },
+        {
+          "file": "adapters/cloudflare-workers/src/utils.ts",
+          "line": 13,
+          "text": "options?: KVAssetOptions"
+        }
+      ],
+      "symbol": "KVAssetOptions",
+      "verdict": "UNSURE",
+      "reason": "Name `KVAssetOptions` occurs 2 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/cloudflare-workers/utils.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/client/types.ts",
+      "line": 232,
+      "message": "Exported type `Response` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/src/handler.test.ts",
+          "line": 140,
+          "text": "const response = new Response('test content', {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.test.ts",
+          "line": 154,
+          "text": "const response = new Response('test content', {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.test.ts",
+          "line": 168,
+          "text": "const response = new Response('test image content', {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.test.ts",
+          "line": 183,
+          "text": "const response = new Response('test text content', {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.test.ts",
+          "line": 198,
+          "text": "const response = new Response('\\uFEFFname\\r\\nexample\\r\\n', {"
+        }
+      ],
+      "symbol": "Response",
+      "verdict": "UNSURE",
+      "reason": "Name `Response` occurs 462 time(s) outside the declaration, but none could be attributed to an import from `src/client/types.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/client/types.ts",
+      "line": 273,
+      "message": "Exported type `InferRequestOptionsType` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "InferRequestOptionsType",
+      "verdict": "CONFIRMED",
+      "reason": "Name `InferRequestOptionsType` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/context.ts",
+      "line": 78,
+      "message": "Exported type `Renderer` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "docs/MIGRATION.md",
+          "line": 53,
+          "text": "- The default value of the `docType` option in JSX Renderer Middleware is now `true`."
+        }
+      ],
+      "symbol": "Renderer",
+      "verdict": "UNSURE",
+      "reason": "Name `Renderer` occurs 1 time(s) outside the declaration, but none could be attributed to an import from `src/context.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/context.ts",
+      "line": 88,
+      "message": "Exported type `Layout` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "docs/MAINTAINING.md",
+          "line": 9,
+          "text": "### Layout"
+        },
+        {
+          "file": "runtime-tests/bun/index.test.tsx",
+          "line": 113,
+          "text": "const Layout = (props: PropsWithChildren) => {"
+        },
+        {
+          "file": "runtime-tests/bun/index.test.tsx",
+          "line": 129,
+          "text": "<Layout>"
+        },
+        {
+          "file": "runtime-tests/bun/index.test.tsx",
+          "line": 131,
+          "text": "</Layout>"
+        },
+        {
+          "file": "runtime-tests/bun/index.test.tsx",
+          "line": 149,
+          "text": "it('Should return rendered HTML with Layout', async () => {"
+        }
+      ],
+      "symbol": "Layout",
+      "verdict": "UNSURE",
+      "reason": "Name `Layout` occurs 28 time(s) outside the declaration, but none could be attributed to an import from `src/context.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/helper/css/common.ts",
+      "line": 3,
+      "message": "Exported symbol `isPseudoGlobalSelectorRe` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "isPseudoGlobalSelectorRe",
+      "verdict": "CONFIRMED",
+      "reason": "Name `isPseudoGlobalSelectorRe` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/helper/css/common.ts",
+      "line": 10,
+      "message": "Exported symbol `EXTERNAL_CLASS_NAMES` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "EXTERNAL_CLASS_NAMES",
+      "verdict": "CONFIRMED",
+      "reason": "Name `EXTERNAL_CLASS_NAMES` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/helper/css/common.ts",
+      "line": 21,
+      "message": "Exported symbol `IS_CSS_ESCAPED` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "IS_CSS_ESCAPED",
+      "verdict": "CONFIRMED",
+      "reason": "Name `IS_CSS_ESCAPED` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/helper/css/common.ts",
+      "line": 143,
+      "message": "Exported symbol `buildStyleString` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "buildStyleString",
+      "verdict": "CONFIRMED",
+      "reason": "Name `buildStyleString` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/jsx/base.ts",
+      "line": 87,
+      "message": "Exported symbol `booleanAttributes` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "booleanAttributes",
+      "verdict": "CONFIRMED",
+      "reason": "Name `booleanAttributes` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/jsx/dom/render.ts",
+      "line": 32,
+      "message": "Exported type `ErrorHandler` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "src/compose.ts",
+          "line": 2,
+          "text": "import type { Env, ErrorHandler, Next, NotFoundHandler } from './types'"
+        },
+        {
+          "file": "src/compose.ts",
+          "line": 17,
+          "text": "onError?: ErrorHandler<E>,"
+        },
+        {
+          "file": "src/hono-base.ts",
+          "line": 15,
+          "text": "ErrorHandler,"
+        },
+        {
+          "file": "src/hono-base.ts",
+          "line": 37,
+          "text": "const errorHandler: ErrorHandler = (err, c) => {"
+        },
+        {
+          "file": "src/hono-base.ts",
+          "line": 208,
+          "text": "private errorHandler: ErrorHandler = errorHandler"
+        }
+      ],
+      "symbol": "ErrorHandler",
+      "verdict": "UNSURE",
+      "reason": "Name `ErrorHandler` occurs 14 time(s) outside the declaration, but none could be attributed to an import from `src/jsx/dom/render.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/router/reg-exp-router/node.ts",
+      "line": 3,
+      "message": "Exported symbol `LABEL_REG_EXP_STR` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "LABEL_REG_EXP_STR",
+      "verdict": "CONFIRMED",
+      "reason": "Name `LABEL_REG_EXP_STR` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/router/reg-exp-router/trie.ts",
+      "line": 5,
+      "message": "Exported type `ReplacementMap` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "ReplacementMap",
+      "verdict": "CONFIRMED",
+      "reason": "Name `ReplacementMap` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/accept.ts",
+      "line": 1,
+      "message": "Exported type `Accept` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "src/context.test.ts",
+          "line": 227,
+          "text": "c.header('Vary', 'Accept-Encoding', { append: true })"
+        },
+        {
+          "file": "src/context.test.ts",
+          "line": 235,
+          "text": "c.header('Vary', 'Accept-Encoding', { append: true })"
+        },
+        {
+          "file": "src/context.test.ts",
+          "line": 242,
+          "text": "c.header('Vary', 'Accept-Encoding', { append: true })"
+        },
+        {
+          "file": "src/helper/accepts/accepts.test.ts",
+          "line": 4,
+          "text": "import type { Accept, acceptsConfig, acceptsOptions } from './accepts'"
+        },
+        {
+          "file": "src/helper/accepts/accepts.test.ts",
+          "line": 24,
+          "text": "const accepts: Accept[] = ["
+        }
+      ],
+      "symbol": "Accept",
+      "verdict": "UNSURE",
+      "reason": "Name `Accept` occurs 183 time(s) outside the declaration, but none could be attributed to an import from `src/utils/accept.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/basic-auth.ts",
+      "line": 7,
+      "message": "Exported type `Auth` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "docs/MIGRATION.md",
+          "line": 154,
+          "text": "### Basic Auth Middleware and Bearer Auth Middleware"
+        },
+        {
+          "file": "docs/MIGRATION.md",
+          "line": 156,
+          "text": "If you are using Basic Auth and Bearer Auth in your Handler (nested), change as follows:"
+        },
+        {
+          "file": "runtime-tests/bun/index.test.tsx",
+          "line": 51,
+          "text": "describe('Basic Auth Middleware', () => {"
+        },
+        {
+          "file": "runtime-tests/bun/index.test.tsx",
+          "line": 85,
+          "text": "describe('JWT Auth Middleware', () => {"
+        },
+        {
+          "file": "runtime-tests/deno/middleware.test.tsx",
+          "line": 9,
+          "text": "Deno.test('Basic Auth Middleware', async () => {"
+        }
+      ],
+      "symbol": "Auth",
+      "verdict": "UNSURE",
+      "reason": "Name `Auth` occurs 25 time(s) outside the declaration, but none could be attributed to an import from `src/utils/basic-auth.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/concurrent.ts",
+      "line": 8,
+      "message": "Exported type `Pool` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "Pool",
+      "verdict": "CONFIRMED",
+      "reason": "Name `Pool` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/cookie.ts",
+      "line": 31,
+      "message": "Exported type `CookieConstraint` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "CookieConstraint",
+      "verdict": "CONFIRMED",
+      "reason": "Name `CookieConstraint` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/utils/crypto.ts",
+      "line": 33,
+      "message": "Exported symbol `createHash` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "runtime-tests/fastly/index.test.ts",
+          "line": 1,
+          "text": "import { createHash } from 'crypto'"
+        },
+        {
+          "file": "runtime-tests/fastly/index.test.ts",
+          "line": 74,
+          "text": "hashFunction: (m: string) => createHash('sha256').update(m).digest('hex'),"
+        },
+        {
+          "file": "src/middleware/basic-auth/index.test.ts",
+          "line": 1,
+          "text": "import { createHash } from 'crypto'"
+        },
+        {
+          "file": "src/middleware/basic-auth/index.test.ts",
+          "line": 64,
+          "text": "hashFunction: (data: string) => createHash('sha256').update(data).digest('hex'),"
+        },
+        {
+          "file": "src/utils/buffer.test.ts",
+          "line": 1,
+          "text": "import { createHash } from 'crypto'"
+        }
+      ],
+      "symbol": "createHash",
+      "verdict": "UNSURE",
+      "reason": "Name `createHash` occurs 9 time(s) outside the declaration, but none could be attributed to an import from `src/utils/crypto.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/http-status.ts",
+      "line": 6,
+      "message": "Exported type `InfoStatusCode` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "InfoStatusCode",
+      "verdict": "CONFIRMED",
+      "reason": "Name `InfoStatusCode` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/http-status.ts",
+      "line": 8,
+      "message": "Exported type `DeprecatedStatusCode` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "DeprecatedStatusCode",
+      "verdict": "CONFIRMED",
+      "reason": "Name `DeprecatedStatusCode` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/http-status.ts",
+      "line": 52,
+      "message": "Exported type `UnofficialStatusCode` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "UnofficialStatusCode",
+      "verdict": "CONFIRMED",
+      "reason": "Name `UnofficialStatusCode` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/http-status.ts",
+      "line": 58,
+      "message": "Exported type `UnOfficalStatusCode` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "UnOfficalStatusCode",
+      "verdict": "CONFIRMED",
+      "reason": "Name `UnOfficalStatusCode` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/http-status.ts",
+      "line": 71,
+      "message": "Exported type `ContentlessStatusCode` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "ContentlessStatusCode",
+      "verdict": "CONFIRMED",
+      "reason": "Name `ContentlessStatusCode` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/jwt/jwt.ts",
+      "line": 104,
+      "message": "Exported type `VerifyOptionsWithAlg` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "VerifyOptionsWithAlg",
+      "verdict": "CONFIRMED",
+      "reason": "Name `VerifyOptionsWithAlg` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/utils/mime.ts",
+      "line": 29,
+      "message": "Exported symbol `mimes` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/cloudflare-workers/src/serve-static.test.ts",
+          "line": 132,
+          "text": "describe('With `mimes` options', () => {"
+        },
+        {
+          "file": "adapters/cloudflare-workers/src/serve-static.test.ts",
+          "line": 133,
+          "text": "const mimes = {"
+        },
+        {
+          "file": "adapters/cloudflare-workers/src/serve-static.test.ts",
+          "line": 144,
+          "text": "app.use('/static/*', serveStatic({ root: './assets', mimes, manifest }))"
+        },
+        {
+          "file": "src/adapter/cloudflare-workers/serve-static.test.ts",
+          "line": 132,
+          "text": "describe('With `mimes` options', () => {"
+        },
+        {
+          "file": "src/adapter/cloudflare-workers/serve-static.test.ts",
+          "line": 133,
+          "text": "const mimes = {"
+        }
+      ],
+      "symbol": "mimes",
+      "verdict": "UNSURE",
+      "reason": "Name `mimes` occurs 8 time(s) outside the declaration, but none could be attributed to an import from `src/utils/mime.ts`"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/types.ts",
+      "line": 10,
+      "message": "Exported type `NotEqual` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "NotEqual",
+      "verdict": "CONFIRMED",
+      "reason": "Name `NotEqual` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/types.ts",
+      "line": 23,
+      "message": "Exported type `JSONPrimitive` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "JSONPrimitive",
+      "verdict": "CONFIRMED",
+      "reason": "Name `JSONPrimitive` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/types.ts",
+      "line": 24,
+      "message": "Exported type `JSONArray` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "JSONArray",
+      "verdict": "CONFIRMED",
+      "reason": "Name `JSONArray` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/types.ts",
+      "line": 25,
+      "message": "Exported type `JSONObject` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "JSONObject",
+      "verdict": "CONFIRMED",
+      "reason": "Name `JSONObject` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/types.ts",
+      "line": 127,
+      "message": "Exported type `InterfaceToType` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "InterfaceToType",
+      "verdict": "CONFIRMED",
+      "reason": "Name `InterfaceToType` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/utils/types.ts",
+      "line": 129,
+      "message": "Exported type `RequiredKeysOf` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "RequiredKeysOf",
+      "verdict": "CONFIRMED",
+      "reason": "Name `RequiredKeysOf` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/utils/url.ts",
+      "line": 362,
+      "message": "Exported symbol `decodeURIComponent_` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "decodeURIComponent_",
+      "verdict": "CONFIRMED",
+      "reason": "Name `decodeURIComponent_` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/validator/validator.ts",
+      "line": 28,
+      "message": "Exported type `ExtractValidationResponse` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "ExtractValidationResponse",
+      "verdict": "CONFIRMED",
+      "reason": "Name `ExtractValidationResponse` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/validator/validator.ts",
+      "line": 176,
+      "message": "Exported type `ExtractValidatorOutput` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "ExtractValidatorOutput",
+      "verdict": "CONFIRMED",
+      "reason": "Name `ExtractValidatorOutput` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "mm.mjs",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `mm.mjs` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 21,
+      "message": "Dependency `@arethetypeswrong/cli` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 11,
+          "text": "'@arethetypeswrong/cli':"
+        }
+      ],
+      "symbol": "@arethetypeswrong/cli",
+      "verdict": "UNSURE",
+      "reason": "Package `@arethetypeswrong/cli` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 22,
+      "message": "Dependency `@biomejs/biome` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 14,
+          "text": "'@biomejs/biome':"
+        }
+      ],
+      "symbol": "@biomejs/biome",
+      "verdict": "UNSURE",
+      "reason": "Package `@biomejs/biome` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 33,
+      "message": "Dependency `globby` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 47,
+          "text": "globby:"
+        }
+      ],
+      "symbol": "globby",
+      "verdict": "UNSURE",
+      "reason": "Package `globby` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 41,
+      "message": "Dependency `rolldown` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 71,
+          "text": "rolldown:"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 5451,
+          "text": "rolldown: ^1.0.0-rc.12"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 11628,
+          "text": "rolldown: 1.0.0-rc.17"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 12196,
+          "text": "rolldown: 1.0.0-rc.17"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 12345,
+          "text": "rolldown: 1.0.0-rc.17"
+        }
+      ],
+      "symbol": "rolldown",
+      "verdict": "UNSURE",
+      "reason": "Package `rolldown` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 44,
+      "message": "Dependency `supershy` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 80,
+          "text": "supershy:"
+        }
+      ],
+      "symbol": "supershy",
+      "verdict": "UNSURE",
+      "reason": "Package `supershy` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 46,
+      "message": "Dependency `ts-morph` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "packages/zod/src/v3/tests/language-server.test.ts",
+          "line": 3,
+          "text": "// import { Node, Project, SyntaxKind } from \"ts-morph\";"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 86,
+          "text": "ts-morph:"
+        }
+      ],
+      "symbol": "ts-morph",
+      "verdict": "UNSURE",
+      "reason": "Package `ts-morph` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 47,
+      "message": "Dependency `tsdown` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 89,
+          "text": "tsdown:"
+        }
+      ],
+      "symbol": "tsdown",
+      "verdict": "UNSURE",
+      "reason": "Package `tsdown` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 48,
+      "message": "Dependency `tslib` is never imported, required or referenced by name in scripts.",
+      "evidence": [
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 92,
+          "text": "tslib:"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 2297,
+          "text": "tslib: '*'"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 2302,
+          "text": "tslib:"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 6518,
+          "text": "tslib: 2.8.1"
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "line": 6524,
+          "text": "tslib: 2.8.1"
+        }
+      ],
+      "symbol": "tslib",
+      "verdict": "UNSURE",
+      "reason": "Package `tslib` appears only in text (comment/doc/lockfile) in its scope"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/arktype-morph-test.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/arktype-morph-test.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/array.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/array.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/bench-invalid.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/bench-invalid.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/bench-invalid.ts",
+      "line": 73,
+      "message": "Exported symbol `sink` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 353,
+          "text": "let sink = 0;"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 366,
+          "text": "sink += r.success ? 1 : 0;"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 402,
+          "text": "sink += v === INVALID ? 0 : 1;"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 413,
+          "text": "sink += r.success ? 1 : 0;"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 451,
+          "text": "console.log(`(sink ${sink}${escaped === undefined ? \"\" : \"\"})`);"
+        }
+      ],
+      "symbol": "sink",
+      "verdict": "UNSURE",
+      "reason": "Name `sink` occurs 38 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/bench-invalid.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/boolean.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/boolean.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-array-build.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-array-build.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-base64-inline-vs-hoist.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-base64-inline-vs-hoist.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-codec-direction.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-codec-direction.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-endswith.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-endswith.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-helper-scope.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-helper-scope.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-includes.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-includes.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-matrix.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-matrix.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-object-build.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-object-build.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-output.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [
+        {
+          "file": "wiki/compile.md",
+          "line": 52,
+          "text": "Generated code always builds new objects and arrays; it never mutates input or `payload.value`. Justified by `packages/bench/compile-passthrough.ts` and `packages/bench/compile-output.ts`: build-new wins or ties mutate-in-place across every benchmarked shape, and produces predictable semantics (call"
+        }
+      ],
+      "symbol": null,
+      "verdict": "UNSURE",
+      "reason": "Path text of `packages/bench/compile-output.ts` appears only in non-executable text"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-overwrite.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-overwrite.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-passthrough.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [
+        {
+          "file": "wiki/compile.md",
+          "line": 52,
+          "text": "Generated code always builds new objects and arrays; it never mutates input or `payload.value`. Justified by `packages/bench/compile-passthrough.ts` and `packages/bench/compile-output.ts`: build-new wins or ties mutate-in-place across every benchmarked shape, and produces predictable semantics (call"
+        }
+      ],
+      "symbol": null,
+      "verdict": "UNSURE",
+      "reason": "Path text of `packages/bench/compile-passthrough.ts` appears only in non-executable text"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-scaling.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-scaling.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-startswith.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-startswith.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-tuple.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-tuple.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-validate-vs-parse.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-validate-vs-parse.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-vs-arktype.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-vs-arktype.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile-wrapper-cost.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile-wrapper-cost.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/compile-wrapper-cost.ts",
+      "line": 16,
+      "message": "Exported symbol `SINK` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "SINK",
+      "verdict": "CONFIRMED",
+      "reason": "Name `SINK` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/compile.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/compile.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/datetime-regex.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/datetime-regex.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/datetime.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/datetime.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/discriminated-union.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/discriminated-union.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/error-construction-breakdown.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/error-construction-breakdown.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/error-handling.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/error-handling.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/failing-safeparse.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/failing-safeparse.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/init.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/init.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/instanceof.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/instanceof.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/ipv4-regex.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/ipv4-regex.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/jit-union.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/jit-union.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/key-iteration.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/key-iteration.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/lazy-box.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/lazy-box.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/lazy-box.ts",
+      "line": 4,
+      "message": "Exported symbol `lazyWithInternalProp` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "lazyWithInternalProp",
+      "verdict": "CONFIRMED",
+      "reason": "Name `lazyWithInternalProp` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/lazy-box.ts",
+      "line": 16,
+      "message": "Exported symbol `lazyWithScopeProp` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "lazyWithScopeProp",
+      "verdict": "CONFIRMED",
+      "reason": "Name `lazyWithScopeProp` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/lazy-box.ts",
+      "line": 31,
+      "message": "Exported symbol `lazyWithGetterOverride` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "lazyWithGetterOverride",
+      "verdict": "CONFIRMED",
+      "reason": "Name `lazyWithGetterOverride` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/libs.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/libs.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/breakdown.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/breakdown.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/calibrate.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/calibrate.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/compiled-slope.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/compiled-slope.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/dict-mode.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 84,
+          "text": "- **Redefining an accessor demotes the object to dictionary mode**, which cost 2x on `z.object().parse` once. Run `packages/bench/memory/dict-mode.ts` after any change here — every instance must report `fast`."
+        }
+      ],
+      "symbol": null,
+      "verdict": "UNSURE",
+      "reason": "Path text of `packages/bench/memory/dict-mode.ts` appears only in non-executable text"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/bench/memory/harness.ts",
+      "line": 21,
+      "message": "Exported type `Measurement` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "packages/bench/validate-abort-sweep.ts",
+          "line": 145,
+          "text": "interface Measurement {"
+        },
+        {
+          "file": "packages/bench/validate-abort-sweep.ts",
+          "line": 152,
+          "text": "function measure(schema: z.ZodType, input: unknown): Measurement {"
+        },
+        {
+          "file": "packages/bench/validate-abort-sweep.ts",
+          "line": 188,
+          "text": "valid: Measurement;"
+        },
+        {
+          "file": "packages/bench/validate-abort-sweep.ts",
+          "line": 189,
+          "text": "invalid: Measurement;"
+        },
+        {
+          "file": "packages/bench/validate-vs-safeparse.ts",
+          "line": 126,
+          "text": "interface Measurement {"
+        }
+      ],
+      "symbol": "Measurement",
+      "verdict": "UNSURE",
+      "reason": "Name `Measurement` occurs 9 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/memory/harness.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/memory/harness.ts",
+      "line": 32,
+      "message": "Exported symbol `measure` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 61,
+          "text": "| axis | how to measure |"
+        },
+        {
+          "file": "packages/bench/validate-abort-sweep.ts",
+          "line": 152,
+          "text": "function measure(schema: z.ZodType, input: unknown): Measurement {"
+        },
+        {
+          "file": "packages/bench/validate-abort-sweep.ts",
+          "line": 215,
+          "text": "valid: measure(c.schema, c.valid),"
+        },
+        {
+          "file": "packages/bench/validate-abort-sweep.ts",
+          "line": 216,
+          "text": "invalid: measure(c.schema, c.invalid),"
+        },
+        {
+          "file": "packages/bench/validate-vs-safeparse.ts",
+          "line": 137,
+          "text": "function measure(plain: z.ZodType, compiled: z.ZodType | null, input: unknown): Pair {"
+        }
+      ],
+      "symbol": "measure",
+      "verdict": "UNSURE",
+      "reason": "Name `measure` occurs 18 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/memory/harness.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/indent-leak.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/indent-leak.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/leaks.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/leaks.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/own-props.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/own-props.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/prop-arrays.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/prop-arrays.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/prop-slack.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 79,
+          "text": "Most of the memory in a schema is its own-property count, not its closures. V8 sizes an instance's backing store in steps and `$constructor` assigns nothing itself, so instances get no in-object slots: **≤12 own properties cost 128 bytes, 13–20 cost 848, ≥21 cost 1616** (`packages/bench/memory/prop-"
+        }
+      ],
+      "symbol": null,
+      "verdict": "UNSURE",
+      "reason": "Path text of `packages/bench/memory/prop-slack.ts` appears only in non-executable text"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/realworld.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/realworld.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/bench/memory/retainers.ts",
+      "line": 26,
+      "message": "Exported type `Graph` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "Graph",
+      "verdict": "CONFIRMED",
+      "reason": "Name `Graph` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/memory/retainers.ts",
+      "line": 97,
+      "message": "Exported symbol `shortestPaths` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "shortestPaths",
+      "verdict": "CONFIRMED",
+      "reason": "Name `shortestPaths` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/memory/retainers.ts",
+      "line": 118,
+      "message": "Exported symbol `findNodes` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "findNodes",
+      "verdict": "CONFIRMED",
+      "reason": "Name `findNodes` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/schema-footprint.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 64,
+          "text": "| memory | `packages/bench/memory/schema-footprint.ts` and `realworld.ts` (retained bytes per schema; run under `--expose-gc`) |"
+        },
+        {
+          "file": "packages/docs/content/blog/reducing-memory-footprint.mdx",
+          "line": 109,
+          "text": "Retained bytes can be tricky to measure. The numbers above come from [`packages/bench/memory/schema-footprint.ts`](https://github.com/colinhacks/zod/blob/main/packages/bench/memory/schema-footprint.ts) in the repo."
+        }
+      ],
+      "symbol": null,
+      "verdict": "UNSURE",
+      "reason": "Path text of `packages/bench/memory/schema-footprint.ts` appears only in non-executable text"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/bench/memory/snapshot.ts",
+      "line": 30,
+      "message": "Exported type `NodeRow` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "NodeRow",
+      "verdict": "CONFIRMED",
+      "reason": "Name `NodeRow` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/bench/memory/snapshot.ts",
+      "line": 88,
+      "message": "Exported type `DiffRow` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "DiffRow",
+      "verdict": "CONFIRMED",
+      "reason": "Name `DiffRow` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/survey.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/survey.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/memory/throughput.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/memory/throughput.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/moltar-libs.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/moltar-libs.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/number.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/number.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/object-async.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/object-async.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/object-creation.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/object-creation.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/object-fail.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/object-fail.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/object-moltar-jitless.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/object-moltar-jitless.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/object-moltar.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/object-moltar.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/object-safe.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/object-safe.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/object-safeasync.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/object-safeasync.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/object.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/object.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/property-access.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/property-access.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/property-access.ts",
+      "line": 4,
+      "message": "Exported symbol `objA` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "packages/bench/memory/own-props.ts",
+          "line": 12,
+          "text": "for (const [where, objA, objB] of ["
+        },
+        {
+          "file": "packages/bench/memory/own-props.ts",
+          "line": 16,
+          "text": "for (const key of Reflect.ownKeys(objA)) {"
+        },
+        {
+          "file": "packages/bench/memory/own-props.ts",
+          "line": 17,
+          "text": "const d = Object.getOwnPropertyDescriptor(objA, key)!;"
+        },
+        {
+          "file": "packages/bench/memory/survey.ts",
+          "line": 16,
+          "text": "for (const [objA, objB] of ["
+        },
+        {
+          "file": "packages/bench/memory/survey.ts",
+          "line": 20,
+          "text": "for (const key of Reflect.ownKeys(objA)) {"
+        }
+      ],
+      "symbol": "objA",
+      "verdict": "UNSURE",
+      "reason": "Name `objA` occurs 12 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/property-access.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/property-access.ts",
+      "line": 9,
+      "message": "Exported symbol `objB` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "packages/bench/memory/own-props.ts",
+          "line": 12,
+          "text": "for (const [where, objA, objB] of ["
+        },
+        {
+          "file": "packages/bench/memory/own-props.ts",
+          "line": 18,
+          "text": "const dB = Object.getOwnPropertyDescriptor(objB, key);"
+        },
+        {
+          "file": "packages/bench/memory/survey.ts",
+          "line": 16,
+          "text": "for (const [objA, objB] of ["
+        },
+        {
+          "file": "packages/bench/memory/survey.ts",
+          "line": 22,
+          "text": "const dB = objB && Object.getOwnPropertyDescriptor(objB, key);"
+        },
+        {
+          "file": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+          "line": 18,
+          "text": "const objB = {"
+        }
+      ],
+      "symbol": "objB",
+      "verdict": "UNSURE",
+      "reason": "Name `objB` occurs 8 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/property-access.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/property-access.ts",
+      "line": 17,
+      "message": "Exported symbol `objC` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+          "line": 25,
+          "text": "const objC = {"
+        },
+        {
+          "file": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+          "line": 50,
+          "text": "double.parse(objC);"
+        },
+        {
+          "file": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+          "line": 62,
+          "text": "many.parse(objC);"
+        },
+        {
+          "file": "packages/zod/src/v3/benchmarks/union.ts",
+          "line": 25,
+          "text": "const objC = {"
+        },
+        {
+          "file": "packages/zod/src/v3/benchmarks/union.ts",
+          "line": 50,
+          "text": "double.parse(objC);"
+        }
+      ],
+      "symbol": "objC",
+      "verdict": "UNSURE",
+      "reason": "Name `objC` occurs 6 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/property-access.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/property-access.ts",
+      "line": 33,
+      "message": "Exported symbol `objD` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "objD",
+      "verdict": "CONFIRMED",
+      "reason": "Name `objD` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/property-access.ts",
+      "line": 49,
+      "message": "Exported symbol `objE` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "objE",
+      "verdict": "CONFIRMED",
+      "reason": "Name `objE` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/safe.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/safe.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/safeparse.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/safeparse.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/single-element-enum.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/single-element-enum.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/single-item-union.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/single-item-union.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/string.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/string.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/typia-case/src/index.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/typia-case/src/index.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/typia-case/src/index.ts",
+      "line": 17,
+      "message": "Exported symbol `is` has zero references; safe to delete.",
+      "evidence": [
+        {
+          "file": ".editorconfig",
+          "line": 1,
+          "text": "# EditorConfig is awesome: https://EditorConfig.org"
+        },
+        {
+          "file": ".gitignore",
+          "line": 33,
+          "text": "# maintainer-only plans, comparisons and investigations; wiki/ is the public half"
+        },
+        {
+          "file": "AGENTS.md",
+          "line": 41,
+          "text": "- Never stack prose across consecutive `//` lines. Lines have no maximum width here — the editor wraps for display — so a paragraph split across several `//` lines is just a hard-wrapped line, and hard wrapping breaks search, diffs and editing. Write one long `//` instead. `nub run check:comments` e"
+        },
+        {
+          "file": "AGENTS.md",
+          "line": 42,
+          "text": "- Keep comments SHORT AND TIGHT — one lowercase sentence fragment, one clause, no trailing period. Never a capitalized full sentence, and never two of them. Extreme concision: say only what the code cannot say, and cut the setup sentence, the recap, and the same point restated in different words; a "
+        },
+        {
+          "file": "AGENTS.md",
+          "line": 45,
+          "text": "- Never branch on specific schema types in shared code. No `def.type === \"optional\"` conditionals, no hardcoded lists of wrapper type names, no walks up the wrapper chain hunting for a particular type. Every schema type added later silently falls through such a check, and the list is wrong the momen"
+        }
+      ],
+      "symbol": "is",
+      "verdict": "UNSURE",
+      "reason": "Name `is` occurs 1021 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/typia-case/src/index.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/typia-case/src/index.ts",
+      "line": 18,
+      "message": "Exported symbol `equals` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "equals",
+      "verdict": "CONFIRMED",
+      "reason": "Name `equals` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/bench/typia-case/src/index.ts",
+      "line": 19,
+      "message": "Exported symbol `clone` has zero references; safe to delete.",
+      "evidence": [
+        {
+          "file": "CONTRIBUTING.md",
+          "line": 14,
+          "text": "- Clone your forked repository: `git clone git@github.com:{your_username}/zod.git`"
+        },
+        {
+          "file": "CONTRIBUTING.md",
+          "line": 36,
+          "text": "2. Clone your forked repo: `git clone git@github.com:{your_username}/zod.git`"
+        },
+        {
+          "file": "packages/bench/compile-output.ts",
+          "line": 151,
+          "text": "\"clone with spread\"() {"
+        },
+        {
+          "file": "packages/bench/compile-output.ts",
+          "line": 216,
+          "text": "\"clone path to transform\"() {"
+        },
+        {
+          "file": "packages/bench/compile-output.ts",
+          "line": 219,
+          "text": "\"JSON deep clone\"() {"
+        }
+      ],
+      "symbol": "clone",
+      "verdict": "UNSURE",
+      "reason": "Name `clone` occurs 110 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/typia-case/src/index.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/union.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/union.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/validate-abort-sweep.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/validate-abort-sweep.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/bench/validate-vs-safeparse.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/bench/validate-vs-safeparse.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/example-mini.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/example-mini.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/example.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/example.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "packages/treeshake/package.json",
+      "line": 23,
+      "message": "Dependency `zod4` is never imported, required or referenced by name in scripts of packages/treeshake.",
+      "evidence": [],
+      "symbol": "zod4",
+      "verdict": "CONFIRMED",
+      "reason": "Name `zod4` appears nowhere outside its `packages/treeshake/package.json` declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/valibot-boolean.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/valibot-boolean.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/valibot-object.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/valibot-object.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/valibot-simple-object.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/valibot-simple-object.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/valibot-string.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/valibot-string.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-boolean.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-boolean.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-default-import.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-default-import.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-full.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-full.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/treeshake/zod-full.ts",
+      "line": 3,
+      "message": "Exported symbol `schema` has zero references; safe to delete.",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 45,
+          "text": "- Never branch on specific schema types in shared code. No `def.type === \"optional\"` conditionals, no hardcoded lists of wrapper type names, no walks up the wrapper chain hunting for a particular type. Every schema type added later silently falls through such a check, and the list is wrong the momen"
+        },
+        {
+          "file": "AGENTS.md",
+          "line": 64,
+          "text": "| memory | `packages/bench/memory/schema-footprint.ts` and `realworld.ts` (retained bytes per schema; run under `--expose-gc`) |"
+        },
+        {
+          "file": "AGENTS.md",
+          "line": 79,
+          "text": "Most of the memory in a schema is its own-property count, not its closures. V8 sizes an instance's backing store in steps and `$constructor` assigns nothing itself, so instances get no in-object slots: **≤12 own properties cost 128 bytes, 13–20 cost 848, ≥21 cost 1616** (`packages/bench/memory/prop-"
+        },
+        {
+          "file": "biome.jsonc",
+          "line": 2,
+          "text": "\"$schema\": \"https://biomejs.dev/schemas/1.9.4/schema.json\","
+        },
+        {
+          "file": "package.json",
+          "line": 23,
+          "text": "\"@seriousme/openapi-schema-validator\": \"2.9.0\","
+        }
+      ],
+      "symbol": "schema",
+      "verdict": "UNSURE",
+      "reason": "Name `schema` occurs 4788 time(s) outside the declaration, but none could be attributed to an import from `packages/treeshake/zod-full.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-locale.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-locale.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-locales.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-locales.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-mini-boolean.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-mini-boolean.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-mini-full.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-mini-full.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/treeshake/zod-mini-full.ts",
+      "line": 3,
+      "message": "Exported symbol `schema` has zero references; safe to delete.",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 45,
+          "text": "- Never branch on specific schema types in shared code. No `def.type === \"optional\"` conditionals, no hardcoded lists of wrapper type names, no walks up the wrapper chain hunting for a particular type. Every schema type added later silently falls through such a check, and the list is wrong the momen"
+        },
+        {
+          "file": "AGENTS.md",
+          "line": 64,
+          "text": "| memory | `packages/bench/memory/schema-footprint.ts` and `realworld.ts` (retained bytes per schema; run under `--expose-gc`) |"
+        },
+        {
+          "file": "AGENTS.md",
+          "line": 79,
+          "text": "Most of the memory in a schema is its own-property count, not its closures. V8 sizes an instance's backing store in steps and `$constructor` assigns nothing itself, so instances get no in-object slots: **≤12 own properties cost 128 bytes, 13–20 cost 848, ≥21 cost 1616** (`packages/bench/memory/prop-"
+        },
+        {
+          "file": "biome.jsonc",
+          "line": 2,
+          "text": "\"$schema\": \"https://biomejs.dev/schemas/1.9.4/schema.json\","
+        },
+        {
+          "file": "package.json",
+          "line": 23,
+          "text": "\"@seriousme/openapi-schema-validator\": \"2.9.0\","
+        }
+      ],
+      "symbol": "schema",
+      "verdict": "UNSURE",
+      "reason": "Name `schema` occurs 4788 time(s) outside the declaration, but none could be attributed to an import from `packages/treeshake/zod-mini-full.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-mini-object.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-mini-object.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-mini-simple-object.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-mini-simple-object.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-mini-string.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-mini-string.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-named-import.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-named-import.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-object.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-object.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod-string.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod-string.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod3-boolean.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod3-boolean.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod3-full.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod3-full.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/treeshake/zod3-full.ts",
+      "line": 3,
+      "message": "Exported symbol `schema` has zero references; safe to delete.",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 45,
+          "text": "- Never branch on specific schema types in shared code. No `def.type === \"optional\"` conditionals, no hardcoded lists of wrapper type names, no walks up the wrapper chain hunting for a particular type. Every schema type added later silently falls through such a check, and the list is wrong the momen"
+        },
+        {
+          "file": "AGENTS.md",
+          "line": 64,
+          "text": "| memory | `packages/bench/memory/schema-footprint.ts` and `realworld.ts` (retained bytes per schema; run under `--expose-gc`) |"
+        },
+        {
+          "file": "AGENTS.md",
+          "line": 79,
+          "text": "Most of the memory in a schema is its own-property count, not its closures. V8 sizes an instance's backing store in steps and `$constructor` assigns nothing itself, so instances get no in-object slots: **≤12 own properties cost 128 bytes, 13–20 cost 848, ≥21 cost 1616** (`packages/bench/memory/prop-"
+        },
+        {
+          "file": "biome.jsonc",
+          "line": 2,
+          "text": "\"$schema\": \"https://biomejs.dev/schemas/1.9.4/schema.json\","
+        },
+        {
+          "file": "package.json",
+          "line": 23,
+          "text": "\"@seriousme/openapi-schema-validator\": \"2.9.0\","
+        }
+      ],
+      "symbol": "schema",
+      "verdict": "UNSURE",
+      "reason": "Name `schema` occurs 4788 time(s) outside the declaration, but none could be attributed to an import from `packages/treeshake/zod3-full.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod3-object.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod3-object.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/treeshake/zod3-string.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/treeshake/zod3-string.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/tsc/bench/lots-of-objects.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/tsc/bench/lots-of-objects.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/tsc/bench/object-with-extend.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/tsc/bench/object-with-extend.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/tsc/bench/omit-extend.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/tsc/bench/omit-extend.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/tsc/bench/string.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/tsc/bench/string.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/tsc/bench/strongly-connected.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/tsc/bench/strongly-connected.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/tsc/extend.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/tsc/extend.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/tsc/generate.ts",
+      "line": 16,
+      "message": "Exported symbol `VALIBOT` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "VALIBOT",
+      "verdict": "CONFIRMED",
+      "reason": "Name `VALIBOT` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "deps/unused-dependency",
+      "file": "packages/tsc/package.json",
+      "line": 10,
+      "message": "Dependency `@typescript/analyze-trace` is never imported, required or referenced by name in scripts of packages/tsc.",
+      "evidence": [],
+      "symbol": "@typescript/analyze-trace",
+      "verdict": "CONFIRMED",
+      "reason": "Name `@typescript/analyze-trace` appears nowhere outside its `packages/tsc/package.json` declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/zod/src/v3/benchmarks/index.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/zod/src/v3/benchmarks/index.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/zod/src/v3/tests/language-server.source.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 3,
+      "message": "Exported symbol `filePath` has zero references; safe to delete.",
+      "evidence": [
+        {
+          "file": "packages/docs/loaders/get-llm-text.ts",
+          "line": 22,
+          "text": "let filePath: string;"
+        },
+        {
+          "file": "packages/docs/loaders/get-llm-text.ts",
+          "line": 25,
+          "text": "filePath = resolvedPath;"
+        },
+        {
+          "file": "packages/docs/loaders/get-llm-text.ts",
+          "line": 26,
+          "text": "fileContent = await fs.readFile(filePath);"
+        },
+        {
+          "file": "packages/docs/loaders/get-llm-text.ts",
+          "line": 29,
+          "text": "filePath = page.data._file.absolutePath;"
+        },
+        {
+          "file": "packages/docs/loaders/get-llm-text.ts",
+          "line": 30,
+          "text": "fileContent = await fs.readFile(filePath);"
+        }
+      ],
+      "symbol": "filePath",
+      "verdict": "UNSURE",
+      "reason": "Name `filePath` occurs 6 time(s) outside the declaration, but none could be attributed to an import from `packages/zod/src/v3/tests/language-server.source.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 7,
+      "message": "Exported symbol `Test` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 38,
+          "text": "- Test both success and failure cases with edge cases"
+        },
+        {
+          "file": "packages/bench/arktype-morph-test.ts",
+          "line": 24,
+          "text": "console.log(\"=== Arktype Morph Object Identity Test ===\\n\");"
+        },
+        {
+          "file": "packages/docs/content/api.mdx",
+          "line": 2311,
+          "text": "class Test {"
+        },
+        {
+          "file": "packages/docs/content/api.mdx",
+          "line": 2315,
+          "text": "const TestSchema = z.instanceof(Test);"
+        },
+        {
+          "file": "packages/docs/content/api.mdx",
+          "line": 2317,
+          "text": "TestSchema.parse(new Test()); // ✅"
+        }
+      ],
+      "symbol": "Test",
+      "verdict": "UNSURE",
+      "reason": "Name `Test` occurs 84 time(s) outside the declaration, but none could be attributed to an import from `packages/zod/src/v3/tests/language-server.source.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 11,
+      "message": "Exported type `Test` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 38,
+          "text": "- Test both success and failure cases with edge cases"
+        },
+        {
+          "file": "packages/bench/arktype-morph-test.ts",
+          "line": 24,
+          "text": "console.log(\"=== Arktype Morph Object Identity Test ===\\n\");"
+        },
+        {
+          "file": "packages/docs/content/api.mdx",
+          "line": 2311,
+          "text": "class Test {"
+        },
+        {
+          "file": "packages/docs/content/api.mdx",
+          "line": 2315,
+          "text": "const TestSchema = z.instanceof(Test);"
+        },
+        {
+          "file": "packages/docs/content/api.mdx",
+          "line": 2317,
+          "text": "TestSchema.parse(new Test()); // ✅"
+        }
+      ],
+      "symbol": "Test",
+      "verdict": "UNSURE",
+      "reason": "Name `Test` occurs 84 time(s) outside the declaration, but none could be attributed to an import from `packages/zod/src/v3/tests/language-server.source.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 13,
+      "message": "Exported symbol `instanceOfTest` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "instanceOfTest",
+      "verdict": "CONFIRMED",
+      "reason": "Name `instanceOfTest` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 19,
+      "message": "Exported symbol `TestMerge` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestMerge",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestMerge` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 25,
+      "message": "Exported type `TestMerge` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestMerge",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestMerge` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 27,
+      "message": "Exported symbol `instanceOfTestMerge` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "instanceOfTestMerge",
+      "verdict": "CONFIRMED",
+      "reason": "Name `instanceOfTestMerge` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 34,
+      "message": "Exported symbol `TestUnion` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestUnion",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestUnion` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 41,
+      "message": "Exported type `TestUnion` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestUnion",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestUnion` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 43,
+      "message": "Exported symbol `instanceOfTestUnion` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "instanceOfTestUnion",
+      "verdict": "CONFIRMED",
+      "reason": "Name `instanceOfTestUnion` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 50,
+      "message": "Exported symbol `TestPartial` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestPartial",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestPartial` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 52,
+      "message": "Exported type `TestPartial` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestPartial",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestPartial` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 54,
+      "message": "Exported symbol `instanceOfTestPartial` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "instanceOfTestPartial",
+      "verdict": "CONFIRMED",
+      "reason": "Name `instanceOfTestPartial` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 60,
+      "message": "Exported symbol `TestPick` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestPick",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestPick` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 62,
+      "message": "Exported type `TestPick` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestPick",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestPick` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 64,
+      "message": "Exported symbol `instanceOfTestPick` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "instanceOfTestPick",
+      "verdict": "CONFIRMED",
+      "reason": "Name `instanceOfTestPick` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 70,
+      "message": "Exported symbol `TestOmit` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestOmit",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestOmit` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 72,
+      "message": "Exported type `TestOmit` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "TestOmit",
+      "verdict": "CONFIRMED",
+      "reason": "Name `TestOmit` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-export",
+      "file": "packages/zod/src/v3/tests/language-server.source.ts",
+      "line": 74,
+      "message": "Exported symbol `instanceOfTestOmit` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "instanceOfTestOmit",
+      "verdict": "CONFIRMED",
+      "reason": "Name `instanceOfTestOmit` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/classic/deep-partial.ts",
+      "line": 7,
+      "message": "Exported type `DeepPartial` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 13,
+          "text": "export type DeepPartial<T extends ZodTypeAny> = T extends ZodObject<ZodRawShape>"
+        },
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 15,
+          "text": "{ [k in keyof T[\"shape\"]]: ZodOptional<DeepPartial<T[\"shape\"][k]>> },"
+        },
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 20,
+          "text": "? ZodArray<DeepPartial<Type>, Card>"
+        },
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 22,
+          "text": "? ZodOptional<DeepPartial<Type>>"
+        },
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 24,
+          "text": "? ZodNullable<DeepPartial<Type>>"
+        }
+      ],
+      "symbol": "DeepPartial",
+      "verdict": "UNSURE",
+      "reason": "Name `DeepPartial` occurs 32 time(s) outside the declaration, but none could be attributed to an import from `packages/zod/src/v4/classic/deep-partial.ts`"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/json-schema-generator.ts",
+      "line": 20,
+      "message": "Exported type `EmitParams` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "EmitParams",
+      "verdict": "CONFIRMED",
+      "reason": "Name `EmitParams` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/standard-schema.ts",
+      "line": 2,
+      "message": "Exported type `StandardTypedV1` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "StandardTypedV1",
+      "verdict": "CONFIRMED",
+      "reason": "Name `StandardTypedV1` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/visit.ts",
+      "line": 17,
+      "message": "Exported type `VisitFn` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "VisitFn",
+      "verdict": "CONFIRMED",
+      "reason": "Name `VisitFn` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/visit.ts",
+      "line": 18,
+      "message": "Exported type `VisitHandlers` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "VisitHandlers",
+      "verdict": "CONFIRMED",
+      "reason": "Name `VisitHandlers` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-file",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `packages/zod/src/v4/core/zsf.ts` outside the file itself"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 5,
+      "message": "Exported type `$ZSF` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "$ZSF",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSF` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 14,
+      "message": "Exported type `$ZSFString` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFString",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFString` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 21,
+      "message": "Exported type `NumberTypes` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "NumberTypes",
+      "verdict": "CONFIRMED",
+      "reason": "Name `NumberTypes` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 23,
+      "message": "Exported type `$ZSFNumber` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFNumber",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFNumber` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 31,
+      "message": "Exported type `$ZSFBoolean` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFBoolean",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFBoolean` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 35,
+      "message": "Exported type `$ZSFNull` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFNull",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFNull` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 39,
+      "message": "Exported type `$ZSFUndefined` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFUndefined",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFUndefined` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 43,
+      "message": "Exported type `$ZSFOptional` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFOptional",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFOptional` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 48,
+      "message": "Exported type `$ZSFNever` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFNever",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFNever` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 52,
+      "message": "Exported type `$ZSFAny` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFAny",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFAny` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 57,
+      "message": "Exported type `$ZSFEnum` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFEnum",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFEnum` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 62,
+      "message": "Exported type `$ZSFArray` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFArray",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFArray` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 75,
+      "message": "Exported type `$ZSFObject` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFObject",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFObject` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 90,
+      "message": "Exported type `$ZSFLiteral` is used only locally; drop the `export` keyword.",
+      "evidence": [],
+      "symbol": "$ZSFLiteral",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFLiteral` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 96,
+      "message": "Exported type `$ZSFUnion` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFUnion",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFUnion` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 101,
+      "message": "Exported type `$ZSFIntersection` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFIntersection",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFIntersection` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 106,
+      "message": "Exported type `$ZSFMap` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFMap",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFMap` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/core/zsf.ts",
+      "line": 112,
+      "message": "Exported type `$ZSFConditional` has zero references; safe to delete.",
+      "evidence": [],
+      "symbol": "$ZSFConditional",
+      "verdict": "CONFIRMED",
+      "reason": "Name `$ZSFConditional` appears nowhere outside its declaration"
+    },
+    {
+      "corpus": "zod",
+      "ruleId": "ts/unused-type-export",
+      "file": "packages/zod/src/v4/mini/deep-partial.ts",
+      "line": 7,
+      "message": "Exported type `DeepPartial` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 13,
+          "text": "export type DeepPartial<T extends ZodTypeAny> = T extends ZodObject<ZodRawShape>"
+        },
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 15,
+          "text": "{ [k in keyof T[\"shape\"]]: ZodOptional<DeepPartial<T[\"shape\"][k]>> },"
+        },
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 20,
+          "text": "? ZodArray<DeepPartial<Type>, Card>"
+        },
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 22,
+          "text": "? ZodOptional<DeepPartial<Type>>"
+        },
+        {
+          "file": "packages/zod/src/v3/helpers/partialUtil.ts",
+          "line": 24,
+          "text": "? ZodNullable<DeepPartial<Type>>"
+        }
+      ],
+      "symbol": "DeepPartial",
+      "verdict": "UNSURE",
+      "reason": "Name `DeepPartial` occurs 33 time(s) outside the declaration, but none could be attributed to an import from `packages/zod/src/v4/mini/deep-partial.ts`"
+    },
+    {
+      "corpus": "execa",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 65,
+      "message": "Dependency `@typescript/native` is never imported, required or referenced by name in scripts.",
+      "evidence": [],
+      "symbol": "@typescript/native",
+      "verdict": "CONFIRMED",
+      "reason": "Name `@typescript/native` appears nowhere outside its package.json declaration"
+    },
+    {
+      "corpus": "execa",
+      "ruleId": "ts/unused-file",
+      "file": "test-d/ipc/graceful.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test-d/ipc/graceful.ts` outside the file itself"
+    },
+    {
+      "corpus": "execa",
+      "ruleId": "ts/unused-file",
+      "file": "test-d/return/result-ipc.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test-d/return/result-ipc.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 175,
+      "message": "Dependency `@stylistic/eslint-plugin` is never imported, required or referenced by name in scripts.",
+      "evidence": [],
+      "symbol": "@stylistic/eslint-plugin",
+      "verdict": "CONFIRMED",
+      "reason": "Name `@stylistic/eslint-plugin` appears nowhere outside its package.json declaration"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 176,
+      "message": "Dependency `@stylistic/eslint-plugin-js` is never imported, required or referenced by name in scripts.",
+      "evidence": [],
+      "symbol": "@stylistic/eslint-plugin-js",
+      "verdict": "CONFIRMED",
+      "reason": "Name `@stylistic/eslint-plugin-js` appears nowhere outside its package.json declaration"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "deps/unused-dependency",
+      "file": "package.json",
+      "line": 185,
+      "message": "Dependency `branch-comparer` is never imported, required or referenced by name in scripts.",
+      "evidence": [],
+      "symbol": "branch-comparer",
+      "verdict": "CONFIRMED",
+      "reason": "Name `branch-comparer` appears nowhere outside its package.json declaration"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/bundler/esbuild/src/fail-plugin-version.js",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/bundler/esbuild/src/fail-plugin-version.js` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/bundler/esbuild/src/index.js",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/bundler/esbuild/src/index.js` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "deps/unused-dependency",
+      "file": "test/bundler/webpack/package.json",
+      "line": 9,
+      "message": "Dependency `webpack-cli` is never imported, required or referenced by name in scripts of test/bundler/webpack.",
+      "evidence": [],
+      "symbol": "webpack-cli",
+      "verdict": "CONFIRMED",
+      "reason": "Name `webpack-cli` appears nowhere outside its `test/bundler/webpack/package.json` declaration"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/content-type-parser.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/content-type-parser.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/decorate-request-reply.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/decorate-request-reply.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/errors.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/errors.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/fastify.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/fastify.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/hooks.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/hooks.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/instance.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/instance.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/logger.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/logger.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/plugin.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/plugin.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/register.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/register.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/reply.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/reply.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/request.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/request.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/route.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/route.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/schema.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/schema.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/serverFactory.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/serverFactory.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/type-provider.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/type-provider.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "fastify",
+      "ruleId": "ts/unused-file",
+      "file": "test/types/using.tst.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `test/types/using.tst.ts` outside the file itself"
+    },
+    {
+      "corpus": "commander.js",
+      "ruleId": "ts/unused-file",
+      "file": "tests/fixtures-extensions/pm-try-cjs.cjs",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `tests/fixtures-extensions/pm-try-cjs.cjs` outside the file itself"
+    },
+    {
+      "corpus": "commander.js",
+      "ruleId": "ts/unused-file",
+      "file": "tests/fixtures-extensions/pm-try-mjs.mjs",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `tests/fixtures-extensions/pm-try-mjs.mjs` outside the file itself"
+    },
+    {
+      "corpus": "commander.js",
+      "ruleId": "ts/unused-file",
+      "file": "tests/fixtures-extensions/pm-try-ts.ts",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `tests/fixtures-extensions/pm-try-ts.ts` outside the file itself"
+    },
+    {
+      "corpus": "commander.js",
+      "ruleId": "ts/unused-file",
+      "file": "tests/fixtures-extensions/pm.js",
+      "line": 1,
+      "message": "File is never imported by any other scanned file.",
+      "evidence": [],
+      "symbol": null,
+      "verdict": "CONFIRMED",
+      "reason": "No import, require, reference or path mention of `tests/fixtures-extensions/pm.js` outside the file itself"
+    }
+  ]
+}
