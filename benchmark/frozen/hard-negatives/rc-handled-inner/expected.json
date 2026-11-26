@@ -1,0 +1,8 @@
+{
+  "description": "Both catches handle their errors; neither is empty or a bare rethrow.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": []
+}

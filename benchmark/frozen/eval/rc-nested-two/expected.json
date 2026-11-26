@@ -1,0 +1,21 @@
+{
+  "description": "Frozen eval case for slop/redundant-catch: rc nested two.",
+  "groundTruth": "The catch block only rethrows the same caught identifier; it adds no handling and can be removed. The catch block is empty and carries no comment, so the error is silently swallowed.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/nested.ts",
+      "symbol": "4:7",
+      "reason": "The catch block only rethrows the same caught identifier; it adds no handling and can be removed."
+    },
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/nested.ts",
+      "symbol": "11:5",
+      "reason": "The catch block is empty and carries no comment, so the error is silently swallowed."
+    }
+  ]
+}

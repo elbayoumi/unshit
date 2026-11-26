@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for slop/redundant-catch: rc callback.",
+  "groundTruth": "A promise callback swallows exceptions without a comment or recovery.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/callback.ts",
+      "symbol": "5:7",
+      "reason": "A promise callback swallows exceptions without a comment or recovery."
+    }
+  ]
+}

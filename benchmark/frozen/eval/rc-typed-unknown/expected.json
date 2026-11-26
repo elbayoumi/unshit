@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for slop/redundant-catch: rc typed unknown.",
+  "groundTruth": "The typed catch still only rethrows its own binding, so the wrapper is redundant.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": [
+    {
+      "ruleId": "slop/redundant-catch",
+      "file": "src/typed.ts",
+      "symbol": "2:3",
+      "reason": "The typed catch still only rethrows its own binding, so the wrapper is redundant."
+    }
+  ]
+}

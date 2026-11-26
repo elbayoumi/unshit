@@ -1,0 +1,8 @@
+{
+  "description": "The catch logs context before rethrowing, so it is not redundant.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "slop/redundant-catch"
+  ],
+  "expected": []
+}
