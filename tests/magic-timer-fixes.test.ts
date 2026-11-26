@@ -127,6 +127,21 @@ test('a second timer deriving the same name is skipped, leaving its literal for 
   });
 });
 
+test('window.setTimeout and globalThis.setInterval keep their callee-based suffixes', async () => {
+  await withTempProject({
+    'src/index.ts': 'export function retry(cb: () => void) { window.setTimeout(cb, 300); }\nexport function poll(cb: () => void) { globalThis.setInterval(cb, 2000); }\n',
+  }, async (dir) => {
+    assert.equal(timerFindings(await scan(dir)).length, 2);
+    const applied = await fix(dir, true);
+    assert.equal(applied.skipped.length, 0);
+    assert.equal(
+      await readFile(join(dir, 'src/index.ts'), 'utf8'),
+      'const POLL_INTERVAL_MS = 2000;\nconst RETRY_DELAY_MS = 300;\nexport function retry(cb: () => void) { window.setTimeout(cb, RETRY_DELAY_MS); }\nexport function poll(cb: () => void) { globalThis.setInterval(cb, POLL_INTERVAL_MS); }\n',
+    );
+    assert.equal(timerFindings(await scan(dir)).length, 0);
+  });
+});
+
 test('distinct contexts get distinct constants inserted after directive prologues', async () => {
   await withTempProject({
     'src/index.ts': "'use strict';\nexport function retry(cb: () => void) { setTimeout(cb, 250); }\nexport function poll(cb: () => void) { setInterval(cb, 1000); }\n",
