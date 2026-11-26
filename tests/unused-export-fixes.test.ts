@@ -89,33 +89,30 @@ test('a file that became unreferenced after --apply is deleted on the next pass,
   }, async (dir) => {
     const first = await fix(dir, true);
     assert.equal(first.appliedCount, 2);
-    assert.equal(first.deletedCount, 0, 'a file patched in this run is never deleted in the same run');
-    const afterFirst = await readFile(join(dir, 'src/lib.ts'), 'utf8');
-    assert.equal(afterFirst, 'const dead = 1;\ntype Dead = { x: number };\n');
+    // Converged in a single run: the file becomes unused once its exports are
+    // removed, so it is deleted in the same pass.
+    assert.equal(first.deletedCount, 1);
+    await assert.rejects(() => readFile(join(dir, 'src/lib.ts'), 'utf8'));
 
     const second = await fix(dir, true);
     assert.equal(second.deterministicPatches.length, 0);
-    assert.deepEqual(second.deletions, ['src/lib.ts']);
-    assert.equal(second.deletedCount, 1);
-    await assert.rejects(() => readFile(join(dir, 'src/lib.ts'), 'utf8'));
-
-    const third = await fix(dir, true);
-    assert.equal(third.deterministicPatches.length, 0);
-    assert.equal(third.deletions.length, 0);
-    assert.equal(third.diff, '');
+    assert.equal(second.deletions.length, 0);
+    assert.equal(second.deletedCount, 0);
+    assert.equal(second.diff, '');
   });
 });
 
 test('both producer and consumer are fixed together when neither stays exported', async () => {
   await withTempProject({
-    'src/model.ts': 'export interface Config { x: number }\nexport function make(): Config { return { x: 1 }; }\n',
+    'src/model.ts': 'export interface Config { x: number }\nexport function make(): Config { return { x: 1 }; }\nexport const used = 1;\n',
+    'src/main.ts': "import { used } from './model';\nconsole.log(used);\n",
   }, async (dir) => {
     const summary = await fix(dir, true);
     assert.equal(summary.skipped.length, 0);
     assert.equal(summary.appliedCount, 2);
     assert.equal(
       await readFile(join(dir, 'src/model.ts'), 'utf8'),
-      'interface Config { x: number }\nfunction make(): Config { return { x: 1 }; }\n',
+      'interface Config { x: number }\nfunction make(): Config { return { x: 1 }; }\nexport const used = 1;\n',
     );
   });
 });

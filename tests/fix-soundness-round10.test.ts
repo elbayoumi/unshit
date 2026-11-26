@@ -32,6 +32,7 @@ test('ts/no-explicit-any: does not auto-fix catch(any) when binding is used', as
   catch (err: any) { console.log(err.message); }
 }
 `,
+      'main.ts': `import { run } from './catch-used';\nconsole.log(run());\n`,
     },
     async (dir) => {
       const scan = await runScan(dir, { ...DEFAULT_CONFIG });

@@ -235,7 +235,7 @@ function mdProject(r) {
 
 function renderMarkdown(results) {
   return [
-    '# Fix soundness (round 10)', '', `Generated: ${new Date().toISOString()}`, '',
+    '# Fix soundness (round 11)', '', `Generated: ${new Date().toISOString()}`, '',
     'Method: for each corpus project, copy to a fresh `/tmp` dir (corpus read-only), run `node bin/unshit.js fix <copy> --apply --no-cache`, then compare TypeScript program diagnostics before/after using this repo\'s `typescript` package over the project\'s `tsconfig.json`. "New compile errors" are diagnostics present after but not before (keyed by file+code+message). Idempotency = second `fix --apply` makes no changes and applies 0 patches/deletions. Re-scan = fixed findings do not reappear.', '',
     ...mdSummary(results),
     ...results.flatMap(mdProject),

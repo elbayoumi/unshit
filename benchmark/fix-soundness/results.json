@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-11-26T11:55:20.340Z",
+  "generatedAt": "2026-11-26T12:45:08.629Z",
   "results": [
     {
       "name": "hono",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-hono-TshucP/hono",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-hono-OoNjkf/hono",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -119,7 +119,7 @@
     },
     {
       "name": "execa",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-execa-2Wwju0/execa",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-execa-tFcBcu/execa",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -194,7 +194,7 @@
     },
     {
       "name": "zod",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-zod-R7du6X/zod",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-zod-2MHVC7/zod",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -202,8 +202,8 @@
           "files": 472
         },
         "after": {
-          "count": 408,
-          "files": 370
+          "count": 374,
+          "files": 353
         },
         "newErrors": 0,
         "unattributedNewErrors": []
@@ -211,77 +211,60 @@
       "fix": {
         "exitCode": 0,
         "applied": {
-          "patches": 31,
-          "applied": 31,
-          "deletions": 103,
-          "deleted": 103
+          "patches": 53,
+          "applied": 53,
+          "deletions": 120,
+          "deleted": 120
         },
-        "skips": 61,
+        "skips": 94,
         "output": "  SKIP [ts/unused-export] packages/bench/bench-invalid.ts:73 — removing export would leave `sink` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/bench/compile-wrapper-cost.ts:16 — removing export would leave `SINK` unused locally (noUnusedLocals)\n  SKIP [ts/unused-type-export] packages/bench/memory/harness.ts:21 — could break declaration emit: `Measurement` is referenced by the exported signature of `measureStable` (kept conservatively)\n  SKIP [ts/unused-type-export] packages/bench/memory/retainers.ts:26 — could break declaration emit: `Graph` is referenced by the exported signature of `loadGraph` (kept conservatively)\n  SKIP [ts/unused-export] packages/bench/memory/retainers.ts:97 — removing export would leave `shortestPaths` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/bench/memory/retainers.ts:118 — removing export would leave `findNodes` unused locally (noUnusedLocals)\n  SKIP [ts/unused-type-export] packages/bench/memory/snapshot.ts:88 — could break declaration emit: `DiffRow` is referenced by the exported signature of `diffAllocation` (kept conservatively)\n  SKIP [ts/unused-export] packages/bench/typia-case/src/index.ts:17 — removing export would leave `is` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/bench/typia-case/src/index.ts:18 — removing export would leave `equals` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/bench/typia-case/src/index.ts:19 — removing export would leave `clone` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/treeshake/zod-full.ts:3 — removing export would leave `schema` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/treeshake/zod-mini-full.ts:3 — removing export would leave `schema` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/treeshake/zod3-full.ts:3 — removing export would leave `schema` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/tsc/generate.ts:16 — removing export would leave `VALIBOT` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:3 — removing export would leave `filePath` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:13 — removing export would leave `instanceOfTest` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:27 — removing export would leave `instanceOfTestMerge` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:43 — removing export would leave `instanceOfTestUnion` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:54 — removing export would leave `instanceOfTestPartial` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:64 — removing export would leave `instanceOfTestPick` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:74 — removing export would leave `instanceOfTestOmit` unused locally (noUnusedLocals)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:7 — could break declaration emit: `Test` is referenced by the exported signature of `instanceOfTest` (kept conservatively)\n  SKIP [ts/unused-type-export] packages/zod/src/v3/tests/language-server.source.ts:11 — could break declaration emit: `Test` is referenced by the exported signature of `Test` (kept conservatively)\n  SKIP [ts/unused-export] packages/zod/src/v3/tests/language-server.source.ts:19 — could break declaration emit: `TestMerge` is referenced by the exported signature of `instanceOfTestMerge` (kept conservatively)\n  SKIP [ts/unused-type-export] packages/zod/src/v3/tests/language-server.source.ts:25 — could break declaration emit: `TestMerge` is referenced by the exported signature of `TestMerge` (kept conserv"
       },
       "idempotency": {
-        "ok": false,
+        "ok": true,
         "secondApply": {
-          "patches": 12,
-          "applied": 12,
-          "deletions": 13,
-          "deleted": 13
+          "patches": 0,
+          "applied": 0,
+          "deletions": 0,
+          "deleted": 0
         },
-        "changedFilesAfterSecond": [
-          "package.json",
-          "packages/bench/lazy-box.ts",
-          "packages/bench/memory/harness.ts",
-          "packages/bench/memory/retainers.ts",
-          "packages/bench/memory/snapshot.ts",
-          "packages/bench/object-setup.ts",
-          "packages/bench/package.json",
-          "packages/bench/property-access.ts",
-          "packages/treeshake/package.json",
-          "packages/tsc/generate.ts",
-          "packages/zod/src/v3/benchmarks/datetime.ts",
-          "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
-          "packages/zod/src/v3/benchmarks/ipv4.ts",
-          "packages/zod/src/v3/benchmarks/object.ts",
-          "packages/zod/src/v3/benchmarks/primitives.ts",
-          "packages/zod/src/v3/benchmarks/realworld.ts",
-          "packages/zod/src/v3/benchmarks/string.ts",
-          "packages/zod/src/v3/benchmarks/union.ts"
-        ]
+        "changedFilesAfterSecond": []
       },
       "rescan": {
         "beforeFindings": 1477,
-        "afterFindings": 1244,
-        "fixedFindings": 283,
+        "afterFindings": 1136,
+        "fixedFindings": 342,
         "fixedStillPresent": 0,
         "fixedStillPresentSample": []
       },
       "perRule": {
         "code/duplicate-block": {
-          "fixed": 26,
+          "fixed": 27,
           "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": []
         },
         "code/high-complexity": {
-          "fixed": 1,
+          "fixed": 3,
           "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": []
         },
         "deps/unused-dependency": {
-          "fixed": 10,
-          "skipped": 2,
+          "fixed": 11,
+          "skipped": 10,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": [
             "`lint-staged` still referenced by package.json (scripts or config field)",
-            "`zod4` still imported (or required) by a scanned file anywhere in the project"
+            "`zod4` still imported (or required) by a scanned file anywhere in the project",
+            "`zod3` still imported (or required) by a scanned file anywhere in the project",
+            "`execa` still imported (or required) by a scanned file anywhere in the project"
           ]
         },
         "react/god-file": {
-          "fixed": 3,
+          "fixed": 4,
           "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
@@ -297,7 +280,7 @@
           ]
         },
         "slop/redundant-catch": {
-          "fixed": 1,
+          "fixed": 23,
           "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
@@ -311,15 +294,15 @@
           "skippedReasons": []
         },
         "ts/no-explicit-any": {
-          "fixed": 100,
+          "fixed": 124,
           "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": []
         },
         "ts/unused-export": {
-          "fixed": 17,
-          "skipped": 24,
+          "fixed": 20,
+          "skipped": 49,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": [
@@ -336,7 +319,7 @@
           ]
         },
         "ts/unused-file": {
-          "fixed": 103,
+          "fixed": 105,
           "skipped": 2,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
@@ -345,7 +328,7 @@
           ]
         },
         "ts/unused-type-export": {
-          "fixed": 20,
+          "fixed": 23,
           "skipped": 32,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
@@ -366,7 +349,7 @@
     },
     {
       "name": "commander.js",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-commander_js-4W5dcA/commander.js",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-commander_js-y4LaFo/commander.js",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
@@ -412,74 +395,6 @@
         "ts/unused-file": {
           "fixed": 0,
           "skipped": 4,
-          "newCompileErrors": 0,
-          "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "protected path (config, test, docs or script directory)"
-          ]
-        }
-      }
-    },
-    {
-      "name": "fastify",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-fastify-o2PE6V/fastify",
-      "tsconfig": null,
-      "typecheck": {
-        "before": {
-          "error": "no tsconfig found"
-        },
-        "after": {
-          "error": "no tsconfig found"
-        },
-        "newErrors": 0,
-        "unattributedNewErrors": []
-      },
-      "fix": {
-        "exitCode": 0,
-        "applied": {
-          "patches": 5,
-          "applied": 5,
-          "deletions": 0,
-          "deleted": 0
-        },
-        "skips": 20,
-        "output": "  SKIP [ts/unused-file] test/bundler/esbuild/src/fail-plugin-version.js:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/bundler/esbuild/src/index.js:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/bundler/webpack/src/fail-plugin-version.js:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/bundler/webpack/src/index.js:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/content-type-parser.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/decorate-request-reply.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/errors.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/fastify.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/hooks.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/instance.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/logger.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/plugin.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/register.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/reply.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/request.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/route.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/schema.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/serverFactory.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/type-provider.tst.ts:1 — protected path (config, test, docs or script directory)\n  SKIP [ts/unused-file] test/types/using.tst.ts:1 — protected path (config, test, docs or script directory)\nunshit fix (applied): 5 deterministic patches (5 applied), deletions: 0 (0 deleted), skipped: 20, AI attempted: 0, reverted: 0\n\n"
-      },
-      "idempotency": {
-        "ok": true,
-        "secondApply": {
-          "patches": 0,
-          "applied": 0,
-          "deletions": 0,
-          "deleted": 0
-        },
-        "changedFilesAfterSecond": []
-      },
-      "rescan": {
-        "beforeFindings": 88,
-        "afterFindings": 83,
-        "fixedFindings": 5,
-        "fixedStillPresent": 0,
-        "fixedStillPresentSample": []
-      },
-      "perRule": {
-        "deps/unused-dependency": {
-          "fixed": 4,
-          "skipped": 0,
-          "newCompileErrors": 0,
-          "newCompileErrorDetails": [],
-          "skippedReasons": []
-        },
-        "slop/magic-timer": {
-          "fixed": 1,
-          "skipped": 0,
-          "newCompileErrors": 0,
-          "newCompileErrorDetails": [],
-          "skippedReasons": []
-        },
-        "ts/unused-file": {
-          "fixed": 0,
-          "skipped": 20,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": [

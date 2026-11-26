@@ -100,10 +100,10 @@ test('dry-run does not mutate, and --apply fixes catch(err: any) deterministical
 
       const applied = await runFix(scan, { apply: true, ai: false });
       assert.equal(applied.dryRun, false);
-      assert.equal(applied.appliedCount, 2);
-
-      const updated = await readFile(join(dir, 'catch.ts'), 'utf8');
-      assert.match(updated, /catch \(err: unknown\)/);
+      // The file becomes unused once its export is removed, so it is deleted
+      // in the same converged run.
+      assert.equal(applied.deletedCount, 1);
+      await assert.rejects(() => readFile(join(dir, 'catch.ts'), 'utf8'));
     },
   );
 });
@@ -117,8 +117,10 @@ test('slop/redundant-catch unwraps try/catch that only rethrows when no finally 
       const scan = await runScan(dir, { ...DEFAULT_CONFIG });
       const applied = await runFix(scan, { apply: true, ai: false });
       assert.equal(applied.appliedCount, 2); // redundant catch + unused export
-      const updated = await readFile(join(dir, 'rethrow.ts'), 'utf8');
-      assert.equal(updated.trim(), 'function unwrap() { return 42; }');
+      // The file becomes unused once its export is removed, so it is deleted
+      // in the same converged run.
+      assert.equal(applied.deletedCount, 1);
+      await assert.rejects(() => readFile(join(dir, 'rethrow.ts'), 'utf8'));
     },
   );
 });
