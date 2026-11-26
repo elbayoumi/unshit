@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for code/duplicate-block: dup list pipeline.",
+  "groundTruth": "The map/filter pipeline is copied between two list modules.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/returns.ts",
+      "symbol": "src/orders.ts -> src/returns.ts",
+      "reason": "The map/filter pipeline is copied between two list modules."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/duplicate-block: dup renamed literals.",
+  "groundTruth": "Identifiers, numbers and string literals are normalized by the tokenizer, so these two blocks still match.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/orders.ts",
+      "symbol": "src/invoices.ts -> src/orders.ts",
+      "reason": "Identifiers, numbers and string literals are normalized by the tokenizer, so these two blocks still match."
+    }
+  ]
+}

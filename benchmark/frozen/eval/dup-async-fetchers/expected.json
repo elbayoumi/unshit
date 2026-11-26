@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/duplicate-block: dup async fetchers.",
+  "groundTruth": "Two async fetchers share the same guard/await/error token sequence.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/users.ts",
+      "symbol": "src/teams.ts -> src/users.ts",
+      "reason": "Two async fetchers share the same guard/await/error token sequence."
+    }
+  ]
+}

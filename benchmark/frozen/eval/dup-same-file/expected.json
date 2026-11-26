@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/duplicate-block: dup same file.",
+  "groundTruth": "The second function repeats the first function’s 24+ token block inside the same file.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/helpers.ts",
+      "symbol": "src/helpers.ts -> src/helpers.ts",
+      "reason": "The second function repeats the first function’s 24+ token block inside the same file."
+    }
+  ]
+}

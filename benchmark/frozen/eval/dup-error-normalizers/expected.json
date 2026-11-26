@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for code/duplicate-block: dup error normalizers.",
+  "groundTruth": "Both error normalizers use the same three-stage fallback token sequence.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/http.ts",
+      "symbol": "src/grpc.ts -> src/http.ts",
+      "reason": "Both error normalizers use the same three-stage fallback token sequence."
+    }
+  ]
+}

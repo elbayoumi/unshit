@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for code/duplicate-block: dup retry blocks.",
+  "groundTruth": "The try/catch cleanup block is duplicated; the catch logs and returns, so it is not a redundant-catch finding.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": [
+    {
+      "ruleId": "code/duplicate-block",
+      "file": "src/shipping.ts",
+      "symbol": "src/billing.ts -> src/shipping.ts",
+      "reason": "The try/catch cleanup block is duplicated; the catch logs and returns, so it is not a redundant-catch finding."
+    }
+  ]
+}

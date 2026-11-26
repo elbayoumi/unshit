@@ -1,0 +1,8 @@
+{
+  "description": "Repeated JSX markup has many tokens but fewer than three logic tokens.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": []
+}

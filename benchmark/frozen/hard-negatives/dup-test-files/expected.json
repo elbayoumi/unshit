@@ -1,0 +1,8 @@
+{
+  "description": "Clone detection deliberately skips test and spec files.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": []
+}

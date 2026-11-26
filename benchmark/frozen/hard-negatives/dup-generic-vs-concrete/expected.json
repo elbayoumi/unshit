@@ -1,0 +1,8 @@
+{
+  "description": "A generic helper and its concrete-looking cousin differ enough in token structure.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "code/duplicate-block"
+  ],
+  "expected": []
+}
