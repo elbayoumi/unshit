@@ -172,7 +172,7 @@ in `KNOWN-GAPS.md` but are not gate exclusions, since eval is not gated.
 Measured on 2026-11-26 with Node v26.7.0 (macOS) after `pnpm build`:
 
 ```text
-cases: 180 (eval 64, holdout 46, hard-negatives 70)
+cases: 188 (eval 64, holdout 46, hard-negatives 78)
 
 HOLDOUT RECALL (gate: per-rule recall >= 90.00%)
 rule                       expected  matched  recall  missing
@@ -182,20 +182,19 @@ ts/unused-file             5         5        100.00%  0
 deps/unused-dependency     7         7        100.00%  0
 deps/unlisted-dependency   6         6        100.00%  0
 code/high-complexity       4         4        100.00%  0
-arch/import-cycle          3         3        100.00%  0   (1 documented gap excluded)
+arch/import-cycle          4         4        100.00%  0
 code/duplicate-block       4         4        100.00%  0
 react/god-file             5         5        100.00%  0
 slop/redundant-catch       4         4        100.00%  0
 ts/no-explicit-any         4         4        100.00%  0
 
 HARD-NEGATIVE FPR
-cases: 70   cases with >=1 FP: 0   FPR: 0.00%   unexpected findings: 0
+cases: 78   cases with >=1 FP: 0   FPR: 0.00%   unexpected findings: 0
 per-rule FPR: 0.00% for all eleven rules
 
-EVAL (informational)  recall: 97.40% (75/77)   unexpected findings: 0
-  misses: eval/cy-dynamic, eval/cy-self-import (dynamic-import / self-import cycles)
+EVAL (informational)  recall: 100.00% (77/77)   unexpected findings: 0
 
-KNOWN GAPS: 1 gated exclusion (holdout/cy-lazy-three) + 2 eval-only misses
+KNOWN GAPS: 0
 ```
 
 The suite prints `RESULT: PASS`. The original suite (60 cases) still passes all

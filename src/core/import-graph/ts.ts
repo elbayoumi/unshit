@@ -221,16 +221,17 @@ export function collectTsJsEdges(
     emitSpec(moduleSpecifier.text, lineOf(moduleSpecifier));
   }
 
-  // Static CommonJS require('...') calls, including nested ones.
-  const visitRequires = (node: ts.Node): void => {
-    if (ts.isCallExpression(node)
-      && ts.isIdentifier(node.expression)
-      && node.expression.text === 'require'
-      && node.arguments.length > 0) {
+  // CommonJS require('...') and lazy import('...') calls, including nested ones.
+  const visitCalls = (node: ts.Node): void => {
+    if (ts.isCallExpression(node) && node.arguments.length > 0) {
       const arg = node.arguments[0];
-      if (arg && ts.isStringLiteral(arg)) emitSpec(arg.text, lineOf(arg));
+      const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
+      const isImportCall = node.expression.kind === ts.SyntaxKind.ImportKeyword;
+      if (arg && ts.isStringLiteral(arg) && (isRequire || isImportCall)) {
+        emitSpec(arg.text, lineOf(arg));
+      }
     }
-    ts.forEachChild(node, visitRequires);
+    ts.forEachChild(node, visitCalls);
   };
-  visitRequires(sf);
+  visitCalls(sf);
 }
