@@ -110,6 +110,27 @@ function selfLoop(adj: Map<string, string[]>, node: string): boolean {
   return (adj.get(node) ?? []).includes(node);
 }
 
+function makeCycleFinding(
+  detector: Detector,
+  file: string,
+  evidence: string,
+  size: number,
+  confidence = 1,
+): Finding {
+  return {
+    ruleId: detector.id,
+    category: detector.category,
+    tier: detector.tier,
+    severity: detector.severity,
+    fixability: 'manual',
+    confidence,
+    file,
+    span: { line: 1, column: 1 },
+    message: `Import cycle detected among ${size} file(s).`,
+    evidence,
+  };
+}
+
 function bfsShortestPath(
   start: string,
   target: string,
@@ -183,23 +204,19 @@ export const importCycleDetector: Detector = {
     // include any nodes not in graph? no.
 
     const sccs = tarjanSCC(graph.nodes, adj);
+    const cyclic = new Set<string>();
     for (const scc of sccs) {
       const isCycle = scc.length > 1 || (scc.length === 1 && selfLoop(adj, scc[0]));
       if (!isCycle) continue;
       const anchor = [...scc].sort()[0];
-      const evidence = shortestCyclePath(anchor, scc, adj);
-      findings.push({
-        ruleId: this.id,
-        category: this.category,
-        tier: this.tier,
-        severity: this.severity,
-        fixability: 'manual',
-        confidence: 1,
-        file: anchor,
-        span: { line: 1, column: 1 },
-        message: `Import cycle detected among ${scc.length} file(s).`,
-        evidence,
-      });
+      for (const node of scc) cyclic.add(node);
+      findings.push(makeCycleFinding(
+        this, anchor, shortestCyclePath(anchor, scc, adj), scc.length,
+      ));
+    }
+    for (const file of graph.selfLoops) {
+      if (cyclic.has(file)) continue;
+      findings.push(makeCycleFinding(this, file, `${file} -> ${file}`, 1, 0.6));
     }
     return findings;
   },

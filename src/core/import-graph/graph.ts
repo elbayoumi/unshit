@@ -28,7 +28,10 @@ function emitEdge(
   state.internalSpecs++;
   if (!target || !state.fileSet.has(target)) return;
   state.resolved++;
-  if (target === from) return;
+  if (target === from) {
+    state.selfTargets.add(from);
+    return;
+  }
   state.outgoing.get(from)!.add(target);
   const key = `${from}\u0000${target}`;
   if (!state.edgeDetails.has(key)) state.edgeDetails.set(key, { line, spec });
@@ -152,6 +155,7 @@ function finalizeGraph(state: GraphState, sortedNodes: string[]): ImportGraph {
   graph.dependencies = importsRecord;
   graph.dependents = dependentsRecord;
   graph.stats = { internalSpecs: state.internalSpecs, resolved: state.resolved, graphedFiles: sortedNodes.length };
+  graph.selfLoops = [...state.selfTargets].sort();
   graph.get = (file: string): string[] => {
     const value = mapGet(file);
     return value ? [...value] : [];
@@ -176,6 +180,7 @@ function computeGraph(ctx: DetectorContext): ImportGraph {
     fileSet,
     absToRel: new Map(ctx.files.map((f) => [path.resolve(f.absPath), f.relPath])),
     outgoing,
+    selfTargets: new Set<string>(),
     edgeDetails: new Map<string, EdgeDetails>(),
     internalSpecs: 0,
     resolved: 0,

@@ -23,6 +23,8 @@ export type ImportGraph = Map<string, string[]> & {
   dependencies: Record<string, string[]>;
   dependents: Record<string, string[]>;
   stats: { internalSpecs: number; resolved: number; graphedFiles: number };
+  /** Files with a resolved import of themselves; kept out of `edges` so reachability is unchanged. */
+  selfLoops: string[];
   get(file: string): string[];
   has(file: string): boolean;
   incomingOf(file: string): string[];
@@ -80,6 +82,7 @@ export interface GraphState {
   fileSet: Set<string>;
   absToRel: Map<string, string>;
   outgoing: Map<string, Set<string>>;
+  selfTargets: Set<string>;
   edgeDetails: Map<string, EdgeDetails>;
   internalSpecs: number;
   resolved: number;

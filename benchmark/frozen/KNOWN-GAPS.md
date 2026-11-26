@@ -18,8 +18,14 @@ but are not listed in `known-gaps.json`.
 
 ## Current gaps
 
-### `arch/import-cycle`
+None. All three previously documented `arch/import-cycle` gaps were fixed in
+round 10 and their entries removed from `known-gaps.json`:
 
-- **Gated miss — `holdout/cy-lazy-three`**, key `arch/import-cycle | src/a.ts | src/a.ts -> src/b.ts -> src/c.ts -> src/a.ts`. `src/a.ts` lazily imports `src/b.ts` with `import('./b')`; `b -> c -> a` are static imports. `collectTsJsEdges` (`src/core/import-graph/ts.ts`) does not emit an edge for dynamic `import()`, so Tarjan SCC never sees the closing edge. Excluded explicitly in `known-gaps.json`. Owner: detector worker (round 9); not changed here.
-- **Informational eval miss — `eval/cy-dynamic`**, key `arch/import-cycle | src/a.ts | src/a.ts -> src/b.ts -> src/a.ts`. Same missing dynamic-`import()` edge in a two-module lazy cycle.
-- **Informational eval miss — `eval/cy-self-import`**, key `arch/import-cycle | src/cache.ts | src/cache.ts -> src/cache.ts`. A module importing its own runtime export is a one-node cycle; the graph collapses or skips self edges, so no finding is emitted.
+- `holdout/cy-lazy-three` (gated): dynamic `import()` now emits a graph edge, so
+  the lazy `a -> b` edge closes the `b -> c -> a` static chain.
+- `eval/cy-dynamic` (informational): same fix closes the two-module lazy cycle.
+- `eval/cy-self-import` (informational): self imports are recorded as one-node
+  cycles without changing import reachability for other detectors.
+
+Evidence and the corpus false-positive check are in
+[`docs/research/import-cycle-dynamic.md`](../../docs/research/import-cycle-dynamic.md).
