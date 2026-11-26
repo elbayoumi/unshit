@@ -1,0 +1,5 @@
+{
+  "description": "Example files are not scanned for unlisted dependencies.",
+  "groundTruth": "examples/demo.mjs imports chalk, which is an optional example dependency.",
+  "expected": []
+}

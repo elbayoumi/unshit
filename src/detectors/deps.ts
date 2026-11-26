@@ -33,7 +33,7 @@ export const unusedDependencyDetector: Detector = {
     const buildGroups = (): Map<string, FileEntry[]> => {
       const groups = new Map<string, FileEntry[]>();
       for (const file of ctx.files) {
-        if (/(^|\/)(docs|fixtures|__fixtures__)\//.test(file.relPath)) continue;
+        if (/(^|\/)(docs|fixtures|__fixtures__|examples)\//.test(file.relPath)) continue;
         const owner = ownerOf(file.relPath);
         const list = groups.get(owner) ?? [];
         list.push(file);
@@ -75,11 +75,14 @@ export const unusedDependencyDetector: Detector = {
       const dirFiles = safeReaddirNames(pkgDirAbs);
       const configTexts = dirFiles.filter((f) => /(config|rc)(\.|$)/i.test(f) && !f.endsWith('.lock')).map((f) => safeReadText(join(pkgDirAbs, f)));
       const unusedRuntime = new Set<string>();
+      const otherFileTexts = files.filter((f) => !/(^|\/)package\.json$/.test(f.relPath)).map((f) => f.content);
+      const ownedManifests = (ctx.manifests ?? []).filter((m) => ownerOf(m) === dir && !/(^|\/)package\.json$/.test(m));
+      const manifestTexts = ownedManifests.map((m) => safeReadText(join(ctx.rootDir, m)));
       for (const name of deps.keys()) {
         if (isCommonTooling(name) || name.startsWith('@types/')) continue;
         if (used.has(name) || scriptsReference(scripts, name)) continue;
         if (dirFiles.some((f) => isConfigFileNamed(f, name))) continue;
-        if (configTexts.some((t) => t.includes(name)) || workflows.some((t) => t.includes(name))) continue;
+        if (configTexts.some((t) => t.includes(name)) || workflows.some((t) => t.includes(name)) || otherFileTexts.some((t) => t.includes(name)) || manifestTexts.some((t) => t.includes(name))) continue;
         unusedRuntime.add(name);
       }
       for (const name of deps.keys()) {
@@ -174,6 +177,7 @@ function unlistedSpecName(
   if (rootDeclared.has(name) || fileDeclared.has(name)) return null;
   if (workspaceNames.has(name) || (projectName && name === projectName)) return null;
   if (name.startsWith('@types/')) return null;
+  if (name === '@std' || name.startsWith('@std/')) return null;
   if (fileDeclared.has(`@types/${name}`) || rootDeclared.has(`@types/${name}`)) return null;
   return name;
 }
@@ -224,7 +228,7 @@ export const unlistedDependencyDetector: Detector = {
     const findings: Finding[] = [];
     const seen = new Set<string>();
     for (const file of ctx.files) {
-      if (/(^|\/)(docs|fixtures|__fixtures__)\//.test(file.relPath)) continue;
+      if (/(^|\/)(docs|fixtures|__fixtures__|examples)\//.test(file.relPath)) continue;
       for (const spec of collectModuleSpecs(file)) {
         const name = unlistedSpecName(spec.text, aliases, rootDeclared, declaredFor(file.relPath), workspaceNames, projectName);
         if (!name) continue;

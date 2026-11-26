@@ -1,0 +1,6 @@
+{
+  "name": "hn-unused-tsconfig",
+  "devDependencies": {
+    "fastify-tsconfig": "^3.0.0"
+  }
+}
