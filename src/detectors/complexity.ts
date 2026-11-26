@@ -6,11 +6,17 @@ const ts: typeof TS = new Proxy({} as typeof TS, { get(_, p) { const mod = _ts ?
 import type { Detector, DetectorContext, Finding, Span } from '../contracts.js';
 import { isTestFile } from './ts-ast.js';
 
-const LOGICAL_BINARY_KINDS = new Set<TS.SyntaxKind>([
-  ts.SyntaxKind.AmpersandAmpersandToken,
-  ts.SyntaxKind.BarBarToken,
-  ts.SyntaxKind.QuestionQuestionToken,
-]);
+let _logicalBinaryKinds: Set<TS.SyntaxKind> | undefined;
+function logicalBinaryKinds(): Set<TS.SyntaxKind> {
+  if (!_logicalBinaryKinds) {
+    _logicalBinaryKinds = new Set<TS.SyntaxKind>([
+      ts.SyntaxKind.AmpersandAmpersandToken,
+      ts.SyntaxKind.BarBarToken,
+      ts.SyntaxKind.QuestionQuestionToken,
+    ]);
+  }
+  return _logicalBinaryKinds;
+}
 
 function spanOf(sf: TS.SourceFile, node: TS.Node): Span {
   const start = sf.getLineAndCharacterOfPosition(node.getStart(sf));
@@ -26,7 +32,7 @@ function spanOf(sf: TS.SourceFile, node: TS.Node): Span {
 }
 
 function isLogicalBinary(node: TS.Node): node is TS.BinaryExpression {
-  return ts.isBinaryExpression(node) && LOGICAL_BINARY_KINDS.has(node.operatorToken.kind);
+  return ts.isBinaryExpression(node) && logicalBinaryKinds().has(node.operatorToken.kind);
 }
 
 /**

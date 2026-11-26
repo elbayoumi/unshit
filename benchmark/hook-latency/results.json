@@ -1,0 +1,14 @@
+{
+  "node": "v26.7.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "runs": 40,
+  "warmups": 5,
+  "p50": 29.76,
+  "p95": 38.86,
+  "min": 27.3,
+  "max": 46.63,
+  "statuses": [
+    0
+  ]
+}

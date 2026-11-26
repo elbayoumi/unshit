@@ -41,6 +41,7 @@ function collectSkipRanges(sourceFile: ts.SourceFile): SkipRange[] {
     if (
       ts.isImportDeclaration(node) || ts.isImportEqualsDeclaration(node)
       || ts.isNoSubstitutionTemplateLiteral(node) || ts.isTemplateExpression(node)
+      || ts.isTemplateLiteralTypeNode(node)
       || ts.isRegularExpressionLiteral(node) || ts.isJsxText(node)
     ) {
       ranges.push({ start: node.getStart(sourceFile), end: node.getEnd() });

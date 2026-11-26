@@ -53,12 +53,13 @@ export function findingMatchesInjection(finding, inj) {
 export function evaluateRecall(injections, afterFindings) {
   const buckets = new Map();
   for (const inj of injections) {
-    if (!buckets.has(inj.ruleId)) buckets.set(inj.ruleId, { ruleId: inj.ruleId, injected: 0, found: 0, misses: [], hits: [] });
-    const b = buckets.get(inj.ruleId);
+    const ruleId = inj.reportRuleId ?? inj.ruleId;
+    const b = buckets.get(ruleId) ?? { ruleId, injected: 0, found: 0, misses: [], hits: [], outOfScope: Boolean(inj.outOfScope) };
     b.injected++;
     const hit = afterFindings.find((f) => findingMatchesInjection(f, inj));
     if (hit) { b.found++; b.hits.push({ injection: inj, finding: pickFinding(hit) }); }
     else b.misses.push({ injection: inj, reason: 'no matching finding after injection' });
+    buckets.set(ruleId, b);
   }
   return [...buckets.keys()].sort().map((id) => {
     const b = buckets.get(id);
@@ -99,7 +100,7 @@ export function injectAllPositives(work, seed, counts, opts = {}) {
     ['highComplexity', (w, f, n, r) => injectHighComplexity(w, f, n, r, threshold)],
     ['godFile', injectGodFile, opts.includeReactGodFile !== false],
     ['importCycle', injectImportCycle],
-    ['unusedTypeExport', injectUnusedTypeExport],
+    ['unusedTypeExport', (w, f, n, r) => injectUnusedTypeExport(w, f, n, r, { skipFiles: opts.skipFiles })],
     ['unlistedDependency', injectUnlistedDependency],
   ];
   const out = [];
@@ -120,7 +121,7 @@ export function injectAllNegatives(work, seed, counts, opts = {}) {
     ['highComplexity', (w, f, n, r) => injectHighComplexityNegatives(w, f, n, r, threshold)],
     ['godFile', injectGodFileNegatives, opts.includeReactGodFile !== false],
     ['importCycle', injectImportCycleNegatives],
-    ['unusedTypeExport', injectUnusedTypeExportNegatives],
+    ['unusedTypeExport', (w, f, n, r) => injectUnusedTypeExportNegatives(w, f, n, r, { skipFiles: opts.skipFiles })],
     ['unlistedDependency', injectUnlistedDependencyNegatives],
   ];
   const out = [];

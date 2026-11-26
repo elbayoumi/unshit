@@ -23,15 +23,15 @@ Unused exports use import-binding analysis (resolved specifiers, default/named, 
 | Corpus | unshit exports | knip exports | both | unshit ms |
 |---|---|---|---|---|
 | unshit (self) | 32 | 20 | 20 | 556 |
-| auctions-platform-frontend | 1 | 1 | 1 | 232 |
-| bidshop-frontend | 1 | 1 | 1 | 218 |
-| rveta-site | 3 | 2 | 2 | 216 |
-| auctions-platform-backend | 0 | 0 | 0 | 224 |
+| frontend | 1 | 1 | 1 | 232 |
+| app-3 | 1 | 1 | 1 | 218 |
+| app-4 | 3 | 2 | 2 | 216 |
+| backend | 0 | 0 | 0 | 224 |
 
 unshit now finds every export knip finds on all five corpora (nothing is knip-only). Its extra findings are listed
 in the table below.
 
-Duplication (unshit vs jscpd): self 4 vs 6, auctions-frontend 6 vs 2, bidshop 6 vs 2, rveta 2 vs 1, backend 0 vs 0.
+Duplication (unshit vs jscpd): self 4 vs 6, frontend 6 vs 2, app-3 6 vs 2, app-4 2 vs 1, backend 0 vs 0.
 unshit also reports same-file repeats (3 of the 6 on each frontend); same-file regions need at least 6 branch tokens so
 repeated JSX markup is not flagged. jscpd still finds 2 more clones in unshit itself. The counts are not a one-to-one
 match, so check overlap before reading them as recall or precision.
@@ -41,18 +41,18 @@ match, so check overlap before reading them as recall or precision.
 | Corpus | unused files (unshit / knip / both) | unused deps (unshit / knip / both) | unlisted (unshit / knip) | high-complexity |
 |---|---|---|---|---|
 | unshit (self) | 0 / 6 / 0 | 0 / 0 / 0 | 0 / 0 | 27 |
-| auctions-platform-frontend | 0 / 0 / 0 | 16 / 16 / 16 | 1 / 1 | 2 |
-| bidshop-frontend | 0 / 0 / 0 | 16 / 16 / 16 | 1 / 1 | 2 |
-| rveta-site | 1 / 1 / 1 | 2 / 4 / 2 | 0 / 0 | 2 |
-| auctions-platform-backend | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 | 0 |
+| frontend | 0 / 0 / 0 | 16 / 16 / 16 | 1 / 1 | 2 |
+| app-3 | 0 / 0 / 0 | 16 / 16 / 16 | 1 / 1 | 2 |
+| app-4 | 1 / 1 / 1 | 2 / 4 / 2 | 0 / 0 | 2 |
+| backend | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 | 0 |
 
 Disagreements, hand-checked:
 
 | Finding | Who flagged | Verdict |
 |---|---|---|
-| rveta unused file, `@google/genai`, `autoprefixer` | both | Correct. |
-| `tsx`, `vite` (rveta) | knip only | Both are CLI tooling; unshit deliberately spares tooling packages (scripts, configs). Judgement call. |
-| `react-dom`, `@types/react-dom`, `@auctions/tokens` (frontends) | both (now) | Correct, per workspace package (counts are `package.json#dependency` pairs). Were unshit misses before per-workspace analysis; `@types/x` is flagged only when `x` is declared and unused in the same package. |
+| app-4 unused file, `@google/genai`, `autoprefixer` | both | Correct. |
+| `tsx`, `vite` (app-4) | knip only | Both are CLI tooling; unshit deliberately spares tooling packages (scripts, configs). Judgement call. |
+| `react-dom`, `@types/react-dom`, `@frontend/tokens` (frontends) | both (now) | Correct, per workspace package (counts are `package.json#dependency` pairs). Were unshit misses before per-workspace analysis; `@types/x` is flagged only when `x` is declared and unused in the same package. |
 | `react` unlisted in `packages/core` (frontends) | both | Correct: a phantom dependency resolved from the monorepo root. |
 | `apps/shell/src/main.tsx`, `resources/js/app.js` | unshit (early run) | False positives, fixed: nested `index.html` module scripts and vite/laravel `input` entries are now entry points. Both are covered by tests. |
 | `@prisma/client` unlisted in `docs/research/**` | unshit (early run) | False positive, fixed: `docs/` and fixture directories are skipped. |
@@ -62,8 +62,8 @@ Disagreements, hand-checked:
 | Finding | Who flagged | Verdict |
 |---|---|---|
 | `translations` (i18n.ts) | unshit | Correct: used only inside its own file. |
-| `AuctionRegistration` (types.ts) | unshit | Correct: zero references. knip missed it. |
-| `ContactForm` (rveta) | unshit | Correct: never imported. knip missed it. |
+| `Registration` (types.ts) | unshit | Correct: zero references. knip missed it. |
+| `ContactForm` (app-4) | unshit | Correct: never imported. knip missed it. |
 | `Tokens` (packages/tokens/index.ts) | unshit | Correct within the repo: never imported. knip treats workspace package entries as public API. |
 | `i18n` default export | both (now) | Correct: module is imported only for side effects. Was an unshit miss before binding analysis. |
 | `inferShape`, `BASELINE_FILENAME` (unshit self) | both (now) | Correct: only the default / other names were imported. Were unshit misses before. |

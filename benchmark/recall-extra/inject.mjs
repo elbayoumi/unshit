@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { mulberry32, pickN, listSourceFiles as rawListSourceFiles, wilson95 } from '../recall/lib.mjs';
+import { mulberry32, pickN, listSourceFiles as rawListSourceFiles, wilson95, injectLinePerFile } from '../recall/lib.mjs';
 
 export { wilson95 } from '../recall/lib.mjs';
 
@@ -172,8 +172,9 @@ function relativeImport(fromDir, toRel) {
   return prefix + downs.join('/');
 }
 
-export function injectUnusedTypeExport(work, files, n, rand) {
-  const candidates = tsNonTest(files);
+export function injectUnusedTypeExport(work, files, n, rand, options = {}) {
+  const skipFiles = options.skipFiles ?? null;
+  const candidates = tsNonTest(files).filter((f) => !(skipFiles && skipFiles.has(f)));
   const picked = pickN(candidates, n, rand);
   const injections = [];
   for (let i = 0; i < picked.length; i++) {
@@ -304,8 +305,9 @@ export function injectImportCycleNegatives(work, files, n, rand) {
   return injections;
 }
 
-export function injectUnusedTypeExportNegatives(work, files, n, rand) {
-  const candidates = tsNonTest(files);
+export function injectUnusedTypeExportNegatives(work, files, n, rand, options = {}) {
+  const skipFiles = options.skipFiles ?? null;
+  const candidates = tsNonTest(files).filter((f) => !(skipFiles && skipFiles.has(f)));
   const picked = pickN(candidates, Math.min(n, candidates.length), rand);
   const dir = existsSync(join(work, 'src')) ? 'src' : '';
   const injections = [];
@@ -342,4 +344,21 @@ export function injectUnlistedDependencyNegatives(work, files, n, rand) {
   }
   if (pkg) writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n', 'utf8');
   return injections;
+}
+
+
+export function injectEntryPointTypeExports(work, files, n, rand) {
+  return injectLinePerFile(work, files, n, rand, /\.(ts|tsx|js|jsx|mjs|cjs)$/, (i, r) => {
+    const marker = `__unshitRecallEntryTypeExport_${i}_${Math.floor(r() * 1e6)}`;
+    return {
+      text: `export type ${marker} = { __marker: '${marker}' };`,
+      meta: {
+        ruleId: 'ts/unused-type-export',
+        reportRuleId: 'ts/unused-type-export [entry-point, out of scope]',
+        marker,
+        kind: 'entry-point-unused-type-export',
+        outOfScope: true,
+      },
+    };
+  });
 }

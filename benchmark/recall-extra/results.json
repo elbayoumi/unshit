@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T13:19:16.948Z",
+  "generatedAt": "2026-11-26T13:55:10.759Z",
   "corpusDir": "/Volumes/data/projects/unshit-bench/corpus",
   "seeds": [
     20261126,
@@ -11,14 +11,15 @@
     {
       "name": "hono",
       "path": "/Volumes/data/projects/unshit-bench/corpus/hono",
+      "synthetic": false,
       "reactTsx": false,
       "seeds": [
         {
           "seed": 20261126,
           "positives": {
             "beforeCount": 642,
-            "afterCount": 782,
-            "injectedCount": 90,
+            "afterCount": 788,
+            "injectedCount": 95,
             "rules": [
               {
                 "ruleId": "arch/import-cycle",
@@ -30,6 +31,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -42,6 +44,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -54,6 +57,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -66,6 +70,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -78,60 +83,68 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
                 "ruleId": "ts/unused-type-export",
                 "injected": 15,
-                "found": 9,
-                "recall": 0.6,
+                "found": 15,
+                "recall": 1,
                 "wilson95": {
-                  "low": 0.357468301206246,
-                  "high": 0.8017550385865841,
-                  "center": 0.6
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
                 },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+                "injected": 5,
+                "found": 0,
+                "recall": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.43448246478317476,
+                  "center": 0
+                },
+                "outOfScope": true,
                 "misses": [
                   {
-                    "file": "src/types.ts",
-                    "line": 2813,
-                    "marker": "__unshitRecallUnusedType_1_678669",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "src/helper/dev/index.ts",
+                    "line": 80,
+                    "marker": "__unshitRecallEntryTypeExport_0_410390",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "src/adapter/netlify/mod.ts",
-                    "line": 3,
-                    "marker": "__unshitRecallUnusedType_2_91860",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "src/middleware/etag/digest.ts",
+                    "line": 96,
+                    "marker": "__unshitRecallEntryTypeExport_1_763624",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "src/jsx/hooks/index.ts",
-                    "line": 438,
-                    "marker": "__unshitRecallUnusedType_5_441037",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "src/middleware/cors/index.ts",
+                    "line": 165,
+                    "marker": "__unshitRecallEntryTypeExport_2_46008",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "src/helper/accepts/index.ts",
-                    "line": 7,
-                    "marker": "__unshitRecallUnusedType_9_626906",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "src/router.ts",
+                    "line": 105,
+                    "marker": "__unshitRecallEntryTypeExport_3_640644",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "adapters/deno/src/index.ts",
-                    "line": 10,
-                    "marker": "__unshitRecallUnusedType_11_674617",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "src/adapter/aws-lambda/index.ts",
-                    "line": 19,
-                    "marker": "__unshitRecallUnusedType_13_972920",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "src/router/reg-exp-router/index.ts",
+                    "line": 8,
+                    "marker": "__unshitRecallEntryTypeExport_4_240263",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   }
                 ]
               }
@@ -221,8 +234,8 @@
           "seed": 20261127,
           "positives": {
             "beforeCount": 642,
-            "afterCount": 779,
-            "injectedCount": 90,
+            "afterCount": 785,
+            "injectedCount": 95,
             "rules": [
               {
                 "ruleId": "arch/import-cycle",
@@ -234,6 +247,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -246,6 +260,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -258,6 +273,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -270,6 +286,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -282,60 +299,68 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
                 "ruleId": "ts/unused-type-export",
                 "injected": 15,
-                "found": 9,
-                "recall": 0.6,
+                "found": 15,
+                "recall": 1,
                 "wilson95": {
-                  "low": 0.357468301206246,
-                  "high": 0.8017550385865841,
-                  "center": 0.6
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
                 },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+                "injected": 5,
+                "found": 0,
+                "recall": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.43448246478317476,
+                  "center": 0
+                },
+                "outOfScope": true,
                 "misses": [
+                  {
+                    "file": "src/middleware/method-override/index.ts",
+                    "line": 172,
+                    "marker": "__unshitRecallEntryTypeExport_0_104254",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
+                  {
+                    "file": "src/index.ts",
+                    "line": 54,
+                    "marker": "__unshitRecallEntryTypeExport_1_403958",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
+                  {
+                    "file": "src/adapter/netlify/index.ts",
+                    "line": 12,
+                    "marker": "__unshitRecallEntryTypeExport_2_733463",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
                   {
                     "file": "src/middleware/compress/index.ts",
                     "line": 176,
-                    "marker": "__unshitRecallUnusedType_0_450920",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "marker": "__unshitRecallEntryTypeExport_3_330459",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "src/jsx/dom/server.ts",
-                    "line": 77,
-                    "marker": "__unshitRecallUnusedType_1_687557",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "src/middleware/language/index.ts",
-                    "line": 13,
-                    "marker": "__unshitRecallUnusedType_3_565193",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "src/helper/testing/index.ts",
-                    "line": 29,
-                    "marker": "__unshitRecallUnusedType_4_870171",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "src/jsx/types.ts",
-                    "line": 41,
-                    "marker": "__unshitRecallUnusedType_10_63548",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "src/middleware/etag/index.ts",
-                    "line": 136,
-                    "marker": "__unshitRecallUnusedType_14_592025",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "adapters/cloudflare-workers/src/index.ts",
+                    "line": 10,
+                    "marker": "__unshitRecallEntryTypeExport_4_448893",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   }
                 ]
               }
@@ -426,14 +451,15 @@
     {
       "name": "zod",
       "path": "/Volumes/data/projects/unshit-bench/corpus/zod",
+      "synthetic": false,
       "reactTsx": false,
       "seeds": [
         {
           "seed": 20261126,
           "positives": {
             "beforeCount": 1477,
-            "afterCount": 1617,
-            "injectedCount": 90,
+            "afterCount": 1608,
+            "injectedCount": 95,
             "rules": [
               {
                 "ruleId": "arch/import-cycle",
@@ -445,19 +471,29 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
                 "ruleId": "code/high-complexity",
                 "injected": 15,
-                "found": 15,
-                "recall": 1,
+                "found": 14,
+                "recall": 0.9333333333333333,
                 "wilson95": {
-                  "low": 0.7961166989641515,
-                  "high": 1,
-                  "center": 1
+                  "low": 0.7018347012621998,
+                  "high": 0.9881331045067315,
+                  "center": 0.9333333333333333
                 },
-                "misses": []
+                "outOfScope": false,
+                "misses": [
+                  {
+                    "file": "packages/integration/fixtures/internal-types/index.ts",
+                    "line": 59,
+                    "marker": "__unshitRecallComplex_2_290814",
+                    "kind": "high-complexity",
+                    "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+                  }
+                ]
               },
               {
                 "ruleId": "deps/unlisted-dependency",
@@ -469,19 +505,36 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
                 "ruleId": "slop/redundant-catch",
                 "injected": 15,
-                "found": 15,
-                "recall": 1,
+                "found": 13,
+                "recall": 0.8666666666666667,
                 "wilson95": {
-                  "low": 0.7961166989641515,
-                  "high": 1,
-                  "center": 1
+                  "low": 0.6211801716767764,
+                  "high": 0.9626387408969346,
+                  "center": 0.8666666666666667
                 },
-                "misses": []
+                "outOfScope": false,
+                "misses": [
+                  {
+                    "file": "packages/integration/fixtures/internal-types/mini.ts",
+                    "line": 35,
+                    "marker": "__unshitRecallRedundantCatch_5_458085",
+                    "kind": "redundant-catch",
+                    "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+                  },
+                  {
+                    "file": "packages/integration/fixtures/ai-sdk/index.ts",
+                    "line": 19,
+                    "marker": "__unshitRecallRedundantCatch_10_926275",
+                    "kind": "redundant-catch",
+                    "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+                  }
+                ]
               },
               {
                 "ruleId": "ts/no-double-cast",
@@ -493,46 +546,76 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
                 "ruleId": "ts/unused-type-export",
                 "injected": 15,
-                "found": 11,
-                "recall": 0.7333333333333333,
+                "found": 14,
+                "recall": 0.9333333333333333,
                 "wilson95": {
-                  "low": 0.4804956594401943,
-                  "high": 0.8910254667430761,
-                  "center": 0.7333333333333333
+                  "low": 0.7018347012621998,
+                  "high": 0.9881331045067315,
+                  "center": 0.9333333333333333
                 },
+                "outOfScope": false,
                 "misses": [
                   {
-                    "file": "packages/zod/src/v4/core/checks.ts",
-                    "line": 1268,
-                    "marker": "__unshitRecallUnusedType_1_678496",
+                    "file": "packages/integration/fixtures/drizzle-zod/index.ts",
+                    "line": 20,
+                    "marker": "__unshitRecallUnusedType_12_384540",
                     "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+                  }
+                ]
+              },
+              {
+                "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+                "injected": 5,
+                "found": 0,
+                "recall": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.43448246478317476,
+                  "center": 0
+                },
+                "outOfScope": true,
+                "misses": [
+                  {
+                    "file": "packages/zod/src/v4/core/compile.ts",
+                    "line": 2379,
+                    "marker": "__unshitRecallEntryTypeExport_0_958891",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "packages/zod/src/v4/classic/schemas.ts",
-                    "line": 2941,
-                    "marker": "__unshitRecallUnusedType_2_384957",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "packages/zod/src/v3/helpers/typeAliases.ts",
+                    "line": 3,
+                    "marker": "__unshitRecallEntryTypeExport_1_149573",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "scripts/check-versions.ts",
-                    "line": 97,
-                    "marker": "__unshitRecallUnusedType_8_65642",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "packages/zod/src/mini/index.ts",
+                    "line": 4,
+                    "marker": "__unshitRecallEntryTypeExport_2_734550",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "packages/zod/src/v4/classic/errors.ts",
-                    "line": 98,
-                    "marker": "__unshitRecallUnusedType_10_260471",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "packages/zod/src/v4/core/memoizer.ts",
+                    "line": 477,
+                    "marker": "__unshitRecallEntryTypeExport_3_329697",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
+                  {
+                    "file": "packages/zod/src/v4/classic/index.ts",
+                    "line": 36,
+                    "marker": "__unshitRecallEntryTypeExport_4_401959",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   }
                 ]
               }
@@ -540,7 +623,7 @@
           },
           "negatives": {
             "beforeCount": 1477,
-            "afterCount": 1533,
+            "afterCount": 1546,
             "injectedCount": 60,
             "rules": [
               {
@@ -622,8 +705,8 @@
           "seed": 20261127,
           "positives": {
             "beforeCount": 1477,
-            "afterCount": 1630,
-            "injectedCount": 90,
+            "afterCount": 1616,
+            "injectedCount": 95,
             "rules": [
               {
                 "ruleId": "arch/import-cycle",
@@ -635,6 +718,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -647,6 +731,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -659,6 +744,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -671,6 +757,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -683,39 +770,68 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
                 "ruleId": "ts/unused-type-export",
                 "injected": 15,
-                "found": 12,
-                "recall": 0.8,
+                "found": 15,
+                "recall": 1,
                 "wilson95": {
-                  "low": 0.5481455128483065,
-                  "high": 0.9295245065301844,
-                  "center": 0.8
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
                 },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+                "injected": 5,
+                "found": 0,
+                "recall": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.43448246478317476,
+                  "center": 0
+                },
+                "outOfScope": true,
                 "misses": [
                   {
-                    "file": "packages/zod/src/v4/classic/external.ts",
-                    "line": 59,
-                    "marker": "__unshitRecallUnusedType_1_885302",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "packages/zod/src/v4/core/versions.ts",
+                    "line": 6,
+                    "marker": "__unshitRecallEntryTypeExport_0_480669",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "packages/zod/src/v4/mini/parse.ts",
-                    "line": 17,
-                    "marker": "__unshitRecallUnusedType_4_428915",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "packages/zod/src/v4/classic/iso.ts",
+                    "line": 21,
+                    "marker": "__unshitRecallEntryTypeExport_1_320192",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "packages/zod/src/v4/mini/checks.ts",
-                    "line": 34,
-                    "marker": "__unshitRecallUnusedType_12_554014",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "packages/zod/src/v4/core/json-schema.ts",
+                    "line": 150,
+                    "marker": "__unshitRecallEntryTypeExport_2_756910",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
+                  {
+                    "file": "packages/zod/src/v4/mini/iso.ts",
+                    "line": 68,
+                    "marker": "__unshitRecallEntryTypeExport_3_261973",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
+                  {
+                    "file": "packages/zod/src/v4/mini/index.ts",
+                    "line": 4,
+                    "marker": "__unshitRecallEntryTypeExport_4_895513",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   }
                 ]
               }
@@ -723,7 +839,7 @@
           },
           "negatives": {
             "beforeCount": 1477,
-            "afterCount": 1537,
+            "afterCount": 1538,
             "injectedCount": 60,
             "rules": [
               {
@@ -806,14 +922,15 @@
     {
       "name": "execa",
       "path": "/Volumes/data/projects/unshit-bench/corpus/execa",
+      "synthetic": false,
       "reactTsx": false,
       "seeds": [
         {
           "seed": 20261126,
           "positives": {
             "beforeCount": 35,
-            "afterCount": 139,
-            "injectedCount": 90,
+            "afterCount": 141,
+            "injectedCount": 82,
             "rules": [
               {
                 "ruleId": "arch/import-cycle",
@@ -825,6 +942,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -837,6 +955,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -849,6 +968,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -861,6 +981,7 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
@@ -873,123 +994,68 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
               },
               {
                 "ruleId": "ts/unused-type-export",
-                "injected": 15,
+                "injected": 2,
+                "found": 2,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.34238022750665303,
+                  "high": 1,
+                  "center": 1
+                },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+                "injected": 5,
                 "found": 0,
                 "recall": 0,
                 "wilson95": {
                   "low": 0,
-                  "high": 0.20388330103584862,
+                  "high": 0.43448246478317476,
                   "center": 0
                 },
+                "outOfScope": true,
                 "misses": [
-                  {
-                    "file": "test-d/stdio/option/generator-only-object-mode.test-d.ts",
-                    "line": 45,
-                    "marker": "__unshitRecallUnusedType_0_749643",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/methods/script-stdin.test-d.ts",
-                    "line": 47,
-                    "marker": "__unshitRecallUnusedType_1_319906",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
                   {
                     "file": "test-d/methods/script.test-d.ts",
                     "line": 66,
-                    "marker": "__unshitRecallUnusedType_2_802583",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "marker": "__unshitRecallEntryTypeExport_0_655095",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "test-d/stdio/option/pipe.test-d.ts",
-                    "line": 43,
-                    "marker": "__unshitRecallUnusedType_3_66860",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "test-d/return/result-all.test-d.ts",
+                    "line": 202,
+                    "marker": "__unshitRecallEntryTypeExport_1_597186",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "test-d/convert/transform-stream.test-d.ts",
-                    "line": 33,
-                    "marker": "__unshitRecallUnusedType_4_526763",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/generator-object-mode-invalid.test-d.ts",
-                    "line": 51,
-                    "marker": "__unshitRecallUnusedType_5_592247",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/methods/node.test-d.ts",
-                    "line": 65,
-                    "marker": "__unshitRecallUnusedType_6_918789",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/pipe-inherit.test-d.ts",
-                    "line": 30,
-                    "marker": "__unshitRecallUnusedType_7_395803",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/ipc/get-one.test-d.ts",
-                    "line": 71,
-                    "marker": "__unshitRecallUnusedType_8_519909",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/methods/main-sync.test-d.ts",
-                    "line": 56,
-                    "marker": "__unshitRecallUnusedType_9_825472",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/subprocess/subprocess.test-d.ts",
-                    "line": 59,
-                    "marker": "__unshitRecallUnusedType_10_359260",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/return/result-main.test-d.ts",
-                    "line": 105,
-                    "marker": "__unshitRecallUnusedType_11_311703",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/generator-binary.test-d.ts",
+                    "file": "test-d/stdio/option/generator-string-full.test-d.ts",
                     "line": 50,
-                    "marker": "__unshitRecallUnusedType_12_858035",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "marker": "__unshitRecallEntryTypeExport_2_246525",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "test-d/stdio/array.test-d.ts",
-                    "line": 15,
-                    "marker": "__unshitRecallUnusedType_13_491235",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "test-d/stdio/option/web-transform-invalid.test-d.ts",
+                    "line": 49,
+                    "marker": "__unshitRecallEntryTypeExport_3_898611",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
-                    "file": "test-d/convert/duplex.test-d.ts",
-                    "line": 33,
-                    "marker": "__unshitRecallUnusedType_14_624423",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
+                    "file": "test-d/stdio/option/generator-only-preserve.test-d.ts",
+                    "line": 45,
+                    "marker": "__unshitRecallEntryTypeExport_4_388073",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   }
                 ]
               }
@@ -997,8 +1063,8 @@
           },
           "negatives": {
             "beforeCount": 35,
-            "afterCount": 79,
-            "injectedCount": 60,
+            "afterCount": 62,
+            "injectedCount": 52,
             "rules": [
               {
                 "ruleId": "arch/import-cycle",
@@ -1062,6 +1128,272 @@
               },
               {
                 "ruleId": "ts/unused-type-export",
+                "negatives": 2,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.6576197724933469,
+                  "center": 0
+                },
+                "fps": []
+              }
+            ]
+          }
+        },
+        {
+          "seed": 20261127,
+          "positives": {
+            "beforeCount": 35,
+            "afterCount": 125,
+            "injectedCount": 82,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "injected": 2,
+                "found": 2,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.34238022750665303,
+                  "high": 1,
+                  "center": 1
+                },
+                "outOfScope": false,
+                "misses": []
+              },
+              {
+                "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+                "injected": 5,
+                "found": 0,
+                "recall": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.43448246478317476,
+                  "center": 0
+                },
+                "outOfScope": true,
+                "misses": [
+                  {
+                    "file": "test-d/arguments/specific.test-d.ts",
+                    "line": 177,
+                    "marker": "__unshitRecallEntryTypeExport_0_905408",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
+                  {
+                    "file": "test-d/stdio/option/generator-string.test-d.ts",
+                    "line": 65,
+                    "marker": "__unshitRecallEntryTypeExport_1_317613",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
+                  {
+                    "file": "test-d/methods/node.test-d.ts",
+                    "line": 66,
+                    "marker": "__unshitRecallEntryTypeExport_2_472719",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
+                  {
+                    "file": "test-d/stdio/option/array-string.test-d.ts",
+                    "line": 32,
+                    "marker": "__unshitRecallEntryTypeExport_3_760476",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  },
+                  {
+                    "file": "test-d/arguments/encoding-option.test-d.ts",
+                    "line": 50,
+                    "marker": "__unshitRecallEntryTypeExport_4_960180",
+                    "kind": "entry-point-unused-type-export",
+                    "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+                  }
+                ]
+              }
+            ]
+          },
+          "negatives": {
+            "beforeCount": 35,
+            "afterCount": 64,
+            "injectedCount": 52,
+            "rules": [
+              {
+                "ruleId": "arch/import-cycle",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "code/high-complexity",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "deps/unlisted-dependency",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "slop/redundant-catch",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/no-double-cast",
+                "negatives": 10,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.2775327998628892,
+                  "center": 0
+                },
+                "fps": []
+              },
+              {
+                "ruleId": "ts/unused-type-export",
+                "negatives": 2,
+                "falsePositives": 0,
+                "fpRate": 0,
+                "wilson95": {
+                  "low": 0,
+                  "high": 0.6576197724933469,
+                  "center": 0
+                },
+                "fps": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "synthetic-react",
+      "path": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-extra-synthetic-gdqSkg/synthetic-react",
+      "synthetic": true,
+      "reactTsx": true,
+      "seeds": [
+        {
+          "seed": 20261126,
+          "positives": {
+            "beforeCount": 0,
+            "afterCount": 2573,
+            "injectedCount": 15,
+            "rules": [
+              {
+                "ruleId": "react/god-file",
+                "injected": 15,
+                "found": 15,
+                "recall": 1,
+                "wilson95": {
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
+                },
+                "outOfScope": false,
+                "misses": []
+              }
+            ]
+          },
+          "negatives": {
+            "beforeCount": 0,
+            "afterCount": 1774,
+            "injectedCount": 10,
+            "rules": [
+              {
+                "ruleId": "react/god-file",
                 "negatives": 10,
                 "falsePositives": 0,
                 "fpRate": 0,
@@ -1078,12 +1410,12 @@
         {
           "seed": 20261127,
           "positives": {
-            "beforeCount": 35,
-            "afterCount": 123,
-            "injectedCount": 90,
+            "beforeCount": 0,
+            "afterCount": 2573,
+            "injectedCount": 15,
             "rules": [
               {
-                "ruleId": "arch/import-cycle",
+                "ruleId": "react/god-file",
                 "injected": 15,
                 "found": 15,
                 "recall": 1,
@@ -1092,243 +1424,18 @@
                   "high": 1,
                   "center": 1
                 },
+                "outOfScope": false,
                 "misses": []
-              },
-              {
-                "ruleId": "code/high-complexity",
-                "injected": 15,
-                "found": 15,
-                "recall": 1,
-                "wilson95": {
-                  "low": 0.7961166989641515,
-                  "high": 1,
-                  "center": 1
-                },
-                "misses": []
-              },
-              {
-                "ruleId": "deps/unlisted-dependency",
-                "injected": 15,
-                "found": 15,
-                "recall": 1,
-                "wilson95": {
-                  "low": 0.7961166989641515,
-                  "high": 1,
-                  "center": 1
-                },
-                "misses": []
-              },
-              {
-                "ruleId": "slop/redundant-catch",
-                "injected": 15,
-                "found": 15,
-                "recall": 1,
-                "wilson95": {
-                  "low": 0.7961166989641515,
-                  "high": 1,
-                  "center": 1
-                },
-                "misses": []
-              },
-              {
-                "ruleId": "ts/no-double-cast",
-                "injected": 15,
-                "found": 15,
-                "recall": 1,
-                "wilson95": {
-                  "low": 0.7961166989641515,
-                  "high": 1,
-                  "center": 1
-                },
-                "misses": []
-              },
-              {
-                "ruleId": "ts/unused-type-export",
-                "injected": 15,
-                "found": 0,
-                "recall": 0,
-                "wilson95": {
-                  "low": 0,
-                  "high": 0.20388330103584862,
-                  "center": 0
-                },
-                "misses": [
-                  {
-                    "file": "test-d/subprocess/input-native.test-d.ts",
-                    "line": 85,
-                    "marker": "__unshitRecallUnusedType_0_637840",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/generator-string.test-d.ts",
-                    "line": 65,
-                    "marker": "__unshitRecallUnusedType_1_167476",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/generator-string-full.test-d.ts",
-                    "line": 49,
-                    "marker": "__unshitRecallUnusedType_2_481153",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/web-transform.test-d.ts",
-                    "line": 46,
-                    "marker": "__unshitRecallUnusedType_3_446662",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/web-transform-instance.test-d.ts",
-                    "line": 47,
-                    "marker": "__unshitRecallUnusedType_4_115651",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/file-append.test-d.ts",
-                    "line": 45,
-                    "marker": "__unshitRecallUnusedType_5_414794",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/array-binary.test-d.ts",
-                    "line": 33,
-                    "marker": "__unshitRecallUnusedType_6_340801",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/uint-array.test-d.ts",
-                    "line": 43,
-                    "marker": "__unshitRecallUnusedType_7_309671",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/generator-binary-invalid.test-d.ts",
-                    "line": 50,
-                    "marker": "__unshitRecallUnusedType_8_283113",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/ipc/get-each.test-d.ts",
-                    "line": 49,
-                    "marker": "__unshitRecallUnusedType_9_809144",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/final-invalid-full.test-d.ts",
-                    "line": 53,
-                    "marker": "__unshitRecallUnusedType_10_159081",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/ipc-options-union.test-d.ts",
-                    "line": 102,
-                    "marker": "__unshitRecallUnusedType_11_233507",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/option/process-stdout.test-d.ts",
-                    "line": 45,
-                    "marker": "__unshitRecallUnusedType_12_609461",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/stdio/direction.test-d.ts",
-                    "line": 42,
-                    "marker": "__unshitRecallUnusedType_13_486488",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  },
-                  {
-                    "file": "test-d/arguments/specific.test-d.ts",
-                    "line": 177,
-                    "marker": "__unshitRecallUnusedType_14_374603",
-                    "kind": "unused-type-export",
-                    "reason": "no matching finding after injection"
-                  }
-                ]
               }
             ]
           },
           "negatives": {
-            "beforeCount": 35,
-            "afterCount": 82,
-            "injectedCount": 60,
+            "beforeCount": 0,
+            "afterCount": 1774,
+            "injectedCount": 10,
             "rules": [
               {
-                "ruleId": "arch/import-cycle",
-                "negatives": 10,
-                "falsePositives": 0,
-                "fpRate": 0,
-                "wilson95": {
-                  "low": 0,
-                  "high": 0.2775327998628892,
-                  "center": 0
-                },
-                "fps": []
-              },
-              {
-                "ruleId": "code/high-complexity",
-                "negatives": 10,
-                "falsePositives": 0,
-                "fpRate": 0,
-                "wilson95": {
-                  "low": 0,
-                  "high": 0.2775327998628892,
-                  "center": 0
-                },
-                "fps": []
-              },
-              {
-                "ruleId": "deps/unlisted-dependency",
-                "negatives": 10,
-                "falsePositives": 0,
-                "fpRate": 0,
-                "wilson95": {
-                  "low": 0,
-                  "high": 0.2775327998628892,
-                  "center": 0
-                },
-                "fps": []
-              },
-              {
-                "ruleId": "slop/redundant-catch",
-                "negatives": 10,
-                "falsePositives": 0,
-                "fpRate": 0,
-                "wilson95": {
-                  "low": 0,
-                  "high": 0.2775327998628892,
-                  "center": 0
-                },
-                "fps": []
-              },
-              {
-                "ruleId": "ts/no-double-cast",
-                "negatives": 10,
-                "falsePositives": 0,
-                "fpRate": 0,
-                "wilson95": {
-                  "low": 0,
-                  "high": 0.2775327998628892,
-                  "center": 0
-                },
-                "fps": []
-              },
-              {
-                "ruleId": "ts/unused-type-export",
+                "ruleId": "react/god-file",
                 "negatives": 10,
                 "falsePositives": 0,
                 "fpRate": 0,
@@ -1348,7 +1455,8 @@
   "notes": [
     "hono: react/god-file marked not measurable (no .tsx/.jsx files in corpus).",
     "zod: react/god-file marked not measurable (no .tsx/.jsx files in corpus).",
-    "execa: react/god-file marked not measurable (no .tsx/.jsx files in corpus)."
+    "execa: react/god-file marked not measurable (no .tsx/.jsx files in corpus).",
+    "synthetic-react: synthetic React/TSX corpus (generated, deterministic, seeded) — components are below god-file thresholds; god-file positives/negatives injected on top."
   ],
   "projectAggregates": [
     {
@@ -1360,6 +1468,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1373,6 +1482,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1386,6 +1496,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1399,6 +1510,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1412,6 +1524,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1422,99 +1535,100 @@
         {
           "ruleId": "ts/unused-type-export",
           "injected": 30,
-          "found": 18,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "outOfScope": false,
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+          "injected": 10,
+          "found": 0,
           "misses": [
             {
-              "file": "src/types.ts",
-              "line": 2813,
-              "marker": "__unshitRecallUnusedType_1_678669",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "file": "src/helper/dev/index.ts",
+              "line": 80,
+              "marker": "__unshitRecallEntryTypeExport_0_410390",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
-              "file": "src/adapter/netlify/mod.ts",
-              "line": 3,
-              "marker": "__unshitRecallUnusedType_2_91860",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "file": "src/middleware/etag/digest.ts",
+              "line": 96,
+              "marker": "__unshitRecallEntryTypeExport_1_763624",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
-              "file": "src/jsx/hooks/index.ts",
-              "line": 438,
-              "marker": "__unshitRecallUnusedType_5_441037",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "file": "src/middleware/cors/index.ts",
+              "line": 165,
+              "marker": "__unshitRecallEntryTypeExport_2_46008",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
-              "file": "src/helper/accepts/index.ts",
-              "line": 7,
-              "marker": "__unshitRecallUnusedType_9_626906",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "file": "src/router.ts",
+              "line": 105,
+              "marker": "__unshitRecallEntryTypeExport_3_640644",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
-              "file": "adapters/deno/src/index.ts",
-              "line": 10,
-              "marker": "__unshitRecallUnusedType_11_674617",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "file": "src/router/reg-exp-router/index.ts",
+              "line": 8,
+              "marker": "__unshitRecallEntryTypeExport_4_240263",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
-              "file": "src/adapter/aws-lambda/index.ts",
-              "line": 19,
-              "marker": "__unshitRecallUnusedType_13_972920",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "file": "src/middleware/method-override/index.ts",
+              "line": 172,
+              "marker": "__unshitRecallEntryTypeExport_0_104254",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "src/index.ts",
+              "line": 54,
+              "marker": "__unshitRecallEntryTypeExport_1_403958",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "src/adapter/netlify/index.ts",
+              "line": 12,
+              "marker": "__unshitRecallEntryTypeExport_2_733463",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
               "file": "src/middleware/compress/index.ts",
               "line": 176,
-              "marker": "__unshitRecallUnusedType_0_450920",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "marker": "__unshitRecallEntryTypeExport_3_330459",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
-              "file": "src/jsx/dom/server.ts",
-              "line": 77,
-              "marker": "__unshitRecallUnusedType_1_687557",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "src/middleware/language/index.ts",
-              "line": 13,
-              "marker": "__unshitRecallUnusedType_3_565193",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "src/helper/testing/index.ts",
-              "line": 29,
-              "marker": "__unshitRecallUnusedType_4_870171",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "src/jsx/types.ts",
-              "line": 41,
-              "marker": "__unshitRecallUnusedType_10_63548",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "src/middleware/etag/index.ts",
-              "line": 136,
-              "marker": "__unshitRecallUnusedType_14_592025",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "file": "adapters/cloudflare-workers/src/index.ts",
+              "line": 10,
+              "marker": "__unshitRecallEntryTypeExport_4_448893",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             }
           ],
           "hits": [],
-          "recall": 0.6,
+          "outOfScope": true,
+          "recall": 0,
           "wilson95": {
-            "low": 0.42320360253322475,
-            "high": 0.7540937188319815,
-            "center": 0.6
+            "low": 0,
+            "high": 0.2775327998628892,
+            "center": 0
           }
         }
       ],
@@ -1602,6 +1716,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1612,14 +1727,23 @@
         {
           "ruleId": "code/high-complexity",
           "injected": 30,
-          "found": 30,
-          "misses": [],
+          "found": 29,
+          "misses": [
+            {
+              "file": "packages/integration/fixtures/internal-types/index.ts",
+              "line": 59,
+              "marker": "__unshitRecallComplex_2_290814",
+              "kind": "high-complexity",
+              "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+            }
+          ],
           "hits": [],
-          "recall": 1,
+          "outOfScope": false,
+          "recall": 0.9666666666666667,
           "wilson95": {
-            "low": 0.8864866068260312,
-            "high": 0.9999999999999999,
-            "center": 1
+            "low": 0.8332960900859082,
+            "high": 0.9940914096183874,
+            "center": 0.9666666666666667
           }
         },
         {
@@ -1628,6 +1752,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1638,14 +1763,30 @@
         {
           "ruleId": "slop/redundant-catch",
           "injected": 30,
-          "found": 30,
-          "misses": [],
+          "found": 28,
+          "misses": [
+            {
+              "file": "packages/integration/fixtures/internal-types/mini.ts",
+              "line": 35,
+              "marker": "__unshitRecallRedundantCatch_5_458085",
+              "kind": "redundant-catch",
+              "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+            },
+            {
+              "file": "packages/integration/fixtures/ai-sdk/index.ts",
+              "line": 19,
+              "marker": "__unshitRecallRedundantCatch_10_926275",
+              "kind": "redundant-catch",
+              "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+            }
+          ],
           "hits": [],
-          "recall": 1,
+          "outOfScope": false,
+          "recall": 0.9333333333333333,
           "wilson95": {
-            "low": 0.8864866068260312,
-            "high": 0.9999999999999999,
-            "center": 1
+            "low": 0.7867654163738308,
+            "high": 0.9815229762087295,
+            "center": 0.9333333333333333
           }
         },
         {
@@ -1654,6 +1795,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1664,64 +1806,108 @@
         {
           "ruleId": "ts/unused-type-export",
           "injected": 30,
-          "found": 23,
+          "found": 29,
           "misses": [
             {
-              "file": "packages/zod/src/v4/core/checks.ts",
-              "line": 1268,
-              "marker": "__unshitRecallUnusedType_1_678496",
+              "file": "packages/integration/fixtures/drizzle-zod/index.ts",
+              "line": 20,
+              "marker": "__unshitRecallUnusedType_12_384540",
               "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "packages/zod/src/v4/classic/schemas.ts",
-              "line": 2941,
-              "marker": "__unshitRecallUnusedType_2_384957",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "scripts/check-versions.ts",
-              "line": 97,
-              "marker": "__unshitRecallUnusedType_8_65642",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "packages/zod/src/v4/classic/errors.ts",
-              "line": 98,
-              "marker": "__unshitRecallUnusedType_10_260471",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "packages/zod/src/v4/classic/external.ts",
-              "line": 59,
-              "marker": "__unshitRecallUnusedType_1_885302",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "packages/zod/src/v4/mini/parse.ts",
-              "line": 17,
-              "marker": "__unshitRecallUnusedType_4_428915",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "packages/zod/src/v4/mini/checks.ts",
-              "line": 34,
-              "marker": "__unshitRecallUnusedType_12_554014",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
             }
           ],
           "hits": [],
-          "recall": 0.7666666666666667,
+          "outOfScope": false,
+          "recall": 0.9666666666666667,
           "wilson95": {
-            "low": 0.5907167384187784,
-            "high": 0.8820761185551049,
-            "center": 0.7666666666666667
+            "low": 0.8332960900859082,
+            "high": 0.9940914096183874,
+            "center": 0.9666666666666667
+          }
+        },
+        {
+          "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+          "injected": 10,
+          "found": 0,
+          "misses": [
+            {
+              "file": "packages/zod/src/v4/core/compile.ts",
+              "line": 2379,
+              "marker": "__unshitRecallEntryTypeExport_0_958891",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "packages/zod/src/v3/helpers/typeAliases.ts",
+              "line": 3,
+              "marker": "__unshitRecallEntryTypeExport_1_149573",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "packages/zod/src/mini/index.ts",
+              "line": 4,
+              "marker": "__unshitRecallEntryTypeExport_2_734550",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "packages/zod/src/v4/core/memoizer.ts",
+              "line": 477,
+              "marker": "__unshitRecallEntryTypeExport_3_329697",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "packages/zod/src/v4/classic/index.ts",
+              "line": 36,
+              "marker": "__unshitRecallEntryTypeExport_4_401959",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "packages/zod/src/v4/core/versions.ts",
+              "line": 6,
+              "marker": "__unshitRecallEntryTypeExport_0_480669",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "packages/zod/src/v4/classic/iso.ts",
+              "line": 21,
+              "marker": "__unshitRecallEntryTypeExport_1_320192",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "packages/zod/src/v4/core/json-schema.ts",
+              "line": 150,
+              "marker": "__unshitRecallEntryTypeExport_2_756910",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "packages/zod/src/v4/mini/iso.ts",
+              "line": 68,
+              "marker": "__unshitRecallEntryTypeExport_3_261973",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "packages/zod/src/v4/mini/index.ts",
+              "line": 4,
+              "marker": "__unshitRecallEntryTypeExport_4_895513",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            }
+          ],
+          "hits": [],
+          "outOfScope": true,
+          "recall": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.2775327998628892,
+            "center": 0
           }
         }
       ],
@@ -1809,6 +1995,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1822,6 +2009,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1835,6 +2023,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1848,6 +2037,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1861,6 +2051,7 @@
           "found": 30,
           "misses": [],
           "hits": [],
+          "outOfScope": false,
           "recall": 1,
           "wilson95": {
             "low": 0.8864866068260312,
@@ -1870,225 +2061,100 @@
         },
         {
           "ruleId": "ts/unused-type-export",
-          "injected": 30,
+          "injected": 4,
+          "found": 4,
+          "misses": [],
+          "hits": [],
+          "outOfScope": false,
+          "recall": 1,
+          "wilson95": {
+            "low": 0.5101091635454027,
+            "high": 1,
+            "center": 1
+          }
+        },
+        {
+          "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+          "injected": 10,
           "found": 0,
           "misses": [
             {
-              "file": "test-d/stdio/option/generator-only-object-mode.test-d.ts",
-              "line": 45,
-              "marker": "__unshitRecallUnusedType_0_749643",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/methods/script-stdin.test-d.ts",
-              "line": 47,
-              "marker": "__unshitRecallUnusedType_1_319906",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
               "file": "test-d/methods/script.test-d.ts",
               "line": 66,
-              "marker": "__unshitRecallUnusedType_2_802583",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "marker": "__unshitRecallEntryTypeExport_0_655095",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
-              "file": "test-d/stdio/option/pipe.test-d.ts",
-              "line": 43,
-              "marker": "__unshitRecallUnusedType_3_66860",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/convert/transform-stream.test-d.ts",
-              "line": 33,
-              "marker": "__unshitRecallUnusedType_4_526763",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/generator-object-mode-invalid.test-d.ts",
-              "line": 51,
-              "marker": "__unshitRecallUnusedType_5_592247",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/methods/node.test-d.ts",
-              "line": 65,
-              "marker": "__unshitRecallUnusedType_6_918789",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/pipe-inherit.test-d.ts",
-              "line": 30,
-              "marker": "__unshitRecallUnusedType_7_395803",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/ipc/get-one.test-d.ts",
-              "line": 71,
-              "marker": "__unshitRecallUnusedType_8_519909",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/methods/main-sync.test-d.ts",
-              "line": 56,
-              "marker": "__unshitRecallUnusedType_9_825472",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/subprocess/subprocess.test-d.ts",
-              "line": 59,
-              "marker": "__unshitRecallUnusedType_10_359260",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/return/result-main.test-d.ts",
-              "line": 105,
-              "marker": "__unshitRecallUnusedType_11_311703",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/generator-binary.test-d.ts",
-              "line": 50,
-              "marker": "__unshitRecallUnusedType_12_858035",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/array.test-d.ts",
-              "line": 15,
-              "marker": "__unshitRecallUnusedType_13_491235",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/convert/duplex.test-d.ts",
-              "line": 33,
-              "marker": "__unshitRecallUnusedType_14_624423",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/subprocess/input-native.test-d.ts",
-              "line": 85,
-              "marker": "__unshitRecallUnusedType_0_637840",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/generator-string.test-d.ts",
-              "line": 65,
-              "marker": "__unshitRecallUnusedType_1_167476",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "file": "test-d/return/result-all.test-d.ts",
+              "line": 202,
+              "marker": "__unshitRecallEntryTypeExport_1_597186",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
               "file": "test-d/stdio/option/generator-string-full.test-d.ts",
-              "line": 49,
-              "marker": "__unshitRecallUnusedType_2_481153",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/web-transform.test-d.ts",
-              "line": 46,
-              "marker": "__unshitRecallUnusedType_3_446662",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/web-transform-instance.test-d.ts",
-              "line": 47,
-              "marker": "__unshitRecallUnusedType_4_115651",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/file-append.test-d.ts",
-              "line": 45,
-              "marker": "__unshitRecallUnusedType_5_414794",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/array-binary.test-d.ts",
-              "line": 33,
-              "marker": "__unshitRecallUnusedType_6_340801",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/uint-array.test-d.ts",
-              "line": 43,
-              "marker": "__unshitRecallUnusedType_7_309671",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/generator-binary-invalid.test-d.ts",
               "line": 50,
-              "marker": "__unshitRecallUnusedType_8_283113",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "marker": "__unshitRecallEntryTypeExport_2_246525",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
-              "file": "test-d/ipc/get-each.test-d.ts",
+              "file": "test-d/stdio/option/web-transform-invalid.test-d.ts",
               "line": 49,
-              "marker": "__unshitRecallUnusedType_9_809144",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "marker": "__unshitRecallEntryTypeExport_3_898611",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
-              "file": "test-d/stdio/option/final-invalid-full.test-d.ts",
-              "line": 53,
-              "marker": "__unshitRecallUnusedType_10_159081",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/ipc-options-union.test-d.ts",
-              "line": 102,
-              "marker": "__unshitRecallUnusedType_11_233507",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/option/process-stdout.test-d.ts",
+              "file": "test-d/stdio/option/generator-only-preserve.test-d.ts",
               "line": 45,
-              "marker": "__unshitRecallUnusedType_12_609461",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
-            },
-            {
-              "file": "test-d/stdio/direction.test-d.ts",
-              "line": 42,
-              "marker": "__unshitRecallUnusedType_13_486488",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "marker": "__unshitRecallEntryTypeExport_4_388073",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
               "file": "test-d/arguments/specific.test-d.ts",
               "line": 177,
-              "marker": "__unshitRecallUnusedType_14_374603",
-              "kind": "unused-type-export",
-              "reason": "no matching finding after injection"
+              "marker": "__unshitRecallEntryTypeExport_0_905408",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "test-d/stdio/option/generator-string.test-d.ts",
+              "line": 65,
+              "marker": "__unshitRecallEntryTypeExport_1_317613",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "test-d/methods/node.test-d.ts",
+              "line": 66,
+              "marker": "__unshitRecallEntryTypeExport_2_472719",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "test-d/stdio/option/array-string.test-d.ts",
+              "line": 32,
+              "marker": "__unshitRecallEntryTypeExport_3_760476",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+            },
+            {
+              "file": "test-d/arguments/encoding-option.test-d.ts",
+              "line": 50,
+              "marker": "__unshitRecallEntryTypeExport_4_960180",
+              "kind": "entry-point-unused-type-export",
+              "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             }
           ],
           "hits": [],
+          "outOfScope": true,
           "recall": 0,
           "wilson95": {
             "low": 0,
-            "high": 0.11351339317396876,
+            "high": 0.2775327998628892,
             "center": 0
           }
         }
@@ -2156,6 +2222,39 @@
         },
         {
           "ruleId": "ts/unused-type-export",
+          "negatives": 4,
+          "falsePositives": 0,
+          "fps": [],
+          "fpRate": 0,
+          "wilson95": {
+            "low": 0,
+            "high": 0.4898908364545973,
+            "center": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "synthetic-react",
+      "recall": [
+        {
+          "ruleId": "react/god-file",
+          "injected": 30,
+          "found": 30,
+          "misses": [],
+          "hits": [],
+          "outOfScope": false,
+          "recall": 1,
+          "wilson95": {
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
+          }
+        }
+      ],
+      "falsePositives": [
+        {
+          "ruleId": "react/god-file",
           "negatives": 20,
           "falsePositives": 0,
           "fps": [],
@@ -2177,6 +2276,7 @@
         "found": 90,
         "misses": [],
         "hits": [],
+        "outOfScope": false,
         "recall": 1,
         "wilson95": {
           "low": 0.9590643744356734,
@@ -2187,14 +2287,23 @@
       {
         "ruleId": "code/high-complexity",
         "injected": 90,
-        "found": 90,
-        "misses": [],
+        "found": 89,
+        "misses": [
+          {
+            "file": "packages/integration/fixtures/internal-types/index.ts",
+            "line": 59,
+            "marker": "__unshitRecallComplex_2_290814",
+            "kind": "high-complexity",
+            "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+          }
+        ],
         "hits": [],
-        "recall": 1,
+        "outOfScope": false,
+        "recall": 0.9888888888888889,
         "wilson95": {
-          "low": 0.9590643744356734,
-          "high": 1,
-          "center": 1
+          "low": 0.9397159168824657,
+          "high": 0.9980359158990818,
+          "center": 0.9888888888888889
         }
       },
       {
@@ -2203,6 +2312,7 @@
         "found": 90,
         "misses": [],
         "hits": [],
+        "outOfScope": false,
         "recall": 1,
         "wilson95": {
           "low": 0.9590643744356734,
@@ -2211,16 +2321,46 @@
         }
       },
       {
-        "ruleId": "slop/redundant-catch",
-        "injected": 90,
-        "found": 90,
+        "ruleId": "react/god-file",
+        "injected": 30,
+        "found": 30,
         "misses": [],
         "hits": [],
+        "outOfScope": false,
         "recall": 1,
         "wilson95": {
-          "low": 0.9590643744356734,
-          "high": 1,
+          "low": 0.8864866068260312,
+          "high": 0.9999999999999999,
           "center": 1
+        }
+      },
+      {
+        "ruleId": "slop/redundant-catch",
+        "injected": 90,
+        "found": 88,
+        "misses": [
+          {
+            "file": "packages/integration/fixtures/internal-types/mini.ts",
+            "line": 35,
+            "marker": "__unshitRecallRedundantCatch_5_458085",
+            "kind": "redundant-catch",
+            "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+          },
+          {
+            "file": "packages/integration/fixtures/ai-sdk/index.ts",
+            "line": 19,
+            "marker": "__unshitRecallRedundantCatch_10_926275",
+            "kind": "redundant-catch",
+            "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+          }
+        ],
+        "hits": [],
+        "outOfScope": false,
+        "recall": 0.9777777777777777,
+        "wilson95": {
+          "low": 0.9225547331137463,
+          "high": 0.9938845580136748,
+          "center": 0.9777777777777777
         }
       },
       {
@@ -2229,6 +2369,7 @@
         "found": 90,
         "misses": [],
         "hits": [],
+        "outOfScope": false,
         "recall": 1,
         "wilson95": {
           "low": 0.9590643744356734,
@@ -2238,359 +2379,249 @@
       },
       {
         "ruleId": "ts/unused-type-export",
-        "injected": 90,
-        "found": 41,
+        "injected": 64,
+        "found": 63,
         "misses": [
           {
-            "file": "src/types.ts",
-            "line": 2813,
-            "marker": "__unshitRecallUnusedType_1_678669",
+            "file": "packages/integration/fixtures/drizzle-zod/index.ts",
+            "line": 20,
+            "marker": "__unshitRecallUnusedType_12_384540",
             "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
+          }
+        ],
+        "hits": [],
+        "outOfScope": false,
+        "recall": 0.984375,
+        "wilson95": {
+          "low": 0.9166589839990573,
+          "high": 0.9972364580766624,
+          "center": 0.984375
+        }
+      },
+      {
+        "ruleId": "ts/unused-type-export [entry-point, out of scope]",
+        "injected": 30,
+        "found": 0,
+        "misses": [
+          {
+            "file": "src/helper/dev/index.ts",
+            "line": 80,
+            "marker": "__unshitRecallEntryTypeExport_0_410390",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "src/adapter/netlify/mod.ts",
-            "line": 3,
-            "marker": "__unshitRecallUnusedType_2_91860",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "src/middleware/etag/digest.ts",
+            "line": 96,
+            "marker": "__unshitRecallEntryTypeExport_1_763624",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "src/jsx/hooks/index.ts",
-            "line": 438,
-            "marker": "__unshitRecallUnusedType_5_441037",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "src/middleware/cors/index.ts",
+            "line": 165,
+            "marker": "__unshitRecallEntryTypeExport_2_46008",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "src/helper/accepts/index.ts",
-            "line": 7,
-            "marker": "__unshitRecallUnusedType_9_626906",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "src/router.ts",
+            "line": 105,
+            "marker": "__unshitRecallEntryTypeExport_3_640644",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "adapters/deno/src/index.ts",
-            "line": 10,
-            "marker": "__unshitRecallUnusedType_11_674617",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "src/router/reg-exp-router/index.ts",
+            "line": 8,
+            "marker": "__unshitRecallEntryTypeExport_4_240263",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "src/adapter/aws-lambda/index.ts",
-            "line": 19,
-            "marker": "__unshitRecallUnusedType_13_972920",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "src/middleware/method-override/index.ts",
+            "line": 172,
+            "marker": "__unshitRecallEntryTypeExport_0_104254",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+          },
+          {
+            "file": "src/index.ts",
+            "line": 54,
+            "marker": "__unshitRecallEntryTypeExport_1_403958",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+          },
+          {
+            "file": "src/adapter/netlify/index.ts",
+            "line": 12,
+            "marker": "__unshitRecallEntryTypeExport_2_733463",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
             "file": "src/middleware/compress/index.ts",
             "line": 176,
-            "marker": "__unshitRecallUnusedType_0_450920",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "marker": "__unshitRecallEntryTypeExport_3_330459",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "src/jsx/dom/server.ts",
-            "line": 77,
-            "marker": "__unshitRecallUnusedType_1_687557",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "adapters/cloudflare-workers/src/index.ts",
+            "line": 10,
+            "marker": "__unshitRecallEntryTypeExport_4_448893",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "src/middleware/language/index.ts",
-            "line": 13,
-            "marker": "__unshitRecallUnusedType_3_565193",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/v4/core/compile.ts",
+            "line": 2379,
+            "marker": "__unshitRecallEntryTypeExport_0_958891",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "src/helper/testing/index.ts",
-            "line": 29,
-            "marker": "__unshitRecallUnusedType_4_870171",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/v3/helpers/typeAliases.ts",
+            "line": 3,
+            "marker": "__unshitRecallEntryTypeExport_1_149573",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "src/jsx/types.ts",
-            "line": 41,
-            "marker": "__unshitRecallUnusedType_10_63548",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/mini/index.ts",
+            "line": 4,
+            "marker": "__unshitRecallEntryTypeExport_2_734550",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "src/middleware/etag/index.ts",
-            "line": 136,
-            "marker": "__unshitRecallUnusedType_14_592025",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/v4/core/memoizer.ts",
+            "line": 477,
+            "marker": "__unshitRecallEntryTypeExport_3_329697",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "packages/zod/src/v4/core/checks.ts",
-            "line": 1268,
-            "marker": "__unshitRecallUnusedType_1_678496",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/v4/classic/index.ts",
+            "line": 36,
+            "marker": "__unshitRecallEntryTypeExport_4_401959",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "packages/zod/src/v4/classic/schemas.ts",
-            "line": 2941,
-            "marker": "__unshitRecallUnusedType_2_384957",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/v4/core/versions.ts",
+            "line": 6,
+            "marker": "__unshitRecallEntryTypeExport_0_480669",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "scripts/check-versions.ts",
-            "line": 97,
-            "marker": "__unshitRecallUnusedType_8_65642",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/v4/classic/iso.ts",
+            "line": 21,
+            "marker": "__unshitRecallEntryTypeExport_1_320192",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "packages/zod/src/v4/classic/errors.ts",
-            "line": 98,
-            "marker": "__unshitRecallUnusedType_10_260471",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/v4/core/json-schema.ts",
+            "line": 150,
+            "marker": "__unshitRecallEntryTypeExport_2_756910",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "packages/zod/src/v4/classic/external.ts",
-            "line": 59,
-            "marker": "__unshitRecallUnusedType_1_885302",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/v4/mini/iso.ts",
+            "line": 68,
+            "marker": "__unshitRecallEntryTypeExport_3_261973",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "packages/zod/src/v4/mini/parse.ts",
-            "line": 17,
-            "marker": "__unshitRecallUnusedType_4_428915",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "packages/zod/src/v4/mini/checks.ts",
-            "line": 34,
-            "marker": "__unshitRecallUnusedType_12_554014",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/generator-only-object-mode.test-d.ts",
-            "line": 45,
-            "marker": "__unshitRecallUnusedType_0_749643",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/methods/script-stdin.test-d.ts",
-            "line": 47,
-            "marker": "__unshitRecallUnusedType_1_319906",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "packages/zod/src/v4/mini/index.ts",
+            "line": 4,
+            "marker": "__unshitRecallEntryTypeExport_4_895513",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
             "file": "test-d/methods/script.test-d.ts",
             "line": 66,
-            "marker": "__unshitRecallUnusedType_2_802583",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "marker": "__unshitRecallEntryTypeExport_0_655095",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "test-d/stdio/option/pipe.test-d.ts",
-            "line": 43,
-            "marker": "__unshitRecallUnusedType_3_66860",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/convert/transform-stream.test-d.ts",
-            "line": 33,
-            "marker": "__unshitRecallUnusedType_4_526763",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/generator-object-mode-invalid.test-d.ts",
-            "line": 51,
-            "marker": "__unshitRecallUnusedType_5_592247",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/methods/node.test-d.ts",
-            "line": 65,
-            "marker": "__unshitRecallUnusedType_6_918789",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/pipe-inherit.test-d.ts",
-            "line": 30,
-            "marker": "__unshitRecallUnusedType_7_395803",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/ipc/get-one.test-d.ts",
-            "line": 71,
-            "marker": "__unshitRecallUnusedType_8_519909",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/methods/main-sync.test-d.ts",
-            "line": 56,
-            "marker": "__unshitRecallUnusedType_9_825472",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/subprocess/subprocess.test-d.ts",
-            "line": 59,
-            "marker": "__unshitRecallUnusedType_10_359260",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/return/result-main.test-d.ts",
-            "line": 105,
-            "marker": "__unshitRecallUnusedType_11_311703",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/generator-binary.test-d.ts",
-            "line": 50,
-            "marker": "__unshitRecallUnusedType_12_858035",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/array.test-d.ts",
-            "line": 15,
-            "marker": "__unshitRecallUnusedType_13_491235",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/convert/duplex.test-d.ts",
-            "line": 33,
-            "marker": "__unshitRecallUnusedType_14_624423",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/subprocess/input-native.test-d.ts",
-            "line": 85,
-            "marker": "__unshitRecallUnusedType_0_637840",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/generator-string.test-d.ts",
-            "line": 65,
-            "marker": "__unshitRecallUnusedType_1_167476",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "file": "test-d/return/result-all.test-d.ts",
+            "line": 202,
+            "marker": "__unshitRecallEntryTypeExport_1_597186",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
             "file": "test-d/stdio/option/generator-string-full.test-d.ts",
-            "line": 49,
-            "marker": "__unshitRecallUnusedType_2_481153",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/web-transform.test-d.ts",
-            "line": 46,
-            "marker": "__unshitRecallUnusedType_3_446662",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/web-transform-instance.test-d.ts",
-            "line": 47,
-            "marker": "__unshitRecallUnusedType_4_115651",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/file-append.test-d.ts",
-            "line": 45,
-            "marker": "__unshitRecallUnusedType_5_414794",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/array-binary.test-d.ts",
-            "line": 33,
-            "marker": "__unshitRecallUnusedType_6_340801",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/uint-array.test-d.ts",
-            "line": 43,
-            "marker": "__unshitRecallUnusedType_7_309671",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/generator-binary-invalid.test-d.ts",
             "line": 50,
-            "marker": "__unshitRecallUnusedType_8_283113",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "marker": "__unshitRecallEntryTypeExport_2_246525",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "test-d/ipc/get-each.test-d.ts",
+            "file": "test-d/stdio/option/web-transform-invalid.test-d.ts",
             "line": 49,
-            "marker": "__unshitRecallUnusedType_9_809144",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "marker": "__unshitRecallEntryTypeExport_3_898611",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
-            "file": "test-d/stdio/option/final-invalid-full.test-d.ts",
-            "line": 53,
-            "marker": "__unshitRecallUnusedType_10_159081",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/ipc-options-union.test-d.ts",
-            "line": 102,
-            "marker": "__unshitRecallUnusedType_11_233507",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/option/process-stdout.test-d.ts",
+            "file": "test-d/stdio/option/generator-only-preserve.test-d.ts",
             "line": 45,
-            "marker": "__unshitRecallUnusedType_12_609461",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
-          },
-          {
-            "file": "test-d/stdio/direction.test-d.ts",
-            "line": 42,
-            "marker": "__unshitRecallUnusedType_13_486488",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "marker": "__unshitRecallEntryTypeExport_4_388073",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
             "file": "test-d/arguments/specific.test-d.ts",
             "line": 177,
-            "marker": "__unshitRecallUnusedType_14_374603",
-            "kind": "unused-type-export",
-            "reason": "no matching finding after injection"
+            "marker": "__unshitRecallEntryTypeExport_0_905408",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+          },
+          {
+            "file": "test-d/stdio/option/generator-string.test-d.ts",
+            "line": 65,
+            "marker": "__unshitRecallEntryTypeExport_1_317613",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+          },
+          {
+            "file": "test-d/methods/node.test-d.ts",
+            "line": 66,
+            "marker": "__unshitRecallEntryTypeExport_2_472719",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+          },
+          {
+            "file": "test-d/stdio/option/array-string.test-d.ts",
+            "line": 32,
+            "marker": "__unshitRecallEntryTypeExport_3_760476",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
+          },
+          {
+            "file": "test-d/arguments/encoding-option.test-d.ts",
+            "line": 50,
+            "marker": "__unshitRecallEntryTypeExport_4_960180",
+            "kind": "entry-point-unused-type-export",
+            "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           }
         ],
         "hits": [],
-        "recall": 0.45555555555555555,
+        "outOfScope": true,
+        "recall": 0,
         "wilson95": {
-          "low": 0.3565961690755778,
-          "high": 0.5581536643079179,
-          "center": 0.45555555555555555
+          "low": 0,
+          "high": 0.11351339317396876,
+          "center": 0
         }
       }
     ],
@@ -2632,6 +2663,18 @@
         }
       },
       {
+        "ruleId": "react/god-file",
+        "negatives": 20,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
+        "wilson95": {
+          "low": 0,
+          "high": 0.16112515805281938,
+          "center": 0
+        }
+      },
+      {
         "ruleId": "slop/redundant-catch",
         "negatives": 60,
         "falsePositives": 0,
@@ -2657,16 +2700,36 @@
       },
       {
         "ruleId": "ts/unused-type-export",
-        "negatives": 60,
+        "negatives": 44,
         "falsePositives": 0,
         "fps": [],
         "fpRate": 0,
         "wilson95": {
           "low": 0,
-          "high": 0.06017185214208986,
+          "high": 0.08029560375848066,
           "center": 0
         }
       }
-    ]
+    ],
+    "outOfScope": {
+      "injected": 30,
+      "found": 0,
+      "recall": 0,
+      "wilson95": {
+        "low": 0,
+        "high": 0.11351339317396876,
+        "center": 0
+      }
+    }
+  },
+  "outOfScope": {
+    "injected": 30,
+    "found": 0,
+    "recall": 0,
+    "wilson95": {
+      "low": 0,
+      "high": 0.11351339317396876,
+      "center": 0
+    }
   }
 }

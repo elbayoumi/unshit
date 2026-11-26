@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-26T13:31:17.477Z",
+  "generatedAt": "2026-11-26T13:47:48.633Z",
   "corpusProject": "/Volumes/data/projects/unshit-bench/corpus/hono",
   "corpusProjects": [
     "/Volumes/data/projects/unshit-bench/corpus/hono",
@@ -8,7 +8,7 @@
     "/Volumes/data/projects/unshit-bench/corpus/execa",
     "/Volumes/data/projects/unshit-bench/corpus/fastify"
   ],
-  "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-hono-gEbzZW/hono",
+  "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-hono-GOo8xF/hono",
   "seed": 20261127,
   "seeds": {
     "dev": 20261126,
@@ -17,36 +17,17 @@
   "perRule": 20,
   "minFiles": 25,
   "target": 0.9,
-  "beforeCount": 2242,
-  "afterCount": 3172,
-  "newFindingCount": 961,
+  "beforeCount": 2258,
+  "afterCount": 3192,
+  "newFindingCount": 965,
   "injectedCount": 467,
   "rules": [
     {
       "ruleId": "code/duplicate-block",
       "outOfScope": false,
       "injected": 76,
-      "found": 74,
-      "misses": [
-        {
-          "project": "zod",
-          "file": "packages/zod/src/v4/mini/schemas.ts",
-          "line": 2052,
-          "marker": "__unshitRecallDup_16",
-          "kind": "duplicate-block",
-          "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-          "sourceFile": "scripts/triage-signal.ts"
-        },
-        {
-          "project": "zod",
-          "file": "packages/zod/src/v4/classic/schemas.ts",
-          "line": 2941,
-          "marker": "__unshitRecallDup_19",
-          "kind": "duplicate-block",
-          "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-          "sourceFile": "packages/zod/src/v4/classic/checks.ts"
-        }
-      ],
+      "found": 76,
+      "misses": [],
       "projects": [
         {
           "project": "hono",
@@ -56,7 +37,7 @@
         {
           "project": "zod",
           "injected": 20,
-          "found": 18
+          "found": 20
         },
         {
           "project": "execa",
@@ -69,11 +50,11 @@
           "found": 16
         }
       ],
-      "recall": 0.9736842105263158,
+      "recall": 1,
       "wilson95": {
-        "low": 0.9090337890134194,
-        "high": 0.9927533409248718,
-        "center": 0.9736842105263158
+        "low": 0.9518864149348628,
+        "high": 1,
+        "center": 1
       }
     },
     {
@@ -1400,69 +1381,27 @@
         {
           "name": "hono",
           "path": "/Volumes/data/projects/unshit-bench/corpus/hono",
-          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-hono-PEk0mU/hono",
+          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-hono-VSBb4D/hono",
           "fileCount": 224,
           "starConsumedCount": 102,
           "beforeCount": 642,
-          "afterCount": 882,
-          "newFindingCount": 255,
+          "afterCount": 885,
+          "newFindingCount": 258,
           "injectedCount": 125,
-          "tokenizerBlind": [
-            {
-              "file": "src/jsx/intrinsic-elements.ts",
-              "marker": "__unshitRecallAny_13_975",
-              "kind": "no-explicit-any",
-              "note": "scored normally; clone tokenizer stops before this line (template literal type)"
-            },
-            {
-              "file": "src/jsx/intrinsic-elements.ts",
-              "marker": "__unshitRecallTimer_1",
-              "kind": "magic-timer",
-              "note": "scored normally; clone tokenizer stops before this line (template literal type)"
-            },
-            {
-              "file": "src/types.ts",
-              "marker": "__unshitRecallDup_10",
-              "kind": "duplicate-block",
-              "note": "scored normally; clone tokenizer stops before this line (template literal type)"
-            },
-            {
-              "file": "src/client/types.ts",
-              "marker": "__unshitRecallDup_14",
-              "kind": "duplicate-block",
-              "note": "scored normally; clone tokenizer stops before this line (template literal type)"
-            }
-          ],
+          "tokenizerBlind": [],
           "rules": [
             {
               "ruleId": "code/duplicate-block",
               "injected": 20,
-              "found": 18,
-              "recall": 0.9,
+              "found": 20,
+              "recall": 1,
               "wilson95": {
-                "low": 0.6989663547715128,
-                "high": 0.9721335187862319,
-                "center": 0.9
+                "low": 0.8388748419471806,
+                "high": 1,
+                "center": 1
               },
               "outOfScope": false,
-              "misses": [
-                {
-                  "file": "src/types.ts",
-                  "line": 2783,
-                  "marker": "__unshitRecallDup_10",
-                  "kind": "duplicate-block",
-                  "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                  "sourceFile": "src/jsx/dom/components.ts"
-                },
-                {
-                  "file": "src/client/types.ts",
-                  "line": 394,
-                  "marker": "__unshitRecallDup_14",
-                  "kind": "duplicate-block",
-                  "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                  "sourceFile": "src/utils/stream.ts"
-                }
-              ]
+              "misses": []
             },
             {
               "ruleId": "deps/unused-dependency",
@@ -2530,49 +2469,27 @@
         {
           "name": "zod",
           "path": "/Volumes/data/projects/unshit-bench/corpus/zod",
-          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-zod-Orxqql/zod",
+          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-zod-JAiAF9/zod",
           "fileCount": 249,
           "starConsumedCount": 60,
-          "beforeCount": 1477,
-          "afterCount": 1713,
-          "newFindingCount": 247,
+          "beforeCount": 1493,
+          "afterCount": 1731,
+          "newFindingCount": 249,
           "injectedCount": 125,
-          "tokenizerBlind": [
-            {
-              "file": "packages/zod/src/v4/mini/schemas.ts",
-              "marker": "__unshitRecallTimer_16",
-              "kind": "magic-timer",
-              "note": "scored normally; clone tokenizer stops before this line (template literal type)"
-            },
-            {
-              "file": "packages/zod/src/v4/mini/schemas.ts",
-              "marker": "__unshitRecallDup_8",
-              "kind": "duplicate-block",
-              "note": "scored normally; clone tokenizer stops before this line (template literal type)"
-            }
-          ],
+          "tokenizerBlind": [],
           "rules": [
             {
               "ruleId": "code/duplicate-block",
               "injected": 20,
-              "found": 19,
-              "recall": 0.95,
+              "found": 20,
+              "recall": 1,
               "wilson95": {
-                "low": 0.763868806553258,
-                "high": 0.9911185511992047,
-                "center": 0.95
+                "low": 0.8388748419471806,
+                "high": 1,
+                "center": 1
               },
               "outOfScope": false,
-              "misses": [
-                {
-                  "file": "packages/zod/src/v4/mini/schemas.ts",
-                  "line": 2053,
-                  "marker": "__unshitRecallDup_8",
-                  "kind": "duplicate-block",
-                  "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                  "sourceFile": "packages/zod/src/v4/core/memoizer.ts"
-                }
-              ]
+              "misses": []
             },
             {
               "ruleId": "deps/unused-dependency",
@@ -3640,21 +3557,14 @@
         {
           "name": "execa",
           "path": "/Volumes/data/projects/unshit-bench/corpus/execa",
-          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-execa-QHEVJk/execa",
+          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-execa-F6Hr70/execa",
           "fileCount": 240,
           "starConsumedCount": 128,
           "beforeCount": 35,
           "afterCount": 288,
           "newFindingCount": 254,
           "injectedCount": 125,
-          "tokenizerBlind": [
-            {
-              "file": "test-d/methods/bind-override.test-d.ts",
-              "marker": "__unshitRecallAny_7_171222",
-              "kind": "no-explicit-any",
-              "note": "scored normally; clone tokenizer stops before this line (template literal type)"
-            }
-          ],
+          "tokenizerBlind": [],
           "rules": [
             {
               "ruleId": "code/duplicate-block",
@@ -4735,7 +4645,7 @@
         {
           "name": "fastify",
           "path": "/Volumes/data/projects/unshit-bench/corpus/fastify",
-          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-fastify-ugR3Ja/fastify",
+          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-fastify-pLljmI/fastify",
           "fileCount": 34,
           "starConsumedCount": 23,
           "beforeCount": 88,
@@ -5584,14 +5494,14 @@
             "name": "hono",
             "fileCount": 224,
             "injected": 120,
-            "found": 118,
-            "recall": 0.9833333333333333,
+            "found": 120,
+            "recall": 1,
             "wilson95": {
-              "low": 0.941264037027841,
-              "high": 0.9954174354340789,
-              "center": 0.9833333333333333
+              "low": 0.9689808335812966,
+              "high": 1,
+              "center": 1
             },
-            "misses": 2,
+            "misses": 0,
             "outOfScope": {
               "injected": 5,
               "found": 0,
@@ -5607,14 +5517,14 @@
             "name": "zod",
             "fileCount": 249,
             "injected": 120,
-            "found": 119,
-            "recall": 0.9916666666666667,
+            "found": 120,
+            "recall": 1,
             "wilson95": {
-              "low": 0.9543037087549505,
-              "high": 0.998527444266658,
-              "center": 0.9916666666666667
+              "low": 0.9689808335812966,
+              "high": 1,
+              "center": 1
             },
-            "misses": 1,
+            "misses": 0,
             "outOfScope": {
               "injected": 5,
               "found": 0,
@@ -5673,15 +5583,15 @@
             }
           }
         ],
-        "tokenizerBlind": 7,
+        "tokenizerBlind": 0,
         "pooled": {
           "injected": 447,
-          "found": 444,
-          "recall": 0.9932885906040269,
+          "found": 447,
+          "recall": 1,
           "wilson95": {
-            "low": 0.9804559663908022,
-            "high": 0.9977149435196632,
-            "center": 0.9932885906040269
+            "low": 0.9914793576643495,
+            "high": 1,
+            "center": 1
           }
         },
         "outOfScope": {
@@ -5699,46 +5609,18 @@
             "ruleId": "code/duplicate-block",
             "outOfScope": false,
             "injected": 76,
-            "found": 73,
-            "misses": [
-              {
-                "project": "hono",
-                "file": "src/types.ts",
-                "line": 2783,
-                "marker": "__unshitRecallDup_10",
-                "kind": "duplicate-block",
-                "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                "sourceFile": "src/jsx/dom/components.ts"
-              },
-              {
-                "project": "hono",
-                "file": "src/client/types.ts",
-                "line": 394,
-                "marker": "__unshitRecallDup_14",
-                "kind": "duplicate-block",
-                "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                "sourceFile": "src/utils/stream.ts"
-              },
-              {
-                "project": "zod",
-                "file": "packages/zod/src/v4/mini/schemas.ts",
-                "line": 2053,
-                "marker": "__unshitRecallDup_8",
-                "kind": "duplicate-block",
-                "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                "sourceFile": "packages/zod/src/v4/core/memoizer.ts"
-              }
-            ],
+            "found": 76,
+            "misses": [],
             "projects": [
               {
                 "project": "hono",
                 "injected": 20,
-                "found": 18
+                "found": 20
               },
               {
                 "project": "zod",
                 "injected": 20,
-                "found": 19
+                "found": 20
               },
               {
                 "project": "execa",
@@ -5751,11 +5633,11 @@
                 "found": 16
               }
             ],
-            "recall": 0.9605263157894737,
+            "recall": 1,
             "wilson95": {
-              "low": 0.8902521225345447,
-              "high": 0.9864853649054605,
-              "center": 0.9605263157894737
+              "low": 0.9518864149348628,
+              "high": 1,
+              "center": 1
             }
           },
           {
@@ -6138,7 +6020,7 @@
         {
           "name": "hono",
           "path": "/Volumes/data/projects/unshit-bench/corpus/hono",
-          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-hono-gEbzZW/hono",
+          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-hono-GOo8xF/hono",
           "fileCount": 224,
           "starConsumedCount": 102,
           "beforeCount": 642,
@@ -7226,57 +7108,27 @@
         {
           "name": "zod",
           "path": "/Volumes/data/projects/unshit-bench/corpus/zod",
-          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-zod-CkRJfD/zod",
+          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-zod-4epQAa/zod",
           "fileCount": 249,
           "starConsumedCount": 60,
-          "beforeCount": 1477,
-          "afterCount": 1712,
-          "newFindingCount": 245,
+          "beforeCount": 1493,
+          "afterCount": 1732,
+          "newFindingCount": 249,
           "injectedCount": 125,
-          "tokenizerBlind": [
-            {
-              "file": "packages/zod/src/v4/mini/schemas.ts",
-              "marker": "__unshitRecallDup_16",
-              "kind": "duplicate-block",
-              "note": "scored normally; clone tokenizer stops before this line (template literal type)"
-            },
-            {
-              "file": "packages/zod/src/v4/classic/schemas.ts",
-              "marker": "__unshitRecallDup_19",
-              "kind": "duplicate-block",
-              "note": "scored normally; clone tokenizer stops before this line (template literal type)"
-            }
-          ],
+          "tokenizerBlind": [],
           "rules": [
             {
               "ruleId": "code/duplicate-block",
               "injected": 20,
-              "found": 18,
-              "recall": 0.9,
+              "found": 20,
+              "recall": 1,
               "wilson95": {
-                "low": 0.6989663547715128,
-                "high": 0.9721335187862319,
-                "center": 0.9
+                "low": 0.8388748419471806,
+                "high": 1,
+                "center": 1
               },
               "outOfScope": false,
-              "misses": [
-                {
-                  "file": "packages/zod/src/v4/mini/schemas.ts",
-                  "line": 2052,
-                  "marker": "__unshitRecallDup_16",
-                  "kind": "duplicate-block",
-                  "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                  "sourceFile": "scripts/triage-signal.ts"
-                },
-                {
-                  "file": "packages/zod/src/v4/classic/schemas.ts",
-                  "line": 2941,
-                  "marker": "__unshitRecallDup_19",
-                  "kind": "duplicate-block",
-                  "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                  "sourceFile": "packages/zod/src/v4/classic/checks.ts"
-                }
-              ]
+              "misses": []
             },
             {
               "ruleId": "deps/unused-dependency",
@@ -8344,7 +8196,7 @@
         {
           "name": "execa",
           "path": "/Volumes/data/projects/unshit-bench/corpus/execa",
-          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-execa-oDirhg/execa",
+          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-execa-CXpv3A/execa",
           "fileCount": 240,
           "starConsumedCount": 128,
           "beforeCount": 35,
@@ -9432,7 +9284,7 @@
         {
           "name": "fastify",
           "path": "/Volumes/data/projects/unshit-bench/corpus/fastify",
-          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-fastify-Dl4Aji/fastify",
+          "workDir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-fastify-xfvZ1l/fastify",
           "fileCount": 34,
           "starConsumedCount": 23,
           "beforeCount": 88,
@@ -10304,14 +10156,14 @@
             "name": "zod",
             "fileCount": 249,
             "injected": 120,
-            "found": 118,
-            "recall": 0.9833333333333333,
+            "found": 120,
+            "recall": 1,
             "wilson95": {
-              "low": 0.941264037027841,
-              "high": 0.9954174354340789,
-              "center": 0.9833333333333333
+              "low": 0.9689808335812966,
+              "high": 1,
+              "center": 1
             },
-            "misses": 2,
+            "misses": 0,
             "outOfScope": {
               "injected": 5,
               "found": 0,
@@ -10370,15 +10222,15 @@
             }
           }
         ],
-        "tokenizerBlind": 2,
+        "tokenizerBlind": 0,
         "pooled": {
           "injected": 447,
-          "found": 445,
-          "recall": 0.9955257270693513,
+          "found": 447,
+          "recall": 1,
           "wilson95": {
-            "low": 0.9838349249428474,
-            "high": 0.9987721342189128,
-            "center": 0.9955257270693513
+            "low": 0.9914793576643495,
+            "high": 1,
+            "center": 1
           }
         },
         "outOfScope": {
@@ -10396,27 +10248,8 @@
             "ruleId": "code/duplicate-block",
             "outOfScope": false,
             "injected": 76,
-            "found": 74,
-            "misses": [
-              {
-                "project": "zod",
-                "file": "packages/zod/src/v4/mini/schemas.ts",
-                "line": 2052,
-                "marker": "__unshitRecallDup_16",
-                "kind": "duplicate-block",
-                "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                "sourceFile": "scripts/triage-signal.ts"
-              },
-              {
-                "project": "zod",
-                "file": "packages/zod/src/v4/classic/schemas.ts",
-                "line": 2941,
-                "marker": "__unshitRecallDup_19",
-                "kind": "duplicate-block",
-                "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-                "sourceFile": "packages/zod/src/v4/classic/checks.ts"
-              }
-            ],
+            "found": 76,
+            "misses": [],
             "projects": [
               {
                 "project": "hono",
@@ -10426,7 +10259,7 @@
               {
                 "project": "zod",
                 "injected": 20,
-                "found": 18
+                "found": 20
               },
               {
                 "project": "execa",
@@ -10439,11 +10272,11 @@
                 "found": 16
               }
             ],
-            "recall": 0.9736842105263158,
+            "recall": 1,
             "wilson95": {
-              "low": 0.9090337890134194,
-              "high": 0.9927533409248718,
-              "center": 0.9736842105263158
+              "low": 0.9518864149348628,
+              "high": 1,
+              "center": 1
             }
           },
           {
@@ -10826,14 +10659,14 @@
           "name": "hono",
           "fileCount": 224,
           "injected": 120,
-          "found": 118,
-          "recall": 0.9833333333333333,
+          "found": 120,
+          "recall": 1,
           "wilson95": {
-            "low": 0.941264037027841,
-            "high": 0.9954174354340789,
-            "center": 0.9833333333333333
+            "low": 0.9689808335812966,
+            "high": 1,
+            "center": 1
           },
-          "misses": 2,
+          "misses": 0,
           "outOfScope": {
             "injected": 5,
             "found": 0,
@@ -10849,14 +10682,14 @@
           "name": "zod",
           "fileCount": 249,
           "injected": 120,
-          "found": 119,
-          "recall": 0.9916666666666667,
+          "found": 120,
+          "recall": 1,
           "wilson95": {
-            "low": 0.9543037087549505,
-            "high": 0.998527444266658,
-            "center": 0.9916666666666667
+            "low": 0.9689808335812966,
+            "high": 1,
+            "center": 1
           },
-          "misses": 1,
+          "misses": 0,
           "outOfScope": {
             "injected": 5,
             "found": 0,
@@ -10915,15 +10748,15 @@
           }
         }
       ],
-      "tokenizerBlind": 7,
+      "tokenizerBlind": 0,
       "pooled": {
         "injected": 447,
-        "found": 444,
-        "recall": 0.9932885906040269,
+        "found": 447,
+        "recall": 1,
         "wilson95": {
-          "low": 0.9804559663908022,
-          "high": 0.9977149435196632,
-          "center": 0.9932885906040269
+          "low": 0.9914793576643495,
+          "high": 1,
+          "center": 1
         }
       },
       "outOfScope": {
@@ -10941,46 +10774,18 @@
           "ruleId": "code/duplicate-block",
           "outOfScope": false,
           "injected": 76,
-          "found": 73,
-          "misses": [
-            {
-              "project": "hono",
-              "file": "src/types.ts",
-              "line": 2783,
-              "marker": "__unshitRecallDup_10",
-              "kind": "duplicate-block",
-              "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-              "sourceFile": "src/jsx/dom/components.ts"
-            },
-            {
-              "project": "hono",
-              "file": "src/client/types.ts",
-              "line": 394,
-              "marker": "__unshitRecallDup_14",
-              "kind": "duplicate-block",
-              "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-              "sourceFile": "src/utils/stream.ts"
-            },
-            {
-              "project": "zod",
-              "file": "packages/zod/src/v4/mini/schemas.ts",
-              "line": 2053,
-              "marker": "__unshitRecallDup_8",
-              "kind": "duplicate-block",
-              "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-              "sourceFile": "packages/zod/src/v4/core/memoizer.ts"
-            }
-          ],
+          "found": 76,
+          "misses": [],
           "projects": [
             {
               "project": "hono",
               "injected": 20,
-              "found": 18
+              "found": 20
             },
             {
               "project": "zod",
               "injected": 20,
-              "found": 19
+              "found": 20
             },
             {
               "project": "execa",
@@ -10993,11 +10798,11 @@
               "found": 16
             }
           ],
-          "recall": 0.9605263157894737,
+          "recall": 1,
           "wilson95": {
-            "low": 0.8902521225345447,
-            "high": 0.9864853649054605,
-            "center": 0.9605263157894737
+            "low": 0.9518864149348628,
+            "high": 1,
+            "center": 1
           }
         },
         {
@@ -11400,14 +11205,14 @@
           "name": "zod",
           "fileCount": 249,
           "injected": 120,
-          "found": 118,
-          "recall": 0.9833333333333333,
+          "found": 120,
+          "recall": 1,
           "wilson95": {
-            "low": 0.941264037027841,
-            "high": 0.9954174354340789,
-            "center": 0.9833333333333333
+            "low": 0.9689808335812966,
+            "high": 1,
+            "center": 1
           },
-          "misses": 2,
+          "misses": 0,
           "outOfScope": {
             "injected": 5,
             "found": 0,
@@ -11466,15 +11271,15 @@
           }
         }
       ],
-      "tokenizerBlind": 2,
+      "tokenizerBlind": 0,
       "pooled": {
         "injected": 447,
-        "found": 445,
-        "recall": 0.9955257270693513,
+        "found": 447,
+        "recall": 1,
         "wilson95": {
-          "low": 0.9838349249428474,
-          "high": 0.9987721342189128,
-          "center": 0.9955257270693513
+          "low": 0.9914793576643495,
+          "high": 1,
+          "center": 1
         }
       },
       "outOfScope": {
@@ -11492,27 +11297,8 @@
           "ruleId": "code/duplicate-block",
           "outOfScope": false,
           "injected": 76,
-          "found": 74,
-          "misses": [
-            {
-              "project": "zod",
-              "file": "packages/zod/src/v4/mini/schemas.ts",
-              "line": 2052,
-              "marker": "__unshitRecallDup_16",
-              "kind": "duplicate-block",
-              "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-              "sourceFile": "scripts/triage-signal.ts"
-            },
-            {
-              "project": "zod",
-              "file": "packages/zod/src/v4/classic/schemas.ts",
-              "line": 2941,
-              "marker": "__unshitRecallDup_19",
-              "kind": "duplicate-block",
-              "reason": "detector bug: clone tokenizer stops before this line (template literal type earlier in file)",
-              "sourceFile": "packages/zod/src/v4/classic/checks.ts"
-            }
-          ],
+          "found": 76,
+          "misses": [],
           "projects": [
             {
               "project": "hono",
@@ -11522,7 +11308,7 @@
             {
               "project": "zod",
               "injected": 20,
-              "found": 18
+              "found": 20
             },
             {
               "project": "execa",
@@ -11535,11 +11321,11 @@
               "found": 16
             }
           ],
-          "recall": 0.9736842105263158,
+          "recall": 1,
           "wilson95": {
-            "low": 0.9090337890134194,
-            "high": 0.9927533409248718,
-            "center": 0.9736842105263158
+            "low": 0.9518864149348628,
+            "high": 1,
+            "center": 1
           }
         },
         {
@@ -11915,7 +11701,5 @@
     "target": 0.9,
     "met": true
   },
-  "detectorBugs": [
-    "Clone tokenizer (`src/detectors/clones-tokenize.ts`) truncates files that contain a template literal type. `TemplateLiteralType` nodes are not in the skip ranges, so the raw `ts.createScanner` mis-scans the `}` that closes `${...}` and swallows the rest of the file. Reproducer: hono `src/jsx/intrinsic-elements.ts` (928 lines) emits no tokens after line 705 (`image/${string}`); hono `src/types.ts` (2783 lines) stops at line 2733 (`${infer R}?`). Effect: `code/duplicate-block` cannot see clones below that line. Other rules are unaffected (an appended `any` and `setTimeout` at lines 926/927 are both reported). Not fixed in this round."
-  ]
+  "detectorBugs": []
 }

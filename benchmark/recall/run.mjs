@@ -291,9 +291,7 @@ const report = {
     target: TARGET,
     met: runs[String(HOLDOUT_SEED)]?.summary?.met ?? currentSummary.met,
   },
-  detectorBugs: [
-    'Clone tokenizer (`src/detectors/clones-tokenize.ts`) truncates files that contain a template literal type. `TemplateLiteralType` nodes are not in the skip ranges, so the raw `ts.createScanner` mis-scans the `}` that closes `${...}` and swallows the rest of the file. Reproducer: hono `src/jsx/intrinsic-elements.ts` (928 lines) emits no tokens after line 705 (`image/${string}`); hono `src/types.ts` (2783 lines) stops at line 2733 (`${infer R}?`). Effect: `code/duplicate-block` cannot see clones below that line. Other rules are unaffected (an appended `any` and `setTimeout` at lines 926/927 are both reported). Not fixed in this round.',
-  ],
+  detectorBugs: [],
 };
 
 mkdirSync(dirname(outJson), { recursive: true });
