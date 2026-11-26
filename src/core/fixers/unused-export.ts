@@ -2,6 +2,7 @@ import ts from 'typescript';
 import type { FileEntry, Finding, Patch, TextEdit } from '../../contracts.js';
 import type { FixSkip } from './skip.js';
 import { skipCollector } from './skip.js';
+import { hasNoUnusedLocals } from './no-unused-locals.js';
 
 const RULES = new Set(['ts/unused-export', 'ts/unused-type-export']);
 
@@ -190,11 +191,49 @@ function collectCandidates(
   return candidates;
 }
 
+function isWriteOnlyReference(node: ts.Identifier): boolean {
+  const p = node.parent;
+  if (ts.isBinaryExpression(p) && p.left === node && p.operatorToken.kind === ts.SyntaxKind.EqualsToken) return true;
+  if (ts.isForOfStatement(p) && p.initializer === node) return true;
+  if (ts.isForInStatement(p) && p.initializer === node) return true;
+  return false;
+}
+
+function hasLocalReadOutsideStatement(sf: ts.SourceFile, stmt: ts.Statement, name: string): boolean {
+  let read = false;
+  const visit = (node: ts.Node): void => {
+    if (read || node === stmt) return;
+    if (ts.isIdentifier(node) && node.text === name && !isWriteOnlyReference(node)) {
+      read = true;
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sf);
+  return read;
+}
+
+function signatureBlocker(
+  declarations: Declaration[],
+  removable: Map<ts.Statement, Candidate>,
+  stmt: ts.Statement,
+  name: string,
+): string | undefined {
+  for (const other of declarations) {
+    if (!other.hasExport || other.stmt === stmt || other.isExportClause) continue;
+    if (removable.has(other.stmt)) continue;
+    if (mentionsInExportedSignature(other.stmt, name)) return displayName(declarations, other.stmt);
+  }
+  return undefined;
+}
+
 /**
  * Fixed point: a declaration skipped below stays exported, so it may in turn
  * protect declarations that reference it from being un-exported.
  */
 function pruneProtectedCandidates(
+  file: FileEntry,
+  sf: ts.SourceFile,
   declarations: Declaration[],
   candidates: Map<ts.Statement, Candidate>,
   skip: (finding: Finding, reason: string) => void,
@@ -204,23 +243,18 @@ function pruneProtectedCandidates(
   while (changed) {
     changed = false;
     for (const [stmt, candidate] of [...removable]) {
-      let blocker: string | undefined;
-      for (const other of declarations) {
-        if (!other.hasExport || other.stmt === stmt || other.isExportClause) continue;
-        if (removable.has(other.stmt)) continue;
-        if (mentionsInExportedSignature(other.stmt, candidate.decl.name)) {
-          blocker = displayName(declarations, other.stmt);
-          break;
-        }
-      }
-      if (blocker) {
+      const name = candidate.decl.name;
+      if (!hasLocalReadOutsideStatement(sf, stmt, name) && hasNoUnusedLocals(file.absPath)) {
         removable.delete(stmt);
-        skip(
-          candidate.finding,
-          `could break declaration emit: \`${candidate.decl.name}\` is referenced by the exported signature of \`${blocker}\` (kept conservatively)`,
-        );
+        skip(candidate.finding, `removing export would leave \`${name}\` unused locally (noUnusedLocals)`);
         changed = true;
+        continue;
       }
+      const blocker = signatureBlocker(declarations, removable, stmt, name);
+      if (!blocker) continue;
+      removable.delete(stmt);
+      skip(candidate.finding, `could break declaration emit: \`${name}\` is referenced by the exported signature of \`${blocker}\` (kept conservatively)`);
+      changed = true;
     }
   }
   return removable;
@@ -249,7 +283,7 @@ export function planUnusedExportFixes(file: FileEntry, findings: Finding[]): Unu
 
   const declarations = declarationsOf(sf);
   const candidates = collectCandidates(file, sf, findings, declarations, skip);
-  const removable = pruneProtectedCandidates(declarations, candidates, skip);
+  const removable = pruneProtectedCandidates(file, sf, declarations, candidates, skip);
   const patches: Patch[] = [...removable.values()]
     .sort((a, b) => a.edit.startOffset - b.edit.startOffset)
     .map(({ finding, decl, edit }) => ({
