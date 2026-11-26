@@ -134,7 +134,7 @@ npx unshit fix . --apply --ai --runner opencode --model opencode/big-pickle
 | `ts/no-double-cast` | structural | `warn` | `ai` | `as unknown as T` type-system bypasses |
 | `i18n/no-inline-ternary` | structural | `error` | `ai` | Inline `isAr` / `language === 'ar'` ternaries outside dictionaries |
 | `react/god-file` | heuristic | `warn` | `ai` | Modules exceeding `godFileMaxLines` (350) or `godFileMaxHooks` (15) |
-| `slop/magic-timer` | structural | `info` | `ai` | Raw numeric delays in `setTimeout` / `window.setTimeout` / `setInterval` |
+| `slop/magic-timer` | structural | `info` | `safe` / `ai` | Raw numeric delays in `setTimeout` / `window.setTimeout` / `setInterval` (deterministic extraction for plain decimal literals) |
 | `slop/redundant-catch` | structural | `warn` | `ai` | Empty `catch {}` blocks or `catch (e) { throw e; }` |
 | `code/duplicate-block` | structural | `info` | `ai` | Copy-pasted token blocks across files (`cloneMinTokens`: 80) |
 | `code/high-complexity` | structural | `warn` | `ai` | Functions/methods/arrows with cognitive complexity above `complexityMax` (25); skips `.d.ts` and test files |

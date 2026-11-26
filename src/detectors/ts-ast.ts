@@ -224,7 +224,7 @@ export const magicTimerDetector: Detector = {
                 category: this.category,
                 tier: this.tier,
                 severity: this.severity,
-                fixability: 'ai',
+                fixability: 'safe',
                 confidence: 0.85,
                 file: file.relPath,
                 span: spanOf(sf, delayArg),
