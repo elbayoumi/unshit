@@ -14,10 +14,10 @@ Charter target: full scan < 3 s for 1000 files and < 1.5 s for 200 files. This r
 
 | Target | no-cache before (ms) | no-cache after (ms) | Δ | cached before (ms) | cached after (ms) | Δ |
 |---|---:|---:|---:|---:|---:|---:|
-| auctions-platform-backend | 144.7 | 121.8 | −15.8% | 142.4 | 118.9 | −16.5% |
-| auctions-platform-frontend | 195.4 | 187.0 | −4.3% | 177.5 | 173.4 | −2.3% |
-| bidshop-frontend | 216.5 | 211.6 | −2.3% | 195.0 | 196.3 | +0.7% |
-| rveta-site | 214.5 | 205.6 | −4.2% | 197.3 | 181.4 | −8.1% |
+| private-app-1 | 144.7 | 121.8 | −15.8% | 142.4 | 118.9 | −16.5% |
+| private-app-2 | 195.4 | 187.0 | −4.3% | 177.5 | 173.4 | −2.3% |
+| private-app-3 | 216.5 | 211.6 | −2.3% | 195.0 | 196.3 | +0.7% |
+| private-app-4 | 214.5 | 205.6 | −4.2% | 197.3 | 181.4 | −8.1% |
 | this repo (125 files) | 477.7 | 436.5 | −8.6% | 375.8 | 351.9 | −6.4% |
 
 Cached scans improve less because per-file cacheable detectors are skipped entirely; the remaining cross-file work (deps, unused-file, entry points) is what the shared memoization speeds up. Small corpora are dominated by process startup, so percentage gains there are noisy; the repo is the most reliable signal.
@@ -29,10 +29,10 @@ Baseline build:
 ```text
 Scan wall time — median of 5 runs, warm FS, Node v26.7.0
 Target                             no-cache ms    cached ms    speedup
-/Volumes/data/projects/auctions-platform-backend 146.4          145.6        1.01x
-/Volumes/data/projects/auctions-platform-frontend 194.7          176.9        1.10x
-/Volumes/data/projects/bidshop-frontend          195.9          180.7        1.08x
-/Volumes/data/projects/rveta-site                202.9          181.9        1.12x
+private-app-1 146.4          145.6        1.01x
+private-app-2 194.7          176.9        1.10x
+private-app-3          195.9          180.7        1.08x
+private-app-4                202.9          181.9        1.12x
 /private/tmp/unshit-r10/copies/unshit-self       403.1          367.2        1.10x
 ```
 
@@ -41,10 +41,10 @@ Optimized build, same invocation:
 ```text
 Scan wall time — median of 5 runs, warm FS, Node v26.7.0
 Target                             no-cache ms    cached ms    speedup
-/Volumes/data/projects/auctions-platform-backend 123.2          122.0        1.01x
-/Volumes/data/projects/auctions-platform-frontend 190.0          173.8        1.09x
-/Volumes/data/projects/bidshop-frontend          217.7          214.4        1.02x
-/Volumes/data/projects/rveta-site                237.1          222.9        1.06x
+private-app-1 123.2          122.0        1.01x
+private-app-2 190.0          173.8        1.09x
+private-app-3          217.7          214.4        1.02x
+private-app-4                237.1          222.9        1.06x
 /Volumes/data/projects/unshit-wt/r10-perf        408.6          391.1        1.04x
 ```
 
@@ -54,7 +54,7 @@ These two runs disagree on the small corpora (fresh-copy noise); the interleaved
 
 Before (649 samples): `typescript.js` 39.1% (mostly `walker.ts` AST creation — not editable this round), `clones.js` 13.4% with `addTokenWindows` alone at 12.0% (**forbidden file**), `ts-ast.js` 9.6% (five separate walks), `deps-shared.js` 3.4%, `unused-file.js` 3.2%, `import-graph/ts.js` 3.1%, `clones-tokenize.js` 2.8% (**forbidden**), native `readdir` 4.6%.
 
-After (516 samples): `addTokenWindows` 11.6% remains #1; `deps-shared.js` 4.8%; `import-graph/ts.js` 4.5%; `ts-ast.js` 2.5% (down from 9.6%); native `readdir` 1.7% (down from 4.6%). On the slowest corpus (rveta-site) `ts-ast.js` walks occupied ~35% before.
+After (516 samples): `addTokenWindows` 11.6% remains #1; `deps-shared.js` 4.8%; `import-graph/ts.js` 4.5%; `ts-ast.js` 2.5% (down from 9.6%); native `readdir` 1.7% (down from 4.6%). On the slowest corpus (private-app-4) `ts-ast.js` walks occupied ~35% before.
 
 ### Hotspots fixed (editable files)
 
