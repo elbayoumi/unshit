@@ -1,0 +1,8 @@
+{
+  "description": "Nine modules just under the line ceiling; the rule is per file, not cumulative.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": []
+}

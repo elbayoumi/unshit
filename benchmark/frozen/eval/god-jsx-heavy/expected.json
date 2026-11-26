@@ -1,0 +1,15 @@
+{
+  "description": "Frozen eval case for react/god-file: god jsx heavy.",
+  "groundTruth": "A long JSX composition still counts as an oversized module.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/layout.tsx",
+      "symbol": null,
+      "reason": "A long JSX composition still counts as an oversized module."
+    }
+  ]
+}

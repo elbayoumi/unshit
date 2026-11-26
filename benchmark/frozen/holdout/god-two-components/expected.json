@@ -1,0 +1,21 @@
+{
+  "description": "Frozen holdout case for react/god-file: god two components.",
+  "groundTruth": "First uses five hooks, one above the limit. Second uses six hooks and is also oversized by hook density.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/first.tsx",
+      "symbol": null,
+      "reason": "First uses five hooks, one above the limit."
+    },
+    {
+      "ruleId": "react/god-file",
+      "file": "src/second.tsx",
+      "symbol": null,
+      "reason": "Second uses six hooks and is also oversized by hook density."
+    }
+  ]
+}

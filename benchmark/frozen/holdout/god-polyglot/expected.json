@@ -1,0 +1,15 @@
+{
+  "description": "Frozen holdout case for react/god-file: god polyglot.",
+  "groundTruth": "Non-TS modules get a 2x line allowance (60 lines here); this 61-line Python report just exceeds it.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/report.py",
+      "symbol": null,
+      "reason": "Non-TS modules get a 2x line allowance (60 lines here); this 61-line Python report just exceeds it."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "description": "A React component is 40 lines long against a 30-line project limit.",
+  "groundTruth": "The file alone exceeds the line limit; the hook count stays within its limit.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/dashboard.tsx",
+      "symbol": null,
+      "reason": "The module runs past the project’s 30-line ceiling even though its logic is simple."
+    }
+  ]
+}

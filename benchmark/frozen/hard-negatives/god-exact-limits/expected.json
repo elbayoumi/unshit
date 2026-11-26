@@ -1,0 +1,8 @@
+{
+  "description": "A component sits exactly on both configured limits (30 lines, 4 hooks).",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": []
+}

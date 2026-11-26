@@ -1,0 +1,21 @@
+{
+  "description": "Frozen eval case for react/god-file: god mixed limits.",
+  "groundTruth": "Five hooks exceed the hook ceiling. The other component crosses the line ceiling instead.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": [
+    {
+      "ruleId": "react/god-file",
+      "file": "src/hooky.tsx",
+      "symbol": null,
+      "reason": "Five hooks exceed the hook ceiling."
+    },
+    {
+      "ruleId": "react/god-file",
+      "file": "src/long.tsx",
+      "symbol": null,
+      "reason": "The other component crosses the line ceiling instead."
+    }
+  ]
+}

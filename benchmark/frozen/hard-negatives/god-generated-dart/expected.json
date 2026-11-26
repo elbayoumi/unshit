@@ -1,0 +1,8 @@
+{
+  "description": "A generated Dart part file is exempt even when very long.",
+  "groundTruth": "None of the modules form a strongly connected import group; the near-miss is deliberately tempting.",
+  "rules": [
+    "react/god-file"
+  ],
+  "expected": []
+}
