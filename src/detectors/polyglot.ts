@@ -149,6 +149,8 @@ function isAllowedRustUnwrap(prefix: string): boolean {
   return /\b(?:lock|read|write)\(\)\s*$/.test(prefix) || /Regex::new\([^)]*\)\s*$/.test(prefix);
 }
 
+const RUST_UNWRAP_CALL = /\.\s*\bunwrap\b\s*\(\s*\)/g;
+
 export const rustNoUnwrapDetector: Detector = {
   id: 'rust/no-unwrap',
   category: 'slop',
@@ -162,8 +164,8 @@ export const rustNoUnwrapDetector: Detector = {
       for (let i = 0; i < maskedLines.length; i++) {
         const line = maskedLines[i] ?? '';
         if (updateRustTestState(state, line)) continue;
-        let pos = 0;
-        while ((pos = line.indexOf('.unwrap()', pos)) !== -1) {
+        for (const match of line.matchAll(RUST_UNWRAP_CALL)) {
+          const pos = match.index ?? 0;
           if (!isAllowedRustUnwrap(line.slice(0, pos))) {
             findings.push({
               ruleId: this.id, category: this.category, tier: this.tier, severity: this.severity,
@@ -173,7 +175,6 @@ export const rustNoUnwrapDetector: Detector = {
               evidence: (file.lines[i] ?? line).trim().slice(0, 100),
             });
           }
-          pos += '.unwrap()'.length;
         }
       }
     }

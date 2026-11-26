@@ -1,6 +1,6 @@
 # Polyglot rule recall and false positives (Rust, Python, Dart, CSS)
 
-Generated: 2026-11-26T19:52:41.647Z
+Generated: 2026-11-26T21:11:43.676Z
 
 ## Method
 
@@ -11,7 +11,7 @@ Generated: 2026-11-26T19:52:41.647Z
 - Hard negatives: 10 near misses per rule per seed, each one a construct the rule must not flag according to its description/exemptions.
 - Three fresh copies per seed (base, positives, negatives) are written to temp dirs and scanned with `node bin/unshit.js scan <dir> --format json --no-cache`. The corpus is never modified.
 - Matching is strict: same `ruleId`, same file, same 1-based line as the injection. Recall = matched positives / injected positives; FP rate = matched hard negatives / hard negatives. Wilson 95% intervals are reported per seed and pooled.
-- No detector was tuned to this benchmark. Known misses and the known false positive are kept in the injectors and reported below.
+- No detector was tuned to this benchmark. The injectors that exposed the three detector bugs below are kept unchanged after the fixes, so they now guard against regressions.
 
 ## Clean-base findings
 
@@ -31,33 +31,33 @@ No findings on the clean base in any seed: the generated idiomatic code does not
 | Rule | Injected | Found | Recall | Wilson 95% | Misses |
 |---|---:|---:|---:|---:|---:|
 | css/design-drift | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
-| css/duplicate-selector | 15 | 14 | 93.3% | [70.2%, 98.8%] | 1 |
+| css/duplicate-selector | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
 | css/no-important | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
 | dart/no-dynamic-or-print | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
 | python/no-bare-except | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
-| rust/no-unwrap | 15 | 14 | 93.3% | [70.2%, 98.8%] | 1 |
+| rust/no-unwrap | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
 
 ### Seed 20261127
 
 | Rule | Injected | Found | Recall | Wilson 95% | Misses |
 |---|---:|---:|---:|---:|---:|
 | css/design-drift | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
-| css/duplicate-selector | 15 | 14 | 93.3% | [70.2%, 98.8%] | 1 |
+| css/duplicate-selector | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
 | css/no-important | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
 | dart/no-dynamic-or-print | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
 | python/no-bare-except | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
-| rust/no-unwrap | 15 | 14 | 93.3% | [70.2%, 98.8%] | 1 |
+| rust/no-unwrap | 15 | 15 | 100.0% | [79.6%, 100.0%] | 0 |
 
 ### Pooled
 
 | Rule | Injected | Found | Recall | Wilson 95% | Misses |
 |---|---:|---:|---:|---:|---:|
 | css/design-drift | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
-| css/duplicate-selector | 30 | 28 | 93.3% | [78.7%, 98.2%] | 2 |
+| css/duplicate-selector | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
 | css/no-important | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
 | dart/no-dynamic-or-print | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
 | python/no-bare-except | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
-| rust/no-unwrap | 30 | 28 | 93.3% | [78.7%, 98.2%] | 2 |
+| rust/no-unwrap | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
 
 ## False-positive rate on hard negatives
 
@@ -65,7 +65,7 @@ No findings on the clean base in any seed: the generated idiomatic code does not
 
 | Rule | Negatives | False positives | FP rate | Wilson 95% |
 |---|---:|---:|---:|---:|
-| css/design-drift | 10 | 1 | 10.0% | [1.8%, 40.4%] |
+| css/design-drift | 10 | 0 | 0.0% | [0.0%, 27.8%] |
 | css/duplicate-selector | 10 | 0 | 0.0% | [0.0%, 27.8%] |
 | css/no-important | 10 | 0 | 0.0% | [0.0%, 27.8%] |
 | dart/no-dynamic-or-print | 10 | 0 | 0.0% | [0.0%, 27.8%] |
@@ -76,7 +76,7 @@ No findings on the clean base in any seed: the generated idiomatic code does not
 
 | Rule | Negatives | False positives | FP rate | Wilson 95% |
 |---|---:|---:|---:|---:|
-| css/design-drift | 10 | 1 | 10.0% | [1.8%, 40.4%] |
+| css/design-drift | 10 | 0 | 0.0% | [0.0%, 27.8%] |
 | css/duplicate-selector | 10 | 0 | 0.0% | [0.0%, 27.8%] |
 | css/no-important | 10 | 0 | 0.0% | [0.0%, 27.8%] |
 | dart/no-dynamic-or-print | 10 | 0 | 0.0% | [0.0%, 27.8%] |
@@ -87,7 +87,7 @@ No findings on the clean base in any seed: the generated idiomatic code does not
 
 | Rule | Negatives | False positives | FP rate | Wilson 95% |
 |---|---:|---:|---:|---:|
-| css/design-drift | 20 | 2 | 10.0% | [2.8%, 30.1%] |
+| css/design-drift | 20 | 0 | 0.0% | [0.0%, 16.1%] |
 | css/duplicate-selector | 20 | 0 | 0.0% | [0.0%, 16.1%] |
 | css/no-important | 20 | 0 | 0.0% | [0.0%, 16.1%] |
 | dart/no-dynamic-or-print | 20 | 0 | 0.0% | [0.0%, 16.1%] |
@@ -96,23 +96,15 @@ No findings on the clean base in any seed: the generated idiomatic code does not
 
 ## Misses (pooled)
 
-| Rule | Seed | File | Line | Variant | Reason |
-|---|---:|---|---:|---|---|
-| css/duplicate-selector | 20261126 | `styles/theme.scss` | 19 | `nested-expansion` | the detector compares raw selector text; it does not expand nested `&:hover` |
-| css/duplicate-selector | 20261127 | `styles/theme.scss` | 22 | `nested-expansion` | the detector compares raw selector text; it does not expand nested `&:hover` |
-| rust/no-unwrap | 20261126 | `src/env.rs` | 15 | `spaced-call` | the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list |
-| rust/no-unwrap | 20261127 | `src/cli.rs` | 15 | `spaced-call` | the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list |
+No misses.
 
 ## False positives (pooled)
 
-| Rule | File | Line | Variant | Finding |
-|---|---|---:|---|---|
-| css/design-drift | `styles/forms.css` | 17 | `rgb-var-channels` | Hardcoded color `rgb(                 / 0.5)`. |
-| css/design-drift | `styles/forms.css` | 17 | `rgb-var-channels` | Hardcoded color `rgb(                 / 0.5)`. |
+No false positives on the hard negatives.
 
 ## Detector bugs found
 
-These are real false negatives/positives reproduced by the injectors. Detector sources were **not** changed in this track.
+These were real false negatives/positives reproduced by the injectors when the benchmark was introduced. All three are fixed (see `CHANGELOG.md`, Unreleased); the reproducers below are kept as history and the matching injections stay in the benchmark.
 
 ### 1. Rust: whitespace before the argument list is not matched (`rust/no-unwrap`)
 
@@ -128,7 +120,9 @@ fn main() {
 }
 ```
 
-Observed: 0 findings. Expected by the rule description: 1 finding.
+Observed before the fix: 0 findings. Expected by the rule description: 1 finding.
+
+Status: fixed — the detector now matches `.unwrap` followed by optional whitespace and `()`.
 
 ### 2. CSS: `rgb()`/`hsl()` channel functions with custom-property channels are false positives (`css/design-drift`)
 
@@ -141,7 +135,9 @@ Minimal reproducer:
 .button { color: rgb(var(--color-rgb) / 0.5); }
 ```
 
-Observed: one `css/design-drift` finding on the declaration line with message ``Hardcoded color `rgb(                 / 0.5)`.`` (the `var()` is masked in the message). There is no hardcoded channel in the declaration.
+Observed before the fix: one `css/design-drift` finding on the declaration line with message ``Hardcoded color `rgb(                 / 0.5)`.`` (the `var()` is masked in the message). There is no hardcoded channel in the declaration.
+
+Status: fixed — `rgb()`/`hsl()` calls are only reported when at least one color channel is a literal; a literal alpha alone does not count.
 
 ### 3. CSS: nested `&:hover` is not expanded when comparing selectors (`css/duplicate-selector`)
 
@@ -156,7 +152,9 @@ Minimal reproducer:
 .card:hover { color: inherit; }
 ```
 
-Observed: 0 findings. Both selectors target the same element state.
+Observed before the fix: 0 findings. Both selectors target the same element state.
+
+Status: fixed — nested selectors are expanded through every ancestor rule (`&` substitution, descendant otherwise) before comparison; BEM suffixes, interpolation and placeholders keep their full scope.
 
 ## Limitations
 

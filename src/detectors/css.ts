@@ -9,10 +9,13 @@ import {
   maskColorExemptFunctions,
   maskCustomPropertyValues,
   maskNestedBlocks,
+  maskUrlFunctions,
   normalizeColor,
   stripCommentsAndStringsPreserveLines,
   walkCssScopes,
 } from './css-parse.js';
+import { maskColorlessColorCalls } from './css-color.js';
+import { expandSelectorChain } from './css-nesting.js';
 
 export const cssNoImportantDetector: Detector = {
   id: 'css/no-important',
@@ -97,7 +100,11 @@ export const cssDesignDriftDetector: Detector = {
         (blockText, blockStart, scopeStack) => {
           if (scopeStack.some((entry) => entry.startsWith('RULE:') && /:root\b/i.test(entry.slice(5)))) return;
 
-          const scannable = maskColorExemptFunctions(maskCustomPropertyValues(maskNestedBlocks(blockText)));
+          const base = maskCustomPropertyValues(maskNestedBlocks(blockText));
+          // `keepVars` retains var() contents so rgb()/rgba()/hsl()/hsla() calls
+          // built only from var()/env()/calc-with-var channels are not hardcoded.
+          const keepVars = maskUrlFunctions(base);
+          const scannable = maskColorlessColorCalls(maskColorExemptFunctions(base), keepVars);
           for (const re of HARDCODED_COLOR_RES) {
             re.lastIndex = 0;
             let match: RegExpExecArray | null;
@@ -150,13 +157,22 @@ export const cssDuplicateSelectorDetector: Detector = {
       walkCssScopes(clean, (header, scopeStack, selectorStart) => {
         const insideKeyframes = scopeStack.some((s) => /^@(-webkit-|-moz-)?keyframes\b/i.test(s));
         if (insideKeyframes) return;
-        const scopeKey = scopeStack.join(' > ');
+        const atRuleScopeKey = scopeStack
+          .filter((s) => !s.startsWith('RULE:'))
+          .join(' > ');
         if (/^(:root|:host(\(.*\))?|html|body|\*)$/i.test(header.trim())) return;
-        // Same class names across unrelated stylesheets are separate modules, not duplicates.
-        const mapKey = `${file.relPath}::${scopeKey}::${header}`;
-        const list = seen.get(mapKey) ?? [];
-        list.push({ file: file.relPath, line: lineAtOffset(offsets, selectorStart), selector: header });
-        seen.set(mapKey, list);
+        const ancestors = scopeStack.filter((s) => s.startsWith('RULE:')).map((s) => s.slice(5));
+        // Expand `&` through the whole ancestor chain; when that is not safe, keep the
+        // raw header keyed by the full scope stack so unrelated nested rules never collide.
+        const expanded = ancestors.length > 0 ? expandSelectorChain(ancestors, header) : [header];
+        const headersToRecord = expanded ?? [`${scopeStack.join(' > ')} > ${header}`];
+        const lineNum = lineAtOffset(offsets, selectorStart);
+        for (const h of headersToRecord) {
+          const mapKey = `${file.relPath}::${atRuleScopeKey}::${h}`;
+          const list = seen.get(mapKey) ?? [];
+          list.push({ file: file.relPath, line: lineNum, selector: header });
+          seen.set(mapKey, list);
+        }
       });
     }
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T19:52:41.647Z",
+  "generatedAt": "2026-11-26T21:11:43.676Z",
   "generator": "benchmark/polyglot/generate.mjs",
   "seedList": [
     20261126,
@@ -99,7 +99,7 @@
       },
       "positives": {
         "injected": 90,
-        "findings": 90,
+        "findings": 92,
         "rules": [
           {
             "ruleId": "css/design-drift",
@@ -208,22 +208,14 @@
           {
             "ruleId": "css/duplicate-selector",
             "injected": 15,
-            "found": 14,
-            "recall": 0.9333333333333333,
+            "found": 15,
+            "recall": 1,
             "wilson95": {
-              "low": 0.7018347012621998,
-              "high": 0.9881331045067315,
-              "center": 0.9333333333333333
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
             },
-            "misses": [
-              {
-                "file": "styles/theme.scss",
-                "line": 19,
-                "variant": "nested-expansion",
-                "marker": ".theme-card:hover",
-                "reason": "the detector compares raw selector text; it does not expand nested `&:hover`"
-              }
-            ],
+            "misses": [],
             "hits": [
               {
                 "file": "styles/cards.css",
@@ -307,6 +299,12 @@
                 "file": "styles/lists.css",
                 "line": 19,
                 "variant": "repeat-top-level",
+                "findingLine": 19
+              },
+              {
+                "file": "styles/theme.scss",
+                "line": 19,
+                "variant": "nested-expansion",
                 "findingLine": 19
               }
             ]
@@ -626,22 +624,14 @@
           {
             "ruleId": "rust/no-unwrap",
             "injected": 15,
-            "found": 14,
-            "recall": 0.9333333333333333,
+            "found": 15,
+            "recall": 1,
             "wilson95": {
-              "low": 0.7018347012621998,
-              "high": 0.9881331045067315,
-              "center": 0.9333333333333333
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
             },
-            "misses": [
-              {
-                "file": "src/env.rs",
-                "line": 15,
-                "variant": "spaced-call",
-                "marker": "inj_14",
-                "reason": "the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list"
-              }
-            ],
+            "misses": [],
             "hits": [
               {
                 "file": "src/auth.rs",
@@ -726,6 +716,12 @@
                 "line": 19,
                 "variant": "id-parse",
                 "findingLine": 19
+              },
+              {
+                "file": "src/env.rs",
+                "line": 15,
+                "variant": "spaced-call",
+                "findingLine": 15
               }
             ]
           }
@@ -733,32 +729,19 @@
       },
       "negatives": {
         "injected": 60,
-        "findings": 3,
+        "findings": 2,
         "rules": [
           {
             "ruleId": "css/design-drift",
             "negatives": 10,
-            "falsePositives": 1,
-            "fpRate": 0.1,
+            "falsePositives": 0,
+            "fpRate": 0,
             "wilson95": {
-              "low": 0.017876213095072868,
-              "high": 0.4041500267952385,
-              "center": 0.1
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
             },
-            "fps": [
-              {
-                "file": "styles/forms.css",
-                "line": 17,
-                "variant": "rgb-var-channels",
-                "marker": "neg_rgb_colors_0",
-                "finding": {
-                  "ruleId": "css/design-drift",
-                  "file": "styles/forms.css",
-                  "line": 17,
-                  "message": "Hardcoded color `rgb(                 / 0.5)`."
-                }
-              }
-            ]
+            "fps": []
           },
           {
             "ruleId": "css/duplicate-selector",
@@ -838,7 +821,7 @@
       },
       "positives": {
         "injected": 90,
-        "findings": 90,
+        "findings": 92,
         "rules": [
           {
             "ruleId": "css/design-drift",
@@ -947,22 +930,14 @@
           {
             "ruleId": "css/duplicate-selector",
             "injected": 15,
-            "found": 14,
-            "recall": 0.9333333333333333,
+            "found": 15,
+            "recall": 1,
             "wilson95": {
-              "low": 0.7018347012621998,
-              "high": 0.9881331045067315,
-              "center": 0.9333333333333333
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
             },
-            "misses": [
-              {
-                "file": "styles/theme.scss",
-                "line": 22,
-                "variant": "nested-expansion",
-                "marker": ".theme-card:hover",
-                "reason": "the detector compares raw selector text; it does not expand nested `&:hover`"
-              }
-            ],
+            "misses": [],
             "hits": [
               {
                 "file": "styles/accessibility.css",
@@ -1047,6 +1022,12 @@
                 "line": 11,
                 "variant": "repeat-top-level",
                 "findingLine": 11
+              },
+              {
+                "file": "styles/theme.scss",
+                "line": 22,
+                "variant": "nested-expansion",
+                "findingLine": 22
               }
             ]
           },
@@ -1365,22 +1346,14 @@
           {
             "ruleId": "rust/no-unwrap",
             "injected": 15,
-            "found": 14,
-            "recall": 0.9333333333333333,
+            "found": 15,
+            "recall": 1,
             "wilson95": {
-              "low": 0.7018347012621998,
-              "high": 0.9881331045067315,
-              "center": 0.9333333333333333
+              "low": 0.7961166989641515,
+              "high": 1,
+              "center": 1
             },
-            "misses": [
-              {
-                "file": "src/cli.rs",
-                "line": 15,
-                "variant": "spaced-call",
-                "marker": "inj_14",
-                "reason": "the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list"
-              }
-            ],
+            "misses": [],
             "hits": [
               {
                 "file": "src/auth.rs",
@@ -1465,6 +1438,12 @@
                 "line": 22,
                 "variant": "id-parse",
                 "findingLine": 22
+              },
+              {
+                "file": "src/cli.rs",
+                "line": 15,
+                "variant": "spaced-call",
+                "findingLine": 15
               }
             ]
           }
@@ -1472,32 +1451,19 @@
       },
       "negatives": {
         "injected": 60,
-        "findings": 3,
+        "findings": 2,
         "rules": [
           {
             "ruleId": "css/design-drift",
             "negatives": 10,
-            "falsePositives": 1,
-            "fpRate": 0.1,
+            "falsePositives": 0,
+            "fpRate": 0,
             "wilson95": {
-              "low": 0.017876213095072868,
-              "high": 0.4041500267952385,
-              "center": 0.1
+              "low": 0,
+              "high": 0.2775327998628892,
+              "center": 0
             },
-            "fps": [
-              {
-                "file": "styles/forms.css",
-                "line": 17,
-                "variant": "rgb-var-channels",
-                "marker": "neg_rgb_colors_0",
-                "finding": {
-                  "ruleId": "css/design-drift",
-                  "file": "styles/forms.css",
-                  "line": 17,
-                  "message": "Hardcoded color `rgb(                 / 0.5)`."
-                }
-              }
-            ]
+            "fps": []
           },
           {
             "ruleId": "css/duplicate-selector",
@@ -1762,23 +1728,8 @@
       {
         "ruleId": "css/duplicate-selector",
         "injected": 30,
-        "found": 28,
-        "misses": [
-          {
-            "file": "styles/theme.scss",
-            "line": 19,
-            "variant": "nested-expansion",
-            "marker": ".theme-card:hover",
-            "reason": "the detector compares raw selector text; it does not expand nested `&:hover`"
-          },
-          {
-            "file": "styles/theme.scss",
-            "line": 22,
-            "variant": "nested-expansion",
-            "marker": ".theme-card:hover",
-            "reason": "the detector compares raw selector text; it does not expand nested `&:hover`"
-          }
-        ],
+        "found": 30,
+        "misses": [],
         "hits": [
           {
             "file": "styles/cards.css",
@@ -1865,6 +1816,12 @@
             "findingLine": 19
           },
           {
+            "file": "styles/theme.scss",
+            "line": 19,
+            "variant": "nested-expansion",
+            "findingLine": 19
+          },
+          {
             "file": "styles/accessibility.css",
             "line": 20,
             "variant": "repeat-top-level",
@@ -1947,13 +1904,19 @@
             "line": 11,
             "variant": "repeat-top-level",
             "findingLine": 11
+          },
+          {
+            "file": "styles/theme.scss",
+            "line": 22,
+            "variant": "nested-expansion",
+            "findingLine": 22
           }
         ],
-        "recall": 0.9333333333333333,
+        "recall": 1,
         "wilson95": {
-          "low": 0.7867654163738308,
-          "high": 0.9815229762087295,
-          "center": 0.9333333333333333
+          "low": 0.8864866068260312,
+          "high": 0.9999999999999999,
+          "center": 1
         }
       },
       {
@@ -2541,23 +2504,8 @@
       {
         "ruleId": "rust/no-unwrap",
         "injected": 30,
-        "found": 28,
-        "misses": [
-          {
-            "file": "src/env.rs",
-            "line": 15,
-            "variant": "spaced-call",
-            "marker": "inj_14",
-            "reason": "the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list"
-          },
-          {
-            "file": "src/cli.rs",
-            "line": 15,
-            "variant": "spaced-call",
-            "marker": "inj_14",
-            "reason": "the detector matches the literal `.unwrap()`; Rust allows whitespace before the argument list"
-          }
-        ],
+        "found": 30,
+        "misses": [],
         "hits": [
           {
             "file": "src/auth.rs",
@@ -2644,6 +2592,12 @@
             "findingLine": 19
           },
           {
+            "file": "src/env.rs",
+            "line": 15,
+            "variant": "spaced-call",
+            "findingLine": 15
+          },
+          {
             "file": "src/auth.rs",
             "line": 14,
             "variant": "file-open",
@@ -2726,13 +2680,19 @@
             "line": 22,
             "variant": "id-parse",
             "findingLine": 22
+          },
+          {
+            "file": "src/cli.rs",
+            "line": 15,
+            "variant": "spaced-call",
+            "findingLine": 15
           }
         ],
-        "recall": 0.9333333333333333,
+        "recall": 1,
         "wilson95": {
-          "low": 0.7867654163738308,
-          "high": 0.9815229762087295,
-          "center": 0.9333333333333333
+          "low": 0.8864866068260312,
+          "high": 0.9999999999999999,
+          "center": 1
         }
       }
     ],
@@ -2740,38 +2700,13 @@
       {
         "ruleId": "css/design-drift",
         "negatives": 20,
-        "falsePositives": 2,
-        "fps": [
-          {
-            "file": "styles/forms.css",
-            "line": 17,
-            "variant": "rgb-var-channels",
-            "marker": "neg_rgb_colors_0",
-            "finding": {
-              "ruleId": "css/design-drift",
-              "file": "styles/forms.css",
-              "line": 17,
-              "message": "Hardcoded color `rgb(                 / 0.5)`."
-            }
-          },
-          {
-            "file": "styles/forms.css",
-            "line": 17,
-            "variant": "rgb-var-channels",
-            "marker": "neg_rgb_colors_0",
-            "finding": {
-              "ruleId": "css/design-drift",
-              "file": "styles/forms.css",
-              "line": 17,
-              "message": "Hardcoded color `rgb(                 / 0.5)`."
-            }
-          }
-        ],
-        "fpRate": 0.1,
+        "falsePositives": 0,
+        "fps": [],
+        "fpRate": 0,
         "wilson95": {
-          "low": 0.027866481213768224,
-          "high": 0.3010336452284873,
-          "center": 0.1
+          "low": 0,
+          "high": 0.16112515805281938,
+          "center": 0
         }
       },
       {

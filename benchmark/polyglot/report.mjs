@@ -22,7 +22,7 @@ export function buildMarkdown(report) {
   md.push(`- Hard negatives: ${report.negPerRule} near misses per rule per seed, each one a construct the rule must not flag according to its description/exemptions.`);
   md.push('- Three fresh copies per seed (base, positives, negatives) are written to temp dirs and scanned with `node bin/unshit.js scan <dir> --format json --no-cache`. The corpus is never modified.');
   md.push('- Matching is strict: same `ruleId`, same file, same 1-based line as the injection. Recall = matched positives / injected positives; FP rate = matched hard negatives / hard negatives. Wilson 95% intervals are reported per seed and pooled.');
-  md.push('- No detector was tuned to this benchmark. Known misses and the known false positive are kept in the injectors and reported below.');
+  md.push('- No detector was tuned to this benchmark. The injectors that exposed the three detector bugs below are kept unchanged after the fixes, so they now guard against regressions.');
   md.push('');
   md.push('## Clean-base findings');
   md.push('');
@@ -108,7 +108,7 @@ export function buildMarkdown(report) {
 
   md.push('## Detector bugs found');
   md.push('');
-  md.push('These are real false negatives/positives reproduced by the injectors. Detector sources were **not** changed in this track.');
+  md.push('These were real false negatives/positives reproduced by the injectors when the benchmark was introduced. All three are fixed (see `CHANGELOG.md`, Unreleased); the reproducers below are kept as history and the matching injections stay in the benchmark.');
   md.push('');
   md.push('### 1. Rust: whitespace before the argument list is not matched (`rust/no-unwrap`)');
   md.push('');
@@ -124,7 +124,9 @@ export function buildMarkdown(report) {
   md.push('}');
   md.push('```');
   md.push('');
-  md.push('Observed: 0 findings. Expected by the rule description: 1 finding.');
+  md.push('Observed before the fix: 0 findings. Expected by the rule description: 1 finding.');
+  md.push('');
+  md.push('Status: fixed — the detector now matches `.unwrap` followed by optional whitespace and `()`.');
   md.push('');
   md.push('### 2. CSS: `rgb()`/`hsl()` channel functions with custom-property channels are false positives (`css/design-drift`)');
   md.push('');
@@ -137,7 +139,9 @@ export function buildMarkdown(report) {
   md.push('.button { color: rgb(var(--color-rgb) / 0.5); }');
   md.push('```');
   md.push('');
-  md.push('Observed: one `css/design-drift` finding on the declaration line with message ``Hardcoded color `rgb(                 / 0.5)`.`` (the `var()` is masked in the message). There is no hardcoded channel in the declaration.');
+  md.push('Observed before the fix: one `css/design-drift` finding on the declaration line with message ``Hardcoded color `rgb(                 / 0.5)`.`` (the `var()` is masked in the message). There is no hardcoded channel in the declaration.');
+  md.push('');
+  md.push('Status: fixed — `rgb()`/`hsl()` calls are only reported when at least one color channel is a literal; a literal alpha alone does not count.');
   md.push('');
   md.push('### 3. CSS: nested `&:hover` is not expanded when comparing selectors (`css/duplicate-selector`)');
   md.push('');
@@ -152,7 +156,9 @@ export function buildMarkdown(report) {
   md.push('.card:hover { color: inherit; }');
   md.push('```');
   md.push('');
-  md.push('Observed: 0 findings. Both selectors target the same element state.');
+  md.push('Observed before the fix: 0 findings. Both selectors target the same element state.');
+  md.push('');
+  md.push('Status: fixed — nested selectors are expanded through every ancestor rule (`&` substitution, descendant otherwise) before comparison; BEM suffixes, interpolation and placeholders keep their full scope.');
   md.push('');
 
   md.push('## Limitations');

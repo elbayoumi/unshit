@@ -87,6 +87,24 @@ export function isExemptImportantContext(scopeStack: string[]): boolean {
   return false;
 }
 
+function extractHeader(clean: string, headerStart: number, i: number, scopeStack: string[]): { header: string; selectorStart: number } {
+  let rawSlice = clean.slice(headerStart, i);
+  if (scopeStack.some((s) => s.startsWith('RULE:'))) {
+    const lastSemi = rawSlice.lastIndexOf(';');
+    if (lastSemi >= 0) {
+      const afterSemi = rawSlice.slice(lastSemi + 1);
+      const leadingWs = afterSemi.search(/\S/);
+      const header = afterSemi.trim().replace(/\s+/g, ' ');
+      const selectorStart = leadingWs === -1 ? headerStart : headerStart + (lastSemi + 1) + leadingWs;
+      return { header, selectorStart };
+    }
+  }
+  const leadingWs = rawSlice.search(/\S/);
+  const header = rawSlice.trim().replace(/\s+/g, ' ');
+  const selectorStart = leadingWs === -1 ? headerStart : headerStart + leadingWs;
+  return { header, selectorStart };
+}
+
 export function walkCssScopes(
   clean: string,
   onOpenRule: (selector: string, scopeStack: string[], selectorStartOffset: number) => void,
@@ -98,10 +116,7 @@ export function walkCssScopes(
   for (let i = 0; i < clean.length; i++) {
     const ch = clean[i];
     if (ch === '{') {
-      const rawSlice = clean.slice(headerStart, i);
-      const leadingWs = rawSlice.search(/\S/);
-      const selectorStart = leadingWs === -1 ? headerStart : headerStart + leadingWs;
-      const header = rawSlice.trim().replace(/\s+/g, ' ');
+      const { header, selectorStart } = extractHeader(clean, headerStart, i, scopeStack);
       if (header.startsWith('@')) {
         scopeStack.push(header);
       } else {
@@ -126,7 +141,8 @@ export const HARDCODED_COLOR_RES: RegExp[] = [
   /\bhsla?\([^)]+\)/gi,
 ];
 
-function blankRange(chars: string[], start: number, end: number): void {
+
+export function blankRange(chars: string[], start: number, end: number): void {
   for (let i = start; i < end; i++) {
     if (chars[i] !== '\n') chars[i] = ' ';
   }
@@ -150,7 +166,7 @@ function readFunctionName(text: string, parenIndex: number): string {
   return text.slice(nameStart + 1, parenIndex);
 }
 
-function findParenEnd(text: string, start: number): number {
+export function findParenEnd(text: string, start: number): number {
   let depth = 0;
   for (let i = start; i < text.length; i++) {
     if (text[i] === '(') depth++;
@@ -163,11 +179,19 @@ function findParenEnd(text: string, start: number): number {
 }
 
 export function maskColorExemptFunctions(text: string): string {
+  return blankFunctionCalls(text, (name) => /^(url|var)$/i.test(name));
+}
+
+export function maskUrlFunctions(text: string): string {
+  return blankFunctionCalls(text, (name) => /^url$/i.test(name));
+}
+
+function blankFunctionCalls(text: string, shouldBlank: (name: string) => boolean): string {
   const chars = text.split('');
   for (let i = 0; i < text.length; i++) {
     if (text[i] !== '(' || i === 0) continue;
     const name = readFunctionName(text, i);
-    if (!/^(url|var)$/i.test(name)) continue;
+    if (!shouldBlank(name)) continue;
     const end = findParenEnd(text, i);
     if (end < 0) continue;
     blankRange(chars, i - name.length, end + 1);
