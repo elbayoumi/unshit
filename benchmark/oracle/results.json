@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-28T02:14:27.364Z",
+  "generatedAt": "2026-11-28T02:38:08.957Z",
   "corpora": [
     "hono",
     "zod",
@@ -28,7 +28,7 @@
         "grade": "B",
         "totalFiles": 427,
         "totalLines": 96257,
-        "totalFindings": 642,
+        "totalFindings": 640,
         "byCategory": {
           "css": 0,
           "types": 493,
@@ -36,21 +36,21 @@
           "architecture": 56,
           "slop": 10,
           "duplication": 23,
-          "dead-code": 60
+          "dead-code": 58
         },
         "bySeverity": {
           "error": 0,
-          "warn": 565,
+          "warn": 563,
           "info": 77
         }
       },
-      "totalFindings": 642,
-      "trackedFindings": 60,
+      "totalFindings": 640,
+      "trackedFindings": 58,
       "byRule": {
         "ts/unused-export": 18,
         "ts/unused-type-export": 36,
-        "ts/unused-file": 3,
-        "deps/unused-dependency": 3
+        "deps/unused-dependency": 3,
+        "ts/unused-file": 1
       }
     },
     {
@@ -176,38 +176,26 @@
     }
   ],
   "pooled": {
-    "confirmed": 206,
-    "contradicted": 7,
-    "unsure": 54,
-    "total": 267,
-    "precisionLower": 0.7715355805243446,
-    "precisionUpper": 0.9737827715355806,
-    "precisionConfirmedOnly": 0.9671361502347418,
+    "confirmed": 205,
+    "contradicted": 1,
+    "unsure": 59,
+    "total": 265,
+    "precisionLower": 0.7735849056603774,
+    "precisionUpper": 0.9962264150943396,
+    "precisionConfirmedOnly": 0.9951456310679612,
     "wilson95": {
-      "lowerBoundLow": 0.7175352774595357,
-      "upperBoundHigh": 0.9872435367864614,
-      "confirmedOnlyLow": 0.9337298994623284,
-      "confirmedOnlyHigh": 0.9839912830194442
+      "lowerBoundLow": 0.7194959099451111,
+      "upperBoundHigh": 0.9993335587332123,
+      "confirmedOnlyLow": 0.9730199431901183,
+      "confirmedOnlyHigh": 0.9991425701019494
     }
   },
   "movement": {
     "moved": {
-      "UNSURE_TO_CONFIRMED": [
-        {
-          "corpus": "hono",
-          "ruleId": "ts/unused-type-export",
-          "file": "src/context.ts",
-          "line": 78,
-          "message": "Exported type `Renderer` is used only locally; drop the `export` keyword.",
-          "evidence": [],
-          "symbol": "Renderer",
-          "verdict": "CONFIRMED",
-          "reason": "Name `Renderer` appears nowhere outside its declaration",
-          "from": "UNSURE",
-          "to": "CONFIRMED"
-        }
-      ],
-      "UNSURE_TO_CONTRADICTED": [
+      "UNSURE_TO_CONFIRMED": [],
+      "UNSURE_TO_CONTRADICTED": [],
+      "CONFIRMED_TO_UNSURE": [],
+      "CONTRADICTED_TO_UNSURE": [
         {
           "corpus": "hono",
           "ruleId": "ts/unused-type-export",
@@ -216,16 +204,36 @@
           "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
           "evidence": [
             {
-              "file": "adapters/aws-lambda/test/stream-mock.ts",
-              "line": 3,
-              "text": "import type { APIGatewayProxyEvent, APIGatewayProxyEventV2 } from '../src/handler' (named import of `APIGatewayProxyEvent` as `APIGatewayProxyEvent`)"
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 25,
+              "text": "| APIGatewayProxyEvent"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 65,
+              "text": "export interface APIGatewayProxyEvent {"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 449,
+              "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 450,
+              "text": "protected getPath(event: APIGatewayProxyEvent): string {"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 454,
+              "text": "protected getMethod(event: APIGatewayProxyEvent): string {"
             }
           ],
           "symbol": "APIGatewayProxyEvent",
-          "verdict": "CONTRADICTED",
-          "reason": "Real consumer of `APIGatewayProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-          "from": "UNSURE",
-          "to": "CONTRADICTED"
+          "verdict": "UNSURE",
+          "reason": "Name `APIGatewayProxyEvent` occurs 15 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+          "from": "CONTRADICTED",
+          "to": "UNSURE"
         },
         {
           "corpus": "hono",
@@ -235,16 +243,36 @@
           "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
           "evidence": [
             {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 14,
-              "text": "import type { ALBProxyEvent, APIGatewayProxyEventV2, LatticeProxyEventV2, LambdaEvent, } from '../src/handler' (named import of `ALBProxyEvent` as `ALBProxyEvent`)"
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 27,
+              "text": "| ALBProxyEvent"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 86,
+              "text": "export interface ALBProxyEvent {"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 509,
+              "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 510,
+              "text": "protected getHeaders(event: ALBProxyEvent): Headers {"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 532,
+              "text": "protected getPath(event: ALBProxyEvent): string {"
             }
           ],
           "symbol": "ALBProxyEvent",
-          "verdict": "CONTRADICTED",
-          "reason": "Real consumer of `ALBProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-          "from": "UNSURE",
-          "to": "CONTRADICTED"
+          "verdict": "UNSURE",
+          "reason": "Name `ALBProxyEvent` occurs 21 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+          "from": "CONTRADICTED",
+          "to": "UNSURE"
         },
         {
           "corpus": "hono",
@@ -254,16 +282,36 @@
           "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
           "evidence": [
             {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 410,
+              "text": "export class EventV2Processor extends EventProcessor<APIGatewayProxyEventV2> {"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 447,
+              "text": "const v2Processor: EventV2Processor = new EventV2Processor()"
+            },
+            {
               "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 6,
-              "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV2Processor` as `EventV2Processor`)"
+              "line": 9,
+              "text": "EventV2Processor,"
+            },
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 1072,
+              "text": "it('Should return EventV2Processor for an APIGatewayProxyEventV2 event', () => {"
+            },
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 1085,
+              "text": "expect(processor).toBeInstanceOf(EventV2Processor)"
             }
           ],
           "symbol": "EventV2Processor",
-          "verdict": "CONTRADICTED",
-          "reason": "Real consumer of `EventV2Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-          "from": "UNSURE",
-          "to": "CONTRADICTED"
+          "verdict": "UNSURE",
+          "reason": "Name `EventV2Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+          "from": "CONTRADICTED",
+          "to": "UNSURE"
         },
         {
           "corpus": "hono",
@@ -273,16 +321,36 @@
           "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
           "evidence": [
             {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 449,
+              "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 507,
+              "text": "const v1Processor: EventV1Processor = new EventV1Processor()"
+            },
+            {
               "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 6,
-              "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV1Processor` as `EventV1Processor`)"
+              "line": 8,
+              "text": "EventV1Processor,"
+            },
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 1058,
+              "text": "it('Should return EventV1Processor for an event without requestContext', () => {"
+            },
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 1069,
+              "text": "expect(processor).toBeInstanceOf(EventV1Processor)"
             }
           ],
           "symbol": "EventV1Processor",
-          "verdict": "CONTRADICTED",
-          "reason": "Real consumer of `EventV1Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-          "from": "UNSURE",
-          "to": "CONTRADICTED"
+          "verdict": "UNSURE",
+          "reason": "Name `EventV1Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+          "from": "CONTRADICTED",
+          "to": "UNSURE"
         },
         {
           "corpus": "hono",
@@ -292,19 +360,38 @@
           "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
           "evidence": [
             {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 509,
+              "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
+            },
+            {
+              "file": "adapters/aws-lambda/src/handler.ts",
+              "line": 588,
+              "text": "const albProcessor: ALBProcessor = new ALBProcessor()"
+            },
+            {
               "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 6,
-              "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `ALBProcessor` as `ALBProcessor`)"
+              "line": 7,
+              "text": "ALBProcessor,"
+            },
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 1040,
+              "text": "it('Should return ALBProcessor for an ALBProxyEvent event', () => {"
+            },
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 1055,
+              "text": "expect(processor).toBeInstanceOf(ALBProcessor)"
             }
           ],
           "symbol": "ALBProcessor",
-          "verdict": "CONTRADICTED",
-          "reason": "Real consumer of `ALBProcessor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-          "from": "UNSURE",
-          "to": "CONTRADICTED"
+          "verdict": "UNSURE",
+          "reason": "Name `ALBProcessor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+          "from": "CONTRADICTED",
+          "to": "UNSURE"
         }
-      ],
-      "CONFIRMED_TO_UNSURE": []
+      ]
     },
     "flips": [
       {
@@ -315,16 +402,36 @@
         "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
         "evidence": [
           {
-            "file": "adapters/aws-lambda/test/stream-mock.ts",
-            "line": 3,
-            "text": "import type { APIGatewayProxyEvent, APIGatewayProxyEventV2 } from '../src/handler' (named import of `APIGatewayProxyEvent` as `APIGatewayProxyEvent`)"
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 25,
+            "text": "| APIGatewayProxyEvent"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 65,
+            "text": "export interface APIGatewayProxyEvent {"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 449,
+            "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 450,
+            "text": "protected getPath(event: APIGatewayProxyEvent): string {"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 454,
+            "text": "protected getMethod(event: APIGatewayProxyEvent): string {"
           }
         ],
         "symbol": "APIGatewayProxyEvent",
-        "verdict": "CONTRADICTED",
-        "reason": "Real consumer of `APIGatewayProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-        "from": "UNSURE",
-        "to": "CONTRADICTED"
+        "verdict": "UNSURE",
+        "reason": "Name `APIGatewayProxyEvent` occurs 15 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+        "from": "CONTRADICTED",
+        "to": "UNSURE"
       },
       {
         "corpus": "hono",
@@ -334,16 +441,36 @@
         "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
         "evidence": [
           {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 14,
-            "text": "import type { ALBProxyEvent, APIGatewayProxyEventV2, LatticeProxyEventV2, LambdaEvent, } from '../src/handler' (named import of `ALBProxyEvent` as `ALBProxyEvent`)"
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 27,
+            "text": "| ALBProxyEvent"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 86,
+            "text": "export interface ALBProxyEvent {"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 509,
+            "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 510,
+            "text": "protected getHeaders(event: ALBProxyEvent): Headers {"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 532,
+            "text": "protected getPath(event: ALBProxyEvent): string {"
           }
         ],
         "symbol": "ALBProxyEvent",
-        "verdict": "CONTRADICTED",
-        "reason": "Real consumer of `ALBProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-        "from": "UNSURE",
-        "to": "CONTRADICTED"
+        "verdict": "UNSURE",
+        "reason": "Name `ALBProxyEvent` occurs 21 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+        "from": "CONTRADICTED",
+        "to": "UNSURE"
       },
       {
         "corpus": "hono",
@@ -353,16 +480,36 @@
         "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
         "evidence": [
           {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 410,
+            "text": "export class EventV2Processor extends EventProcessor<APIGatewayProxyEventV2> {"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 447,
+            "text": "const v2Processor: EventV2Processor = new EventV2Processor()"
+          },
+          {
             "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 6,
-            "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV2Processor` as `EventV2Processor`)"
+            "line": 9,
+            "text": "EventV2Processor,"
+          },
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 1072,
+            "text": "it('Should return EventV2Processor for an APIGatewayProxyEventV2 event', () => {"
+          },
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 1085,
+            "text": "expect(processor).toBeInstanceOf(EventV2Processor)"
           }
         ],
         "symbol": "EventV2Processor",
-        "verdict": "CONTRADICTED",
-        "reason": "Real consumer of `EventV2Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-        "from": "UNSURE",
-        "to": "CONTRADICTED"
+        "verdict": "UNSURE",
+        "reason": "Name `EventV2Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+        "from": "CONTRADICTED",
+        "to": "UNSURE"
       },
       {
         "corpus": "hono",
@@ -372,16 +519,36 @@
         "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
         "evidence": [
           {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 449,
+            "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 507,
+            "text": "const v1Processor: EventV1Processor = new EventV1Processor()"
+          },
+          {
             "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 6,
-            "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV1Processor` as `EventV1Processor`)"
+            "line": 8,
+            "text": "EventV1Processor,"
+          },
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 1058,
+            "text": "it('Should return EventV1Processor for an event without requestContext', () => {"
+          },
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 1069,
+            "text": "expect(processor).toBeInstanceOf(EventV1Processor)"
           }
         ],
         "symbol": "EventV1Processor",
-        "verdict": "CONTRADICTED",
-        "reason": "Real consumer of `EventV1Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-        "from": "UNSURE",
-        "to": "CONTRADICTED"
+        "verdict": "UNSURE",
+        "reason": "Name `EventV1Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+        "from": "CONTRADICTED",
+        "to": "UNSURE"
       },
       {
         "corpus": "hono",
@@ -391,31 +558,54 @@
         "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
         "evidence": [
           {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 509,
+            "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
+          },
+          {
+            "file": "adapters/aws-lambda/src/handler.ts",
+            "line": 588,
+            "text": "const albProcessor: ALBProcessor = new ALBProcessor()"
+          },
+          {
             "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 6,
-            "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `ALBProcessor` as `ALBProcessor`)"
+            "line": 7,
+            "text": "ALBProcessor,"
+          },
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 1040,
+            "text": "it('Should return ALBProcessor for an ALBProxyEvent event', () => {"
+          },
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 1055,
+            "text": "expect(processor).toBeInstanceOf(ALBProcessor)"
           }
         ],
         "symbol": "ALBProcessor",
-        "verdict": "CONTRADICTED",
-        "reason": "Real consumer of `ALBProcessor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
-        "from": "UNSURE",
-        "to": "CONTRADICTED"
-      },
-      {
-        "corpus": "hono",
-        "ruleId": "ts/unused-type-export",
-        "file": "src/context.ts",
-        "line": 78,
-        "message": "Exported type `Renderer` is used only locally; drop the `export` keyword.",
-        "evidence": [],
-        "symbol": "Renderer",
-        "verdict": "CONFIRMED",
-        "reason": "Name `Renderer` appears nowhere outside its declaration",
-        "from": "UNSURE",
-        "to": "CONFIRMED"
+        "verdict": "UNSURE",
+        "reason": "Name `ALBProcessor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
+        "from": "CONTRADICTED",
+        "to": "UNSURE"
       }
-    ]
+    ],
+    "previousGeneratedAt": "2026-11-28T02:14:27.364Z",
+    "previousPooled": {
+      "confirmed": 206,
+      "contradicted": 7,
+      "unsure": 54,
+      "total": 267,
+      "precisionLower": 0.7715355805243446,
+      "precisionUpper": 0.9737827715355806,
+      "precisionConfirmedOnly": 0.9671361502347418,
+      "wilson95": {
+        "lowerBoundLow": 0.7175352774595357,
+        "upperBoundHigh": 0.9872435367864614,
+        "confirmedOnlyLow": 0.9337298994623284,
+        "confirmedOnlyHigh": 0.9839912830194442
+      }
+    }
   },
   "perRule": [
     {
@@ -437,49 +627,49 @@
     {
       "name": "ts/unused-export",
       "confirmed": 28,
-      "contradicted": 3,
-      "unsure": 20,
+      "contradicted": 0,
+      "unsure": 23,
       "total": 51,
       "precisionLower": 0.5490196078431373,
-      "precisionUpper": 0.9411764705882353,
-      "precisionConfirmedOnly": 0.9032258064516129,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
       "wilson95": {
         "lowerBoundLow": 0.41384708550368815,
-        "upperBoundHigh": 0.9797933605775353,
-        "confirmedOnlyLow": 0.7510006155660716,
-        "confirmedOnlyHigh": 0.9665353558368026
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.8793566952341542,
+        "confirmedOnlyHigh": 0.9999999999999999
       }
     },
     {
       "name": "ts/unused-file",
-      "confirmed": 122,
-      "contradicted": 1,
+      "confirmed": 121,
+      "contradicted": 0,
       "unsure": 5,
-      "total": 128,
-      "precisionLower": 0.953125,
-      "precisionUpper": 0.9921875,
-      "precisionConfirmedOnly": 0.991869918699187,
+      "total": 126,
+      "precisionLower": 0.9603174603174603,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
       "wilson95": {
-        "lowerBoundLow": 0.9015024775490568,
-        "upperBoundHigh": 0.9986195681071257,
-        "confirmedOnlyLow": 0.9553833739906696,
-        "confirmedOnlyHigh": 0.9985633964501233
+        "lowerBoundLow": 0.9104643457790981,
+        "upperBoundHigh": 0.9999999999999998,
+        "confirmedOnlyLow": 0.9692293020525218,
+        "confirmedOnlyHigh": 1
       }
     },
     {
       "name": "ts/unused-type-export",
       "confirmed": 49,
-      "contradicted": 2,
-      "unsure": 19,
+      "contradicted": 0,
+      "unsure": 21,
       "total": 70,
       "precisionLower": 0.7,
-      "precisionUpper": 0.9714285714285714,
-      "precisionConfirmedOnly": 0.9607843137254902,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
       "wilson95": {
         "lowerBoundLow": 0.5845568276122731,
-        "upperBoundHigh": 0.9921293880545587,
-        "confirmedOnlyLow": 0.8678369434463774,
-        "confirmedOnlyHigh": 0.9891789166471329
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.9273021807795035,
+        "confirmedOnlyHigh": 0.9999999999999999
       }
     }
   ],
@@ -534,18 +724,18 @@
     },
     {
       "name": "hono",
-      "confirmed": 28,
-      "contradicted": 7,
-      "unsure": 25,
-      "total": 60,
-      "precisionLower": 0.4666666666666667,
-      "precisionUpper": 0.8833333333333333,
-      "precisionConfirmedOnly": 0.8,
+      "confirmed": 27,
+      "contradicted": 1,
+      "unsure": 30,
+      "total": 58,
+      "precisionLower": 0.46551724137931033,
+      "precisionUpper": 0.9827586206896551,
+      "precisionConfirmedOnly": 0.9642857142857143,
       "wilson95": {
-        "lowerBoundLow": 0.34627906041438494,
-        "upperBoundHigh": 0.9423227935994396,
-        "confirmedOnlyLow": 0.6410838693433439,
-        "confirmedOnlyHigh": 0.8995755352620137
+        "lowerBoundLow": 0.3433202232528626,
+        "upperBoundHigh": 0.9969499615539326,
+        "confirmedOnlyLow": 0.8228780225664668,
+        "confirmedOnlyHigh": 0.9936674801509623
       }
     },
     {
@@ -672,51 +862,51 @@
       "corpus": "hono",
       "ruleId": "ts/unused-export",
       "confirmed": 7,
-      "contradicted": 3,
-      "unsure": 8,
+      "contradicted": 0,
+      "unsure": 11,
       "total": 18,
       "precisionLower": 0.3888888888888889,
-      "precisionUpper": 0.8333333333333334,
-      "precisionConfirmedOnly": 0.7,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
       "wilson95": {
         "lowerBoundLow": 0.20305246572163624,
-        "upperBoundHigh": 0.9416342319413855,
-        "confirmedOnlyLow": 0.39677814746114537,
-        "confirmedOnlyHigh": 0.8922087325936989
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.6456695649333126,
+        "confirmedOnlyHigh": 1
       }
     },
     {
       "corpus": "hono",
       "ruleId": "ts/unused-file",
-      "confirmed": 2,
-      "contradicted": 1,
+      "confirmed": 1,
+      "contradicted": 0,
       "unsure": 0,
-      "total": 3,
-      "precisionLower": 0.6666666666666666,
-      "precisionUpper": 0.6666666666666666,
-      "precisionConfirmedOnly": 0.6666666666666666,
+      "total": 1,
+      "precisionLower": 1,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
       "wilson95": {
-        "lowerBoundLow": 0.20765960080204765,
-        "upperBoundHigh": 0.9385080552796037,
-        "confirmedOnlyLow": 0.20765960080204765,
-        "confirmedOnlyHigh": 0.9385080552796037
+        "lowerBoundLow": 0.20654931437723745,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.20654931437723745,
+        "confirmedOnlyHigh": 1
       }
     },
     {
       "corpus": "hono",
       "ruleId": "ts/unused-type-export",
       "confirmed": 19,
-      "contradicted": 2,
-      "unsure": 15,
+      "contradicted": 0,
+      "unsure": 17,
       "total": 36,
       "precisionLower": 0.5277777777777778,
-      "precisionUpper": 0.9444444444444444,
-      "precisionConfirmedOnly": 0.9047619047619048,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
       "wilson95": {
         "lowerBoundLow": 0.37005938022987594,
-        "upperBoundHigh": 0.9846300133358382,
-        "confirmedOnlyLow": 0.7108586092608176,
-        "confirmedOnlyHigh": 0.9734812325619255
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.8318207759473837,
+        "confirmedOnlyHigh": 1
       }
     },
     {
@@ -805,113 +995,6 @@
       "symbol": "mitata",
       "verdict": "CONTRADICTED",
       "reason": "Package `mitata` is imported/required by a file in its package scope"
-    },
-    {
-      "corpus": "hono",
-      "ruleId": "ts/unused-export",
-      "file": "src/adapter/aws-lambda/handler.ts",
-      "line": 438,
-      "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
-      "evidence": [
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 6,
-          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV2Processor` as `EventV2Processor`)"
-        }
-      ],
-      "symbol": "EventV2Processor",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `EventV2Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
-    },
-    {
-      "corpus": "hono",
-      "ruleId": "ts/unused-export",
-      "file": "src/adapter/aws-lambda/handler.ts",
-      "line": 480,
-      "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
-      "evidence": [
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 6,
-          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV1Processor` as `EventV1Processor`)"
-        }
-      ],
-      "symbol": "EventV1Processor",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `EventV1Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
-    },
-    {
-      "corpus": "hono",
-      "ruleId": "ts/unused-export",
-      "file": "src/adapter/aws-lambda/handler.ts",
-      "line": 543,
-      "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
-      "evidence": [
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 6,
-          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `ALBProcessor` as `ALBProcessor`)"
-        }
-      ],
-      "symbol": "ALBProcessor",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `ALBProcessor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
-    },
-    {
-      "corpus": "hono",
-      "ruleId": "ts/unused-file",
-      "file": "runtime-tests/workerd/index.ts",
-      "line": 1,
-      "message": "File is never imported by any other scanned file.",
-      "evidence": [
-        {
-          "file": "runtime-tests/workerd/index.test.ts",
-          "line": 8,
-          "text": "worker = await unstable_dev('./runtime-tests/workerd/index.ts', {"
-        },
-        {
-          "file": "runtime-tests/workerd/index.test.ts",
-          "line": 44,
-          "text": "worker = await unstable_dev('./runtime-tests/workerd/index.ts', {"
-        }
-      ],
-      "symbol": null,
-      "verdict": "CONTRADICTED",
-      "reason": "Literal path reference to `runtime-tests/workerd/index.ts` in a script/config/code file"
-    },
-    {
-      "corpus": "hono",
-      "ruleId": "ts/unused-type-export",
-      "file": "src/adapter/aws-lambda/handler.ts",
-      "line": 77,
-      "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
-      "evidence": [
-        {
-          "file": "adapters/aws-lambda/test/stream-mock.ts",
-          "line": 3,
-          "text": "import type { APIGatewayProxyEvent, APIGatewayProxyEventV2 } from '../src/handler' (named import of `APIGatewayProxyEvent` as `APIGatewayProxyEvent`)"
-        }
-      ],
-      "symbol": "APIGatewayProxyEvent",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `APIGatewayProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
-    },
-    {
-      "corpus": "hono",
-      "ruleId": "ts/unused-type-export",
-      "file": "src/adapter/aws-lambda/handler.ts",
-      "line": 101,
-      "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
-      "evidence": [
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 14,
-          "text": "import type { ALBProxyEvent, APIGatewayProxyEventV2, LatticeProxyEventV2, LambdaEvent, } from '../src/handler' (named import of `ALBProxyEvent` as `ALBProxyEvent`)"
-        }
-      ],
-      "symbol": "ALBProxyEvent",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `ALBProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
     }
   ],
   "verdicts": [
@@ -1086,17 +1169,6 @@
     },
     {
       "corpus": "hono",
-      "ruleId": "ts/unused-file",
-      "file": "adapters/cloudflare-workers/test/worker.ts",
-      "line": 1,
-      "message": "File is never imported by any other scanned file.",
-      "evidence": [],
-      "symbol": null,
-      "verdict": "CONFIRMED",
-      "reason": "No import, require, reference or path mention of `adapters/cloudflare-workers/test/worker.ts` outside the file itself"
-    },
-    {
-      "corpus": "hono",
       "ruleId": "ts/unused-export",
       "file": "adapters/cloudflare-workers/test/worker.ts",
       "line": 15,
@@ -1216,28 +1288,6 @@
     },
     {
       "corpus": "hono",
-      "ruleId": "ts/unused-file",
-      "file": "runtime-tests/workerd/index.ts",
-      "line": 1,
-      "message": "File is never imported by any other scanned file.",
-      "evidence": [
-        {
-          "file": "runtime-tests/workerd/index.test.ts",
-          "line": 8,
-          "text": "worker = await unstable_dev('./runtime-tests/workerd/index.ts', {"
-        },
-        {
-          "file": "runtime-tests/workerd/index.test.ts",
-          "line": 44,
-          "text": "worker = await unstable_dev('./runtime-tests/workerd/index.ts', {"
-        }
-      ],
-      "symbol": null,
-      "verdict": "CONTRADICTED",
-      "reason": "Literal path reference to `runtime-tests/workerd/index.ts` in a script/config/code file"
-    },
-    {
-      "corpus": "hono",
       "ruleId": "ts/unused-export",
       "file": "runtime-tests/workerd/index.ts",
       "line": 18,
@@ -1281,14 +1331,34 @@
       "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "adapters/aws-lambda/test/stream-mock.ts",
-          "line": 3,
-          "text": "import type { APIGatewayProxyEvent, APIGatewayProxyEventV2 } from '../src/handler' (named import of `APIGatewayProxyEvent` as `APIGatewayProxyEvent`)"
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 25,
+          "text": "| APIGatewayProxyEvent"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 65,
+          "text": "export interface APIGatewayProxyEvent {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 449,
+          "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 450,
+          "text": "protected getPath(event: APIGatewayProxyEvent): string {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 454,
+          "text": "protected getMethod(event: APIGatewayProxyEvent): string {"
         }
       ],
       "symbol": "APIGatewayProxyEvent",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `APIGatewayProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
+      "verdict": "UNSURE",
+      "reason": "Name `APIGatewayProxyEvent` occurs 15 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
     },
     {
       "corpus": "hono",
@@ -1298,14 +1368,34 @@
       "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 14,
-          "text": "import type { ALBProxyEvent, APIGatewayProxyEventV2, LatticeProxyEventV2, LambdaEvent, } from '../src/handler' (named import of `ALBProxyEvent` as `ALBProxyEvent`)"
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 27,
+          "text": "| ALBProxyEvent"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 86,
+          "text": "export interface ALBProxyEvent {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 509,
+          "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 510,
+          "text": "protected getHeaders(event: ALBProxyEvent): Headers {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 532,
+          "text": "protected getPath(event: ALBProxyEvent): string {"
         }
       ],
       "symbol": "ALBProxyEvent",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `ALBProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
+      "verdict": "UNSURE",
+      "reason": "Name `ALBProxyEvent` occurs 21 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
     },
     {
       "corpus": "hono",
@@ -1352,14 +1442,34 @@
       "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 410,
+          "text": "export class EventV2Processor extends EventProcessor<APIGatewayProxyEventV2> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 447,
+          "text": "const v2Processor: EventV2Processor = new EventV2Processor()"
+        },
+        {
           "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 6,
-          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV2Processor` as `EventV2Processor`)"
+          "line": 9,
+          "text": "EventV2Processor,"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1072,
+          "text": "it('Should return EventV2Processor for an APIGatewayProxyEventV2 event', () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1085,
+          "text": "expect(processor).toBeInstanceOf(EventV2Processor)"
         }
       ],
       "symbol": "EventV2Processor",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `EventV2Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
+      "verdict": "UNSURE",
+      "reason": "Name `EventV2Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
     },
     {
       "corpus": "hono",
@@ -1369,14 +1479,34 @@
       "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 449,
+          "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 507,
+          "text": "const v1Processor: EventV1Processor = new EventV1Processor()"
+        },
+        {
           "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 6,
-          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV1Processor` as `EventV1Processor`)"
+          "line": 8,
+          "text": "EventV1Processor,"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1058,
+          "text": "it('Should return EventV1Processor for an event without requestContext', () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1069,
+          "text": "expect(processor).toBeInstanceOf(EventV1Processor)"
         }
       ],
       "symbol": "EventV1Processor",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `EventV1Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
+      "verdict": "UNSURE",
+      "reason": "Name `EventV1Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
     },
     {
       "corpus": "hono",
@@ -1386,14 +1516,34 @@
       "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 509,
+          "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
+        },
+        {
+          "file": "adapters/aws-lambda/src/handler.ts",
+          "line": 588,
+          "text": "const albProcessor: ALBProcessor = new ALBProcessor()"
+        },
+        {
           "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 6,
-          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `ALBProcessor` as `ALBProcessor`)"
+          "line": 7,
+          "text": "ALBProcessor,"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1040,
+          "text": "it('Should return ALBProcessor for an ALBProxyEvent event', () => {"
+        },
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 1055,
+          "text": "expect(processor).toBeInstanceOf(ALBProcessor)"
         }
       ],
       "symbol": "ALBProcessor",
-      "verdict": "CONTRADICTED",
-      "reason": "Real consumer of `ALBProcessor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
+      "verdict": "UNSURE",
+      "reason": "Name `ALBProcessor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
     },
     {
       "corpus": "hono",
@@ -1573,7 +1723,7 @@
       "evidence": [],
       "symbol": "InferRequestOptionsType",
       "verdict": "CONFIRMED",
-      "reason": "Name `InferRequestOptionsType` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `InferRequestOptionsType` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1584,7 +1734,7 @@
       "evidence": [],
       "symbol": "Renderer",
       "verdict": "CONFIRMED",
-      "reason": "Name `Renderer` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `Renderer` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1632,7 +1782,7 @@
       "evidence": [],
       "symbol": "isPseudoGlobalSelectorRe",
       "verdict": "CONFIRMED",
-      "reason": "Name `isPseudoGlobalSelectorRe` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `isPseudoGlobalSelectorRe` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1643,7 +1793,7 @@
       "evidence": [],
       "symbol": "EXTERNAL_CLASS_NAMES",
       "verdict": "CONFIRMED",
-      "reason": "Name `EXTERNAL_CLASS_NAMES` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `EXTERNAL_CLASS_NAMES` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1654,7 +1804,7 @@
       "evidence": [],
       "symbol": "IS_CSS_ESCAPED",
       "verdict": "CONFIRMED",
-      "reason": "Name `IS_CSS_ESCAPED` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `IS_CSS_ESCAPED` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1665,7 +1815,7 @@
       "evidence": [],
       "symbol": "buildStyleString",
       "verdict": "CONFIRMED",
-      "reason": "Name `buildStyleString` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `buildStyleString` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1676,7 +1826,7 @@
       "evidence": [],
       "symbol": "booleanAttributes",
       "verdict": "CONFIRMED",
-      "reason": "Name `booleanAttributes` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `booleanAttributes` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1724,7 +1874,7 @@
       "evidence": [],
       "symbol": "LABEL_REG_EXP_STR",
       "verdict": "CONFIRMED",
-      "reason": "Name `LABEL_REG_EXP_STR` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `LABEL_REG_EXP_STR` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1735,7 +1885,7 @@
       "evidence": [],
       "symbol": "ReplacementMap",
       "verdict": "CONFIRMED",
-      "reason": "Name `ReplacementMap` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `ReplacementMap` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1820,7 +1970,7 @@
       "evidence": [],
       "symbol": "Pool",
       "verdict": "CONFIRMED",
-      "reason": "Name `Pool` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `Pool` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1831,7 +1981,7 @@
       "evidence": [],
       "symbol": "CookieConstraint",
       "verdict": "CONFIRMED",
-      "reason": "Name `CookieConstraint` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `CookieConstraint` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1879,7 +2029,7 @@
       "evidence": [],
       "symbol": "InfoStatusCode",
       "verdict": "CONFIRMED",
-      "reason": "Name `InfoStatusCode` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `InfoStatusCode` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1890,7 +2040,7 @@
       "evidence": [],
       "symbol": "DeprecatedStatusCode",
       "verdict": "CONFIRMED",
-      "reason": "Name `DeprecatedStatusCode` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `DeprecatedStatusCode` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1901,7 +2051,7 @@
       "evidence": [],
       "symbol": "UnofficialStatusCode",
       "verdict": "CONFIRMED",
-      "reason": "Name `UnofficialStatusCode` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `UnofficialStatusCode` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1912,7 +2062,7 @@
       "evidence": [],
       "symbol": "UnOfficalStatusCode",
       "verdict": "CONFIRMED",
-      "reason": "Name `UnOfficalStatusCode` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `UnOfficalStatusCode` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1923,7 +2073,7 @@
       "evidence": [],
       "symbol": "ContentlessStatusCode",
       "verdict": "CONFIRMED",
-      "reason": "Name `ContentlessStatusCode` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `ContentlessStatusCode` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1934,7 +2084,7 @@
       "evidence": [],
       "symbol": "VerifyOptionsWithAlg",
       "verdict": "CONFIRMED",
-      "reason": "Name `VerifyOptionsWithAlg` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `VerifyOptionsWithAlg` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1982,7 +2132,7 @@
       "evidence": [],
       "symbol": "NotEqual",
       "verdict": "CONFIRMED",
-      "reason": "Name `NotEqual` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `NotEqual` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1993,7 +2143,7 @@
       "evidence": [],
       "symbol": "JSONPrimitive",
       "verdict": "CONFIRMED",
-      "reason": "Name `JSONPrimitive` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `JSONPrimitive` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -2004,7 +2154,7 @@
       "evidence": [],
       "symbol": "JSONArray",
       "verdict": "CONFIRMED",
-      "reason": "Name `JSONArray` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `JSONArray` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -2015,7 +2165,7 @@
       "evidence": [],
       "symbol": "JSONObject",
       "verdict": "CONFIRMED",
-      "reason": "Name `JSONObject` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `JSONObject` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -2026,7 +2176,7 @@
       "evidence": [],
       "symbol": "InterfaceToType",
       "verdict": "CONFIRMED",
-      "reason": "Name `InterfaceToType` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `InterfaceToType` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -2037,7 +2187,7 @@
       "evidence": [],
       "symbol": "RequiredKeysOf",
       "verdict": "CONFIRMED",
-      "reason": "Name `RequiredKeysOf` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `RequiredKeysOf` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -2048,7 +2198,7 @@
       "evidence": [],
       "symbol": "decodeURIComponent_",
       "verdict": "CONFIRMED",
-      "reason": "Name `decodeURIComponent_` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `decodeURIComponent_` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -2059,7 +2209,7 @@
       "evidence": [],
       "symbol": "ExtractValidationResponse",
       "verdict": "CONFIRMED",
-      "reason": "Name `ExtractValidationResponse` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `ExtractValidationResponse` outside its declaration"
     },
     {
       "corpus": "hono",
@@ -2070,7 +2220,7 @@
       "evidence": [],
       "symbol": "ExtractValidatorOutput",
       "verdict": "CONFIRMED",
-      "reason": "Name `ExtractValidatorOutput` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `ExtractValidatorOutput` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -2553,7 +2703,7 @@
       "evidence": [],
       "symbol": "SINK",
       "verdict": "CONFIRMED",
-      "reason": "Name `SINK` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `SINK` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -2707,7 +2857,7 @@
       "evidence": [],
       "symbol": "lazyWithInternalProp",
       "verdict": "CONFIRMED",
-      "reason": "Name `lazyWithInternalProp` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `lazyWithInternalProp` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -2718,7 +2868,7 @@
       "evidence": [],
       "symbol": "lazyWithScopeProp",
       "verdict": "CONFIRMED",
-      "reason": "Name `lazyWithScopeProp` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `lazyWithScopeProp` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -2729,7 +2879,7 @@
       "evidence": [],
       "symbol": "lazyWithGetterOverride",
       "verdict": "CONFIRMED",
-      "reason": "Name `lazyWithGetterOverride` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `lazyWithGetterOverride` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -2947,7 +3097,7 @@
       "evidence": [],
       "symbol": "Graph",
       "verdict": "CONFIRMED",
-      "reason": "Name `Graph` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `Graph` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -2958,7 +3108,7 @@
       "evidence": [],
       "symbol": "shortestPaths",
       "verdict": "CONFIRMED",
-      "reason": "Name `shortestPaths` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `shortestPaths` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -2969,7 +3119,7 @@
       "evidence": [],
       "symbol": "findNodes",
       "verdict": "CONFIRMED",
-      "reason": "Name `findNodes` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `findNodes` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -3002,7 +3152,7 @@
       "evidence": [],
       "symbol": "NodeRow",
       "verdict": "CONFIRMED",
-      "reason": "Name `NodeRow` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `NodeRow` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -3013,7 +3163,7 @@
       "evidence": [],
       "symbol": "DiffRow",
       "verdict": "CONFIRMED",
-      "reason": "Name `DiffRow` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `DiffRow` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -3278,7 +3428,7 @@
       "evidence": [],
       "symbol": "objD",
       "verdict": "CONFIRMED",
-      "reason": "Name `objD` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `objD` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -3289,7 +3439,7 @@
       "evidence": [],
       "symbol": "objE",
       "verdict": "CONFIRMED",
-      "reason": "Name `objE` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `objE` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -3403,7 +3553,7 @@
       "evidence": [],
       "symbol": "equals",
       "verdict": "CONFIRMED",
-      "reason": "Name `equals` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `equals` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -3925,7 +4075,7 @@
       "evidence": [],
       "symbol": "VALIBOT",
       "verdict": "CONFIRMED",
-      "reason": "Name `VALIBOT` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `VALIBOT` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4080,7 +4230,7 @@
       "evidence": [],
       "symbol": "instanceOfTest",
       "verdict": "CONFIRMED",
-      "reason": "Name `instanceOfTest` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `instanceOfTest` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4091,7 +4241,7 @@
       "evidence": [],
       "symbol": "TestMerge",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestMerge` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestMerge` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4102,7 +4252,7 @@
       "evidence": [],
       "symbol": "TestMerge",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestMerge` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestMerge` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4113,7 +4263,7 @@
       "evidence": [],
       "symbol": "instanceOfTestMerge",
       "verdict": "CONFIRMED",
-      "reason": "Name `instanceOfTestMerge` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `instanceOfTestMerge` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4124,7 +4274,7 @@
       "evidence": [],
       "symbol": "TestUnion",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestUnion` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestUnion` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4135,7 +4285,7 @@
       "evidence": [],
       "symbol": "TestUnion",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestUnion` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestUnion` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4146,7 +4296,7 @@
       "evidence": [],
       "symbol": "instanceOfTestUnion",
       "verdict": "CONFIRMED",
-      "reason": "Name `instanceOfTestUnion` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `instanceOfTestUnion` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4157,7 +4307,7 @@
       "evidence": [],
       "symbol": "TestPartial",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestPartial` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestPartial` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4168,7 +4318,7 @@
       "evidence": [],
       "symbol": "TestPartial",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestPartial` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestPartial` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4179,7 +4329,7 @@
       "evidence": [],
       "symbol": "instanceOfTestPartial",
       "verdict": "CONFIRMED",
-      "reason": "Name `instanceOfTestPartial` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `instanceOfTestPartial` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4190,7 +4340,7 @@
       "evidence": [],
       "symbol": "TestPick",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestPick` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestPick` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4201,7 +4351,7 @@
       "evidence": [],
       "symbol": "TestPick",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestPick` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestPick` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4212,7 +4362,7 @@
       "evidence": [],
       "symbol": "instanceOfTestPick",
       "verdict": "CONFIRMED",
-      "reason": "Name `instanceOfTestPick` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `instanceOfTestPick` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4223,7 +4373,7 @@
       "evidence": [],
       "symbol": "TestOmit",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestOmit` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestOmit` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4234,7 +4384,7 @@
       "evidence": [],
       "symbol": "TestOmit",
       "verdict": "CONFIRMED",
-      "reason": "Name `TestOmit` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `TestOmit` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4245,7 +4395,7 @@
       "evidence": [],
       "symbol": "instanceOfTestOmit",
       "verdict": "CONFIRMED",
-      "reason": "Name `instanceOfTestOmit` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `instanceOfTestOmit` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4293,7 +4443,7 @@
       "evidence": [],
       "symbol": "EmitParams",
       "verdict": "CONFIRMED",
-      "reason": "Name `EmitParams` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `EmitParams` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4304,7 +4454,7 @@
       "evidence": [],
       "symbol": "StandardTypedV1",
       "verdict": "CONFIRMED",
-      "reason": "Name `StandardTypedV1` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `StandardTypedV1` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4315,7 +4465,7 @@
       "evidence": [],
       "symbol": "VisitFn",
       "verdict": "CONFIRMED",
-      "reason": "Name `VisitFn` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `VisitFn` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4326,7 +4476,7 @@
       "evidence": [],
       "symbol": "VisitHandlers",
       "verdict": "CONFIRMED",
-      "reason": "Name `VisitHandlers` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `VisitHandlers` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4348,7 +4498,7 @@
       "evidence": [],
       "symbol": "$ZSF",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSF` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSF` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4359,7 +4509,7 @@
       "evidence": [],
       "symbol": "$ZSFString",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFString` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFString` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4370,7 +4520,7 @@
       "evidence": [],
       "symbol": "NumberTypes",
       "verdict": "CONFIRMED",
-      "reason": "Name `NumberTypes` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `NumberTypes` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4381,7 +4531,7 @@
       "evidence": [],
       "symbol": "$ZSFNumber",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFNumber` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFNumber` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4392,7 +4542,7 @@
       "evidence": [],
       "symbol": "$ZSFBoolean",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFBoolean` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFBoolean` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4403,7 +4553,7 @@
       "evidence": [],
       "symbol": "$ZSFNull",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFNull` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFNull` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4414,7 +4564,7 @@
       "evidence": [],
       "symbol": "$ZSFUndefined",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFUndefined` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFUndefined` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4425,7 +4575,7 @@
       "evidence": [],
       "symbol": "$ZSFOptional",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFOptional` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFOptional` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4436,7 +4586,7 @@
       "evidence": [],
       "symbol": "$ZSFNever",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFNever` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFNever` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4447,7 +4597,7 @@
       "evidence": [],
       "symbol": "$ZSFAny",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFAny` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFAny` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4458,7 +4608,7 @@
       "evidence": [],
       "symbol": "$ZSFEnum",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFEnum` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFEnum` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4469,7 +4619,7 @@
       "evidence": [],
       "symbol": "$ZSFArray",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFArray` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFArray` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4480,7 +4630,7 @@
       "evidence": [],
       "symbol": "$ZSFObject",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFObject` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFObject` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4491,7 +4641,7 @@
       "evidence": [],
       "symbol": "$ZSFLiteral",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFLiteral` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFLiteral` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4502,7 +4652,7 @@
       "evidence": [],
       "symbol": "$ZSFUnion",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFUnion` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFUnion` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4513,7 +4663,7 @@
       "evidence": [],
       "symbol": "$ZSFIntersection",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFIntersection` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFIntersection` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4524,7 +4674,7 @@
       "evidence": [],
       "symbol": "$ZSFMap",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFMap` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFMap` outside its declaration"
     },
     {
       "corpus": "zod",
@@ -4535,7 +4685,7 @@
       "evidence": [],
       "symbol": "$ZSFConditional",
       "verdict": "CONFIRMED",
-      "reason": "Name `$ZSFConditional` appears nowhere outside its declaration"
+      "reason": "No code occurrence of `$ZSFConditional` outside its declaration"
     },
     {
       "corpus": "zod",

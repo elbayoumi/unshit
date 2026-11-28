@@ -1,4 +1,4 @@
-Every CONTRADICTED finding below was checked by reading both the corpus code and the relevant unshit detector. No detector source was changed in this audit. Six contradictions were found in the first run; each is classified honestly as a real detector false positive (FP), a detector limitation under the rule's literal wording, or an oracle limitation.
+Every CONTRADICTED finding from the first run was checked by reading both the corpus code and the relevant unshit detector. No detector source was changed in this audit. Six contradictions were found in the first run; each is classified honestly as a real detector false positive (FP), a detector limitation under the rule's literal wording, or an oracle limitation. Only #1 is still contradicted in the current run; #2 and #4–#6 were resolved by later detector fixes, and the five round-16 mirror artifacts were resolved by the oracle fix described below.
 
 ### 1. `hono` / `deps/unused-dependency` / `benchmarks/fetch/package.json:4` (`mitata`) — REAL DETECTOR BUG
 
@@ -14,7 +14,7 @@ Every CONTRADICTED finding below was checked by reading both the corpus code and
 
   Scan with `node bin/unshit.js scan pkg --format json`.
 
-### 2. `hono` / `ts/unused-file` / `runtime-tests/workerd/index.ts` — DETECTOR LIMITATION (practical FP, literal rule not violated)
+### 2. `hono` / `ts/unused-file` / `runtime-tests/workerd/index.ts` — RESOLVED DETECTOR LIMITATION
 
 - Oracle evidence: `runtime-tests/workerd/index.test.ts:8` and `:44` — `unstable_dev('./runtime-tests/workerd/index.ts', ...)`.
 - Code reading: the file is a Cloudflare Worker entry (`export default app`) loaded by `wrangler`'s `unstable_dev` from a string path; the tests exercise its routes. It is used, so reporting it as unused is a practical false positive.
@@ -27,6 +27,8 @@ Every CONTRADICTED finding below was checked by reading both the corpus code and
   // worker.test.ts
   const worker = await unstable_dev('./worker.ts');
   ```
+
+- Status: resolved. `src/detectors/unused-file.ts` now collects explicit relative path literals passed to calls, so this file and `adapters/cloudflare-workers/test/worker.ts` are no longer reported. Older `results.json` files that still list them are stale; the current run has N=265, not 267.
 
 ### 3. `zod` / `deps/unused-dependency` / `package.json:36` (`lint-staged`) — REAL DETECTOR BUG
 
@@ -69,18 +71,24 @@ These initial CONTRADICTED verdicts were re-checked against the code and turned 
 
 1. `src/walker.ts` omits `.mts`/`.cts` from `TS_EXTS`, causing false `deps/unused-dependency` findings (and hiding those files from all other rules) — reproducer in #1.
 2. `src/detectors/deps.ts` ignores top-level config keys in `package.json`, causing false `deps/unused-dependency` findings even when the config key and the declaration are in the same file — reproducer in #3.
-3. `src/detectors/unused-file.ts` considers only the import graph, so files referenced by npm scripts, third-party loaders and tool configs are reported as unused (#2, #4–#6). This matches its narrow documented definition but is a false positive relative to the rule's dead-code intent.
+3. `src/detectors/unused-file.ts` originally considered only the import graph, so files referenced by npm scripts, third-party loaders and tool configs were reported as unused (#2, #4–#6). Later fixes cover script/config references and explicit relative call arguments; the historical reproducer is kept above.
 
 ## Follow-up (round 14)
 
 - Bug 2 is fixed: `deps/unused-dependency` now honours matching top-level `package.json` config keys (#3 resolved).
-- Bug 3 is fixed for script and `*.config.*` references (#4, #5 and #6 resolved, plus two fastify webpack entries that were not contradicted). #2 remains by design: string literals in ordinary source files are not treated as file references.
+- Bug 3 is fixed for script, `*.config.*` and explicit relative call-argument references (#2, #4, #5 and #6 resolved, plus two fastify webpack entries that were not contradicted). A literal merely assigned to a variable is still data, not a reference.
 - Bug 1 (`.mts`/`.cts` not walked) is still open, so #1 remains.
-- After these fixes the rerun reports 2 contradictions of 267 findings (see `docs/research/oracle-audit.md`).
+- The current rerun reports C=205, D=1, U=59 of 265 findings (see `docs/research/oracle-audit.md`). The drop from 267 is the two `ts/unused-file` findings listed as resolved above, not a change made by this audit.
+
+## Follow-up (round 17)
+
+- The round-16 "mirror" assumption was false. In hono, `adapters/aws-lambda/src/handler.ts` has 684 lines, `src/adapter/aws-lambda/handler.ts` has 728 lines and is marked `@deprecated`, and their imports differ (`hono/types` vs `../../types`). All imports in `adapters/aws-lambda/test/*` resolve to `../src/handler`, i.e. to the adapters copy. Imports are now attributed only to the file they resolve to; the five round-16 contradictions on `src/adapter/aws-lambda/handler.ts` returned to UNSURE. They are not counted as detector FPs. No `src/` code was changed for this fix; real detector contradictions stay contradicted.
+- The other round-16 evidence changes were checked on the corpora. The `./dist/...` -> `./src/...` package-target mapping applies only to hono: `tsconfig.build.json` sets `rootDir: ./src/` and `outDir: ./dist/types/`, and all mapped source files correspond to real `exports` subpaths (for example `./dist/adapter/aws-lambda/index.js` -> `src/adapter/aws-lambda/index.ts`). zod, execa, fastify and commander.js have no such mapping; their existing direct entries are unchanged.
+- The only round-16 UNSURE -> CONFIRMED move was `hono` `src/context.ts:78` `Renderer`. Its sole old evidence was `docs/MIGRATION.md:53`, the prose phrase "JSX Renderer Middleware", not code. Documentation and lockfile mentions are not executable usage, so the move stands; CONFIRMED still means "no code occurrence inside this corpus", not "safe to delete".
 
 ## Limitations of this oracle
 
-- UNSURE is common for exported symbols that exist in mirrored directories (e.g. hono has both `adapters/aws-lambda/src/*` and `src/adapter/aws-lambda/*` with identical symbol names). Since round 16 the oracle resolves imports through such mirror pairs, so a same-named symbol reached through an import that lands in one mirrored tree is attributed to the module in the other; remaining mirror-related UNSUREs are those whose only consumers live outside the corpus (public entry points or external packages). The lower bound counts them all as false positives; the upper bound counts them all as true positives. The truth is between the two, and the bounds are conservative, not a point estimate of precision.
+- UNSURE is common for exported symbols that have a same-named twin in a different directory (e.g. hono has both `adapters/aws-lambda/src/*` and `src/adapter/aws-lambda/*`, but they are different files). The oracle never attributes an import from one twin to the other: only imports that resolve to the audited file (or its re-export chain) contradict it. The remaining UNSUREs include same-name collisions and symbols whose only consumers live outside the corpus (public entry points or external packages). The lower bound counts them all as false positives; the upper bound counts them all as true positives. The truth is between the two, and the bounds are conservative, not a point estimate of precision.
 - `default` exports are not matched by the generic symbol search (the word "default" is too common); they are only contradicted by a resolved default import. A default export consumed solely from outside the corpus remains UNSURE.
 - Text search cannot prove runtime reflection, bundler conventions, or external consumers. A CONFIRMED verdict means "no mechanical evidence inside this corpus", not "safe to delete".
 - The corpora were scanned at the revisions present in `/Volumes/data/projects/unshit-bench/corpus` with default config; other revisions, configs or include/exclude settings can change both findings and verdicts.

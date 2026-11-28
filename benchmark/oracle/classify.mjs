@@ -32,19 +32,8 @@ function consumerDetail(stmt, name, isDefault, sameFile) {
 
 function findConsumers(project, name, isDefault, closure) {
   const found = [];
-  const seenStmt = new Set();
-  // A module and its mirrored twin are the same module for attribution
-  // purposes: an import that resolves into the mirror of the audited file is an
-  // import of the audited file (and vice versa).
-  const candidates = new Set(closure);
   for (const candidate of closure) {
-    const mirror = project.mirrorOf?.get?.(candidate);
-    if (mirror) candidates.add(mirror);
-  }
-  for (const candidate of candidates) {
     for (const stmt of project.statementsByTarget.get(candidate) ?? []) {
-      if (seenStmt.has(stmt)) continue;
-      seenStmt.add(stmt);
       if (stmt.kind === 'export-from') continue; // chain, not a consumer
       const sameFile = project.byPath.get(stmt.file);
       if (!sameFile) continue;
@@ -112,7 +101,7 @@ function classifyExportLike(project, finding) {
     return verdict(project, finding, 'UNSURE', [evidence('package.json', line, `public entry point: ${file}`)], 'File is a package entry point; external consumers are invisible to text search');
   }
   if (occurrences.length === 0) {
-    return verdict(project, finding, 'CONFIRMED', [], `Name \`${name}\` appears nowhere outside its declaration${isDefault ? ' and no default import was found' : ''}`);
+    return verdict(project, finding, 'CONFIRMED', [], `No code occurrence of \`${name}\` outside its declaration${isDefault ? ' and no default import was found' : ''}`);
   }
   const reason = isDefault
     ? 'The word "default" occurs in corpus text, but no default import of the file could be resolved; ambiguous by construction'

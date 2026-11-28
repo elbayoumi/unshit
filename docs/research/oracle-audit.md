@@ -1,6 +1,6 @@
 # Independent oracle audit of dead-code findings
 
-Generated: 2026-11-28T02:14:27.364Z
+Generated: 2026-11-28T02:38:08.957Z
 
 ## Method
 
@@ -13,33 +13,35 @@ Generated: 2026-11-28T02:14:27.364Z
 - Dependency verdicts: CONFIRMED when the package name appears nowhere outside its `package.json` declaration; CONTRADICTED for a matching import specifier, a script/config key in that manifest, a config file named after the package, or a config/type reference in scope; UNSURE for comment/doc/lockfile mentions.
 - Precision with UNSURE counted both ways: lower bound `C / (C + D + U)` (all unsure are wrong), upper bound `(C + U) / (C + D + U)` (all unsure are right), where C/D/U are confirmed/contradicted/unsure. Wilson 95% reported as `[wilson(C).low, wilson(C+U).high]`. Confirmed-only precision (`C / (C+D)`) is in `results.json`.
 - Wilson intervals are computed from summed counts, not by averaging intervals. This is a precision cross-check of emitted findings, not a recall measurement.
-- Round 16 evidence sources: (1) import specifiers are resolved through mirrored adapter directories, so an import that lands in `adapters/<name>/src/*` is attributed to the same module as its twin `src/adapter/<name>/*`; (2) package.json `exports`/`main`/`bin` targets are mapped back to source files before public-entry checks run; (3) documentation and lockfile mentions no longer count as usage occurrences during export/type-export matching.
+- Round 17 evidence policy: (1) every import specifier resolves to the file it actually names; distinct same-named files are never treated as the same module; (2) package.json `exports`/`main`/`bin` targets are mapped back to existing source files before public-entry checks run; (3) documentation and lockfile mentions do not count as code occurrences during export/type-export matching.
 
 ## Results
 
-Pooled: C=206, D=7, U=54, N=267. Precision lower **77.2%**, upper **97.4%**, Wilson 95% [71.8%, 98.7%]. Confirmed-only precision 96.7%.
+Pooled: C=205, D=1, U=59, N=265. Precision lower **77.4%**, upper **99.6%**, Wilson 95% [71.9%, 99.9%]. Confirmed-only precision 99.5%.
 
-## Round 16 verdict movement (new evidence sources)
+## Verdict movement vs the previous run
 
-Before this round: C=205, D=2, U=60, N=267.
+This compares the current findings against the `results.json` that was on disk before this run; it is not a claim about a particular development round.
 
-After this round: C=206, D=7, U=54, N=267.
+Previous run generated at `2026-11-28T02:14:27.364Z`: C=206, D=7, U=54, N=267.
 
-UNSAFE -> CONFIRMED: 1. UNSAFE -> CONTRADICTED: 5. CONFIRMED -> UNSURE (newly uncertain, reported honestly): 0.
+This run: C=205, D=1, U=59, N=265.
+
+UNSURE -> CONFIRMED: 0. UNSURE -> CONTRADICTED: 0. CONFIRMED -> UNSURE: 0. CONTRADICTED -> UNSURE: 5.
 
 ### Verdict flips by rule
 
-- `ts/unused-export`: 3 verdict flip(s) -> UNSURE->CONTRADICTED (hono src/adapter/aws-lambda/handler.ts:438 `EventV2Processor`); UNSURE->CONTRADICTED (hono src/adapter/aws-lambda/handler.ts:480 `EventV1Processor`); UNSURE->CONTRADICTED (hono src/adapter/aws-lambda/handler.ts:543 `ALBProcessor`).
-- `ts/unused-type-export`: 3 verdict flip(s) -> UNSURE->CONTRADICTED (hono src/adapter/aws-lambda/handler.ts:77 `APIGatewayProxyEvent`); UNSURE->CONTRADICTED (hono src/adapter/aws-lambda/handler.ts:101 `ALBProxyEvent`); UNSURE->CONFIRMED (hono src/context.ts:78 `Renderer`).
+- `ts/unused-export`: 3 verdict flip(s) -> CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:438 `EventV2Processor`); CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:480 `EventV1Processor`); CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:543 `ALBProcessor`).
+- `ts/unused-type-export`: 2 verdict flip(s) -> CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:77 `APIGatewayProxyEvent`); CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:101 `ALBProxyEvent`).
 
 ### Per rule
 
 | Rule | Confirmed | Contradicted | Unsure | Total | Precision (lower) | Precision (upper) | Wilson 95% |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | `deps/unused-dependency` | 7 | 1 | 10 | 18 | 38.9% | 94.4% | [20.3%, 99.0%] |
-| `ts/unused-export` | 28 | 3 | 20 | 51 | 54.9% | 94.1% | [41.4%, 98.0%] |
-| `ts/unused-file` | 122 | 1 | 5 | 128 | 95.3% | 99.2% | [90.2%, 99.9%] |
-| `ts/unused-type-export` | 49 | 2 | 19 | 70 | 70.0% | 97.1% | [58.5%, 99.2%] |
+| `ts/unused-export` | 28 | 0 | 23 | 51 | 54.9% | 100.0% | [41.4%, 100.0%] |
+| `ts/unused-file` | 121 | 0 | 5 | 126 | 96.0% | 100.0% | [91.0%, 100.0%] |
+| `ts/unused-type-export` | 49 | 0 | 21 | 70 | 70.0% | 100.0% | [58.5%, 100.0%] |
 
 ### Per corpus
 
@@ -48,7 +50,7 @@ UNSAFE -> CONFIRMED: 1. UNSAFE -> CONTRADICTED: 5. CONFIRMED -> UNSURE (newly un
 | `commander.js` | 4 | 0 | 0 | 4 | 100.0% | 100.0% | [51.0%, 100.0%] |
 | `execa` | 3 | 0 | 0 | 3 | 100.0% | 100.0% | [43.9%, 100.0%] |
 | `fastify` | 22 | 0 | 0 | 22 | 100.0% | 100.0% | [85.1%, 100.0%] |
-| `hono` | 28 | 7 | 25 | 60 | 46.7% | 88.3% | [34.6%, 94.2%] |
+| `hono` | 27 | 1 | 30 | 58 | 46.6% | 98.3% | [34.3%, 99.7%] |
 | `zod` | 149 | 0 | 29 | 178 | 83.7% | 100.0% | [77.6%, 100.0%] |
 
 ### Per rule and corpus
@@ -61,9 +63,9 @@ UNSAFE -> CONFIRMED: 1. UNSAFE -> CONTRADICTED: 5. CONFIRMED -> UNSURE (newly un
 | `fastify` | `deps/unused-dependency` | 4 | 0 | 0 | 4 | 100.0% | 100.0% | [51.0%, 100.0%] |
 | `fastify` | `ts/unused-file` | 18 | 0 | 0 | 18 | 100.0% | 100.0% | [82.4%, 100.0%] |
 | `hono` | `deps/unused-dependency` | 0 | 1 | 2 | 3 | 0.0% | 66.7% | [0.0%, 93.9%] |
-| `hono` | `ts/unused-export` | 7 | 3 | 8 | 18 | 38.9% | 83.3% | [20.3%, 94.2%] |
-| `hono` | `ts/unused-file` | 2 | 1 | 0 | 3 | 66.7% | 66.7% | [20.8%, 93.9%] |
-| `hono` | `ts/unused-type-export` | 19 | 2 | 15 | 36 | 52.8% | 94.4% | [37.0%, 98.5%] |
+| `hono` | `ts/unused-export` | 7 | 0 | 11 | 18 | 38.9% | 100.0% | [20.3%, 100.0%] |
+| `hono` | `ts/unused-file` | 1 | 0 | 0 | 1 | 100.0% | 100.0% | [20.7%, 100.0%] |
+| `hono` | `ts/unused-type-export` | 19 | 0 | 17 | 36 | 52.8% | 100.0% | [37.0%, 100.0%] |
 | `zod` | `deps/unused-dependency` | 2 | 0 | 8 | 10 | 20.0% | 100.0% | [5.7%, 100.0%] |
 | `zod` | `ts/unused-export` | 21 | 0 | 12 | 33 | 63.6% | 100.0% | [46.6%, 100.0%] |
 | `zod` | `ts/unused-file` | 96 | 0 | 5 | 101 | 95.0% | 100.0% | [88.9%, 100.0%] |
@@ -71,7 +73,7 @@ UNSAFE -> CONFIRMED: 1. UNSAFE -> CONTRADICTED: 5. CONFIRMED -> UNSURE (newly un
 
 ## Contradicted findings (all)
 
-Total: 7.
+Total: 1.
 
 ### `deps/unused-dependency` — hono — `benchmarks/fetch/package.json:4` — `mitata`
 
@@ -79,46 +81,9 @@ Total: 7.
 - Oracle reason: Package `mitata` is imported/required by a file in its package scope
 - Evidence: `benchmarks/fetch/bench.mts:17` — import './ts-resolve.mjs' import { run, bench, measure } from 'mitata'
 
-### `ts/unused-export` — hono — `src/adapter/aws-lambda/handler.ts:438` — `EventV2Processor`
-
-- Finding: Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.
-- Oracle reason: Real consumer of `EventV2Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)
-- Evidence: `adapters/aws-lambda/test/index.test.ts:6` — import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV2Processor` as `EventV2Processor`)
-
-### `ts/unused-export` — hono — `src/adapter/aws-lambda/handler.ts:480` — `EventV1Processor`
-
-- Finding: Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.
-- Oracle reason: Real consumer of `EventV1Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)
-- Evidence: `adapters/aws-lambda/test/index.test.ts:6` — import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV1Processor` as `EventV1Processor`)
-
-### `ts/unused-export` — hono — `src/adapter/aws-lambda/handler.ts:543` — `ALBProcessor`
-
-- Finding: Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.
-- Oracle reason: Real consumer of `ALBProcessor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)
-- Evidence: `adapters/aws-lambda/test/index.test.ts:6` — import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `ALBProcessor` as `ALBProcessor`)
-
-### `ts/unused-file` — hono — `runtime-tests/workerd/index.ts:1`
-
-- Finding: File is never imported by any other scanned file.
-- Oracle reason: Literal path reference to `runtime-tests/workerd/index.ts` in a script/config/code file
-- Evidence: `runtime-tests/workerd/index.test.ts:8` — worker = await unstable_dev('./runtime-tests/workerd/index.ts', {
-- Evidence: `runtime-tests/workerd/index.test.ts:44` — worker = await unstable_dev('./runtime-tests/workerd/index.ts', {
-
-### `ts/unused-type-export` — hono — `src/adapter/aws-lambda/handler.ts:77` — `APIGatewayProxyEvent`
-
-- Finding: Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.
-- Oracle reason: Real consumer of `APIGatewayProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)
-- Evidence: `adapters/aws-lambda/test/stream-mock.ts:3` — import type { APIGatewayProxyEvent, APIGatewayProxyEventV2 } from '../src/handler' (named import of `APIGatewayProxyEvent` as `APIGatewayProxyEvent`)
-
-### `ts/unused-type-export` — hono — `src/adapter/aws-lambda/handler.ts:101` — `ALBProxyEvent`
-
-- Finding: Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.
-- Oracle reason: Real consumer of `ALBProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)
-- Evidence: `adapters/aws-lambda/test/index.test.ts:14` — import type { ALBProxyEvent, APIGatewayProxyEventV2, LatticeProxyEventV2, LambdaEvent, } from '../src/handler' (named import of `ALBProxyEvent` as `ALBProxyEvent`)
-
 ## Contradiction investigation, detector bugs and limitations
 
-Every CONTRADICTED finding below was checked by reading both the corpus code and the relevant unshit detector. No detector source was changed in this audit. Six contradictions were found in the first run; each is classified honestly as a real detector false positive (FP), a detector limitation under the rule's literal wording, or an oracle limitation.
+Every CONTRADICTED finding from the first run was checked by reading both the corpus code and the relevant unshit detector. No detector source was changed in this audit. Six contradictions were found in the first run; each is classified honestly as a real detector false positive (FP), a detector limitation under the rule's literal wording, or an oracle limitation. Only #1 is still contradicted in the current run; #2 and #4–#6 were resolved by later detector fixes, and the five round-16 mirror artifacts were resolved by the oracle fix described below.
 
 ### 1. `hono` / `deps/unused-dependency` / `benchmarks/fetch/package.json:4` (`mitata`) — REAL DETECTOR BUG
 
@@ -134,7 +99,7 @@ Every CONTRADICTED finding below was checked by reading both the corpus code and
 
   Scan with `node bin/unshit.js scan pkg --format json`.
 
-### 2. `hono` / `ts/unused-file` / `runtime-tests/workerd/index.ts` — DETECTOR LIMITATION (practical FP, literal rule not violated)
+### 2. `hono` / `ts/unused-file` / `runtime-tests/workerd/index.ts` — RESOLVED DETECTOR LIMITATION
 
 - Oracle evidence: `runtime-tests/workerd/index.test.ts:8` and `:44` — `unstable_dev('./runtime-tests/workerd/index.ts', ...)`.
 - Code reading: the file is a Cloudflare Worker entry (`export default app`) loaded by `wrangler`'s `unstable_dev` from a string path; the tests exercise its routes. It is used, so reporting it as unused is a practical false positive.
@@ -147,6 +112,8 @@ Every CONTRADICTED finding below was checked by reading both the corpus code and
   // worker.test.ts
   const worker = await unstable_dev('./worker.ts');
   ```
+
+- Status: resolved. `src/detectors/unused-file.ts` now collects explicit relative path literals passed to calls, so this file and `adapters/cloudflare-workers/test/worker.ts` are no longer reported. Older `results.json` files that still list them are stale; the current run has N=265, not 267.
 
 ### 3. `zod` / `deps/unused-dependency` / `package.json:36` (`lint-staged`) — REAL DETECTOR BUG
 
@@ -189,18 +156,24 @@ These initial CONTRADICTED verdicts were re-checked against the code and turned 
 
 1. `src/walker.ts` omits `.mts`/`.cts` from `TS_EXTS`, causing false `deps/unused-dependency` findings (and hiding those files from all other rules) — reproducer in #1.
 2. `src/detectors/deps.ts` ignores top-level config keys in `package.json`, causing false `deps/unused-dependency` findings even when the config key and the declaration are in the same file — reproducer in #3.
-3. `src/detectors/unused-file.ts` considers only the import graph, so files referenced by npm scripts, third-party loaders and tool configs are reported as unused (#2, #4–#6). This matches its narrow documented definition but is a false positive relative to the rule's dead-code intent.
+3. `src/detectors/unused-file.ts` originally considered only the import graph, so files referenced by npm scripts, third-party loaders and tool configs were reported as unused (#2, #4–#6). Later fixes cover script/config references and explicit relative call arguments; the historical reproducer is kept above.
 
 ## Follow-up (round 14)
 
 - Bug 2 is fixed: `deps/unused-dependency` now honours matching top-level `package.json` config keys (#3 resolved).
-- Bug 3 is fixed for script and `*.config.*` references (#4, #5 and #6 resolved, plus two fastify webpack entries that were not contradicted). #2 remains by design: string literals in ordinary source files are not treated as file references.
+- Bug 3 is fixed for script, `*.config.*` and explicit relative call-argument references (#2, #4, #5 and #6 resolved, plus two fastify webpack entries that were not contradicted). A literal merely assigned to a variable is still data, not a reference.
 - Bug 1 (`.mts`/`.cts` not walked) is still open, so #1 remains.
-- After these fixes the rerun reports 2 contradictions of 267 findings (see `docs/research/oracle-audit.md`).
+- The current rerun reports C=205, D=1, U=59 of 265 findings (see `docs/research/oracle-audit.md`). The drop from 267 is the two `ts/unused-file` findings listed as resolved above, not a change made by this audit.
+
+## Follow-up (round 17)
+
+- The round-16 "mirror" assumption was false. In hono, `adapters/aws-lambda/src/handler.ts` has 684 lines, `src/adapter/aws-lambda/handler.ts` has 728 lines and is marked `@deprecated`, and their imports differ (`hono/types` vs `../../types`). All imports in `adapters/aws-lambda/test/*` resolve to `../src/handler`, i.e. to the adapters copy. Imports are now attributed only to the file they resolve to; the five round-16 contradictions on `src/adapter/aws-lambda/handler.ts` returned to UNSURE. They are not counted as detector FPs. No `src/` code was changed for this fix; real detector contradictions stay contradicted.
+- The other round-16 evidence changes were checked on the corpora. The `./dist/...` -> `./src/...` package-target mapping applies only to hono: `tsconfig.build.json` sets `rootDir: ./src/` and `outDir: ./dist/types/`, and all mapped source files correspond to real `exports` subpaths (for example `./dist/adapter/aws-lambda/index.js` -> `src/adapter/aws-lambda/index.ts`). zod, execa, fastify and commander.js have no such mapping; their existing direct entries are unchanged.
+- The only round-16 UNSURE -> CONFIRMED move was `hono` `src/context.ts:78` `Renderer`. Its sole old evidence was `docs/MIGRATION.md:53`, the prose phrase "JSX Renderer Middleware", not code. Documentation and lockfile mentions are not executable usage, so the move stands; CONFIRMED still means "no code occurrence inside this corpus", not "safe to delete".
 
 ## Limitations of this oracle
 
-- UNSURE is common for exported symbols that exist in mirrored directories (e.g. hono has both `adapters/aws-lambda/src/*` and `src/adapter/aws-lambda/*` with identical symbol names). Since round 16 the oracle resolves imports through such mirror pairs, so a same-named symbol reached through an import that lands in one mirrored tree is attributed to the module in the other; remaining mirror-related UNSUREs are those whose only consumers live outside the corpus (public entry points or external packages). The lower bound counts them all as false positives; the upper bound counts them all as true positives. The truth is between the two, and the bounds are conservative, not a point estimate of precision.
+- UNSURE is common for exported symbols that have a same-named twin in a different directory (e.g. hono has both `adapters/aws-lambda/src/*` and `src/adapter/aws-lambda/*`, but they are different files). The oracle never attributes an import from one twin to the other: only imports that resolve to the audited file (or its re-export chain) contradict it. The remaining UNSUREs include same-name collisions and symbols whose only consumers live outside the corpus (public entry points or external packages). The lower bound counts them all as false positives; the upper bound counts them all as true positives. The truth is between the two, and the bounds are conservative, not a point estimate of precision.
 - `default` exports are not matched by the generic symbol search (the word "default" is too common); they are only contradicted by a resolved default import. A default export consumed solely from outside the corpus remains UNSURE.
 - Text search cannot prove runtime reflection, bundler conventions, or external consumers. A CONFIRMED verdict means "no mechanical evidence inside this corpus", not "safe to delete".
 - The corpora were scanned at the revisions present in `/Volumes/data/projects/unshit-bench/corpus` with default config; other revisions, configs or include/exclude settings can change both findings and verdicts.

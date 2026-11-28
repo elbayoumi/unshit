@@ -124,29 +124,6 @@ export function resolveSpec(project, fromFile, spec, visited = new Set()) {
   return [...new Set(out)];
 }
 
-// Mirror pairs: the same module published twice under different directory
-// shapes. Adapters live either as `adapters/<name>/src/<...>` (the published
-// package source) or as `src/adapter/<name>/<...>` (the monorepo source that the
-// package.json sub-entries such as `hono/aws-lambda` point at). Both trees hold
-// the same module under the same symbol names, so an import specifier that
-// resolves into one tree must be attributed to the module in the other tree too.
-function mirrorPathOf(path) {
-  const segs = String(path).split('/');
-  if (segs[0] === 'adapters' && segs.length > 2 && segs[2] === 'src') {
-    const name = segs[1];
-    const rest = segs.slice(3);
-    const mirror = ['src', 'adapter', name, ...rest].join('/');
-    return mirror === path ? null : mirror;
-  }
-  if (segs[0] === 'src' && segs[1] === 'adapter' && segs.length > 2) {
-    const name = segs[2];
-    const rest = segs.slice(3);
-    const mirror = ['adapters', name, 'src', ...rest].join('/');
-    return mirror === path ? null : mirror;
-  }
-  return null;
-}
-
 function parseAliases(text) {
   let parsed;
   try {
@@ -213,7 +190,7 @@ function aliasFor(spec) {
 export function buildProject(root) {
   const files = readProjectFiles(root);
   const byPath = new Map(files.map((f) => [f.path, f]));
-  const project = { root, files, byPath, package: {}, packageRaw: null, aliases: [], aliasFor, mirrorOf: new Map() };
+  const project = { root, files, byPath, package: {}, packageRaw: null, aliases: [], aliasFor };
   const pkgFile = byPath.get('package.json');
   if (pkgFile) {
     project.packageRaw = pkgFile;
@@ -230,11 +207,6 @@ export function buildProject(root) {
   }
   project.aliases.sort((a, b) => b.prefix.length - a.prefix.length);
   project.entryFiles = new Set(packageEntryFiles(project));
-  project.mirrorOf = new Map();
-  for (const f of files) {
-    const mirror = mirrorPathOf(f.path);
-    if (mirror && byPath.has(mirror)) project.mirrorOf.set(f.path, mirror);
-  }
   project.statementsByTarget = new Map();
   for (const f of files) {
     for (const stmt of f.statements) {
