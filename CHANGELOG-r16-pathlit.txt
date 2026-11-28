@@ -1,0 +1,2 @@
+### Fixed
+- `ts/unused-file` no longer reports a file when a scanned JS/TS source passes an explicit relative code path (e.g. `unstable_dev('./worker.ts')`) that resolves exactly to that file, either from the source file's directory or from its nearest package root. Bare specifiers, extensionless strings and substitution template literals are still ignored.

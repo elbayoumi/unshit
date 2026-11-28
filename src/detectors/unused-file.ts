@@ -6,6 +6,10 @@ import { entryPointFileSet } from './dead-exports.js';
 import { collectModuleSpecs, safeReadText } from './deps-shared.js';
 
 const TS_LIKE = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
+const CODE_REF_LIKE = new Set([...TS_LIKE, '.mts', '.cts']);
+
+/** Explicit relative paths with a code extension; bare specifiers never match. */
+const CODE_PATH_REF_RE = /^\.\.?\/[^\n"'`]*\.(?:ts|tsx|js|jsx|mjs|cjs|mts|cts)$/i;
 
 const SCRIPT_TOKEN_SPLIT_RE = /[\s"'`]+/;
 
@@ -53,6 +57,81 @@ function resolveExactRef(baseRel: string, spec: string, fileSet: Set<string>): s
 
 const scriptRefCache = new WeakMap<DetectorContext, Set<string>>();
 const configRefCache = new WeakMap<DetectorContext, Set<string>>();
+const pathLitRefCache = new WeakMap<DetectorContext, Set<string>>();
+
+/** Directories containing a package.json (scanned files are always POSIX-relative). */
+function packageRootDirs(ctx: DetectorContext): Set<string> {
+  const roots = new Set<string>();
+  for (const rel of ctx.manifests ?? []) {
+    if (/(^|\/)package\.json$/.test(rel)) roots.add(posixDirname(rel));
+  }
+  for (const file of ctx.files) {
+    if (basenameOf(file.relPath) === 'package.json') roots.add(posixDirname(file.relPath));
+  }
+  return roots;
+}
+
+/** Nearest enclosing package root, or the scan root (`''`) when there is none. */
+function nearestPackageRoot(dir: string, roots: Set<string>, memo: Map<string, string>): string {
+  let current = dir;
+  const visited: string[] = [];
+  for (;;) {
+    const cached = memo.get(current);
+    if (cached !== undefined) {
+      for (const seen of visited) memo.set(seen, cached);
+      return cached;
+    }
+    visited.push(current);
+    if (roots.has(current) || current === '') {
+      for (const seen of visited) memo.set(seen, current);
+      return current;
+    }
+    current = posixDirname(current);
+  }
+}
+
+/**
+ * Explicit relative code-path literals passed to calls in scanned JS/TS files
+ * (e.g. `unstable_dev('./worker.ts')`). A literal merely assigned to a variable
+ * is data, not a reference, and is deliberately not counted. Resolution is
+ * tried from the referencing file's directory, then from its nearest package
+ * root (or the scan root). Substitution templates are not string literals and
+ * are ignored because their value is not statically known.
+ */
+function collectPathLiteralRefTargets(ctx: DetectorContext): Set<string> {
+  const cached = pathLitRefCache.get(ctx);
+  if (cached) return cached;
+  const used = new Set<string>();
+  const fileSet = new Set(ctx.files.map((f) => f.relPath));
+  const roots = packageRootDirs(ctx);
+  const rootMemo = new Map<string, string>();
+  const addLiteral = (file: FileEntry, literal: string): void => {
+    if (literal.includes('${') || !CODE_PATH_REF_RE.test(literal)) return;
+    const fileDir = posixDirname(file.relPath);
+    const fromFile = resolveExactRef(fileDir, literal, fileSet);
+    if (fromFile) {
+      used.add(fromFile);
+      return;
+    }
+    const packageRoot = nearestPackageRoot(fileDir, roots, rootMemo);
+    const fromRoot = resolveExactRef(packageRoot, literal, fileSet);
+    if (fromRoot) used.add(fromRoot);
+  };
+  for (const file of ctx.files) {
+    if (!CODE_REF_LIKE.has(file.ext) || !file.sourceFile) continue;
+    const visit = (node: ts.Node): void => {
+      if (ts.isCallExpression(node)) {
+        for (const arg of node.arguments) {
+          if (ts.isStringLiteralLike(arg)) addLiteral(file, arg.text);
+        }
+      }
+      ts.forEachChild(node, visit);
+    };
+    visit(file.sourceFile);
+  }
+  pathLitRefCache.set(ctx, used);
+  return used;
+}
 
 function packageScriptsOf(content: string): Record<string, unknown> | null {
   let pkg: Record<string, unknown> | null = null;
@@ -178,8 +257,9 @@ function typeOnlyImportTargets(ctx: DetectorContext): Set<string> {
 /**
  * Flags source files that no other scanned file imports (static, dynamic,
  * `require`, export-from or side-effect imports), that no scanned package.json
- * script references and that no scanned tooling config string literal points
- * at, and that are not entry points.
+ * script or tooling config string literal points at, that no explicit relative
+ * code-path literal passed to a call in a scanned JS/TS file resolves to, and
+ * that are not entry points.
  */
 export const unusedFileDetector: Detector = {
   id: 'ts/unused-file',
@@ -195,12 +275,13 @@ export const unusedFileDetector: Detector = {
     const typeOnly = typeOnlyImportTargets(ctx);
     const scriptRefs = collectScriptRefTargets(ctx);
     const configRefs = collectConfigRefTargets(ctx);
+    const pathLitRefs = collectPathLiteralRefTargets(ctx);
     const findings: Finding[] = [];
     for (const file of ctx.files) {
       if (!TS_LIKE.has(file.ext) || file.relPath.endsWith('.d.ts')) continue;
       if (entries.has(file.relPath)) continue;
       if (graph.incomingOf(file.relPath).length > 0 || dynamic.has(file.relPath) || typeOnly.has(file.relPath)) continue;
-      if (scriptRefs.has(file.relPath) || configRefs.has(file.relPath)) continue;
+      if (scriptRefs.has(file.relPath) || configRefs.has(file.relPath) || pathLitRefs.has(file.relPath)) continue;
       findings.push({
         ruleId: this.id,
         category: 'dead-code',
