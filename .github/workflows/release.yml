@@ -37,7 +37,7 @@ jobs:
           # No npm token is used: publishing authenticates through OIDC and needs
           # a Trusted Publisher for this workflow on npmjs.com (without one,
           # npm publish fails with E404). setup-node still exports a placeholder
-          # NODE_AUTH_TOKEN, so unset it in each step that calls the registry.
+          # NODE_AUTH_TOKEN, so unset it before running npm against the registry.
           unset NODE_AUTH_TOKEN
           npm install -g npm@^11.5.1
           node -e "const [major,minor,patch]=require('child_process').execFileSync('npm',['--version'],{encoding:'utf8'}).trim().split('.').map(Number); if (major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1)))) process.exit(1)"
