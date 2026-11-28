@@ -67,12 +67,10 @@ exist, and every top-level `docs/research/*.md` must be listed here.
   deliberately varied to avoid pathological clone blow-ups, and process startup dominates
   the smaller case; real heavily-duplicated repos may be slower
   ([scan-scale](./scan-scale.md)).
-- **Large JSON through a pipe truncates at 64 KiB.** `bin/unshit.js` ends in
-  `process.exit(code)`, so `--format json` output above 64 KiB can be cut off when piped;
-  the benchmarks redirect stdout to a file instead. Open, not fixed
-  ([scan-scale](./scan-scale.md)).
-- **Fix soundness has gaps in coverage.** fastify has no `tsconfig`, so no typecheck ran
-  there, and `scale-1000` is synthetic ([fix-soundness](./fix-soundness.md)).
+- **Fix soundness on plain JS uses syntactic diagnostics only.** `fastify` has no
+  `tsconfig`, so it falls back to a synthesized TS program over `.js`/`.cjs`/`.mjs`
+  (`allowJs`, `checkJs: false`, `getSyntacticDiagnostics` only); `scale-1000` is
+  synthetic ([fix-soundness](./fix-soundness.md)).
 - **The frozen suite gates only holdout and hard negatives;** `eval/` recall is printed for
   calibration and is not a gate, and gate exclusions must stay explicit in
   `benchmark/frozen/known-gaps.json` (`benchmark/frozen/README.md`).
