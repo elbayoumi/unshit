@@ -1,18 +1,20 @@
 {
-  "generatedAt": "2026-11-26T13:51:59.782Z",
+  "generatedAt": "2026-11-28T02:02:31.457Z",
   "results": [
     {
       "name": "hono",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-hono-ljDz6q/hono",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-hono-9YrKGR/hono",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
           "count": 0,
-          "files": 0
+          "files": 0,
+          "mode": "tsconfig"
         },
         "after": {
           "count": 0,
-          "files": 0
+          "files": 0,
+          "mode": "tsconfig"
         },
         "newErrors": 0,
         "unattributedNewErrors": []
@@ -135,20 +137,22 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 5325
+      "wallTimeMs": 4790
     },
     {
       "name": "execa",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-execa-JAJhhi/execa",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-execa-NtqOWY/execa",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
           "count": 16,
-          "files": 1
+          "files": 1,
+          "mode": "tsconfig"
         },
         "after": {
           "count": 16,
-          "files": 1
+          "files": 1,
+          "mode": "tsconfig"
         },
         "newErrors": 0,
         "unattributedNewErrors": []
@@ -156,13 +160,13 @@
       "fix": {
         "exitCode": 0,
         "applied": {
-          "patches": 2,
-          "applied": 2,
+          "patches": 1,
+          "applied": 1,
           "deletions": 2,
           "deleted": 2,
           "passes": 2
         },
-        "skips": 13,
+        "skips": 11,
         "passes": 2,
         "output": ""
       },
@@ -178,9 +182,9 @@
         "changedFilesAfterSecond": []
       },
       "rescan": {
-        "beforeFindings": 35,
-        "afterFindings": 30,
-        "fixedFindings": 5,
+        "beforeFindings": 32,
+        "afterFindings": 28,
+        "fixedFindings": 4,
         "fixedStillPresent": 0,
         "fixedStillPresentSample": []
       },
@@ -192,16 +196,9 @@
           "newCompileErrorDetails": [],
           "skippedReasons": []
         },
-        "slop/magic-timer": {
-          "fixed": 1,
-          "skipped": 0,
-          "newCompileErrors": 0,
-          "newCompileErrorDetails": [],
-          "skippedReasons": []
-        },
         "slop/redundant-catch": {
           "fixed": 0,
-          "skipped": 13,
+          "skipped": 11,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": [
@@ -227,24 +224,26 @@
       "remainingFixable": 0,
       "remainingFixableSamples": [],
       "syntax": {
-        "checked": 1,
+        "checked": 0,
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 12045
+      "wallTimeMs": 4343
     },
     {
       "name": "zod",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-zod-bt92rX/zod",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-zod-fD9OBc/zod",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
           "count": 598,
-          "files": 472
+          "files": 472,
+          "mode": "tsconfig"
         },
         "after": {
-          "count": 374,
-          "files": 353
+          "count": 402,
+          "files": 359,
+          "mode": "tsconfig"
         },
         "newErrors": 0,
         "unattributedNewErrors": []
@@ -252,13 +251,13 @@
       "fix": {
         "exitCode": 0,
         "applied": {
-          "patches": 53,
-          "applied": 53,
-          "deletions": 120,
-          "deleted": 120,
+          "patches": 54,
+          "applied": 54,
+          "deletions": 114,
+          "deleted": 114,
           "passes": 7
         },
-        "skips": 126,
+        "skips": 120,
         "passes": 7,
         "output": ""
       },
@@ -274,9 +273,9 @@
         "changedFilesAfterSecond": []
       },
       "rescan": {
-        "beforeFindings": 1477,
-        "afterFindings": 1136,
-        "fixedFindings": 342,
+        "beforeFindings": 1486,
+        "afterFindings": 1159,
+        "fixedFindings": 330,
         "fixedStillPresent": 0,
         "fixedStillPresentSample": []
       },
@@ -289,26 +288,24 @@
           "skippedReasons": []
         },
         "code/high-complexity": {
-          "fixed": 3,
+          "fixed": 1,
           "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": []
         },
         "deps/unused-dependency": {
-          "fixed": 11,
-          "skipped": 10,
+          "fixed": 10,
+          "skipped": 5,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": [
-            "`lint-staged` still referenced by package.json (scripts or config field)",
             "`zod4` still imported (or required) by a scanned file anywhere in the project",
-            "`zod3` still imported (or required) by a scanned file anywhere in the project",
-            "`execa` still imported (or required) by a scanned file anywhere in the project"
+            "`zod3` still imported (or required) by a scanned file anywhere in the project"
           ]
         },
         "react/god-file": {
-          "fixed": 4,
+          "fixed": 3,
           "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
@@ -341,14 +338,14 @@
           "skippedReasons": []
         },
         "ts/no-explicit-any": {
-          "fixed": 124,
+          "fixed": 122,
           "skipped": 0,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": []
         },
         "ts/unused-export": {
-          "fixed": 20,
+          "fixed": 19,
           "skipped": 49,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
@@ -366,8 +363,8 @@
           ]
         },
         "ts/unused-file": {
-          "fixed": 105,
-          "skipped": 2,
+          "fixed": 100,
+          "skipped": 1,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": [
@@ -400,20 +397,22 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 82289
+      "wallTimeMs": 19382
     },
     {
       "name": "commander.js",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-commander_js-6OoFWW/commander.js",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-commander_js-mCZxdV/commander.js",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
           "count": 47,
-          "files": 12
+          "files": 12,
+          "mode": "tsconfig"
         },
         "after": {
           "count": 47,
-          "files": 12
+          "files": 12,
+          "mode": "tsconfig"
         },
         "newErrors": 0,
         "unattributedNewErrors": []
@@ -467,18 +466,22 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 2869
+      "wallTimeMs": 1563
     },
     {
       "name": "fastify",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-fastify-kwWVAm/fastify",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-fastify-O7ztt5/fastify",
       "tsconfig": null,
       "typecheck": {
         "before": {
-          "error": "no tsconfig found"
+          "count": 0,
+          "files": 271,
+          "mode": "syntactic-js-fallback"
         },
         "after": {
-          "error": "no tsconfig found"
+          "count": 0,
+          "files": 271,
+          "mode": "syntactic-js-fallback"
         },
         "newErrors": 0,
         "unattributedNewErrors": []
@@ -492,7 +495,7 @@
           "deleted": 0,
           "passes": 2
         },
-        "skips": 21,
+        "skips": 18,
         "passes": 2,
         "output": ""
       },
@@ -508,8 +511,8 @@
         "changedFilesAfterSecond": []
       },
       "rescan": {
-        "beforeFindings": 88,
-        "afterFindings": 83,
+        "beforeFindings": 62,
+        "afterFindings": 57,
         "fixedFindings": 5,
         "fixedStillPresent": 0,
         "fixedStillPresentSample": []
@@ -529,18 +532,9 @@
           "newCompileErrorDetails": [],
           "skippedReasons": []
         },
-        "slop/redundant-catch": {
-          "fixed": 0,
-          "skipped": 1,
-          "newCompileErrors": 0,
-          "newCompileErrorDetails": [],
-          "skippedReasons": [
-            "catch parameter is missing or destructured"
-          ]
-        },
         "ts/unused-file": {
           "fixed": 0,
-          "skipped": 20,
+          "skipped": 18,
           "newCompileErrors": 0,
           "newCompileErrorDetails": [],
           "skippedReasons": [
@@ -555,20 +549,22 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 4091
+      "wallTimeMs": 3327
     },
     {
       "name": "scale-1000",
-      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-scale-jODRQx/project",
+      "workdir": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-fs-scale-sokJoT/project",
       "tsconfig": "tsconfig.json",
       "typecheck": {
         "before": {
           "count": 3363,
-          "files": 1000
+          "files": 1000,
+          "mode": "tsconfig"
         },
         "after": {
           "count": 3363,
-          "files": 1000
+          "files": 1000,
+          "mode": "tsconfig"
         },
         "newErrors": 0,
         "unattributedNewErrors": []
@@ -627,7 +623,7 @@
         "failed": 0,
         "failures": []
       },
-      "wallTimeMs": 6002
+      "wallTimeMs": 5089
     }
   ]
 }

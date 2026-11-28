@@ -1,0 +1,9 @@
+## [Unreleased]
+
+### Changed
+
+- `benchmark/fix-soundness/run.mjs`: when a corpus project has no tsconfig (fastify), the typecheck comparison now falls back to a synthesized TypeScript program over the project's `.js`/`.cjs`/`.mjs` files (`allowJs`, `checkJs: false`, `noEmit`), comparing syntactic diagnostics only (`program.getSyntacticDiagnostics`) before and after the fix. Pre-existing diagnostics are diffed out by `file|code|message`. Fastify is the only corpus project using this JS fallback.
+
+### Added
+
+- `tests/fix-soundness-r16.test.ts`: covers the JS fallback diagnostic diff (sound edit yields 0 new diagnostics, broken edit yields >=1, pre-existing syntax error not counted, shifted lines do not count).

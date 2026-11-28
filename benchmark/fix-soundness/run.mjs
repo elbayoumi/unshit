@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { syntacticJsDiagnostics } from './js-fallback.mjs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -53,7 +54,7 @@ function findTsconfig(dir) {
 }
 
 function tscDiagnostics(dir, tsconfigPath) {
-  if (!tsconfigPath) return { ok: false, reason: 'no tsconfig found', diagnostics: [], count: 0 };
+  if (!tsconfigPath) return syntacticJsDiagnostics(dir);
   const configFile = ts.readConfigFile(tsconfigPath, ts.sys.readFile);
   if (configFile.error) {
     return { ok: false, reason: `tsconfig read error: ${ts.flattenDiagnosticMessageText(configFile.error.messageText, '\n')}`, diagnostics: [], count: 0 };
@@ -66,7 +67,7 @@ function tscDiagnostics(dir, tsconfigPath) {
     const pos = d.file && d.start !== undefined ? d.file.getLineAndCharacterOfPosition(d.start) : { line: -1, character: -1 };
     return { file: rel, line: pos.line + 1, column: pos.character + 1, code: d.code, message: ts.flattenDiagnosticMessageText(d.messageText, '\n') };
   });
-  return { ok: true, diagnostics: diags, count: diags.length, fileNames: parsed.fileNames.length };
+  return { ok: true, mode: 'tsconfig', diagnostics: diags, count: diags.length, fileNames: parsed.fileNames.length };
 }
 
 function diffDiagnostics(before, after) {
@@ -231,7 +232,12 @@ async function analyzeProject(name, setupFn) {
     const stillPresent = fixedFindings.filter((f) => afterKeys.has(findingKey(f)));
     return {
       name, workdir: work, tsconfig: tsconfigPath ? tsconfigPath.slice(work.length + 1) : null,
-      typecheck: { before: beforeTsc.ok ? { count: beforeTsc.count, files: beforeTsc.fileNames } : { error: beforeTsc.reason }, after: afterTsc.ok ? { count: afterTsc.count, files: afterTsc.fileNames } : { error: afterTsc.reason }, newErrors: newTscErrors.length, unattributedNewErrors: unattributed.slice(0, 20) },
+      typecheck: {
+        before: beforeTsc.ok ? { count: beforeTsc.count, files: beforeTsc.fileNames, mode: beforeTsc.mode } : { error: beforeTsc.reason },
+        after: afterTsc.ok ? { count: afterTsc.count, files: afterTsc.fileNames, mode: afterTsc.mode } : { error: afterTsc.reason },
+        newErrors: newTscErrors.length,
+        unattributedNewErrors: unattributed.slice(0, 20),
+      },
       fix: { exitCode: 0, applied: { patches: fixResult.deterministicPatches.length, applied: fixResult.appliedCount, deletions: fixResult.deletions.length, deleted: fixResult.deletedCount, passes: fixResult.passes }, skips: (fixResult.skipped || []).length, passes: fixResult.passes, output: '' },
       idempotency, rescan: { beforeFindings: (beforeScan.findings || []).length, afterFindings: (afterScan.findings || []).length, fixedFindings: fixedFindings.length, fixedStillPresent: stillPresent.length, fixedStillPresentSample: stillPresent.slice(0, 10).map((f) => ({ ruleId: f.ruleId, file: f.file, line: f.span?.line, message: f.message })) },
       perRule: buildPerRule(groupByRule(fixedFindings), groupByRule(fixResult.skipped || []), newErrorsByRule),
@@ -246,13 +252,24 @@ async function analyzeProject(name, setupFn) {
   }
 }
 
+function typecheckLabel(r) {
+  const mode = r.typecheck.before?.mode ?? r.typecheck.after?.mode;
+  if (r.tsconfig) return r.tsconfig;
+  if (mode === 'syntactic-js-fallback') return 'none (syntactic JS fallback)';
+  return 'none';
+}
+
+function typecheckCount(side) {
+  if (!side) return '?';
+  if (typeof side.count === 'number') return side.count;
+  return side.error ?? '?';
+}
+
 function mdSummary(results) {
-  const lines = ['## Summary', '', '| Project | tsconfig | tsc before | tsc after | new tsc errors | fixed findings | skipped | passes | idempotent | syntax failed | remaining fixable | time ms |', '|---|---|---:|---:|---:|---:|---:|---:|:---:|---:|---:|---:|'];
+  const lines = ['## Summary', '', '| Project | typecheck | before | after | new errors | fixed findings | skipped | passes | idempotent | syntax failed | remaining fixable | time ms |', '|---|---|---:|---:|---:|---:|---:|---:|:---:|---:|---:|---:|'];
   for (const r of results) {
     if (r.error) { lines.push(`| ${r.name} | - | - | - | - | - | - | - | - | - | ERROR: ${r.error} | - |`); continue; }
-    const b = r.typecheck.before.count ?? r.typecheck.before.error ?? '?';
-    const a = r.typecheck.after.count ?? r.typecheck.after.error ?? '?';
-    lines.push(`| ${r.name} | ${r.tsconfig ?? 'none'} | ${b} | ${a} | ${r.typecheck.newErrors} | ${r.rescan.fixedFindings} | ${r.fix.skips} | ${r.fix.passes} | ${r.idempotency.ok ? 'yes' : 'NO'} | ${r.syntax.failed} | ${r.remainingFixable} | ${r.wallTimeMs} |`);
+    lines.push(`| ${r.name} | ${typecheckLabel(r)} | ${typecheckCount(r.typecheck.before)} | ${typecheckCount(r.typecheck.after)} | ${r.typecheck.newErrors} | ${r.rescan.fixedFindings} | ${r.fix.skips} | ${r.fix.passes} | ${r.idempotency.ok ? 'yes' : 'NO'} | ${r.syntax.failed} | ${r.remainingFixable} | ${r.wallTimeMs} |`);
   }
   lines.push('');
   return lines;
@@ -274,7 +291,12 @@ function mdProject(r) {
   const lines = [`## ${r.name}`, ''];
   if (r.error) return [...lines, `Error: ${r.error}`, ''];
   const t = r.typecheck;
-  lines.push(t.before.error ? `Typecheck: ${t.before.error}` : `Typecheck: ${t.before.count} -> ${t.after.count} (${t.newErrors} new, ${t.unattributedNewErrors.length} unattributed)`);
+  const mode = t.before.mode ?? t.after.mode;
+  const label = mode === 'syntactic-js-fallback'
+    ? `Syntactic JS fallback (no tsconfig, .js/.cjs/.mjs, allowJs, checkJs false, noEmit, program.getSyntacticDiagnostics only)`
+    : 'TypeScript program diagnostics (tsconfig)';
+  if (t.before.error) lines.push(`Typecheck: ${t.before.error}`);
+  else lines.push(`${label}: ${t.before.count} -> ${t.after.count} (${t.newErrors} new, ${t.unattributedNewErrors.length} unattributed, ${t.before.files} files before / ${t.after.files} files after)`);
   lines.push(`Idempotent: ${r.idempotency.ok}. Fixed findings reappearing: ${r.rescan.fixedStillPresent}.`);
   lines.push(`Passes: ${r.fix.passes}. Remaining fixable not fixed: ${r.remainingFixable}. Syntax checked/failed: ${r.syntax.checked}/${r.syntax.failed}. Wall time: ${r.wallTimeMs}ms.`);
   lines.push('', '| Rule | fixed | skipped | new compile errors | notes |', '|---|---:|---:|---:|---|', ...mdRuleRows(r.perRule));
@@ -289,7 +311,7 @@ function mdProject(r) {
 function renderMarkdown(results) {
   return [
     '# Fix soundness (round 11)', '', `Generated: ${new Date().toISOString()}`, '',
-    'Method: for each corpus project, copy to a fresh `/tmp` dir (corpus read-only), run `node bin/unshit.js fix <copy> --apply --no-cache`, then compare TypeScript program diagnostics before/after using this repo\'s `typescript` package over the project\'s `tsconfig.json`. "New compile errors" are diagnostics present after but not before (keyed by file+code+message). Idempotency = second `fix --apply` makes no changes and applies 0 patches/deletions. Re-scan = fixed findings do not reappear.', '',
+    'Method: for each corpus project, copy to a fresh `/tmp` dir (corpus read-only), run `node bin/unshit.js fix <copy> --apply --no-cache`, then compare diagnostics before/after using this repo\'s `typescript` package. Projects with a tsconfig use `ts.createProgram` over the tsconfig and compare pre-emit diagnostics (`ts.getPreEmitDiagnostics` + config errors). Projects with no tsconfig use a synthesized TypeScript program over `.js/.cjs/.mjs` files with `allowJs: true`, `checkJs: false`, `noEmit: true`, and compare SYNTACTIC diagnostics only (`program.getSyntacticDiagnostics` per source file); this catches parse/syntax regressions introduced by fixes, not type errors. "New errors" are diagnostics present after but not before (keyed by file+code+message, not by position, so shifted lines do not count). Idempotency = second `fix --apply` makes no changes and applies 0 patches/deletions. Re-scan = fixed findings do not reappear.', '',
     ...mdSummary(results),
     ...results.flatMap(mdProject),
   ].join('\n');
@@ -324,4 +346,4 @@ async function main() {
   console.log(`RESULT: ${pass ? 'PASS' : 'WARN'} fixed=${totalFixed} newTscErrors=${totalNew} syntaxFailed=${totalSyntaxFailed} idempotent=${allIdempotent}`);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((e) => { console.error(e); process.exit(1); });
