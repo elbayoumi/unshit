@@ -1,6 +1,6 @@
 # Independent oracle audit of dead-code findings
 
-Generated: 2026-11-28T02:38:08.957Z
+Generated: 2026-11-28T03:21:33.279Z
 
 ## Method
 
@@ -17,29 +17,28 @@ Generated: 2026-11-28T02:38:08.957Z
 
 ## Results
 
-Pooled: C=205, D=1, U=59, N=265. Precision lower **77.4%**, upper **99.6%**, Wilson 95% [71.9%, 99.9%]. Confirmed-only precision 99.5%.
+Pooled: C=205, D=0, U=57, N=262. Precision lower **78.2%**, upper **100.0%**, Wilson 95% [72.9%, 100.0%]. Confirmed-only precision 100.0%.
 
 ## Verdict movement vs the previous run
 
 This compares the current findings against the `results.json` that was on disk before this run; it is not a claim about a particular development round.
 
-Previous run generated at `2026-11-28T02:14:27.364Z`: C=206, D=7, U=54, N=267.
+Previous run generated at `2026-11-28T02:38:08.957Z`: C=205, D=1, U=59, N=265.
 
-This run: C=205, D=1, U=59, N=265.
+This run: C=205, D=0, U=57, N=262.
 
-UNSURE -> CONFIRMED: 0. UNSURE -> CONTRADICTED: 0. CONFIRMED -> UNSURE: 0. CONTRADICTED -> UNSURE: 5.
+UNSURE -> CONFIRMED: 0. UNSURE -> CONTRADICTED: 0. CONFIRMED -> UNSURE: 0. CONTRADICTED -> UNSURE: 0.
 
 ### Verdict flips by rule
 
-- `ts/unused-export`: 3 verdict flip(s) -> CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:438 `EventV2Processor`); CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:480 `EventV1Processor`); CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:543 `ALBProcessor`).
-- `ts/unused-type-export`: 2 verdict flip(s) -> CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:77 `APIGatewayProxyEvent`); CONTRADICTED->UNSURE (hono src/adapter/aws-lambda/handler.ts:101 `ALBProxyEvent`).
+No verdicts moved relative to the previous run.
 
 ### Per rule
 
 | Rule | Confirmed | Contradicted | Unsure | Total | Precision (lower) | Precision (upper) | Wilson 95% |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| `deps/unused-dependency` | 7 | 1 | 10 | 18 | 38.9% | 94.4% | [20.3%, 99.0%] |
-| `ts/unused-export` | 28 | 0 | 23 | 51 | 54.9% | 100.0% | [41.4%, 100.0%] |
+| `deps/unused-dependency` | 7 | 0 | 10 | 17 | 41.2% | 100.0% | [21.6%, 100.0%] |
+| `ts/unused-export` | 28 | 0 | 21 | 49 | 57.1% | 100.0% | [43.3%, 100.0%] |
 | `ts/unused-file` | 121 | 0 | 5 | 126 | 96.0% | 100.0% | [91.0%, 100.0%] |
 | `ts/unused-type-export` | 49 | 0 | 21 | 70 | 70.0% | 100.0% | [58.5%, 100.0%] |
 
@@ -50,7 +49,7 @@ UNSURE -> CONFIRMED: 0. UNSURE -> CONTRADICTED: 0. CONFIRMED -> UNSURE: 0. CONTR
 | `commander.js` | 4 | 0 | 0 | 4 | 100.0% | 100.0% | [51.0%, 100.0%] |
 | `execa` | 3 | 0 | 0 | 3 | 100.0% | 100.0% | [43.9%, 100.0%] |
 | `fastify` | 22 | 0 | 0 | 22 | 100.0% | 100.0% | [85.1%, 100.0%] |
-| `hono` | 27 | 1 | 30 | 58 | 46.6% | 98.3% | [34.3%, 99.7%] |
+| `hono` | 27 | 0 | 28 | 55 | 49.1% | 100.0% | [36.4%, 100.0%] |
 | `zod` | 149 | 0 | 29 | 178 | 83.7% | 100.0% | [77.6%, 100.0%] |
 
 ### Per rule and corpus
@@ -62,8 +61,8 @@ UNSURE -> CONFIRMED: 0. UNSURE -> CONTRADICTED: 0. CONFIRMED -> UNSURE: 0. CONTR
 | `execa` | `ts/unused-file` | 2 | 0 | 0 | 2 | 100.0% | 100.0% | [34.2%, 100.0%] |
 | `fastify` | `deps/unused-dependency` | 4 | 0 | 0 | 4 | 100.0% | 100.0% | [51.0%, 100.0%] |
 | `fastify` | `ts/unused-file` | 18 | 0 | 0 | 18 | 100.0% | 100.0% | [82.4%, 100.0%] |
-| `hono` | `deps/unused-dependency` | 0 | 1 | 2 | 3 | 0.0% | 66.7% | [0.0%, 93.9%] |
-| `hono` | `ts/unused-export` | 7 | 0 | 11 | 18 | 38.9% | 100.0% | [20.3%, 100.0%] |
+| `hono` | `deps/unused-dependency` | 0 | 0 | 2 | 2 | 0.0% | 100.0% | [0.0%, 100.0%] |
+| `hono` | `ts/unused-export` | 7 | 0 | 9 | 16 | 43.8% | 100.0% | [23.1%, 100.0%] |
 | `hono` | `ts/unused-file` | 1 | 0 | 0 | 1 | 100.0% | 100.0% | [20.7%, 100.0%] |
 | `hono` | `ts/unused-type-export` | 19 | 0 | 17 | 36 | 52.8% | 100.0% | [37.0%, 100.0%] |
 | `zod` | `deps/unused-dependency` | 2 | 0 | 8 | 10 | 20.0% | 100.0% | [5.7%, 100.0%] |
@@ -73,19 +72,12 @@ UNSURE -> CONFIRMED: 0. UNSURE -> CONTRADICTED: 0. CONFIRMED -> UNSURE: 0. CONTR
 
 ## Contradicted findings (all)
 
-Total: 1.
-
-### `deps/unused-dependency` — hono — `benchmarks/fetch/package.json:4` — `mitata`
-
-- Finding: Dependency `mitata` is never imported, required or referenced by name in scripts of benchmarks/fetch.
-- Oracle reason: Package `mitata` is imported/required by a file in its package scope
-- Evidence: `benchmarks/fetch/bench.mts:17` — import './ts-resolve.mjs' import { run, bench, measure } from 'mitata'
-
+No contradictions found.
 ## Contradiction investigation, detector bugs and limitations
 
-Every CONTRADICTED finding from the first run was checked by reading both the corpus code and the relevant unshit detector. No detector source was changed in this audit. Six contradictions were found in the first run; each is classified honestly as a real detector false positive (FP), a detector limitation under the rule's literal wording, or an oracle limitation. Only #1 is still contradicted in the current run; #2 and #4–#6 were resolved by later detector fixes, and the five round-16 mirror artifacts were resolved by the oracle fix described below.
+Every CONTRADICTED finding from the first run was checked by reading both the corpus code and the relevant unshit detector. No detector source was changed in this audit. Six contradictions were found in the first run; each is classified honestly as a real detector false positive (FP), a detector limitation under the rule's literal wording, or an oracle limitation. No finding is contradicted in the current run: #1, #2 and #4–#6 were resolved by later detector fixes, #3 is no longer reported, and the five round-16 mirror artifacts were resolved by the oracle fix described below. The detector fixes were made in response to these cases on these same five corpora, so zero contradictions here is a regression result, not an estimate of precision on unseen code.
 
-### 1. `hono` / `deps/unused-dependency` / `benchmarks/fetch/package.json:4` (`mitata`) — REAL DETECTOR BUG
+### 1. `hono` / `deps/unused-dependency` / `benchmarks/fetch/package.json:4` (`mitata`) — RESOLVED DETECTOR BUG
 
 - Oracle evidence: `benchmarks/fetch/bench.mts:17` — `import { run, bench, measure } from 'mitata'`.
 - Code reading: `benchmarks/fetch/package.json` declares `mitata` in `devDependencies`; the sibling `bench.mts` imports it. The dependency is unambiguously used by the package that declares it.
@@ -98,6 +90,8 @@ Every CONTRADICTED finding from the first run was checked by reading both the co
   ```
 
   Scan with `node bin/unshit.js scan pkg --format json`.
+
+- Status: resolved in round 17. `.mts` and `.cts` files are now scanned and resolved, so the import is seen and the finding is gone.
 
 ### 2. `hono` / `ts/unused-file` / `runtime-tests/workerd/index.ts` — RESOLVED DETECTOR LIMITATION
 
@@ -113,9 +107,9 @@ Every CONTRADICTED finding from the first run was checked by reading both the co
   const worker = await unstable_dev('./worker.ts');
   ```
 
-- Status: resolved. `src/detectors/unused-file.ts` now collects explicit relative path literals passed to calls, so this file and `adapters/cloudflare-workers/test/worker.ts` are no longer reported. Older `results.json` files that still list them are stale; the current run has N=265, not 267.
+- Status: resolved. `src/detectors/unused-file.ts` now collects explicit relative path literals passed to calls, so this file and `adapters/cloudflare-workers/test/worker.ts` are no longer reported. Since round 17, `ts/unused-export` and `ts/unused-type-export` also stop claiming that exports of such loader-referenced files are dead. Older `results.json` files that still list these findings are stale.
 
-### 3. `zod` / `deps/unused-dependency` / `package.json:36` (`lint-staged`) — REAL DETECTOR BUG
+### 3. `zod` / `deps/unused-dependency` / `package.json:36` (`lint-staged`) — RESOLVED DETECTOR BUG
 
 - Oracle evidence: `package.json:56` — top-level `"lint-staged": { "packages/*/src/**/*.ts": [...], ... }` plus `.husky/pre-commit:8` — `nub exec --node lint-staged --verbose` (a dot-directory the walker skips).
 - Code reading: `lint-staged` is configured in the very manifest that declares it. `src/detectors/deps.ts` checks `scriptsReference`, config *filenames* in the package directory, config texts matching `/(config|rc)/`, workflows, and `otherFileTexts` — but `otherFileTexts` explicitly filters out `package.json`, and top-level config keys are never inspected. Hence a self-contained config key is invisible.
@@ -124,6 +118,8 @@ Every CONTRADICTED finding from the first run was checked by reading both the co
   ```json
   { "devDependencies": { "foo-lint": "^1" }, "foo-lint": { "files": ["*.ts"] } }
   ```
+
+- Status: resolved. The current scan no longer reports this dependency.
 
 ### 4. `zod` / `ts/unused-file` / `packages/bench/index.ts` — DETECTOR LIMITATION (practical FP)
 

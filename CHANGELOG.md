@@ -116,6 +116,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `ROADMAP.md`: replaced the three v0.2 "Target (no benchmark yet)" exit criteria (changed-findings parity, warm --changed <2s, import-cycle 0 FP on 3 real repos) with measured results and links to `docs/research/roadmap-gates.md`.
 - Rewrote `benchmark/README.md`: one section per benchmark with purpose, exact command, prerequisites (build first, hand-cloned hono/zod/execa/fastify/commander.js corpora, competitor tools dir), outputs, measured runtime and the research doc it feeds; every documented command was executed in this pass (g4/recall default-output variants run with their own `--out`/`--md`/`--raw` flags instead of overwriting tracked results), and the old head-to-head result tables measured on non-public corpora were retired.
 - Speed up warm scans by loading per-file cache entries from a single `_index.json` index file instead of one JSON file per cached hash; cross-file detectors still run on every scan.
+- `benchmark/oracle/results.json` and `docs/research/oracle-audit.md` regenerated: pooled 205 confirmed, 0 contradicted, 57 undecided of 262; precision bounds 78.2%–100%. The detectors were fixed in response to earlier contradictions on these same corpora, so this is a regression result, not precision on unseen code.
 
 ## [0.7.0] - 2026-11-25
 

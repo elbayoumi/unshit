@@ -1,6 +1,6 @@
-Every CONTRADICTED finding from the first run was checked by reading both the corpus code and the relevant unshit detector. No detector source was changed in this audit. Six contradictions were found in the first run; each is classified honestly as a real detector false positive (FP), a detector limitation under the rule's literal wording, or an oracle limitation. Only #1 is still contradicted in the current run; #2 and #4–#6 were resolved by later detector fixes, and the five round-16 mirror artifacts were resolved by the oracle fix described below.
+Every CONTRADICTED finding from the first run was checked by reading both the corpus code and the relevant unshit detector. No detector source was changed in this audit. Six contradictions were found in the first run; each is classified honestly as a real detector false positive (FP), a detector limitation under the rule's literal wording, or an oracle limitation. No finding is contradicted in the current run: #1, #2 and #4–#6 were resolved by later detector fixes, #3 is no longer reported, and the five round-16 mirror artifacts were resolved by the oracle fix described below. The detector fixes were made in response to these cases on these same five corpora, so zero contradictions here is a regression result, not an estimate of precision on unseen code.
 
-### 1. `hono` / `deps/unused-dependency` / `benchmarks/fetch/package.json:4` (`mitata`) — REAL DETECTOR BUG
+### 1. `hono` / `deps/unused-dependency` / `benchmarks/fetch/package.json:4` (`mitata`) — RESOLVED DETECTOR BUG
 
 - Oracle evidence: `benchmarks/fetch/bench.mts:17` — `import { run, bench, measure } from 'mitata'`.
 - Code reading: `benchmarks/fetch/package.json` declares `mitata` in `devDependencies`; the sibling `bench.mts` imports it. The dependency is unambiguously used by the package that declares it.
@@ -13,6 +13,8 @@ Every CONTRADICTED finding from the first run was checked by reading both the co
   ```
 
   Scan with `node bin/unshit.js scan pkg --format json`.
+
+- Status: resolved in round 17. `.mts` and `.cts` files are now scanned and resolved, so the import is seen and the finding is gone.
 
 ### 2. `hono` / `ts/unused-file` / `runtime-tests/workerd/index.ts` — RESOLVED DETECTOR LIMITATION
 
@@ -28,9 +30,9 @@ Every CONTRADICTED finding from the first run was checked by reading both the co
   const worker = await unstable_dev('./worker.ts');
   ```
 
-- Status: resolved. `src/detectors/unused-file.ts` now collects explicit relative path literals passed to calls, so this file and `adapters/cloudflare-workers/test/worker.ts` are no longer reported. Older `results.json` files that still list them are stale; the current run has N=265, not 267.
+- Status: resolved. `src/detectors/unused-file.ts` now collects explicit relative path literals passed to calls, so this file and `adapters/cloudflare-workers/test/worker.ts` are no longer reported. Since round 17, `ts/unused-export` and `ts/unused-type-export` also stop claiming that exports of such loader-referenced files are dead. Older `results.json` files that still list these findings are stale.
 
-### 3. `zod` / `deps/unused-dependency` / `package.json:36` (`lint-staged`) — REAL DETECTOR BUG
+### 3. `zod` / `deps/unused-dependency` / `package.json:36` (`lint-staged`) — RESOLVED DETECTOR BUG
 
 - Oracle evidence: `package.json:56` — top-level `"lint-staged": { "packages/*/src/**/*.ts": [...], ... }` plus `.husky/pre-commit:8` — `nub exec --node lint-staged --verbose` (a dot-directory the walker skips).
 - Code reading: `lint-staged` is configured in the very manifest that declares it. `src/detectors/deps.ts` checks `scriptsReference`, config *filenames* in the package directory, config texts matching `/(config|rc)/`, workflows, and `otherFileTexts` — but `otherFileTexts` explicitly filters out `package.json`, and top-level config keys are never inspected. Hence a self-contained config key is invisible.
@@ -39,6 +41,8 @@ Every CONTRADICTED finding from the first run was checked by reading both the co
   ```json
   { "devDependencies": { "foo-lint": "^1" }, "foo-lint": { "files": ["*.ts"] } }
   ```
+
+- Status: resolved. The current scan no longer reports this dependency.
 
 ### 4. `zod` / `ts/unused-file` / `packages/bench/index.ts` — DETECTOR LIMITATION (practical FP)
 

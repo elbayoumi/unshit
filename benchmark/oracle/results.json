@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-28T02:38:08.957Z",
+  "generatedAt": "2026-11-28T03:21:33.279Z",
   "corpora": [
     "hono",
     "zod",
@@ -26,30 +26,30 @@
       "score": {
         "score": 83,
         "grade": "B",
-        "totalFiles": 427,
-        "totalLines": 96257,
-        "totalFindings": 640,
+        "totalFiles": 454,
+        "totalLines": 97196,
+        "totalFindings": 647,
         "byCategory": {
           "css": 0,
-          "types": 493,
+          "types": 503,
           "i18n": 0,
           "architecture": 56,
           "slop": 10,
           "duplication": 23,
-          "dead-code": 58
+          "dead-code": 55
         },
         "bySeverity": {
           "error": 0,
-          "warn": 563,
-          "info": 77
+          "warn": 572,
+          "info": 75
         }
       },
-      "totalFindings": 640,
-      "trackedFindings": 58,
+      "totalFindings": 647,
+      "trackedFindings": 55,
       "byRule": {
-        "ts/unused-export": 18,
+        "ts/unused-export": 16,
         "ts/unused-type-export": 36,
-        "deps/unused-dependency": 3,
+        "deps/unused-dependency": 2,
         "ts/unused-file": 1
       }
     },
@@ -58,25 +58,25 @@
       "score": {
         "score": 62,
         "grade": "C",
-        "totalFiles": 468,
-        "totalLines": 101515,
-        "totalFindings": 1486,
+        "totalFiles": 470,
+        "totalLines": 101601,
+        "totalFindings": 1488,
         "byCategory": {
           "css": 0,
           "types": 1090,
           "i18n": 0,
           "architecture": 123,
           "slop": 33,
-          "duplication": 61,
+          "duplication": 63,
           "dead-code": 179
         },
         "bySeverity": {
           "error": 0,
           "warn": 1357,
-          "info": 129
+          "info": 131
         }
       },
-      "totalFindings": 1486,
+      "totalFindings": 1488,
       "trackedFindings": 178,
       "byRule": {
         "ts/unused-file": 101,
@@ -120,8 +120,8 @@
       "score": {
         "score": 98,
         "grade": "A",
-        "totalFiles": 298,
-        "totalLines": 81603,
+        "totalFiles": 299,
+        "totalLines": 81613,
         "totalFindings": 62,
         "byCategory": {
           "css": 0,
@@ -177,17 +177,17 @@
   ],
   "pooled": {
     "confirmed": 205,
-    "contradicted": 1,
-    "unsure": 59,
-    "total": 265,
-    "precisionLower": 0.7735849056603774,
-    "precisionUpper": 0.9962264150943396,
-    "precisionConfirmedOnly": 0.9951456310679612,
+    "contradicted": 0,
+    "unsure": 57,
+    "total": 262,
+    "precisionLower": 0.7824427480916031,
+    "precisionUpper": 1,
+    "precisionConfirmedOnly": 1,
     "wilson95": {
-      "lowerBoundLow": 0.7194959099451111,
-      "upperBoundHigh": 0.9993335587332123,
-      "confirmedOnlyLow": 0.9730199431901183,
-      "confirmedOnlyHigh": 0.9991425701019494
+      "lowerBoundLow": 0.7285973911460679,
+      "upperBoundHigh": 0.9999999999999999,
+      "confirmedOnlyLow": 0.9816058610086978,
+      "confirmedOnlyHigh": 0.9999999999999999
     }
   },
   "movement": {
@@ -195,415 +195,23 @@
       "UNSURE_TO_CONFIRMED": [],
       "UNSURE_TO_CONTRADICTED": [],
       "CONFIRMED_TO_UNSURE": [],
-      "CONTRADICTED_TO_UNSURE": [
-        {
-          "corpus": "hono",
-          "ruleId": "ts/unused-type-export",
-          "file": "src/adapter/aws-lambda/handler.ts",
-          "line": 77,
-          "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
-          "evidence": [
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 25,
-              "text": "| APIGatewayProxyEvent"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 65,
-              "text": "export interface APIGatewayProxyEvent {"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 449,
-              "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 450,
-              "text": "protected getPath(event: APIGatewayProxyEvent): string {"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 454,
-              "text": "protected getMethod(event: APIGatewayProxyEvent): string {"
-            }
-          ],
-          "symbol": "APIGatewayProxyEvent",
-          "verdict": "UNSURE",
-          "reason": "Name `APIGatewayProxyEvent` occurs 15 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-          "from": "CONTRADICTED",
-          "to": "UNSURE"
-        },
-        {
-          "corpus": "hono",
-          "ruleId": "ts/unused-type-export",
-          "file": "src/adapter/aws-lambda/handler.ts",
-          "line": 101,
-          "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
-          "evidence": [
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 27,
-              "text": "| ALBProxyEvent"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 86,
-              "text": "export interface ALBProxyEvent {"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 509,
-              "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 510,
-              "text": "protected getHeaders(event: ALBProxyEvent): Headers {"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 532,
-              "text": "protected getPath(event: ALBProxyEvent): string {"
-            }
-          ],
-          "symbol": "ALBProxyEvent",
-          "verdict": "UNSURE",
-          "reason": "Name `ALBProxyEvent` occurs 21 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-          "from": "CONTRADICTED",
-          "to": "UNSURE"
-        },
-        {
-          "corpus": "hono",
-          "ruleId": "ts/unused-export",
-          "file": "src/adapter/aws-lambda/handler.ts",
-          "line": 438,
-          "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
-          "evidence": [
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 410,
-              "text": "export class EventV2Processor extends EventProcessor<APIGatewayProxyEventV2> {"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 447,
-              "text": "const v2Processor: EventV2Processor = new EventV2Processor()"
-            },
-            {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 9,
-              "text": "EventV2Processor,"
-            },
-            {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 1072,
-              "text": "it('Should return EventV2Processor for an APIGatewayProxyEventV2 event', () => {"
-            },
-            {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 1085,
-              "text": "expect(processor).toBeInstanceOf(EventV2Processor)"
-            }
-          ],
-          "symbol": "EventV2Processor",
-          "verdict": "UNSURE",
-          "reason": "Name `EventV2Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-          "from": "CONTRADICTED",
-          "to": "UNSURE"
-        },
-        {
-          "corpus": "hono",
-          "ruleId": "ts/unused-export",
-          "file": "src/adapter/aws-lambda/handler.ts",
-          "line": 480,
-          "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
-          "evidence": [
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 449,
-              "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 507,
-              "text": "const v1Processor: EventV1Processor = new EventV1Processor()"
-            },
-            {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 8,
-              "text": "EventV1Processor,"
-            },
-            {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 1058,
-              "text": "it('Should return EventV1Processor for an event without requestContext', () => {"
-            },
-            {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 1069,
-              "text": "expect(processor).toBeInstanceOf(EventV1Processor)"
-            }
-          ],
-          "symbol": "EventV1Processor",
-          "verdict": "UNSURE",
-          "reason": "Name `EventV1Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-          "from": "CONTRADICTED",
-          "to": "UNSURE"
-        },
-        {
-          "corpus": "hono",
-          "ruleId": "ts/unused-export",
-          "file": "src/adapter/aws-lambda/handler.ts",
-          "line": 543,
-          "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
-          "evidence": [
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 509,
-              "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
-            },
-            {
-              "file": "adapters/aws-lambda/src/handler.ts",
-              "line": 588,
-              "text": "const albProcessor: ALBProcessor = new ALBProcessor()"
-            },
-            {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 7,
-              "text": "ALBProcessor,"
-            },
-            {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 1040,
-              "text": "it('Should return ALBProcessor for an ALBProxyEvent event', () => {"
-            },
-            {
-              "file": "adapters/aws-lambda/test/index.test.ts",
-              "line": 1055,
-              "text": "expect(processor).toBeInstanceOf(ALBProcessor)"
-            }
-          ],
-          "symbol": "ALBProcessor",
-          "verdict": "UNSURE",
-          "reason": "Name `ALBProcessor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-          "from": "CONTRADICTED",
-          "to": "UNSURE"
-        }
-      ]
+      "CONTRADICTED_TO_UNSURE": []
     },
-    "flips": [
-      {
-        "corpus": "hono",
-        "ruleId": "ts/unused-type-export",
-        "file": "src/adapter/aws-lambda/handler.ts",
-        "line": 77,
-        "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
-        "evidence": [
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 25,
-            "text": "| APIGatewayProxyEvent"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 65,
-            "text": "export interface APIGatewayProxyEvent {"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 449,
-            "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 450,
-            "text": "protected getPath(event: APIGatewayProxyEvent): string {"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 454,
-            "text": "protected getMethod(event: APIGatewayProxyEvent): string {"
-          }
-        ],
-        "symbol": "APIGatewayProxyEvent",
-        "verdict": "UNSURE",
-        "reason": "Name `APIGatewayProxyEvent` occurs 15 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-        "from": "CONTRADICTED",
-        "to": "UNSURE"
-      },
-      {
-        "corpus": "hono",
-        "ruleId": "ts/unused-type-export",
-        "file": "src/adapter/aws-lambda/handler.ts",
-        "line": 101,
-        "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
-        "evidence": [
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 27,
-            "text": "| ALBProxyEvent"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 86,
-            "text": "export interface ALBProxyEvent {"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 509,
-            "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 510,
-            "text": "protected getHeaders(event: ALBProxyEvent): Headers {"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 532,
-            "text": "protected getPath(event: ALBProxyEvent): string {"
-          }
-        ],
-        "symbol": "ALBProxyEvent",
-        "verdict": "UNSURE",
-        "reason": "Name `ALBProxyEvent` occurs 21 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-        "from": "CONTRADICTED",
-        "to": "UNSURE"
-      },
-      {
-        "corpus": "hono",
-        "ruleId": "ts/unused-export",
-        "file": "src/adapter/aws-lambda/handler.ts",
-        "line": 438,
-        "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
-        "evidence": [
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 410,
-            "text": "export class EventV2Processor extends EventProcessor<APIGatewayProxyEventV2> {"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 447,
-            "text": "const v2Processor: EventV2Processor = new EventV2Processor()"
-          },
-          {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 9,
-            "text": "EventV2Processor,"
-          },
-          {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 1072,
-            "text": "it('Should return EventV2Processor for an APIGatewayProxyEventV2 event', () => {"
-          },
-          {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 1085,
-            "text": "expect(processor).toBeInstanceOf(EventV2Processor)"
-          }
-        ],
-        "symbol": "EventV2Processor",
-        "verdict": "UNSURE",
-        "reason": "Name `EventV2Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-        "from": "CONTRADICTED",
-        "to": "UNSURE"
-      },
-      {
-        "corpus": "hono",
-        "ruleId": "ts/unused-export",
-        "file": "src/adapter/aws-lambda/handler.ts",
-        "line": 480,
-        "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
-        "evidence": [
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 449,
-            "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 507,
-            "text": "const v1Processor: EventV1Processor = new EventV1Processor()"
-          },
-          {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 8,
-            "text": "EventV1Processor,"
-          },
-          {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 1058,
-            "text": "it('Should return EventV1Processor for an event without requestContext', () => {"
-          },
-          {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 1069,
-            "text": "expect(processor).toBeInstanceOf(EventV1Processor)"
-          }
-        ],
-        "symbol": "EventV1Processor",
-        "verdict": "UNSURE",
-        "reason": "Name `EventV1Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-        "from": "CONTRADICTED",
-        "to": "UNSURE"
-      },
-      {
-        "corpus": "hono",
-        "ruleId": "ts/unused-export",
-        "file": "src/adapter/aws-lambda/handler.ts",
-        "line": 543,
-        "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
-        "evidence": [
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 509,
-            "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
-          },
-          {
-            "file": "adapters/aws-lambda/src/handler.ts",
-            "line": 588,
-            "text": "const albProcessor: ALBProcessor = new ALBProcessor()"
-          },
-          {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 7,
-            "text": "ALBProcessor,"
-          },
-          {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 1040,
-            "text": "it('Should return ALBProcessor for an ALBProxyEvent event', () => {"
-          },
-          {
-            "file": "adapters/aws-lambda/test/index.test.ts",
-            "line": 1055,
-            "text": "expect(processor).toBeInstanceOf(ALBProcessor)"
-          }
-        ],
-        "symbol": "ALBProcessor",
-        "verdict": "UNSURE",
-        "reason": "Name `ALBProcessor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`",
-        "from": "CONTRADICTED",
-        "to": "UNSURE"
-      }
-    ],
-    "previousGeneratedAt": "2026-11-28T02:14:27.364Z",
+    "flips": [],
+    "previousGeneratedAt": "2026-11-28T02:38:08.957Z",
     "previousPooled": {
-      "confirmed": 206,
-      "contradicted": 7,
-      "unsure": 54,
-      "total": 267,
-      "precisionLower": 0.7715355805243446,
-      "precisionUpper": 0.9737827715355806,
-      "precisionConfirmedOnly": 0.9671361502347418,
+      "confirmed": 205,
+      "contradicted": 1,
+      "unsure": 59,
+      "total": 265,
+      "precisionLower": 0.7735849056603774,
+      "precisionUpper": 0.9962264150943396,
+      "precisionConfirmedOnly": 0.9951456310679612,
       "wilson95": {
-        "lowerBoundLow": 0.7175352774595357,
-        "upperBoundHigh": 0.9872435367864614,
-        "confirmedOnlyLow": 0.9337298994623284,
-        "confirmedOnlyHigh": 0.9839912830194442
+        "lowerBoundLow": 0.7194959099451111,
+        "upperBoundHigh": 0.9993335587332123,
+        "confirmedOnlyLow": 0.9730199431901183,
+        "confirmedOnlyHigh": 0.9991425701019494
       }
     }
   },
@@ -611,31 +219,31 @@
     {
       "name": "deps/unused-dependency",
       "confirmed": 7,
-      "contradicted": 1,
+      "contradicted": 0,
       "unsure": 10,
-      "total": 18,
-      "precisionLower": 0.3888888888888889,
-      "precisionUpper": 0.9444444444444444,
-      "precisionConfirmedOnly": 0.875,
+      "total": 17,
+      "precisionLower": 0.4117647058823529,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
       "wilson95": {
-        "lowerBoundLow": 0.20305246572163624,
-        "upperBoundHigh": 0.990124809021697,
-        "confirmedOnlyLow": 0.5291118177871464,
-        "confirmedOnlyHigh": 0.9775825085499433
+        "lowerBoundLow": 0.21611056790214814,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.6456695649333126,
+        "confirmedOnlyHigh": 1
       }
     },
     {
       "name": "ts/unused-export",
       "confirmed": 28,
       "contradicted": 0,
-      "unsure": 23,
-      "total": 51,
-      "precisionLower": 0.5490196078431373,
+      "unsure": 21,
+      "total": 49,
+      "precisionLower": 0.5714285714285714,
       "precisionUpper": 1,
       "precisionConfirmedOnly": 1,
       "wilson95": {
-        "lowerBoundLow": 0.41384708550368815,
-        "upperBoundHigh": 1,
+        "lowerBoundLow": 0.4327049309001736,
+        "upperBoundHigh": 0.9999999999999999,
         "confirmedOnlyLow": 0.8793566952341542,
         "confirmedOnlyHigh": 0.9999999999999999
       }
@@ -725,17 +333,17 @@
     {
       "name": "hono",
       "confirmed": 27,
-      "contradicted": 1,
-      "unsure": 30,
-      "total": 58,
-      "precisionLower": 0.46551724137931033,
-      "precisionUpper": 0.9827586206896551,
-      "precisionConfirmedOnly": 0.9642857142857143,
+      "contradicted": 0,
+      "unsure": 28,
+      "total": 55,
+      "precisionLower": 0.4909090909090909,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": 1,
       "wilson95": {
-        "lowerBoundLow": 0.3433202232528626,
-        "upperBoundHigh": 0.9969499615539326,
-        "confirmedOnlyLow": 0.8228780225664668,
-        "confirmedOnlyHigh": 0.9936674801509623
+        "lowerBoundLow": 0.36376777849003283,
+        "upperBoundHigh": 1,
+        "confirmedOnlyLow": 0.8754449702581327,
+        "confirmedOnlyHigh": 0.9999999999999999
       }
     },
     {
@@ -845,17 +453,17 @@
       "corpus": "hono",
       "ruleId": "deps/unused-dependency",
       "confirmed": 0,
-      "contradicted": 1,
+      "contradicted": 0,
       "unsure": 2,
-      "total": 3,
+      "total": 2,
       "precisionLower": 0,
-      "precisionUpper": 0.6666666666666666,
-      "precisionConfirmedOnly": 0,
+      "precisionUpper": 1,
+      "precisionConfirmedOnly": null,
       "wilson95": {
         "lowerBoundLow": 0,
-        "upperBoundHigh": 0.9385080552796037,
+        "upperBoundHigh": 1,
         "confirmedOnlyLow": 0,
-        "confirmedOnlyHigh": 0.7934506856227626
+        "confirmedOnlyHigh": 0
       }
     },
     {
@@ -863,13 +471,13 @@
       "ruleId": "ts/unused-export",
       "confirmed": 7,
       "contradicted": 0,
-      "unsure": 11,
-      "total": 18,
-      "precisionLower": 0.3888888888888889,
+      "unsure": 9,
+      "total": 16,
+      "precisionLower": 0.4375,
       "precisionUpper": 1,
       "precisionConfirmedOnly": 1,
       "wilson95": {
-        "lowerBoundLow": 0.20305246572163624,
+        "lowerBoundLow": 0.23098652405492354,
         "upperBoundHigh": 1,
         "confirmedOnlyLow": 0.6456695649333126,
         "confirmedOnlyHigh": 1
@@ -978,25 +586,7 @@
       }
     }
   ],
-  "contradictions": [
-    {
-      "corpus": "hono",
-      "ruleId": "deps/unused-dependency",
-      "file": "benchmarks/fetch/package.json",
-      "line": 4,
-      "message": "Dependency `mitata` is never imported, required or referenced by name in scripts of benchmarks/fetch.",
-      "evidence": [
-        {
-          "file": "benchmarks/fetch/bench.mts",
-          "line": 17,
-          "text": "import './ts-resolve.mjs' import { run, bench, measure } from 'mitata'"
-        }
-      ],
-      "symbol": "mitata",
-      "verdict": "CONTRADICTED",
-      "reason": "Package `mitata` is imported/required by a file in its package scope"
-    }
-  ],
+  "contradictions": [],
   "verdicts": [
     {
       "corpus": "hono",
@@ -1169,60 +759,6 @@
     },
     {
       "corpus": "hono",
-      "ruleId": "ts/unused-export",
-      "file": "adapters/cloudflare-workers/test/worker.ts",
-      "line": 15,
-      "message": "Default export `default` is never imported by any other file.",
-      "evidence": [
-        {
-          "file": "adapters/aws-lambda/package.json",
-          "line": 13,
-          "text": "\"default\": \"./dist/index.js\""
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 717,
-          "text": "it('Should handle a GET request and return a 200 response if cookies match (ALBProxyEvent) with default headers', async () => {"
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 767,
-          "text": "it('Should handle a POST request and return a 200 response with cookies (ALBProxyEvent) with default headers', async () => {"
-        },
-        {
-          "file": "adapters/aws-lambda/vite.config.ts",
-          "line": 4,
-          "text": "export default defineConfig({"
-        },
-        {
-          "file": "adapters/bun/package.json",
-          "line": 13,
-          "text": "\"default\": \"./dist/index.js\""
-        }
-      ],
-      "symbol": "default",
-      "verdict": "UNSURE",
-      "reason": "The word \"default\" occurs in corpus text, but no default import of the file could be resolved; ambiguous by construction"
-    },
-    {
-      "corpus": "hono",
-      "ruleId": "deps/unused-dependency",
-      "file": "benchmarks/fetch/package.json",
-      "line": 4,
-      "message": "Dependency `mitata` is never imported, required or referenced by name in scripts of benchmarks/fetch.",
-      "evidence": [
-        {
-          "file": "benchmarks/fetch/bench.mts",
-          "line": 17,
-          "text": "import './ts-resolve.mjs' import { run, bench, measure } from 'mitata'"
-        }
-      ],
-      "symbol": "mitata",
-      "verdict": "CONTRADICTED",
-      "reason": "Package `mitata` is imported/required by a file in its package scope"
-    },
-    {
-      "corpus": "hono",
       "ruleId": "deps/unused-dependency",
       "file": "package.json",
       "line": 691,
@@ -1285,43 +821,6 @@
       "symbol": null,
       "verdict": "CONFIRMED",
       "reason": "No import, require, reference or path mention of `perf-measures/type-check/client.ts` outside the file itself"
-    },
-    {
-      "corpus": "hono",
-      "ruleId": "ts/unused-export",
-      "file": "runtime-tests/workerd/index.ts",
-      "line": 18,
-      "message": "Default export `default` is never imported by any other file.",
-      "evidence": [
-        {
-          "file": "adapters/aws-lambda/package.json",
-          "line": 13,
-          "text": "\"default\": \"./dist/index.js\""
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 717,
-          "text": "it('Should handle a GET request and return a 200 response if cookies match (ALBProxyEvent) with default headers', async () => {"
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 767,
-          "text": "it('Should handle a POST request and return a 200 response with cookies (ALBProxyEvent) with default headers', async () => {"
-        },
-        {
-          "file": "adapters/aws-lambda/vite.config.ts",
-          "line": 4,
-          "text": "export default defineConfig({"
-        },
-        {
-          "file": "adapters/bun/package.json",
-          "line": 13,
-          "text": "\"default\": \"./dist/index.js\""
-        }
-      ],
-      "symbol": "default",
-      "verdict": "UNSURE",
-      "reason": "The word \"default\" occurs in corpus text, but no default import of the file could be resolved; ambiguous by construction"
     },
     {
       "corpus": "hono",
