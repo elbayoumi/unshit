@@ -4,6 +4,8 @@ import type { Detector, DetectorContext, FileEntry, Finding } from '../contracts
 import { buildImportGraph, createTsSpecResolver } from '../core/import-graph.js';
 import { entryPointFileSet } from './dead-exports.js';
 import { collectModuleSpecs, safeReadText } from './deps-shared.js';
+import { collectPathLiteralRefTargets, resolveExactRef } from './path-literals.js';
+import { basenameOf, directoryOf as posixDirname } from '../core/project-paths.js';
 
 const TS_LIKE = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
 const CODE_REF_LIKE = new Set([...TS_LIKE, '.mts', '.cts']);
@@ -20,118 +22,9 @@ const SCRIPT_TOKEN_SPLIT_RE = /[\s"'`]+/;
  */
 const CONFIG_BASENAME_RE = /\.config\./;
 
-function basenameOf(relPath: string): string {
-  const idx = relPath.lastIndexOf('/');
-  return idx === -1 ? relPath : relPath.slice(idx + 1);
-}
-
-function posixDirname(relPath: string): string {
-  const idx = relPath.lastIndexOf('/');
-  return idx === -1 ? '' : relPath.slice(0, idx);
-}
-
-function posixJoinRel(from: string, to: string): string {
-  const parts: string[] = [];
-  for (const segment of [...from.split('/'), ...to.split('/')]) {
-    if (!segment || segment === '.') continue;
-    if (segment === '..') parts.pop();
-    else parts.push(segment);
-  }
-  return parts.join('/');
-}
-
-/**
- * Exact relative-path resolution only: strips an optional leading `./`, joins
- * onto the referencing file's directory and requires the result to be one of
- * the scanned files. No substring, glob or basename-only matching.
- */
-function resolveExactRef(baseRel: string, spec: string, fileSet: Set<string>): string | null {
-  const clean = (spec ?? '').trim().split('?')[0] ?? '';
-  let target = clean;
-  if (target.startsWith('./')) target = target.slice(2);
-  if (!target || target === '.') return null;
-  const joined = posixJoinRel(baseRel, target);
-  if (!joined) return null;
-  return fileSet.has(joined) ? joined : null;
-}
-
+// basenameOf, posixDirname and resolveExactRef are shared from `path-literals.ts`.
 const scriptRefCache = new WeakMap<DetectorContext, Set<string>>();
 const configRefCache = new WeakMap<DetectorContext, Set<string>>();
-const pathLitRefCache = new WeakMap<DetectorContext, Set<string>>();
-
-/** Directories containing a package.json (scanned files are always POSIX-relative). */
-function packageRootDirs(ctx: DetectorContext): Set<string> {
-  const roots = new Set<string>();
-  for (const rel of ctx.manifests ?? []) {
-    if (/(^|\/)package\.json$/.test(rel)) roots.add(posixDirname(rel));
-  }
-  for (const file of ctx.files) {
-    if (basenameOf(file.relPath) === 'package.json') roots.add(posixDirname(file.relPath));
-  }
-  return roots;
-}
-
-/** Nearest enclosing package root, or the scan root (`''`) when there is none. */
-function nearestPackageRoot(dir: string, roots: Set<string>, memo: Map<string, string>): string {
-  let current = dir;
-  const visited: string[] = [];
-  for (;;) {
-    const cached = memo.get(current);
-    if (cached !== undefined) {
-      for (const seen of visited) memo.set(seen, cached);
-      return cached;
-    }
-    visited.push(current);
-    if (roots.has(current) || current === '') {
-      for (const seen of visited) memo.set(seen, current);
-      return current;
-    }
-    current = posixDirname(current);
-  }
-}
-
-/**
- * Explicit relative code-path literals passed to calls in scanned JS/TS files
- * (e.g. `unstable_dev('./worker.ts')`). A literal merely assigned to a variable
- * is data, not a reference, and is deliberately not counted. Resolution is
- * tried from the referencing file's directory, then from its nearest package
- * root (or the scan root). Substitution templates are not string literals and
- * are ignored because their value is not statically known.
- */
-function collectPathLiteralRefTargets(ctx: DetectorContext): Set<string> {
-  const cached = pathLitRefCache.get(ctx);
-  if (cached) return cached;
-  const used = new Set<string>();
-  const fileSet = new Set(ctx.files.map((f) => f.relPath));
-  const roots = packageRootDirs(ctx);
-  const rootMemo = new Map<string, string>();
-  const addLiteral = (file: FileEntry, literal: string): void => {
-    if (literal.includes('${') || !CODE_PATH_REF_RE.test(literal)) return;
-    const fileDir = posixDirname(file.relPath);
-    const fromFile = resolveExactRef(fileDir, literal, fileSet);
-    if (fromFile) {
-      used.add(fromFile);
-      return;
-    }
-    const packageRoot = nearestPackageRoot(fileDir, roots, rootMemo);
-    const fromRoot = resolveExactRef(packageRoot, literal, fileSet);
-    if (fromRoot) used.add(fromRoot);
-  };
-  for (const file of ctx.files) {
-    if (!CODE_REF_LIKE.has(file.ext) || !file.sourceFile) continue;
-    const visit = (node: ts.Node): void => {
-      if (ts.isCallExpression(node)) {
-        for (const arg of node.arguments) {
-          if (ts.isStringLiteralLike(arg)) addLiteral(file, arg.text);
-        }
-      }
-      ts.forEachChild(node, visit);
-    };
-    visit(file.sourceFile);
-  }
-  pathLitRefCache.set(ctx, used);
-  return used;
-}
 
 function packageScriptsOf(content: string): Record<string, unknown> | null {
   let pkg: Record<string, unknown> | null = null;

@@ -49,6 +49,7 @@ import { createTsSpecResolver } from '../../core/import-graph.js';
 import { posixJoin } from './utils.js';
 import { leftmost, isDeclarationName } from './utils.js';
 import { STAR, ASSET_SPEC_RE, FRAMEWORK_EXPORTS } from './utils.js';
+import { collectNonModuleLoadingPathTargets } from '../path-literals.js';
 
 function handleImportDeclaration(fa: FileAnalysis, stmt: ts.ImportDeclaration): void {
   const { state, file } = fa;
@@ -243,9 +244,11 @@ function visitNode(fa: FileAnalysis, node: ts.Node): void {
 }
 
 export function walkDynamic(fa: FileAnalysis): void {
-  const { nsLocals, nsMembers } = fa;
+  const { state, nsLocals, nsMembers } = fa;
   for (const name of nsLocals.keys()) nsMembers.set(name, { members: new Set(), star: false });
   visitNode(fa, fa.sf);
+  // Files passed by explicit relative path literal to a NON-module-loading call have unseen consumers; keep ALL exports. `import(...)`/bare `require(...)` excluded (`handleCallExpression` tracks them). See `path-literals.ts`.
+  for (const target of collectNonModuleLoadingPathTargets(state.ctx)) consume(state, target, STAR);
 }
 
 export function processNamespaceUsage(fa: FileAnalysis): void {

@@ -89,6 +89,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `benchmark/oracle`: maps `package.json` `exports`/`main`/`bin` targets back to source files, and skips doc/lock mentions in symbol occurrence matching (`tests/oracle-r16.test.ts`).
 - `benchmark/oracle`: removed the false assumption that `adapters/<name>/src/*` and `src/adapter/<name>/*` are the same module. Imports are attributed only to the file their specifier resolves to, so same-named but distinct files no longer produce false `CONTRADICTED` verdicts.
 - `benchmark/oracle`: the report says `UNSURE ->` instead of `UNSAFE ->` and labels verdict movement as a comparison with the previous run, including its `generatedAt`.
+- `ts/unused-export` / `ts/unused-type-export` no longer claim dead exports for a file passed to a call as an explicit relative code-path string literal (e.g. `unstable_dev('./test/worker.ts')`), because that consumer is invisible to static analysis. `import()` and bare `require()` keep their precise per-symbol tracking. Limits: any call counts as a possible load; computed or unscanned paths stay invisible. `ts/unused-file` findings are unchanged.
 
 ### Changed
 - `benchmark/recall/results.json` and `docs/research/recall.md` regenerated: dev and holdout now 447/447 (100.0%); tokenizer-blind injections dropped to 0. zod `code/duplicate-block` findings rose from 45 to 61 because previously truncated files are now fully tokenized.
