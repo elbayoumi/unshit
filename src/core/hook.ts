@@ -87,7 +87,7 @@ export function scanSingleContent(
     return cached.filter((f) => !isWaived(lines, f));
   }
 
-  const isTs = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'].includes(ext);
+  const isTs = ['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs'].includes(ext);
   const file: FileEntry = {
     absPath: resolve(rootDir, relPath),
     relPath,

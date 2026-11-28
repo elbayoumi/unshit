@@ -59,7 +59,7 @@ function validateStructure(config: UnshitConfig): void {
 }
 
 export const DEFAULT_CONFIG: UnshitConfig = {
-  include: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.css', '.scss', '.rs', '.dart', '.py'],
+  include: ['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs', '.css', '.scss', '.rs', '.dart', '.py'],
   exclude: [
     'node_modules',
     'dist',

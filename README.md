@@ -40,6 +40,8 @@ AI coding assistants ship features fast—and silently leave behind **AI slop**:
 
 Existing tools each solve one slice of the problem. **`unshit`** borrows ideas from them and combines them into one zero-infrastructure, deterministic pipeline. It is **not** a drop-in replacement for any of them: TS/JS rules use the TypeScript AST, clone detection uses a TypeScript-scanner token window, and CSS plus Rust/Dart/Python rules are lightweight text heuristics. Expect fewer edge cases handled than in the dedicated tools.
 
+The default scan includes `.ts`, `.tsx`, `.mts`, `.cts`, `.js`, `.jsx`, `.mjs` and `.cjs` sources, and resolves NodeNext-style `./x.mjs` / `./x.cjs` specifiers to their TypeScript sources while preferring a real JS file when one exists. Declaration files (`.d.ts`, `.d.mts`, `.d.cts`) are skipped by declaration-sensitive rules.
+
 | Inspiration | What `unshit` Adopts |
 |---|---|
 | **[knip](https://github.com/webpro-nl/knip)** | Cross-file export reachability (`ts/unused-export`) |

@@ -61,7 +61,7 @@ export function resolveSpecToFile(dirRel: string, spec: string, fileSet: Set<str
   const bases = [posixJoin(dirRel ? `${dirRel}/x` : 'x', rootRelative ? clean.slice(1) : clean)];
   if (rootRelative) bases.push(clean.slice(1));
   for (const base of bases) {
-    for (const suffix of ['', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']) {
+    for (const suffix of ['', '.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs']) {
       const candidate = base + suffix;
       if (fileSet.has(candidate)) return candidate;
     }

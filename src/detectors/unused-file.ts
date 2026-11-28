@@ -1,17 +1,14 @@
 import ts from 'typescript';
 import { join } from 'node:path';
 import type { Detector, DetectorContext, FileEntry, Finding } from '../contracts.js';
+import { isDeclarationFile } from '../core/declaration-file.js';
 import { buildImportGraph, createTsSpecResolver } from '../core/import-graph.js';
 import { entryPointFileSet } from './dead-exports.js';
 import { collectModuleSpecs, safeReadText } from './deps-shared.js';
 import { collectPathLiteralRefTargets, resolveExactRef } from './path-literals.js';
 import { basenameOf, directoryOf as posixDirname } from '../core/project-paths.js';
 
-const TS_LIKE = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
-const CODE_REF_LIKE = new Set([...TS_LIKE, '.mts', '.cts']);
-
-/** Explicit relative paths with a code extension; bare specifiers never match. */
-const CODE_PATH_REF_RE = /^\.\.?\/[^\n"'`]*\.(?:ts|tsx|js|jsx|mjs|cjs|mts|cts)$/i;
+const TS_LIKE = new Set(['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs']);
 
 const SCRIPT_TOKEN_SPLIT_RE = /[\s"'`]+/;
 
@@ -22,7 +19,6 @@ const SCRIPT_TOKEN_SPLIT_RE = /[\s"'`]+/;
  */
 const CONFIG_BASENAME_RE = /\.config\./;
 
-// basenameOf, posixDirname and resolveExactRef are shared from `path-literals.ts`.
 const scriptRefCache = new WeakMap<DetectorContext, Set<string>>();
 const configRefCache = new WeakMap<DetectorContext, Set<string>>();
 
@@ -171,7 +167,7 @@ export const unusedFileDetector: Detector = {
     const pathLitRefs = collectPathLiteralRefTargets(ctx);
     const findings: Finding[] = [];
     for (const file of ctx.files) {
-      if (!TS_LIKE.has(file.ext) || file.relPath.endsWith('.d.ts')) continue;
+      if (!TS_LIKE.has(file.ext) || isDeclarationFile(file.relPath)) continue;
       if (entries.has(file.relPath)) continue;
       if (graph.incomingOf(file.relPath).length > 0 || dynamic.has(file.relPath) || typeOnly.has(file.relPath)) continue;
       if (scriptRefs.has(file.relPath) || configRefs.has(file.relPath) || pathLitRefs.has(file.relPath)) continue;

@@ -27,6 +27,12 @@ export function findNearestConfigFile(startDir: string, rootDir: string, filenam
   return null;
 }
 
+/** TypeScript source files that NodeNext resolves from an explicit ESM/CJS JS specifier. */
+const JS_TO_TS_SOURCES: Record<string, readonly string[]> = {
+  '.mjs': ['.mts', '.d.mts'],
+  '.cjs': ['.cts', '.d.cts'],
+};
+
 export function resolveFromBase(
   baseRel: string,
   target: string,
@@ -41,6 +47,14 @@ export function resolveFromBase(
   const ext = path.posix.extname(cand);
   if (JS_EXTS.has(ext)) {
     const stem = cand.slice(0, -ext.length);
+    const sourceExts = JS_TO_TS_SOURCES[ext];
+    if (sourceExts) {
+      for (const sourceExt of sourceExts) {
+        const candidate = stem + sourceExt;
+        if (fileSet.has(candidate)) return candidate;
+      }
+      return null;
+    }
     for (const suffix of suffixes) {
       const candidate = stem + suffix;
       if (fileSet.has(candidate)) return candidate;

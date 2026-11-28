@@ -1,8 +1,8 @@
-export const TS_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
+export const TS_EXTS = new Set(['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs']);
 export const COMPONENT_EXTS = new Set(['.vue', '.svelte']);
 export const TS_SUFFIXES = [
-  '', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.vue', '.svelte',
-  '/index.ts', '/index.tsx', '/index.js', '/index.jsx', '/index.mjs',
+  '', '.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs', '.vue', '.svelte',
+  '/index.ts', '/index.tsx', '/index.mts', '/index.cts', '/index.js', '/index.jsx', '/index.mjs', '/index.cjs',
   '/index.vue', '/index.svelte',
 ];
 export const JS_EXTS = new Set(['.js', '.jsx', '.mjs', '.cjs']);

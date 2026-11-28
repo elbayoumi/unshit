@@ -83,7 +83,7 @@ function referencedFiles(scan: ScanResult): Set<string> {
     ts.forEachChild(node, (child) => visit(file, child));
   };
   const fileSet = new Set(scan.files.map((f) => f.relPath));
-  const suffixes = ['', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '/index.ts', '/index.js'];
+  const suffixes = ['', '.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs', '/index.ts', '/index.tsx', '/index.mts', '/index.cts', '/index.js', '/index.jsx', '/index.mjs', '/index.cjs'];
   const fallback = (spec: string, from: FileEntry): void => {
     if (!spec.startsWith('.')) return;
     const base = posixJoin(posixDirname(from.relPath), spec);

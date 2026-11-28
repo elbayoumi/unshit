@@ -4,6 +4,7 @@ const _require = createRequire(import.meta.url);
 let _ts: typeof TS | undefined;
 const ts: typeof TS = new Proxy({} as typeof TS, { get(_, p) { const mod = _ts ??= _require('typescript') as typeof TS; return (mod as Record<PropertyKey, unknown>)[p]; } });
 import type { Detector, DetectorContext, FileEntry, Finding, Patch, Span } from '../contracts.js';
+import { isDeclarationFile } from '../core/declaration-file.js';
 
 type AstRule = 'ts/no-explicit-any' | 'ts/no-double-cast' | 'i18n/no-inline-ternary' | 'slop/magic-timer' | 'slop/redundant-catch';
 type AstBuckets = Record<AstRule, Finding[]>;
@@ -236,7 +237,7 @@ function bucketsFor(file: FileEntry, sf: TS.SourceFile): AstBuckets {
       ts.forEachChild(node, visit);
     };
     visit(sf);
-    if (/\.d\.ts$/.test(file.relPath)) out['ts/no-explicit-any'] = [];
+    if (isDeclarationFile(file.relPath)) out['ts/no-explicit-any'] = [];
     if (isDictionaryFile(file.relPath)) out['i18n/no-inline-ternary'] = [];
   }
   astCache.set(sf, out);

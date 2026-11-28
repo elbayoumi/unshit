@@ -33,8 +33,8 @@ type GraphStats = {
   resolvedRatio?: number;
 };
 
-const CODE_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.py', '.rs', '.dart']);
-const GRAPHED_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.py', '.dart']);
+const CODE_EXTS = new Set(['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs', '.py', '.rs', '.dart']);
+const GRAPHED_EXTS = new Set(['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs', '.py', '.dart']);
 const BOUNDARY_RULES = new Set<string>([
   STRUCTURE_RULES.crossPackage,
   STRUCTURE_RULES.deepImport,

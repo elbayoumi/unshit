@@ -12,7 +12,7 @@ interface SkipRange {
   end: number;
 }
 
-const TS_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
+const TS_EXTS = new Set(['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs']);
 const LOGIC_TOKENS = new Set([
   'if', 'else', 'for', 'while', 'do', 'switch', 'case',
   'try', 'catch', 'finally', 'throw', 'return', 'await', 'yield',

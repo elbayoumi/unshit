@@ -280,6 +280,17 @@ test('deps/unlisted-dependency ignores runtime builtin specifiers for bun and de
   });
 });
 
+test('deps/unlisted-dependency ignores Deno npm: specifiers in .mts files', async () => {
+  await withTempProject({
+    'package.json': JSON.stringify({ name: 'demo' }, null, 2),
+    'src/bench.mts': "import { run } from 'npm:mitata';\nconsole.log(run);\n",
+  }, async (dir) => {
+    const scan = await runScan(dir, { ...DEFAULT_CONFIG });
+    assert.ok(scan.files.some((f) => f.relPath === 'src/bench.mts'));
+    assert.equal(findingsFor(scan, 'deps/unlisted-dependency').length, 0);
+  });
+});
+
 test('deps/unused-dependency spares packages referenced only by tailwind/postcss configs, flagging nearby dead deps', async () => {
   const packageJson = JSON.stringify({
     name: 'demo',

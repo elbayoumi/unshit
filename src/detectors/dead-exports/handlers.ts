@@ -314,7 +314,7 @@ function handleExportStatement(fa: FileAnalysis, stmt: ts.Statement, record: (na
 
 export function recordExports(fa: FileAnalysis): void {
   const { state, file, sf } = fa;
-  const isAppRouterFile = /(^|\/)(page|layout|route|loading|error|not-found|template|default|middleware|instrumentation)\.[jt]sx?$/.test(file.relPath);
+  const isAppRouterFile = /(^|\/)(page|layout|route|loading|error|not-found|template|default|middleware|instrumentation)\.[cm]?[jt]sx?$/.test(file.relPath);
   const seen = new Set<string>();
   const record = (nameNode: ts.Node, exported: string, local: string, isTypeOnly: boolean, isListed: boolean, isDefault = false): void => {
     if (isAppRouterFile && FRAMEWORK_EXPORTS.has(exported)) return;

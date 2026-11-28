@@ -31,7 +31,7 @@ function countSignalsForFile(file: FileEntry, signals: LanguageSignals): void {
   const base = basenameOf(lower);
   const ext = file.ext.toLowerCase();
 
-  if (ext === '.ts' || ext === '.tsx' || ext === '.js' || ext === '.jsx' || ext === '.mjs' || ext === '.cjs') {
+  if (ext === '.ts' || ext === '.tsx' || ext === '.mts' || ext === '.cts' || ext === '.js' || ext === '.jsx' || ext === '.mjs' || ext === '.cjs') {
     signals.webCount += 1;
     if (REACT_IMPORT_RE.test(file.content?.slice(0, 4000) ?? '')) signals.viteSignals += 1;
   } else if (ext === '.dart') {

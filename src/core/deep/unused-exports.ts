@@ -40,7 +40,7 @@ async function getEntryPoints(rootDir: string, config: UnshitConfig, files: File
 }
 
 function isUnused(exp: ExportInfo, rel: string, used: Map<string, Set<string>>): boolean {
-  if (/(^|\/)(page|layout|route|loading|error|not-found|template|default|middleware|instrumentation)\.[jt]sx?$/.test(rel)
+  if (/(^|\/)(page|layout|route|loading|error|not-found|template|default|middleware|instrumentation)\.[cm]?[jt]sx?$/.test(rel)
     && FRAMEWORK_EXPORTS.has(exp.name)) return false;
   if (exp.isTypeOnly && /Props$/.test(exp.name)) return false;
   const usedSet = used.get(exp.file);

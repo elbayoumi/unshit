@@ -102,6 +102,14 @@ export function tryResolveTs(
   rootDir: string,
 ): string | null {
   if (typeof spec !== 'string' || spec.trim() === '') return null;
+  // A real .mjs/.cjs file wins over the .mts/.cts source TypeScript would pick.
+  if ((spec.startsWith('./') || spec.startsWith('../')) && /\.[mc]js$/i.test(spec)) {
+    const fromRel = toRel(rootDir, containingAbs);
+    if (fromRel) {
+      const exact = normalizeRel(path.posix.normalize(path.posix.join(path.posix.dirname(fromRel), spec)));
+      if (fileSet.has(exact)) return exact;
+    }
+  }
   try {
     const resolved = ts.resolveModuleName(
       spec, containingAbs, info.options, ts.sys, resolutionCache,

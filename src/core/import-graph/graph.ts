@@ -8,6 +8,7 @@ import {
   TS_EXTS, COMPONENT_EXTS, NON_GRAPHABLE_RE,
 } from './constants.js';
 import { normalizeRel, toRel } from './util.js';
+import { isDeclarationFile } from '../declaration-file.js';
 import * as TSM from './ts.js';
 import * as DartM from './dart.js';
 import * as PythonM from './python.js';
@@ -69,7 +70,7 @@ function processTsSource(
 function collectEdges(state: GraphState): void {
   const { ctx, rootDir, fileSet } = state;
   for (const file of ctx.files) {
-    if (!TS_EXTS.has(file.ext) || !file.sourceFile || file.relPath.endsWith('.d.ts')) continue;
+    if (!TS_EXTS.has(file.ext) || !file.sourceFile || isDeclarationFile(file.relPath)) continue;
     processTsSource(state, file.relPath, file.absPath, file.sourceFile, 0);
   }
   for (const file of ctx.files) {

@@ -54,11 +54,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `docs/research/README.md`: index of all 13 reports in `docs/research/` with a one-line summary, the headline number taken from the doc itself and the command that produced it, plus a "Known limits" list collected from the reports (excludes `reviews/`, `studies/` and `PROTOCOL_LANDSCAPE_STUDY.md`, which belong to other work streams).
 - `tests/benchmark-readme-r14.test.ts`: fails the build when a `benchmark/*.mjs` script or a `benchmark/` subfolder is missing from `benchmark/README.md`, when `docs/research/README.md` indexes a path that no longer exists, or when a top-level `docs/research/*.md` report is not indexed, so the two documents cannot silently rot.
 - Independent oracle audit for dead-code findings: scans the five public corpora and cross-checks `ts/unused-export`, `ts/unused-type-export`, `ts/unused-file` and `deps/unused-dependency` with a text-only resolver that shares no code with the scanner. Results are written to `benchmark/oracle/results.json` and `docs/research/oracle-audit.md`, including per-rule/per-corpus counts, Wilson bounds with unsure counted both ways, and file:line evidence for every contradiction.
-- The cross-check found three detector gaps; the dependency config-key and unused-file script/config gaps are fixed in this release, and the `.mts`/`.cts` walker gap is documented as open.
+- The cross-check found three detector gaps; the dependency config-key and unused-file script/config gaps are fixed in this release, and the `.mts`/`.cts` walker gap, open at the time of that audit, is fixed too.
 - `tests/oracle-r14.test.ts` covering the oracle's classification on temporary fixtures.
 - `benchmark/polyglot`: deterministic seeded (dev/holdout) synthetic Rust, Python, Dart and CSS projects plus 15 positives and 10 hard negatives per polyglot/CSS rule, a scan-based recall/FP runner with Wilson 95% intervals, and committed `results.json`.
 - `docs/research/polyglot-recall.md`: measured per-seed and pooled recall/FP tables, misses with reasons, clean-base findings, detector-bug reproducers and synthetic-corpus limitations for the polyglot/CSS rules.
 - `tests/polyglot-recall-r14.test.ts`: generator determinism, injector shapes, matcher/evaluator and report-rendering coverage.
+- `.mts` / `.cts` sources are scanned and analyzed by default, including NodeNext-style resolution of `./x.mjs` and `./x.cjs` to `x.mts` / `x.cts` (a real `.mjs` / `.cjs` file wins); `.d.mts` / `.d.cts` are treated like `.d.ts`.
 
 ### Fixed
 
@@ -90,6 +91,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `benchmark/oracle`: removed the false assumption that `adapters/<name>/src/*` and `src/adapter/<name>/*` are the same module. Imports are attributed only to the file their specifier resolves to, so same-named but distinct files no longer produce false `CONTRADICTED` verdicts.
 - `benchmark/oracle`: the report says `UNSURE ->` instead of `UNSAFE ->` and labels verdict movement as a comparison with the previous run, including its `generatedAt`.
 - `ts/unused-export` / `ts/unused-type-export` no longer claim dead exports for a file passed to a call as an explicit relative code-path string literal (e.g. `unstable_dev('./test/worker.ts')`), because that consumer is invisible to static analysis. `import()` and bare `require()` keep their precise per-symbol tracking. Limits: any call counts as a possible load; computed or unscanned paths stay invisible. `ts/unused-file` findings are unchanged.
+- `deps/unlisted-dependency` ignores Deno `npm:` specifiers.
+- Next.js app-router framework exports (e.g. `dynamic`, `revalidate`) are exempt from dead-export findings in `.mts` and `.cts` route files too.
 
 ### Changed
 - `benchmark/recall/results.json` and `docs/research/recall.md` regenerated: dev and holdout now 447/447 (100.0%); tokenizer-blind injections dropped to 0. zod `code/duplicate-block` findings rose from 45 to 61 because previously truncated files are now fully tokenized.

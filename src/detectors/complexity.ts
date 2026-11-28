@@ -4,6 +4,7 @@ const _require = createRequire(import.meta.url);
 let _ts: typeof TS | undefined;
 const ts: typeof TS = new Proxy({} as typeof TS, { get(_, p) { const mod = _ts ??= _require('typescript') as typeof TS; return (mod as Record<PropertyKey, unknown>)[p]; } });
 import type { Detector, DetectorContext, Finding, Span } from '../contracts.js';
+import { isDeclarationFile } from '../core/declaration-file.js';
 import { isTestFile } from './ts-ast.js';
 
 let _logicalBinaryKinds: Set<TS.SyntaxKind> | undefined;
@@ -121,7 +122,7 @@ export const highComplexityDetector: Detector = {
     const findings: Finding[] = [];
     const max = ctx.config.complexityMax;
     for (const file of ctx.files) {
-      if (!file.sourceFile || /\.d\.ts$/.test(file.relPath) || isTestFile(file.relPath)) continue;
+      if (!file.sourceFile || isDeclarationFile(file.relPath) || isTestFile(file.relPath)) continue;
       const sf = file.sourceFile;
       for (const fn of collectFunctions(sf)) {
         if (fn.score <= max) continue;

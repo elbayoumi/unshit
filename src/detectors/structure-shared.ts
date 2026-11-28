@@ -7,7 +7,7 @@ type StructureEdge = ImportEdge;
 type Feature = { root: string; name: string };
 type FeatureResolver = (relPath: string) => Feature | null;
 
-export const INDEX_FILES = ['index.ts', 'index.tsx', 'index.js', 'index.jsx', 'index.mjs'];
+export const INDEX_FILES = ['index.ts', 'index.tsx', 'index.mts', 'index.cts', 'index.js', 'index.jsx', 'index.mjs', 'index.cjs'];
 const DEFAULT_FEATURE_CONTAINERS = ['features', 'modules', 'domains'];
 const SHARED_BUCKETS = new Set(['shared', 'common', 'utils', 'util', 'helpers', 'lib', 'ui', 'components', 'hooks']);
 const APP_BUCKETS = new Set(['app', 'pages', 'routes', 'screens']);
@@ -15,7 +15,7 @@ export const JUNK_GROUPS = [
   new Set(['utils', 'util', 'helpers', 'helper']),
   new Set(['common', 'shared']),
 ];
-export const CODE_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.py', '.rs', '.dart']);
+export const CODE_EXTS = new Set(['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs', '.py', '.rs', '.dart']);
 
 function normalizeRel(value: string): string {
   return value.replaceAll('\\', '/').replace(/^\.\//, '').replace(/\/+$/, '');

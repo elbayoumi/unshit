@@ -70,7 +70,8 @@ export function packageName(spec: string): string | null {
 
 const BUILTINS = new Set(builtinModules.map((name) => name.split('/')[0] ?? name));
 
-const RUNTIME_BUILTIN_PROTOCOLS = new Set(['node', 'bun', 'deno', 'jsr', 'cloudflare', 'workerd', 'edge-runtime']);
+// `npm:` is Deno's npm-package protocol, resolved outside package.json.
+const RUNTIME_BUILTIN_PROTOCOLS = new Set(['node', 'bun', 'deno', 'jsr', 'npm', 'cloudflare', 'workerd', 'edge-runtime']);
 
 /** Bare specifier = not relative, not absolute, not `#` imports, not a runtime builtin. */
 export function isBareSpec(spec: string): boolean {
