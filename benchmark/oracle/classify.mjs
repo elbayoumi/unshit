@@ -32,8 +32,19 @@ function consumerDetail(stmt, name, isDefault, sameFile) {
 
 function findConsumers(project, name, isDefault, closure) {
   const found = [];
+  const seenStmt = new Set();
+  // A module and its mirrored twin are the same module for attribution
+  // purposes: an import that resolves into the mirror of the audited file is an
+  // import of the audited file (and vice versa).
+  const candidates = new Set(closure);
   for (const candidate of closure) {
+    const mirror = project.mirrorOf?.get?.(candidate);
+    if (mirror) candidates.add(mirror);
+  }
+  for (const candidate of candidates) {
     for (const stmt of project.statementsByTarget.get(candidate) ?? []) {
+      if (seenStmt.has(stmt)) continue;
+      seenStmt.add(stmt);
       if (stmt.kind === 'export-from') continue; // chain, not a consumer
       const sameFile = project.byPath.get(stmt.file);
       if (!sameFile) continue;
@@ -62,6 +73,9 @@ function collectOccurrences(project, file, name, chainLines) {
   const pattern = symbolPattern(name);
   const occurrences = [];
   for (const f of project.files) {
+    // Comments are masked out before matching; documentation prose and lockfile
+    // text are not executable evidence, so they never count as usage.
+    if (f.category === 'doc' || f.category === 'lock') continue;
     if (f.path === file) continue;
     const ignored = chainLines.get(f.path) ?? new Set();
     const lines = f.text.split('\n');

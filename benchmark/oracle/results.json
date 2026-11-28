@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-26T20:17:22.853Z",
+  "generatedAt": "2026-11-28T02:14:27.364Z",
   "corpora": [
     "hono",
     "zod",
@@ -176,19 +176,246 @@
     }
   ],
   "pooled": {
-    "confirmed": 205,
-    "contradicted": 2,
-    "unsure": 60,
+    "confirmed": 206,
+    "contradicted": 7,
+    "unsure": 54,
     "total": 267,
-    "precisionLower": 0.7677902621722846,
-    "precisionUpper": 0.9925093632958801,
-    "precisionConfirmedOnly": 0.9903381642512077,
+    "precisionLower": 0.7715355805243446,
+    "precisionUpper": 0.9737827715355806,
+    "precisionConfirmedOnly": 0.9671361502347418,
     "wilson95": {
-      "lowerBoundLow": 0.7135622717853043,
-      "upperBoundHigh": 0.9979433879306039,
-      "confirmedOnlyLow": 0.9654623784086972,
-      "confirmedOnlyHigh": 0.9973463648785384
+      "lowerBoundLow": 0.7175352774595357,
+      "upperBoundHigh": 0.9872435367864614,
+      "confirmedOnlyLow": 0.9337298994623284,
+      "confirmedOnlyHigh": 0.9839912830194442
     }
+  },
+  "movement": {
+    "moved": {
+      "UNSURE_TO_CONFIRMED": [
+        {
+          "corpus": "hono",
+          "ruleId": "ts/unused-type-export",
+          "file": "src/context.ts",
+          "line": 78,
+          "message": "Exported type `Renderer` is used only locally; drop the `export` keyword.",
+          "evidence": [],
+          "symbol": "Renderer",
+          "verdict": "CONFIRMED",
+          "reason": "Name `Renderer` appears nowhere outside its declaration",
+          "from": "UNSURE",
+          "to": "CONFIRMED"
+        }
+      ],
+      "UNSURE_TO_CONTRADICTED": [
+        {
+          "corpus": "hono",
+          "ruleId": "ts/unused-type-export",
+          "file": "src/adapter/aws-lambda/handler.ts",
+          "line": 77,
+          "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
+          "evidence": [
+            {
+              "file": "adapters/aws-lambda/test/stream-mock.ts",
+              "line": 3,
+              "text": "import type { APIGatewayProxyEvent, APIGatewayProxyEventV2 } from '../src/handler' (named import of `APIGatewayProxyEvent` as `APIGatewayProxyEvent`)"
+            }
+          ],
+          "symbol": "APIGatewayProxyEvent",
+          "verdict": "CONTRADICTED",
+          "reason": "Real consumer of `APIGatewayProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+          "from": "UNSURE",
+          "to": "CONTRADICTED"
+        },
+        {
+          "corpus": "hono",
+          "ruleId": "ts/unused-type-export",
+          "file": "src/adapter/aws-lambda/handler.ts",
+          "line": 101,
+          "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
+          "evidence": [
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 14,
+              "text": "import type { ALBProxyEvent, APIGatewayProxyEventV2, LatticeProxyEventV2, LambdaEvent, } from '../src/handler' (named import of `ALBProxyEvent` as `ALBProxyEvent`)"
+            }
+          ],
+          "symbol": "ALBProxyEvent",
+          "verdict": "CONTRADICTED",
+          "reason": "Real consumer of `ALBProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+          "from": "UNSURE",
+          "to": "CONTRADICTED"
+        },
+        {
+          "corpus": "hono",
+          "ruleId": "ts/unused-export",
+          "file": "src/adapter/aws-lambda/handler.ts",
+          "line": 438,
+          "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
+          "evidence": [
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 6,
+              "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV2Processor` as `EventV2Processor`)"
+            }
+          ],
+          "symbol": "EventV2Processor",
+          "verdict": "CONTRADICTED",
+          "reason": "Real consumer of `EventV2Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+          "from": "UNSURE",
+          "to": "CONTRADICTED"
+        },
+        {
+          "corpus": "hono",
+          "ruleId": "ts/unused-export",
+          "file": "src/adapter/aws-lambda/handler.ts",
+          "line": 480,
+          "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
+          "evidence": [
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 6,
+              "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV1Processor` as `EventV1Processor`)"
+            }
+          ],
+          "symbol": "EventV1Processor",
+          "verdict": "CONTRADICTED",
+          "reason": "Real consumer of `EventV1Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+          "from": "UNSURE",
+          "to": "CONTRADICTED"
+        },
+        {
+          "corpus": "hono",
+          "ruleId": "ts/unused-export",
+          "file": "src/adapter/aws-lambda/handler.ts",
+          "line": 543,
+          "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
+          "evidence": [
+            {
+              "file": "adapters/aws-lambda/test/index.test.ts",
+              "line": 6,
+              "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `ALBProcessor` as `ALBProcessor`)"
+            }
+          ],
+          "symbol": "ALBProcessor",
+          "verdict": "CONTRADICTED",
+          "reason": "Real consumer of `ALBProcessor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+          "from": "UNSURE",
+          "to": "CONTRADICTED"
+        }
+      ],
+      "CONFIRMED_TO_UNSURE": []
+    },
+    "flips": [
+      {
+        "corpus": "hono",
+        "ruleId": "ts/unused-type-export",
+        "file": "src/adapter/aws-lambda/handler.ts",
+        "line": 77,
+        "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
+        "evidence": [
+          {
+            "file": "adapters/aws-lambda/test/stream-mock.ts",
+            "line": 3,
+            "text": "import type { APIGatewayProxyEvent, APIGatewayProxyEventV2 } from '../src/handler' (named import of `APIGatewayProxyEvent` as `APIGatewayProxyEvent`)"
+          }
+        ],
+        "symbol": "APIGatewayProxyEvent",
+        "verdict": "CONTRADICTED",
+        "reason": "Real consumer of `APIGatewayProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+        "from": "UNSURE",
+        "to": "CONTRADICTED"
+      },
+      {
+        "corpus": "hono",
+        "ruleId": "ts/unused-type-export",
+        "file": "src/adapter/aws-lambda/handler.ts",
+        "line": 101,
+        "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
+        "evidence": [
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 14,
+            "text": "import type { ALBProxyEvent, APIGatewayProxyEventV2, LatticeProxyEventV2, LambdaEvent, } from '../src/handler' (named import of `ALBProxyEvent` as `ALBProxyEvent`)"
+          }
+        ],
+        "symbol": "ALBProxyEvent",
+        "verdict": "CONTRADICTED",
+        "reason": "Real consumer of `ALBProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+        "from": "UNSURE",
+        "to": "CONTRADICTED"
+      },
+      {
+        "corpus": "hono",
+        "ruleId": "ts/unused-export",
+        "file": "src/adapter/aws-lambda/handler.ts",
+        "line": 438,
+        "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
+        "evidence": [
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 6,
+            "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV2Processor` as `EventV2Processor`)"
+          }
+        ],
+        "symbol": "EventV2Processor",
+        "verdict": "CONTRADICTED",
+        "reason": "Real consumer of `EventV2Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+        "from": "UNSURE",
+        "to": "CONTRADICTED"
+      },
+      {
+        "corpus": "hono",
+        "ruleId": "ts/unused-export",
+        "file": "src/adapter/aws-lambda/handler.ts",
+        "line": 480,
+        "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
+        "evidence": [
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 6,
+            "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV1Processor` as `EventV1Processor`)"
+          }
+        ],
+        "symbol": "EventV1Processor",
+        "verdict": "CONTRADICTED",
+        "reason": "Real consumer of `EventV1Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+        "from": "UNSURE",
+        "to": "CONTRADICTED"
+      },
+      {
+        "corpus": "hono",
+        "ruleId": "ts/unused-export",
+        "file": "src/adapter/aws-lambda/handler.ts",
+        "line": 543,
+        "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
+        "evidence": [
+          {
+            "file": "adapters/aws-lambda/test/index.test.ts",
+            "line": 6,
+            "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `ALBProcessor` as `ALBProcessor`)"
+          }
+        ],
+        "symbol": "ALBProcessor",
+        "verdict": "CONTRADICTED",
+        "reason": "Real consumer of `ALBProcessor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)",
+        "from": "UNSURE",
+        "to": "CONTRADICTED"
+      },
+      {
+        "corpus": "hono",
+        "ruleId": "ts/unused-type-export",
+        "file": "src/context.ts",
+        "line": 78,
+        "message": "Exported type `Renderer` is used only locally; drop the `export` keyword.",
+        "evidence": [],
+        "symbol": "Renderer",
+        "verdict": "CONFIRMED",
+        "reason": "Name `Renderer` appears nowhere outside its declaration",
+        "from": "UNSURE",
+        "to": "CONFIRMED"
+      }
+    ]
   },
   "perRule": [
     {
@@ -210,17 +437,17 @@
     {
       "name": "ts/unused-export",
       "confirmed": 28,
-      "contradicted": 0,
-      "unsure": 23,
+      "contradicted": 3,
+      "unsure": 20,
       "total": 51,
       "precisionLower": 0.5490196078431373,
-      "precisionUpper": 1,
-      "precisionConfirmedOnly": 1,
+      "precisionUpper": 0.9411764705882353,
+      "precisionConfirmedOnly": 0.9032258064516129,
       "wilson95": {
         "lowerBoundLow": 0.41384708550368815,
-        "upperBoundHigh": 1,
-        "confirmedOnlyLow": 0.8793566952341542,
-        "confirmedOnlyHigh": 0.9999999999999999
+        "upperBoundHigh": 0.9797933605775353,
+        "confirmedOnlyLow": 0.7510006155660716,
+        "confirmedOnlyHigh": 0.9665353558368026
       }
     },
     {
@@ -241,18 +468,18 @@
     },
     {
       "name": "ts/unused-type-export",
-      "confirmed": 48,
-      "contradicted": 0,
-      "unsure": 22,
+      "confirmed": 49,
+      "contradicted": 2,
+      "unsure": 19,
       "total": 70,
-      "precisionLower": 0.6857142857142857,
-      "precisionUpper": 1,
-      "precisionConfirmedOnly": 1,
+      "precisionLower": 0.7,
+      "precisionUpper": 0.9714285714285714,
+      "precisionConfirmedOnly": 0.9607843137254902,
       "wilson95": {
-        "lowerBoundLow": 0.5697286201420141,
-        "upperBoundHigh": 1,
-        "confirmedOnlyLow": 0.9258998703338824,
-        "confirmedOnlyHigh": 0.9999999999999999
+        "lowerBoundLow": 0.5845568276122731,
+        "upperBoundHigh": 0.9921293880545587,
+        "confirmedOnlyLow": 0.8678369434463774,
+        "confirmedOnlyHigh": 0.9891789166471329
       }
     }
   ],
@@ -307,18 +534,18 @@
     },
     {
       "name": "hono",
-      "confirmed": 27,
-      "contradicted": 2,
-      "unsure": 31,
+      "confirmed": 28,
+      "contradicted": 7,
+      "unsure": 25,
       "total": 60,
-      "precisionLower": 0.45,
-      "precisionUpper": 0.9666666666666667,
-      "precisionConfirmedOnly": 0.9310344827586207,
+      "precisionLower": 0.4666666666666667,
+      "precisionUpper": 0.8833333333333333,
+      "precisionConfirmedOnly": 0.8,
       "wilson95": {
-        "lowerBoundLow": 0.3309365440675524,
-        "upperBoundHigh": 0.9908106807438021,
-        "confirmedOnlyLow": 0.7803541984972431,
-        "confirmedOnlyHigh": 0.9808787338305667
+        "lowerBoundLow": 0.34627906041438494,
+        "upperBoundHigh": 0.9423227935994396,
+        "confirmedOnlyLow": 0.6410838693433439,
+        "confirmedOnlyHigh": 0.8995755352620137
       }
     },
     {
@@ -445,17 +672,17 @@
       "corpus": "hono",
       "ruleId": "ts/unused-export",
       "confirmed": 7,
-      "contradicted": 0,
-      "unsure": 11,
+      "contradicted": 3,
+      "unsure": 8,
       "total": 18,
       "precisionLower": 0.3888888888888889,
-      "precisionUpper": 1,
-      "precisionConfirmedOnly": 1,
+      "precisionUpper": 0.8333333333333334,
+      "precisionConfirmedOnly": 0.7,
       "wilson95": {
         "lowerBoundLow": 0.20305246572163624,
-        "upperBoundHigh": 1,
-        "confirmedOnlyLow": 0.6456695649333126,
-        "confirmedOnlyHigh": 1
+        "upperBoundHigh": 0.9416342319413855,
+        "confirmedOnlyLow": 0.39677814746114537,
+        "confirmedOnlyHigh": 0.8922087325936989
       }
     },
     {
@@ -478,18 +705,18 @@
     {
       "corpus": "hono",
       "ruleId": "ts/unused-type-export",
-      "confirmed": 18,
-      "contradicted": 0,
-      "unsure": 18,
+      "confirmed": 19,
+      "contradicted": 2,
+      "unsure": 15,
       "total": 36,
-      "precisionLower": 0.5,
-      "precisionUpper": 1,
-      "precisionConfirmedOnly": 1,
+      "precisionLower": 0.5277777777777778,
+      "precisionUpper": 0.9444444444444444,
+      "precisionConfirmedOnly": 0.9047619047619048,
       "wilson95": {
-        "lowerBoundLow": 0.34474325409626827,
-        "upperBoundHigh": 1,
-        "confirmedOnlyLow": 0.8241207763533425,
-        "confirmedOnlyHigh": 1
+        "lowerBoundLow": 0.37005938022987594,
+        "upperBoundHigh": 0.9846300133358382,
+        "confirmedOnlyLow": 0.7108586092608176,
+        "confirmedOnlyHigh": 0.9734812325619255
       }
     },
     {
@@ -581,6 +808,57 @@
     },
     {
       "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 438,
+      "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 6,
+          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV2Processor` as `EventV2Processor`)"
+        }
+      ],
+      "symbol": "EventV2Processor",
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `EventV2Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 480,
+      "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 6,
+          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV1Processor` as `EventV1Processor`)"
+        }
+      ],
+      "symbol": "EventV1Processor",
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `EventV1Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 543,
+      "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 6,
+          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `ALBProcessor` as `ALBProcessor`)"
+        }
+      ],
+      "symbol": "ALBProcessor",
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `ALBProcessor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
+    },
+    {
+      "corpus": "hono",
       "ruleId": "ts/unused-file",
       "file": "runtime-tests/workerd/index.ts",
       "line": 1,
@@ -600,6 +878,40 @@
       "symbol": null,
       "verdict": "CONTRADICTED",
       "reason": "Literal path reference to `runtime-tests/workerd/index.ts` in a script/config/code file"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 77,
+      "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/test/stream-mock.ts",
+          "line": 3,
+          "text": "import type { APIGatewayProxyEvent, APIGatewayProxyEventV2 } from '../src/handler' (named import of `APIGatewayProxyEvent` as `APIGatewayProxyEvent`)"
+        }
+      ],
+      "symbol": "APIGatewayProxyEvent",
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `APIGatewayProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
+    },
+    {
+      "corpus": "hono",
+      "ruleId": "ts/unused-type-export",
+      "file": "src/adapter/aws-lambda/handler.ts",
+      "line": 101,
+      "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
+      "evidence": [
+        {
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 14,
+          "text": "import type { ALBProxyEvent, APIGatewayProxyEventV2, LatticeProxyEventV2, LambdaEvent, } from '../src/handler' (named import of `ALBProxyEvent` as `ALBProxyEvent`)"
+        }
+      ],
+      "symbol": "ALBProxyEvent",
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `ALBProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
     }
   ],
   "verdicts": [
@@ -791,11 +1103,6 @@
       "message": "Default export `default` is never imported by any other file.",
       "evidence": [
         {
-          "file": "README.md",
-          "line": 31,
-          "text": "export default app"
-        },
-        {
           "file": "adapters/aws-lambda/package.json",
           "line": 13,
           "text": "\"default\": \"./dist/index.js\""
@@ -814,6 +1121,11 @@
           "file": "adapters/aws-lambda/vite.config.ts",
           "line": 4,
           "text": "export default defineConfig({"
+        },
+        {
+          "file": "adapters/bun/package.json",
+          "line": 13,
+          "text": "\"default\": \"./dist/index.js\""
         }
       ],
       "symbol": "default",
@@ -932,11 +1244,6 @@
       "message": "Default export `default` is never imported by any other file.",
       "evidence": [
         {
-          "file": "README.md",
-          "line": 31,
-          "text": "export default app"
-        },
-        {
           "file": "adapters/aws-lambda/package.json",
           "line": 13,
           "text": "\"default\": \"./dist/index.js\""
@@ -955,6 +1262,11 @@
           "file": "adapters/aws-lambda/vite.config.ts",
           "line": 4,
           "text": "export default defineConfig({"
+        },
+        {
+          "file": "adapters/bun/package.json",
+          "line": 13,
+          "text": "\"default\": \"./dist/index.js\""
         }
       ],
       "symbol": "default",
@@ -969,34 +1281,14 @@
       "message": "Exported type `APIGatewayProxyEvent` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 25,
-          "text": "| APIGatewayProxyEvent"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 65,
-          "text": "export interface APIGatewayProxyEvent {"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 449,
-          "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 450,
-          "text": "protected getPath(event: APIGatewayProxyEvent): string {"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 454,
-          "text": "protected getMethod(event: APIGatewayProxyEvent): string {"
+          "file": "adapters/aws-lambda/test/stream-mock.ts",
+          "line": 3,
+          "text": "import type { APIGatewayProxyEvent, APIGatewayProxyEventV2 } from '../src/handler' (named import of `APIGatewayProxyEvent` as `APIGatewayProxyEvent`)"
         }
       ],
       "symbol": "APIGatewayProxyEvent",
-      "verdict": "UNSURE",
-      "reason": "Name `APIGatewayProxyEvent` occurs 15 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `APIGatewayProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
     },
     {
       "corpus": "hono",
@@ -1006,34 +1298,14 @@
       "message": "Exported type `ALBProxyEvent` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 27,
-          "text": "| ALBProxyEvent"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 86,
-          "text": "export interface ALBProxyEvent {"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 509,
-          "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 510,
-          "text": "protected getHeaders(event: ALBProxyEvent): Headers {"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 532,
-          "text": "protected getPath(event: ALBProxyEvent): string {"
+          "file": "adapters/aws-lambda/test/index.test.ts",
+          "line": 14,
+          "text": "import type { ALBProxyEvent, APIGatewayProxyEventV2, LatticeProxyEventV2, LambdaEvent, } from '../src/handler' (named import of `ALBProxyEvent` as `ALBProxyEvent`)"
         }
       ],
       "symbol": "ALBProxyEvent",
-      "verdict": "UNSURE",
-      "reason": "Name `ALBProxyEvent` occurs 21 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `ALBProxyEvent` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
     },
     {
       "corpus": "hono",
@@ -1080,34 +1352,14 @@
       "message": "Exported symbol `EventV2Processor` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 410,
-          "text": "export class EventV2Processor extends EventProcessor<APIGatewayProxyEventV2> {"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 447,
-          "text": "const v2Processor: EventV2Processor = new EventV2Processor()"
-        },
-        {
           "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 9,
-          "text": "EventV2Processor,"
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 1072,
-          "text": "it('Should return EventV2Processor for an APIGatewayProxyEventV2 event', () => {"
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 1085,
-          "text": "expect(processor).toBeInstanceOf(EventV2Processor)"
+          "line": 6,
+          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV2Processor` as `EventV2Processor`)"
         }
       ],
       "symbol": "EventV2Processor",
-      "verdict": "UNSURE",
-      "reason": "Name `EventV2Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `EventV2Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
     },
     {
       "corpus": "hono",
@@ -1117,34 +1369,14 @@
       "message": "Exported symbol `EventV1Processor` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 449,
-          "text": "export class EventV1Processor extends EventProcessor<APIGatewayProxyEvent> {"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 507,
-          "text": "const v1Processor: EventV1Processor = new EventV1Processor()"
-        },
-        {
           "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 8,
-          "text": "EventV1Processor,"
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 1058,
-          "text": "it('Should return EventV1Processor for an event without requestContext', () => {"
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 1069,
-          "text": "expect(processor).toBeInstanceOf(EventV1Processor)"
+          "line": 6,
+          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `EventV1Processor` as `EventV1Processor`)"
         }
       ],
       "symbol": "EventV1Processor",
-      "verdict": "UNSURE",
-      "reason": "Name `EventV1Processor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `EventV1Processor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
     },
     {
       "corpus": "hono",
@@ -1154,34 +1386,14 @@
       "message": "Exported symbol `ALBProcessor` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 509,
-          "text": "export class ALBProcessor extends EventProcessor<ALBProxyEvent> {"
-        },
-        {
-          "file": "adapters/aws-lambda/src/handler.ts",
-          "line": 588,
-          "text": "const albProcessor: ALBProcessor = new ALBProcessor()"
-        },
-        {
           "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 7,
-          "text": "ALBProcessor,"
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 1040,
-          "text": "it('Should return ALBProcessor for an ALBProxyEvent event', () => {"
-        },
-        {
-          "file": "adapters/aws-lambda/test/index.test.ts",
-          "line": 1055,
-          "text": "expect(processor).toBeInstanceOf(ALBProcessor)"
+          "line": 6,
+          "text": "import { ALBProcessor, EventV1Processor, EventV2Processor, getProcessor, handle, streamHandle, } from '../src/handler' (named import of `ALBProcessor` as `ALBProcessor`)"
         }
       ],
       "symbol": "ALBProcessor",
-      "verdict": "UNSURE",
-      "reason": "Name `ALBProcessor` occurs 5 time(s) outside the declaration, but none could be attributed to an import from `src/adapter/aws-lambda/handler.ts`"
+      "verdict": "CONTRADICTED",
+      "reason": "Real consumer of `ALBProcessor` from `src/adapter/aws-lambda/handler.ts` (or its re-export chain)"
     },
     {
       "corpus": "hono",
@@ -1369,16 +1581,10 @@
       "file": "src/context.ts",
       "line": 78,
       "message": "Exported type `Renderer` is used only locally; drop the `export` keyword.",
-      "evidence": [
-        {
-          "file": "docs/MIGRATION.md",
-          "line": 53,
-          "text": "- The default value of the `docType` option in JSX Renderer Middleware is now `true`."
-        }
-      ],
+      "evidence": [],
       "symbol": "Renderer",
-      "verdict": "UNSURE",
-      "reason": "Name `Renderer` occurs 1 time(s) outside the declaration, but none could be attributed to an import from `src/context.ts`"
+      "verdict": "CONFIRMED",
+      "reason": "Name `Renderer` appears nowhere outside its declaration"
     },
     {
       "corpus": "hono",
@@ -1387,11 +1593,6 @@
       "line": 88,
       "message": "Exported type `Layout` is used only locally; drop the `export` keyword.",
       "evidence": [
-        {
-          "file": "docs/MAINTAINING.md",
-          "line": 9,
-          "text": "### Layout"
-        },
         {
           "file": "runtime-tests/bun/index.test.tsx",
           "line": 113,
@@ -1411,11 +1612,16 @@
           "file": "runtime-tests/bun/index.test.tsx",
           "line": 149,
           "text": "it('Should return rendered HTML with Layout', async () => {"
+        },
+        {
+          "file": "src/jsx/index.test.tsx",
+          "line": 44,
+          "text": "const Layout = (props: SiteData) =>"
         }
       ],
       "symbol": "Layout",
       "verdict": "UNSURE",
-      "reason": "Name `Layout` occurs 28 time(s) outside the declaration, but none could be attributed to an import from `src/context.ts`"
+      "reason": "Name `Layout` occurs 27 time(s) outside the declaration, but none could be attributed to an import from `src/context.ts`"
     },
     {
       "corpus": "hono",
@@ -1576,16 +1782,6 @@
       "message": "Exported type `Auth` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "docs/MIGRATION.md",
-          "line": 154,
-          "text": "### Basic Auth Middleware and Bearer Auth Middleware"
-        },
-        {
-          "file": "docs/MIGRATION.md",
-          "line": 156,
-          "text": "If you are using Basic Auth and Bearer Auth in your Handler (nested), change as follows:"
-        },
-        {
           "file": "runtime-tests/bun/index.test.tsx",
           "line": 51,
           "text": "describe('Basic Auth Middleware', () => {"
@@ -1599,11 +1795,21 @@
           "file": "runtime-tests/deno/middleware.test.tsx",
           "line": 9,
           "text": "Deno.test('Basic Auth Middleware', async () => {"
+        },
+        {
+          "file": "runtime-tests/fastly/index.test.ts",
+          "line": 41,
+          "text": "describe('Basic Auth Middleware without `hashFunction`', () => {"
+        },
+        {
+          "file": "runtime-tests/fastly/index.test.ts",
+          "line": 64,
+          "text": "describe('Basic Auth Middleware with `hashFunction`', () => {"
         }
       ],
       "symbol": "Auth",
       "verdict": "UNSURE",
-      "reason": "Name `Auth` occurs 25 time(s) outside the declaration, but none could be attributed to an import from `src/utils/basic-auth.ts`"
+      "reason": "Name `Auth` occurs 23 time(s) outside the declaration, but none could be attributed to an import from `src/utils/basic-auth.ts`"
     },
     {
       "corpus": "hono",
@@ -2631,11 +2837,6 @@
       "message": "Exported symbol `measure` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "AGENTS.md",
-          "line": 61,
-          "text": "| axis | how to measure |"
-        },
-        {
           "file": "packages/bench/validate-abort-sweep.ts",
           "line": 152,
           "text": "function measure(schema: z.ZodType, input: unknown): Measurement {"
@@ -2654,11 +2855,16 @@
           "file": "packages/bench/validate-vs-safeparse.ts",
           "line": 137,
           "text": "function measure(plain: z.ZodType, compiled: z.ZodType | null, input: unknown): Pair {"
+        },
+        {
+          "file": "packages/bench/validate-vs-safeparse.ts",
+          "line": 233,
+          "text": "const valid = measure(p.plain, p.compiled, p.valid);"
         }
       ],
       "symbol": "measure",
       "verdict": "UNSURE",
-      "reason": "Name `measure` occurs 18 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/memory/harness.ts`"
+      "reason": "Name `measure` occurs 14 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/memory/harness.ts`"
     },
     {
       "corpus": "zod",
@@ -3169,24 +3375,24 @@
           "text": "# maintainer-only plans, comparisons and investigations; wiki/ is the public half"
         },
         {
-          "file": "AGENTS.md",
-          "line": 41,
-          "text": "- Never stack prose across consecutive `//` lines. Lines have no maximum width here — the editor wraps for display — so a paragraph split across several `//` lines is just a hard-wrapped line, and hard wrapping breaks search, diffs and editing. Write one long `//` instead. `nub run check:comments` e"
+          "file": "LICENSE",
+          "line": 5,
+          "text": "Permission is hereby granted, free of charge, to any person obtaining a copy"
         },
         {
-          "file": "AGENTS.md",
-          "line": 42,
-          "text": "- Keep comments SHORT AND TIGHT — one lowercase sentence fragment, one clause, no trailing period. Never a capitalized full sentence, and never two of them. Extreme concision: say only what the code cannot say, and cut the setup sentence, the recap, and the same point restated in different words; a "
+          "file": "LICENSE",
+          "line": 9,
+          "text": "copies of the Software, and to permit persons to whom the Software is"
         },
         {
-          "file": "AGENTS.md",
-          "line": 45,
-          "text": "- Never branch on specific schema types in shared code. No `def.type === \"optional\"` conditionals, no hardcoded lists of wrapper type names, no walks up the wrapper chain hunting for a particular type. Every schema type added later silently falls through such a check, and the list is wrong the momen"
+          "file": "packages/bench/failing-safeparse.ts",
+          "line": 15,
+          "text": "\"gc is not exposed — run: nub --expose-gc --conditions @zod/source packages/bench/failing-safeparse.ts\""
         }
       ],
       "symbol": "is",
       "verdict": "UNSURE",
-      "reason": "Name `is` occurs 1021 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/typia-case/src/index.ts`"
+      "reason": "Name `is` occurs 309 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/typia-case/src/index.ts`"
     },
     {
       "corpus": "zod",
@@ -3207,16 +3413,6 @@
       "message": "Exported symbol `clone` has zero references; safe to delete.",
       "evidence": [
         {
-          "file": "CONTRIBUTING.md",
-          "line": 14,
-          "text": "- Clone your forked repository: `git clone git@github.com:{your_username}/zod.git`"
-        },
-        {
-          "file": "CONTRIBUTING.md",
-          "line": 36,
-          "text": "2. Clone your forked repo: `git clone git@github.com:{your_username}/zod.git`"
-        },
-        {
           "file": "packages/bench/compile-output.ts",
           "line": 151,
           "text": "\"clone with spread\"() {"
@@ -3230,11 +3426,21 @@
           "file": "packages/bench/compile-output.ts",
           "line": 219,
           "text": "\"JSON deep clone\"() {"
+        },
+        {
+          "file": "packages/bench/compile-passthrough.ts",
+          "line": 55,
+          "text": "\"spread clone\"() {"
+        },
+        {
+          "file": "packages/bench/compile-passthrough.ts",
+          "line": 143,
+          "text": "\"spread clone\"() {"
         }
       ],
       "symbol": "clone",
       "verdict": "UNSURE",
-      "reason": "Name `clone` occurs 110 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/typia-case/src/index.ts`"
+      "reason": "Name `clone` occurs 85 time(s) outside the declaration, but none could be attributed to an import from `packages/bench/typia-case/src/index.ts`"
     },
     {
       "corpus": "zod",
@@ -3387,21 +3593,6 @@
       "message": "Exported symbol `schema` has zero references; safe to delete.",
       "evidence": [
         {
-          "file": "AGENTS.md",
-          "line": 45,
-          "text": "- Never branch on specific schema types in shared code. No `def.type === \"optional\"` conditionals, no hardcoded lists of wrapper type names, no walks up the wrapper chain hunting for a particular type. Every schema type added later silently falls through such a check, and the list is wrong the momen"
-        },
-        {
-          "file": "AGENTS.md",
-          "line": 64,
-          "text": "| memory | `packages/bench/memory/schema-footprint.ts` and `realworld.ts` (retained bytes per schema; run under `--expose-gc`) |"
-        },
-        {
-          "file": "AGENTS.md",
-          "line": 79,
-          "text": "Most of the memory in a schema is its own-property count, not its closures. V8 sizes an instance's backing store in steps and `$constructor` assigns nothing itself, so instances get no in-object slots: **≤12 own properties cost 128 bytes, 13–20 cost 848, ≥21 cost 1616** (`packages/bench/memory/prop-"
-        },
-        {
           "file": "biome.jsonc",
           "line": 2,
           "text": "\"$schema\": \"https://biomejs.dev/schemas/1.9.4/schema.json\","
@@ -3410,11 +3601,26 @@
           "file": "package.json",
           "line": 23,
           "text": "\"@seriousme/openapi-schema-validator\": \"2.9.0\","
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 12,
+          "text": "schema: z.ZodType;"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 17,
+          "text": "const add = (group: string, name: string, schema: z.ZodType, input: unknown) =>"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 18,
+          "text": "cases.push({ group, name, schema, input });"
         }
       ],
       "symbol": "schema",
       "verdict": "UNSURE",
-      "reason": "Name `schema` occurs 4788 time(s) outside the declaration, but none could be attributed to an import from `packages/treeshake/zod-full.ts`"
+      "reason": "Name `schema` occurs 4065 time(s) outside the declaration, but none could be attributed to an import from `packages/treeshake/zod-full.ts`"
     },
     {
       "corpus": "zod",
@@ -3468,21 +3674,6 @@
       "message": "Exported symbol `schema` has zero references; safe to delete.",
       "evidence": [
         {
-          "file": "AGENTS.md",
-          "line": 45,
-          "text": "- Never branch on specific schema types in shared code. No `def.type === \"optional\"` conditionals, no hardcoded lists of wrapper type names, no walks up the wrapper chain hunting for a particular type. Every schema type added later silently falls through such a check, and the list is wrong the momen"
-        },
-        {
-          "file": "AGENTS.md",
-          "line": 64,
-          "text": "| memory | `packages/bench/memory/schema-footprint.ts` and `realworld.ts` (retained bytes per schema; run under `--expose-gc`) |"
-        },
-        {
-          "file": "AGENTS.md",
-          "line": 79,
-          "text": "Most of the memory in a schema is its own-property count, not its closures. V8 sizes an instance's backing store in steps and `$constructor` assigns nothing itself, so instances get no in-object slots: **≤12 own properties cost 128 bytes, 13–20 cost 848, ≥21 cost 1616** (`packages/bench/memory/prop-"
-        },
-        {
           "file": "biome.jsonc",
           "line": 2,
           "text": "\"$schema\": \"https://biomejs.dev/schemas/1.9.4/schema.json\","
@@ -3491,11 +3682,26 @@
           "file": "package.json",
           "line": 23,
           "text": "\"@seriousme/openapi-schema-validator\": \"2.9.0\","
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 12,
+          "text": "schema: z.ZodType;"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 17,
+          "text": "const add = (group: string, name: string, schema: z.ZodType, input: unknown) =>"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 18,
+          "text": "cases.push({ group, name, schema, input });"
         }
       ],
       "symbol": "schema",
       "verdict": "UNSURE",
-      "reason": "Name `schema` occurs 4788 time(s) outside the declaration, but none could be attributed to an import from `packages/treeshake/zod-mini-full.ts`"
+      "reason": "Name `schema` occurs 4065 time(s) outside the declaration, but none could be attributed to an import from `packages/treeshake/zod-mini-full.ts`"
     },
     {
       "corpus": "zod",
@@ -3593,21 +3799,6 @@
       "message": "Exported symbol `schema` has zero references; safe to delete.",
       "evidence": [
         {
-          "file": "AGENTS.md",
-          "line": 45,
-          "text": "- Never branch on specific schema types in shared code. No `def.type === \"optional\"` conditionals, no hardcoded lists of wrapper type names, no walks up the wrapper chain hunting for a particular type. Every schema type added later silently falls through such a check, and the list is wrong the momen"
-        },
-        {
-          "file": "AGENTS.md",
-          "line": 64,
-          "text": "| memory | `packages/bench/memory/schema-footprint.ts` and `realworld.ts` (retained bytes per schema; run under `--expose-gc`) |"
-        },
-        {
-          "file": "AGENTS.md",
-          "line": 79,
-          "text": "Most of the memory in a schema is its own-property count, not its closures. V8 sizes an instance's backing store in steps and `$constructor` assigns nothing itself, so instances get no in-object slots: **≤12 own properties cost 128 bytes, 13–20 cost 848, ≥21 cost 1616** (`packages/bench/memory/prop-"
-        },
-        {
           "file": "biome.jsonc",
           "line": 2,
           "text": "\"$schema\": \"https://biomejs.dev/schemas/1.9.4/schema.json\","
@@ -3616,11 +3807,26 @@
           "file": "package.json",
           "line": 23,
           "text": "\"@seriousme/openapi-schema-validator\": \"2.9.0\","
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 12,
+          "text": "schema: z.ZodType;"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 17,
+          "text": "const add = (group: string, name: string, schema: z.ZodType, input: unknown) =>"
+        },
+        {
+          "file": "packages/bench/compile-matrix.ts",
+          "line": 18,
+          "text": "cases.push({ group, name, schema, input });"
         }
       ],
       "symbol": "schema",
       "verdict": "UNSURE",
-      "reason": "Name `schema` occurs 4788 time(s) outside the declaration, but none could be attributed to an import from `packages/treeshake/zod3-full.ts`"
+      "reason": "Name `schema` occurs 4065 time(s) outside the declaration, but none could be attributed to an import from `packages/treeshake/zod3-full.ts`"
     },
     {
       "corpus": "zod",
@@ -3799,34 +4005,34 @@
       "message": "Exported symbol `Test` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "AGENTS.md",
-          "line": 38,
-          "text": "- Test both success and failure cases with edge cases"
-        },
-        {
           "file": "packages/bench/arktype-morph-test.ts",
           "line": 24,
           "text": "console.log(\"=== Arktype Morph Object Identity Test ===\\n\");"
         },
         {
-          "file": "packages/docs/content/api.mdx",
-          "line": 2311,
-          "text": "class Test {"
+          "file": "packages/resolution/test-resolution.ts",
+          "line": 92,
+          "text": "console.error(\"💥 Test suite failed:\", error);"
         },
         {
-          "file": "packages/docs/content/api.mdx",
-          "line": 2315,
-          "text": "const TestSchema = z.instanceof(Test);"
+          "file": "packages/zod/src/v3/tests/all-errors.test.ts",
+          "line": 7,
+          "text": "const Test = z.object({"
         },
         {
-          "file": "packages/docs/content/api.mdx",
-          "line": 2317,
-          "text": "TestSchema.parse(new Test()); // ✅"
+          "file": "packages/zod/src/v3/tests/all-errors.test.ts",
+          "line": 13,
+          "text": "type TestFlattenedErrors = z.inferFlattenedErrors<typeof Test, { message: string; code: number }>;"
+        },
+        {
+          "file": "packages/zod/src/v3/tests/all-errors.test.ts",
+          "line": 14,
+          "text": "type TestFormErrors = z.inferFlattenedErrors<typeof Test>;"
         }
       ],
       "symbol": "Test",
       "verdict": "UNSURE",
-      "reason": "Name `Test` occurs 84 time(s) outside the declaration, but none could be attributed to an import from `packages/zod/src/v3/tests/language-server.source.ts`"
+      "reason": "Name `Test` occurs 70 time(s) outside the declaration, but none could be attributed to an import from `packages/zod/src/v3/tests/language-server.source.ts`"
     },
     {
       "corpus": "zod",
@@ -3836,34 +4042,34 @@
       "message": "Exported type `Test` is used only locally; drop the `export` keyword.",
       "evidence": [
         {
-          "file": "AGENTS.md",
-          "line": 38,
-          "text": "- Test both success and failure cases with edge cases"
-        },
-        {
           "file": "packages/bench/arktype-morph-test.ts",
           "line": 24,
           "text": "console.log(\"=== Arktype Morph Object Identity Test ===\\n\");"
         },
         {
-          "file": "packages/docs/content/api.mdx",
-          "line": 2311,
-          "text": "class Test {"
+          "file": "packages/resolution/test-resolution.ts",
+          "line": 92,
+          "text": "console.error(\"💥 Test suite failed:\", error);"
         },
         {
-          "file": "packages/docs/content/api.mdx",
-          "line": 2315,
-          "text": "const TestSchema = z.instanceof(Test);"
+          "file": "packages/zod/src/v3/tests/all-errors.test.ts",
+          "line": 7,
+          "text": "const Test = z.object({"
         },
         {
-          "file": "packages/docs/content/api.mdx",
-          "line": 2317,
-          "text": "TestSchema.parse(new Test()); // ✅"
+          "file": "packages/zod/src/v3/tests/all-errors.test.ts",
+          "line": 13,
+          "text": "type TestFlattenedErrors = z.inferFlattenedErrors<typeof Test, { message: string; code: number }>;"
+        },
+        {
+          "file": "packages/zod/src/v3/tests/all-errors.test.ts",
+          "line": 14,
+          "text": "type TestFormErrors = z.inferFlattenedErrors<typeof Test>;"
         }
       ],
       "symbol": "Test",
       "verdict": "UNSURE",
-      "reason": "Name `Test` occurs 84 time(s) outside the declaration, but none could be attributed to an import from `packages/zod/src/v3/tests/language-server.source.ts`"
+      "reason": "Name `Test` occurs 70 time(s) outside the declaration, but none could be attributed to an import from `packages/zod/src/v3/tests/language-server.source.ts`"
     },
     {
       "corpus": "zod",

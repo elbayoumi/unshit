@@ -1,0 +1,14 @@
+## [Unreleased]
+
+### Changed
+
+- `benchmark/oracle`: the independent dead-code oracle now resolves import specifiers through mirrored adapter directories (`adapters/<name>/src/*` ↔ `src/adapter/<name>/*`), so a same-named symbol reached through an import that lands in one mirrored tree is attributed to the correct module; package.json `exports`/`main`/`bin` targets are mapped back to source files before public-entry checks run; and documentation prose no longer counts as an exported-symbol usage occurrence.
+
+### Added
+
+- `benchmark/oracle`: round 16 verdict-movement report (before/after C/D/U per rule, flips with evidence) emitted into `docs/research/oracle-audit.md` and `benchmark/oracle/results.json`.
+- `tests/oracle-r16.test.ts`: unit tests for the new oracle evidence sources (mirrored-directory attribution, comment-only mention, markdown-only mention, public entry point).
+
+### Notes
+
+- An UNSURE may only become CONFIRMED or CONTRADICTED with concrete, recorded evidence; anything still ambiguous stays UNSURE. The unshit detectors themselves were not changed.

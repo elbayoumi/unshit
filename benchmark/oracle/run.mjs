@@ -65,6 +65,16 @@ const verdicts = [];
 const scanStats = [];
 const projectCache = new Map();
 
+const previousResults = existsSync(RESULTS_PATH) ? safeReadJson(RESULTS_PATH) : null;
+
+function safeReadJson(path) {
+  try {
+    return JSON.parse(readFileSync(path, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
 for (const corpus of CORPORA) {
   const source = join(CORPUS_DIR, corpus);
   const base = mkdtempSync(join(tmpdir(), `unshit-oracle-${corpus}-`));
@@ -115,6 +125,23 @@ function groupBy(rows, keyFn) {
   return map;
 }
 
+function movementFrom(before, after) {
+  const key = (v) => `${v.corpus}\u0000${v.ruleId}\u0000${v.file}\u0000${v.line ?? 0}\u0000${v.symbol ?? ''}`;
+  const beforeMap = new Map((before ?? []).map((v) => [key(v), v]));
+  const flips = [];
+  for (const v of after) {
+    const prev = beforeMap.get(key(v));
+    if (!prev) continue;
+    if (prev.verdict !== v.verdict) flips.push({ ...v, from: prev.verdict, to: v.verdict });
+  }
+  const moved = {
+    UNSURE_TO_CONFIRMED: flips.filter((f) => f.from === 'UNSURE' && f.to === 'CONFIRMED'),
+    UNSURE_TO_CONTRADICTED: flips.filter((f) => f.from === 'UNSURE' && f.to === 'CONTRADICTED'),
+    CONFIRMED_TO_UNSURE: flips.filter((f) => f.from === 'CONFIRMED' && f.to === 'UNSURE'),
+  };
+  return { moved, flips };
+}
+
 const byRuleMap = groupBy(verdicts, (r) => r.ruleId);
 const byCorpusMap = groupBy(verdicts, (r) => r.corpus);
 const byBothMap = groupBy(verdicts, (r) => `${r.corpus}\0${r.ruleId}`);
@@ -127,6 +154,9 @@ const perCorpusRule = [...byBothMap.entries()].map(([key, rows]) => {
   return { corpus, ruleId, ...aggregate(rows) };
 }).sort((a, b) => a.corpus.localeCompare(b.corpus) || a.ruleId.localeCompare(b.ruleId));
 const pooled = aggregate(verdicts);
+
+const movement = movementFrom(previousResults?.verdicts ?? [], verdicts);
+const movedCount = movement.moved.UNSURE_TO_CONFIRMED.length + movement.moved.UNSURE_TO_CONTRADICTED.length + movement.moved.CONFIRMED_TO_UNSURE.length;
 
 const contradictions = verdicts
   .filter((v) => v.verdict === 'CONTRADICTED')
@@ -145,6 +175,7 @@ const results = {
   },
   scanStats,
   pooled,
+  movement,
   perRule,
   perCorpus,
   perCorpusRule,
@@ -186,10 +217,37 @@ doc.push('- File verdicts: CONFIRMED when no import/require/dynamic import/refer
 doc.push('- Dependency verdicts: CONFIRMED when the package name appears nowhere outside its `package.json` declaration; CONTRADICTED for a matching import specifier, a script/config key in that manifest, a config file named after the package, or a config/type reference in scope; UNSURE for comment/doc/lockfile mentions.');
 doc.push('- Precision with UNSURE counted both ways: lower bound `C / (C + D + U)` (all unsure are wrong), upper bound `(C + U) / (C + D + U)` (all unsure are right), where C/D/U are confirmed/contradicted/unsure. Wilson 95% reported as `[wilson(C).low, wilson(C+U).high]`. Confirmed-only precision (`C / (C+D)`) is in `results.json`.');
 doc.push('- Wilson intervals are computed from summed counts, not by averaging intervals. This is a precision cross-check of emitted findings, not a recall measurement.');
+doc.push('- Round 16 evidence sources: (1) import specifiers are resolved through mirrored adapter directories, so an import that lands in `adapters/<name>/src/*` is attributed to the same module as its twin `src/adapter/<name>/*`; (2) package.json `exports`/`main`/`bin` targets are mapped back to source files before public-entry checks run; (3) documentation and lockfile mentions no longer count as usage occurrences during export/type-export matching.');
 doc.push('');
 doc.push('## Results');
 doc.push('');
 doc.push(`Pooled: C=${pooled.confirmed}, D=${pooled.contradicted}, U=${pooled.unsure}, N=${pooled.total}. Precision lower **${pct(pooled.precisionLower)}**, upper **${pct(pooled.precisionUpper)}**, Wilson 95% [${pct(pooled.wilson95.lowerBoundLow)}, ${pct(pooled.wilson95.upperBoundHigh)}]. Confirmed-only precision ${pct(pooled.precisionConfirmedOnly)}.`);
+doc.push('');
+doc.push('## Round 16 verdict movement (new evidence sources)');
+doc.push('');
+const before = previousResults?.pooled ?? null;
+if (before) {
+  doc.push(`Before this round: C=${before.confirmed}, D=${before.contradicted}, U=${before.unsure}, N=${before.total}.`);
+  doc.push('');
+}
+doc.push(`After this round: C=${pooled.confirmed}, D=${pooled.contradicted}, U=${pooled.unsure}, N=${pooled.total}.`);
+doc.push('');
+doc.push(`UNSAFE -> CONFIRMED: ${movement.moved.UNSURE_TO_CONFIRMED.length}. UNSAFE -> CONTRADICTED: ${movement.moved.UNSURE_TO_CONTRADICTED.length}. CONFIRMED -> UNSURE (newly uncertain, reported honestly): ${movement.moved.CONFIRMED_TO_UNSURE.length}.`);
+doc.push('');
+doc.push('### Verdict flips by rule');
+doc.push('');
+if (movedCount === 0) {
+  doc.push('No verdicts moved during this round.');
+} else {
+  const byRule = new Map();
+  for (const f of movement.flips) {
+    if (!byRule.has(f.ruleId)) byRule.set(f.ruleId, []);
+    byRule.get(f.ruleId).push(f);
+  }
+  for (const [ruleId, flips] of [...byRule.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+    doc.push(`- \`${ruleId}\`: ${flips.length} verdict flip(s) -> ${flips.map((f) => `${f.from}->${f.to} (${f.corpus} ${f.file}:${f.line} \`${f.symbol ?? ''}\`)`).join('; ')}.`);
+  }
+}
 doc.push('');
 doc.push('### Per rule');
 doc.push('');
