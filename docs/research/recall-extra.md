@@ -1,6 +1,6 @@
 # Recall-extra benchmark (mutation injection)
 
-Generated: 2026-11-26T13:55:10.759Z
+Generated: 2026-11-28T02:13:13.375Z
 
 ## Method
 
@@ -10,7 +10,7 @@ Generated: 2026-11-26T13:55:10.759Z
 - Recall = matched injected defects / injected defects. FP rate = matched hard negatives / hard negatives. Wilson 95% confidence intervals reported.
 - Matchers are rule-specific and location/marker-based; see `benchmark/recall-extra/lib.mjs`.
 - No detectors were tuned to this benchmark. Misses and FPs are reported as measured.
-- Injection targeting reuses `listSourceFiles` from `benchmark/recall/lib.mjs` with an extra filter excluding default-config-excluded dirs (`fixtures`, `__fixtures__`, etc.) to avoid scan-invisible artifacts.
+- Injection targeting chooses candidate files ONLY from the files the default scan actually scans: the ts-like/non-test base listing is intersected with the scanned set from a real clean scan of the copy through the built unshit (`scan.files`, no cache; `scannedSourceFiles` in `benchmark/recall-extra/inject.mjs`). A caller-supplied scanned set (e.g. `injectionScope().scannedFiles`) can only narrow that pool. No hard-coded project paths.
 - `ts/unused-type-export` injections skip files unshit marks STAR-consumed (entry/public-API), reusing compiled dead-export analysis from `benchmark/recall/entries.mjs`. Out-of-scope injections into those files are reported separately.
 
 ## Notes on measurability
@@ -25,12 +25,12 @@ Generated: 2026-11-26T13:55:10.759Z
 | Rule | Injected | Found | Recall | Wilson 95% | Misses |
 |---|---:|---:|---:|---:|---:|
 | arch/import-cycle | 90 | 90 | 100.0% | [95.9%, 100.0%] | 0 |
-| code/high-complexity | 90 | 89 | 98.9% | [94.0%, 99.8%] | 1 |
+| code/high-complexity | 90 | 90 | 100.0% | [95.9%, 100.0%] | 0 |
 | deps/unlisted-dependency | 90 | 90 | 100.0% | [95.9%, 100.0%] | 0 |
 | react/god-file | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
-| slop/redundant-catch | 90 | 88 | 97.8% | [92.3%, 99.4%] | 2 |
+| slop/redundant-catch | 90 | 90 | 100.0% | [95.9%, 100.0%] | 0 |
 | ts/no-double-cast | 90 | 90 | 100.0% | [95.9%, 100.0%] | 0 |
-| ts/unused-type-export | 64 | 63 | 98.4% | [91.7%, 99.7%] | 1 |
+| ts/unused-type-export | 64 | 64 | 100.0% | [94.3%, 100.0%] | 0 |
 | ts/unused-type-export [entry-point, out of scope] | 30 | 0 | 0.0% | [0.0%, 11.4%] | 30 |
 
 ## Pooled false-positive sanity
@@ -75,11 +75,11 @@ Out of scope (entry-point injections): 0/30 found.
 | Rule | Injected | Found | Recall | Wilson 95% | Misses |
 |---|---:|---:|---:|---:|---:|
 | arch/import-cycle | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
-| code/high-complexity | 30 | 29 | 96.7% | [83.3%, 99.4%] | 1 |
+| code/high-complexity | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
 | deps/unlisted-dependency | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
-| slop/redundant-catch | 30 | 28 | 93.3% | [78.7%, 98.2%] | 2 |
+| slop/redundant-catch | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
 | ts/no-double-cast | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
-| ts/unused-type-export | 30 | 29 | 96.7% | [83.3%, 99.4%] | 1 |
+| ts/unused-type-export | 30 | 30 | 100.0% | [88.6%, 100.0%] | 0 |
 | ts/unused-type-export [entry-point, out of scope] | 10 | 0 | 0.0% | [0.0%, 27.8%] | 10 |
 
 ## False-positive sanity — zod
@@ -132,10 +132,6 @@ Out of scope (entry-point injections): 0/30 found.
 
 | Rule | File | Line | Marker | Reason |
 |---|---|---:|---|---|
-| code/high-complexity | `packages/integration/fixtures/internal-types/index.ts` | 59 | `__unshitRecallComplex_2_290814` | harness artifact: file is not scanned by default config (excluded dir such as fixtures/) |
-| slop/redundant-catch | `packages/integration/fixtures/internal-types/mini.ts` | 35 | `__unshitRecallRedundantCatch_5_458085` | harness artifact: file is not scanned by default config (excluded dir such as fixtures/) |
-| slop/redundant-catch | `packages/integration/fixtures/ai-sdk/index.ts` | 19 | `__unshitRecallRedundantCatch_10_926275` | harness artifact: file is not scanned by default config (excluded dir such as fixtures/) |
-| ts/unused-type-export | `packages/integration/fixtures/drizzle-zod/index.ts` | 20 | `__unshitRecallUnusedType_12_384540` | harness artifact: file is not scanned by default config (excluded dir such as fixtures/) |
 | ts/unused-type-export [entry-point, out of scope] | `src/helper/dev/index.ts` | 80 | `__unshitRecallEntryTypeExport_0_410390` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
 | ts/unused-type-export [entry-point, out of scope] | `src/middleware/etag/digest.ts` | 96 | `__unshitRecallEntryTypeExport_1_763624` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
 | ts/unused-type-export [entry-point, out of scope] | `src/middleware/cors/index.ts` | 165 | `__unshitRecallEntryTypeExport_2_46008` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
@@ -150,11 +146,11 @@ Out of scope (entry-point injections): 0/30 found.
 | ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v3/helpers/typeAliases.ts` | 3 | `__unshitRecallEntryTypeExport_1_149573` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
 | ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/mini/index.ts` | 4 | `__unshitRecallEntryTypeExport_2_734550` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
 | ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/core/memoizer.ts` | 477 | `__unshitRecallEntryTypeExport_3_329697` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
-| ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/classic/index.ts` | 36 | `__unshitRecallEntryTypeExport_4_401959` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
+| ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/classic/index.ts` | 6 | `__unshitRecallEntryTypeExport_4_401959` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
 | ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/core/versions.ts` | 6 | `__unshitRecallEntryTypeExport_0_480669` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
 | ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/classic/iso.ts` | 21 | `__unshitRecallEntryTypeExport_1_320192` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
-| ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/core/json-schema.ts` | 150 | `__unshitRecallEntryTypeExport_2_756910` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
-| ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/mini/iso.ts` | 68 | `__unshitRecallEntryTypeExport_3_261973` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
+| ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/core/json-schema.ts` | 149 | `__unshitRecallEntryTypeExport_2_756910` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
+| ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/mini/iso.ts` | 67 | `__unshitRecallEntryTypeExport_3_261973` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
 | ts/unused-type-export [entry-point, out of scope] | `packages/zod/src/v4/mini/index.ts` | 4 | `__unshitRecallEntryTypeExport_4_895513` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
 | ts/unused-type-export [entry-point, out of scope] | `test-d/methods/script.test-d.ts` | 66 | `__unshitRecallEntryTypeExport_0_655095` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |
 | ts/unused-type-export [entry-point, out of scope] | `test-d/return/result-all.test-d.ts` | 202 | `__unshitRecallEntryTypeExport_1_597186` | out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here |

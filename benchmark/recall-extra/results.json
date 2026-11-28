@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T13:55:10.759Z",
+  "generatedAt": "2026-11-28T02:13:13.375Z",
   "corpusDir": "/Volumes/data/projects/unshit-bench/corpus",
   "seeds": [
     20261126,
@@ -18,7 +18,7 @@
           "seed": 20261126,
           "positives": {
             "beforeCount": 642,
-            "afterCount": 788,
+            "afterCount": 791,
             "injectedCount": 95,
             "rules": [
               {
@@ -457,8 +457,8 @@
         {
           "seed": 20261126,
           "positives": {
-            "beforeCount": 1477,
-            "afterCount": 1608,
+            "beforeCount": 1486,
+            "afterCount": 1622,
             "injectedCount": 95,
             "rules": [
               {
@@ -477,23 +477,15 @@
               {
                 "ruleId": "code/high-complexity",
                 "injected": 15,
-                "found": 14,
-                "recall": 0.9333333333333333,
+                "found": 15,
+                "recall": 1,
                 "wilson95": {
-                  "low": 0.7018347012621998,
-                  "high": 0.9881331045067315,
-                  "center": 0.9333333333333333
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
                 },
                 "outOfScope": false,
-                "misses": [
-                  {
-                    "file": "packages/integration/fixtures/internal-types/index.ts",
-                    "line": 59,
-                    "marker": "__unshitRecallComplex_2_290814",
-                    "kind": "high-complexity",
-                    "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-                  }
-                ]
+                "misses": []
               },
               {
                 "ruleId": "deps/unlisted-dependency",
@@ -511,30 +503,15 @@
               {
                 "ruleId": "slop/redundant-catch",
                 "injected": 15,
-                "found": 13,
-                "recall": 0.8666666666666667,
+                "found": 15,
+                "recall": 1,
                 "wilson95": {
-                  "low": 0.6211801716767764,
-                  "high": 0.9626387408969346,
-                  "center": 0.8666666666666667
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
                 },
                 "outOfScope": false,
-                "misses": [
-                  {
-                    "file": "packages/integration/fixtures/internal-types/mini.ts",
-                    "line": 35,
-                    "marker": "__unshitRecallRedundantCatch_5_458085",
-                    "kind": "redundant-catch",
-                    "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-                  },
-                  {
-                    "file": "packages/integration/fixtures/ai-sdk/index.ts",
-                    "line": 19,
-                    "marker": "__unshitRecallRedundantCatch_10_926275",
-                    "kind": "redundant-catch",
-                    "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-                  }
-                ]
+                "misses": []
               },
               {
                 "ruleId": "ts/no-double-cast",
@@ -552,23 +529,15 @@
               {
                 "ruleId": "ts/unused-type-export",
                 "injected": 15,
-                "found": 14,
-                "recall": 0.9333333333333333,
+                "found": 15,
+                "recall": 1,
                 "wilson95": {
-                  "low": 0.7018347012621998,
-                  "high": 0.9881331045067315,
-                  "center": 0.9333333333333333
+                  "low": 0.7961166989641515,
+                  "high": 1,
+                  "center": 1
                 },
                 "outOfScope": false,
-                "misses": [
-                  {
-                    "file": "packages/integration/fixtures/drizzle-zod/index.ts",
-                    "line": 20,
-                    "marker": "__unshitRecallUnusedType_12_384540",
-                    "kind": "unused-type-export",
-                    "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-                  }
-                ]
+                "misses": []
               },
               {
                 "ruleId": "ts/unused-type-export [entry-point, out of scope]",
@@ -612,7 +581,7 @@
                   },
                   {
                     "file": "packages/zod/src/v4/classic/index.ts",
-                    "line": 36,
+                    "line": 6,
                     "marker": "__unshitRecallEntryTypeExport_4_401959",
                     "kind": "entry-point-unused-type-export",
                     "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
@@ -622,8 +591,8 @@
             ]
           },
           "negatives": {
-            "beforeCount": 1477,
-            "afterCount": 1546,
+            "beforeCount": 1486,
+            "afterCount": 1555,
             "injectedCount": 60,
             "rules": [
               {
@@ -704,8 +673,8 @@
         {
           "seed": 20261127,
           "positives": {
-            "beforeCount": 1477,
-            "afterCount": 1616,
+            "beforeCount": 1486,
+            "afterCount": 1629,
             "injectedCount": 95,
             "rules": [
               {
@@ -814,14 +783,14 @@
                   },
                   {
                     "file": "packages/zod/src/v4/core/json-schema.ts",
-                    "line": 150,
+                    "line": 149,
                     "marker": "__unshitRecallEntryTypeExport_2_756910",
                     "kind": "entry-point-unused-type-export",
                     "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
                   },
                   {
                     "file": "packages/zod/src/v4/mini/iso.ts",
-                    "line": 68,
+                    "line": 67,
                     "marker": "__unshitRecallEntryTypeExport_3_261973",
                     "kind": "entry-point-unused-type-export",
                     "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
@@ -838,8 +807,8 @@
             ]
           },
           "negatives": {
-            "beforeCount": 1477,
-            "afterCount": 1538,
+            "beforeCount": 1486,
+            "afterCount": 1547,
             "injectedCount": 60,
             "rules": [
               {
@@ -928,8 +897,8 @@
         {
           "seed": 20261126,
           "positives": {
-            "beforeCount": 35,
-            "afterCount": 141,
+            "beforeCount": 32,
+            "afterCount": 138,
             "injectedCount": 82,
             "rules": [
               {
@@ -1062,8 +1031,8 @@
             ]
           },
           "negatives": {
-            "beforeCount": 35,
-            "afterCount": 62,
+            "beforeCount": 32,
+            "afterCount": 59,
             "injectedCount": 52,
             "rules": [
               {
@@ -1144,8 +1113,8 @@
         {
           "seed": 20261127,
           "positives": {
-            "beforeCount": 35,
-            "afterCount": 125,
+            "beforeCount": 32,
+            "afterCount": 122,
             "injectedCount": 82,
             "rules": [
               {
@@ -1278,8 +1247,8 @@
             ]
           },
           "negatives": {
-            "beforeCount": 35,
-            "afterCount": 64,
+            "beforeCount": 32,
+            "afterCount": 61,
             "injectedCount": 52,
             "rules": [
               {
@@ -1361,7 +1330,7 @@
     },
     {
       "name": "synthetic-react",
-      "path": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-extra-synthetic-gdqSkg/synthetic-react",
+      "path": "/var/folders/t7/bd6ryhns66d0tc2yx2m6w2kr0000gn/T/unshit-recall-extra-synthetic-KEJRoG/synthetic-react",
       "synthetic": true,
       "reactTsx": true,
       "seeds": [
@@ -1727,23 +1696,15 @@
         {
           "ruleId": "code/high-complexity",
           "injected": 30,
-          "found": 29,
-          "misses": [
-            {
-              "file": "packages/integration/fixtures/internal-types/index.ts",
-              "line": 59,
-              "marker": "__unshitRecallComplex_2_290814",
-              "kind": "high-complexity",
-              "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-            }
-          ],
+          "found": 30,
+          "misses": [],
           "hits": [],
           "outOfScope": false,
-          "recall": 0.9666666666666667,
+          "recall": 1,
           "wilson95": {
-            "low": 0.8332960900859082,
-            "high": 0.9940914096183874,
-            "center": 0.9666666666666667
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
           }
         },
         {
@@ -1763,30 +1724,15 @@
         {
           "ruleId": "slop/redundant-catch",
           "injected": 30,
-          "found": 28,
-          "misses": [
-            {
-              "file": "packages/integration/fixtures/internal-types/mini.ts",
-              "line": 35,
-              "marker": "__unshitRecallRedundantCatch_5_458085",
-              "kind": "redundant-catch",
-              "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-            },
-            {
-              "file": "packages/integration/fixtures/ai-sdk/index.ts",
-              "line": 19,
-              "marker": "__unshitRecallRedundantCatch_10_926275",
-              "kind": "redundant-catch",
-              "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-            }
-          ],
+          "found": 30,
+          "misses": [],
           "hits": [],
           "outOfScope": false,
-          "recall": 0.9333333333333333,
+          "recall": 1,
           "wilson95": {
-            "low": 0.7867654163738308,
-            "high": 0.9815229762087295,
-            "center": 0.9333333333333333
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
           }
         },
         {
@@ -1806,23 +1752,15 @@
         {
           "ruleId": "ts/unused-type-export",
           "injected": 30,
-          "found": 29,
-          "misses": [
-            {
-              "file": "packages/integration/fixtures/drizzle-zod/index.ts",
-              "line": 20,
-              "marker": "__unshitRecallUnusedType_12_384540",
-              "kind": "unused-type-export",
-              "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-            }
-          ],
+          "found": 30,
+          "misses": [],
           "hits": [],
           "outOfScope": false,
-          "recall": 0.9666666666666667,
+          "recall": 1,
           "wilson95": {
-            "low": 0.8332960900859082,
-            "high": 0.9940914096183874,
-            "center": 0.9666666666666667
+            "low": 0.8864866068260312,
+            "high": 0.9999999999999999,
+            "center": 1
           }
         },
         {
@@ -1860,7 +1798,7 @@
             },
             {
               "file": "packages/zod/src/v4/classic/index.ts",
-              "line": 36,
+              "line": 6,
               "marker": "__unshitRecallEntryTypeExport_4_401959",
               "kind": "entry-point-unused-type-export",
               "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
@@ -1881,14 +1819,14 @@
             },
             {
               "file": "packages/zod/src/v4/core/json-schema.ts",
-              "line": 150,
+              "line": 149,
               "marker": "__unshitRecallEntryTypeExport_2_756910",
               "kind": "entry-point-unused-type-export",
               "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
             },
             {
               "file": "packages/zod/src/v4/mini/iso.ts",
-              "line": 68,
+              "line": 67,
               "marker": "__unshitRecallEntryTypeExport_3_261973",
               "kind": "entry-point-unused-type-export",
               "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
@@ -2287,23 +2225,15 @@
       {
         "ruleId": "code/high-complexity",
         "injected": 90,
-        "found": 89,
-        "misses": [
-          {
-            "file": "packages/integration/fixtures/internal-types/index.ts",
-            "line": 59,
-            "marker": "__unshitRecallComplex_2_290814",
-            "kind": "high-complexity",
-            "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-          }
-        ],
+        "found": 90,
+        "misses": [],
         "hits": [],
         "outOfScope": false,
-        "recall": 0.9888888888888889,
+        "recall": 1,
         "wilson95": {
-          "low": 0.9397159168824657,
-          "high": 0.9980359158990818,
-          "center": 0.9888888888888889
+          "low": 0.9590643744356734,
+          "high": 1,
+          "center": 1
         }
       },
       {
@@ -2337,30 +2267,15 @@
       {
         "ruleId": "slop/redundant-catch",
         "injected": 90,
-        "found": 88,
-        "misses": [
-          {
-            "file": "packages/integration/fixtures/internal-types/mini.ts",
-            "line": 35,
-            "marker": "__unshitRecallRedundantCatch_5_458085",
-            "kind": "redundant-catch",
-            "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-          },
-          {
-            "file": "packages/integration/fixtures/ai-sdk/index.ts",
-            "line": 19,
-            "marker": "__unshitRecallRedundantCatch_10_926275",
-            "kind": "redundant-catch",
-            "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-          }
-        ],
+        "found": 90,
+        "misses": [],
         "hits": [],
         "outOfScope": false,
-        "recall": 0.9777777777777777,
+        "recall": 1,
         "wilson95": {
-          "low": 0.9225547331137463,
-          "high": 0.9938845580136748,
-          "center": 0.9777777777777777
+          "low": 0.9590643744356734,
+          "high": 1,
+          "center": 1
         }
       },
       {
@@ -2380,23 +2295,15 @@
       {
         "ruleId": "ts/unused-type-export",
         "injected": 64,
-        "found": 63,
-        "misses": [
-          {
-            "file": "packages/integration/fixtures/drizzle-zod/index.ts",
-            "line": 20,
-            "marker": "__unshitRecallUnusedType_12_384540",
-            "kind": "unused-type-export",
-            "reason": "harness artifact: file is not scanned by default config (excluded dir such as fixtures/)"
-          }
-        ],
+        "found": 64,
+        "misses": [],
         "hits": [],
         "outOfScope": false,
-        "recall": 0.984375,
+        "recall": 1,
         "wilson95": {
-          "low": 0.9166589839990573,
-          "high": 0.9972364580766624,
-          "center": 0.984375
+          "low": 0.9433759402071946,
+          "high": 1,
+          "center": 1
         }
       },
       {
@@ -2504,7 +2411,7 @@
           },
           {
             "file": "packages/zod/src/v4/classic/index.ts",
-            "line": 36,
+            "line": 6,
             "marker": "__unshitRecallEntryTypeExport_4_401959",
             "kind": "entry-point-unused-type-export",
             "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
@@ -2525,14 +2432,14 @@
           },
           {
             "file": "packages/zod/src/v4/core/json-schema.ts",
-            "line": 150,
+            "line": 149,
             "marker": "__unshitRecallEntryTypeExport_2_756910",
             "kind": "entry-point-unused-type-export",
             "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"
           },
           {
             "file": "packages/zod/src/v4/mini/iso.ts",
-            "line": 68,
+            "line": 67,
             "marker": "__unshitRecallEntryTypeExport_3_261973",
             "kind": "entry-point-unused-type-export",
             "reason": "out of scope: entry-point/public-API file (STAR-consumed); unshit intentionally does not report unused-type-exports here"

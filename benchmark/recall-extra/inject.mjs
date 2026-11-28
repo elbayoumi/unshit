@@ -1,15 +1,8 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { mulberry32, pickN, listSourceFiles as rawListSourceFiles, wilson95, injectLinePerFile } from '../recall/lib.mjs';
-
+import { pickN, injectLinePerFile } from '../recall/lib.mjs';
 export { wilson95 } from '../recall/lib.mjs';
-
-function listSourceFiles(work) {
-  // Filter dirs excluded by default config that recall/lib.mjs does not skip.
-  const excluded = /(^|\/)(fixtures|__fixtures__|\.oss-bench|research|benchmark\/frozen|\.unshit|playwright-report|vendor|storage|__pycache__|venv|\.venv|\.dart_tool|static\/lib)\//;
-  return rawListSourceFiles(work).filter((f) => !excluded.test(f));
-}
-
+export { DEFAULT_REPO_ROOT, scannedSourceFiles } from './scanned.mjs';
 export const RULE_IDS = [
   'ts/no-double-cast',
   'slop/redundant-catch',
@@ -19,29 +12,22 @@ export const RULE_IDS = [
   'ts/unused-type-export',
   'deps/unlisted-dependency',
 ];
-
 function appendBlock(filePath, text) {
   const prev = readFileSync(filePath, 'utf8');
   const sep = prev.endsWith('\n') ? '' : '\n';
   writeFileSync(filePath, prev + sep + text + '\n', 'utf8');
   return prev.split('\n').length + (sep ? 1 : 0);
 }
-
 function writeFileEnsured(filePath, content) {
   mkdirSync(dirname(filePath), { recursive: true });
   writeFileSync(filePath, content, 'utf8');
 }
-
 function tsLikeNonTest(files) {
   return files.filter((f) => /\.(ts|tsx|js|jsx|mjs|cjs)$/.test(f) && !/\.d\.ts$/.test(f));
 }
 
 function tsNonTest(files) {
   return files.filter((f) => /\.(ts|tsx)$/.test(f) && !/\.d\.ts$/.test(f));
-}
-
-function hasReactTsx(files) {
-  return files.some((f) => /\.(tsx|jsx)$/.test(f));
 }
 
 // --- Positive injectors ---
@@ -345,7 +331,6 @@ export function injectUnlistedDependencyNegatives(work, files, n, rand) {
   if (pkg) writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n', 'utf8');
   return injections;
 }
-
 
 export function injectEntryPointTypeExports(work, files, n, rand) {
   return injectLinePerFile(work, files, n, rand, /\.(ts|tsx|js|jsx|mjs|cjs)$/, (i, r) => {

@@ -14,10 +14,10 @@ const BIN = join(REPO_ROOT, 'bin', 'unshit.js');
 
 function readOpt(argv, name, fallback) {
   const idx = argv.indexOf(name);
-  if (idx < 0) return fallback;
-  const val = argv[idx + 1];
-  argv.splice(idx, 2);
-  return val ?? fallback;
+  if (idx === -1) return fallback;
+  const removed = argv.splice(idx, 2);
+  const val = removed[1];
+  return val === undefined ? fallback : val;
 }
 
 const argv = process.argv.slice(2);
@@ -138,8 +138,8 @@ for (const proj of projects) {
       ? { noDoubleCast: 0, redundantCatch: 0, highComplexity: 0, godFile: perRule, importCycle: 0, unusedTypeExport: 0, unlistedDependency: 0 }
       : { noDoubleCast: perRule, redundantCatch: perRule, highComplexity: perRule, godFile: perRule, importCycle: perRule, unusedTypeExport: perRule, unlistedDependency: perRule };
 
-    const posOpts = { includeReactGodFile, complexityMax: 25, skipFiles: scope ? scope.starConsumed : null, cloneFiles: scope ? scope.cloneFiles : null };
-    const posInj = injectAllPositives(workPos, seed, posCounts, posOpts);
+    const posOpts = { includeReactGodFile, complexityMax: 25, skipFiles: scope ? scope.starConsumed : null, cloneFiles: scope ? scope.cloneFiles : null, scannedFiles: scope ? scope.scannedFiles : null };
+    const posInj = await injectAllPositives(workPos, seed, posCounts, posOpts);
 
     if (!synthetic && scope) {
       const entryFiles = files.filter((f) => scope.starConsumed.has(f));
@@ -173,7 +173,8 @@ for (const proj of projects) {
     try { negScope = await injectionScope(workNeg, REPO_ROOT); } catch (e) { negScope = null; }
     negOpts.skipFiles = negScope ? negScope.starConsumed : null;
     negOpts.cloneFiles = negScope ? negScope.cloneFiles : null;
-    const negInj = injectAllNegatives(workNeg, seed, negCounts, negOpts);
+    negOpts.scannedFiles = negScope ? negScope.scannedFiles : null;
+    const negInj = await injectAllNegatives(workNeg, seed, negCounts, negOpts);
     const afterNeg = scanJson(BIN, workNeg, REPO_ROOT);
     const fpRows = evaluateFalsePositives(negInj, afterNeg);
 
@@ -242,7 +243,7 @@ lines.push('- For each project+seed, two fresh copies were scanned: one with pos
 lines.push('- Recall = matched injected defects / injected defects. FP rate = matched hard negatives / hard negatives. Wilson 95% confidence intervals reported.');
 lines.push('- Matchers are rule-specific and location/marker-based; see `benchmark/recall-extra/lib.mjs`.');
 lines.push('- No detectors were tuned to this benchmark. Misses and FPs are reported as measured.');
-lines.push('- Injection targeting reuses `listSourceFiles` from `benchmark/recall/lib.mjs` with an extra filter excluding default-config-excluded dirs (`fixtures`, `__fixtures__`, etc.) to avoid scan-invisible artifacts.');
+lines.push('- Injection targeting chooses candidate files ONLY from the files the default scan actually scans: the ts-like/non-test base listing is intersected with the scanned set from a real clean scan of the copy through the built unshit (`scan.files`, no cache; `scannedSourceFiles` in `benchmark/recall-extra/inject.mjs`). A caller-supplied scanned set (e.g. `injectionScope().scannedFiles`) can only narrow that pool. No hard-coded project paths.');
 lines.push('- `ts/unused-type-export` injections skip files unshit marks STAR-consumed (entry/public-API), reusing compiled dead-export analysis from `benchmark/recall/entries.mjs`. Out-of-scope injections into those files are reported separately.');
 lines.push('');
 if (report.notes.length) {
@@ -284,35 +285,27 @@ for (const p of report.projectAggregates) {
   tableFp(`False-positive sanity — ${p.name}`, p.falsePositives);
 }
 
-lines.push('## Misses (pooled)');
-lines.push('');
-const misses = report.pooled.recall.flatMap((r) => r.misses.map((m) => ({ ruleId: r.ruleId, ...m })));
-if (misses.length === 0) {
+lines.push('## Misses (pooled)', '');
+const pooledMisses = report.pooled.recall.flatMap((r) => r.misses.map((m) => ({ ruleId: r.ruleId, inj: m.injection ?? m, reason: m.reason ?? '' })));
+if (pooledMisses.length === 0) {
   lines.push('No misses.');
 } else {
-  lines.push('| Rule | File | Line | Marker | Reason |');
-  lines.push('|---|---|---:|---|---|');
-  for (const r of report.pooled.recall) {
-    for (const m of r.misses) {
-      const inj = m.injection ?? m;
-      lines.push(`| ${r.ruleId} | \`${inj.file}\` | ${inj.line ?? ''} | \`${inj.marker ?? ''}\` | ${m.reason ?? ''} |`);
-    }
+  lines.push('| Rule | File | Line | Marker | Reason |', '|---|---|---:|---|---|');
+  for (const { ruleId, inj, reason } of pooledMisses) {
+    lines.push(`| ${ruleId} | \`${inj.file}\` | ${inj.line ?? ''} | \`${inj.marker ?? ''}\` | ${reason} |`);
   }
 }
 lines.push('');
 
-lines.push('## False positives (pooled)');
-lines.push('');
-const fps = report.pooled.falsePositives.flatMap((r) => r.fps.map((fp) => ({ ruleId: r.ruleId, ...fp })));
-if (fps.length === 0) {
+lines.push('## False positives (pooled)', '');
+const pooledFps = report.pooled.falsePositives.flatMap((r) => r.fps.map((fp) => ({ ruleId: r.ruleId, inj: fp.injection ?? fp, finding: fp.finding ?? {} })));
+if (pooledFps.length === 0) {
   lines.push('No false positives on hard negatives.');
 } else {
-  lines.push('| Rule | File | Line | Marker | Finding |');
-  lines.push('|---|---|---:|---|---|');
-  for (const fp of fps) {
-    const inj = fp.injection ?? fp;
-    const f = fp.finding ?? {};
-    lines.push(`| ${fp.ruleId} | \`${inj.file}\` | ${inj.line ?? ''} | \`${inj.marker ?? ''}\` | ${String(f.message ?? '').replace(/\|/g, '\\|')} |`);
+  lines.push('| Rule | File | Line | Marker | Finding |', '|---|---|---:|---|---|');
+  for (const { ruleId, inj, finding } of pooledFps) {
+    const msg = String(finding.message ?? '').replace(/\|/g, '\\|');
+    lines.push(`| ${ruleId} | \`${inj.file}\` | ${inj.line ?? ''} | \`${inj.marker ?? ''}\` | ${msg} |`);
   }
 }
 lines.push('');

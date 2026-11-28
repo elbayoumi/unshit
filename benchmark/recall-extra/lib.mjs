@@ -1,6 +1,7 @@
 import { mulberry32, listSourceFiles, wilson95 } from '../recall/lib.mjs';
 export { wilson95 } from '../recall/lib.mjs';
 import {
+  DEFAULT_REPO_ROOT, scannedSourceFiles,
   injectNoDoubleCast, injectNoDoubleCastNegatives,
   injectRedundantCatch, injectRedundantCatchNegatives,
   injectHighComplexity, injectHighComplexityNegatives,
@@ -9,6 +10,8 @@ import {
   injectUnusedTypeExport, injectUnusedTypeExportNegatives,
   injectUnlistedDependency, injectUnlistedDependencyNegatives,
 } from './inject.mjs';
+
+export { DEFAULT_REPO_ROOT, scannedSourceFiles } from './inject.mjs';
 
 export {
   injectNoDoubleCast, injectNoDoubleCastNegatives,
@@ -90,45 +93,72 @@ function pickFinding(f) {
   return { ruleId: f.ruleId, file: f.file, line: f.span?.line, message: f.message, evidence: f.evidence };
 }
 
-export function injectAllPositives(work, seed, counts, opts = {}) {
-  const rand = mulberry32(seed);
-  const files = listSourceFiles(work);
-  const threshold = opts.complexityMax ?? 25;
-  const plan = [
-    ['noDoubleCast', injectNoDoubleCast],
-    ['redundantCatch', injectRedundantCatch],
-    ['highComplexity', (w, f, n, r) => injectHighComplexity(w, f, n, r, threshold)],
-    ['godFile', injectGodFile, opts.includeReactGodFile !== false],
-    ['importCycle', injectImportCycle],
-    ['unusedTypeExport', (w, f, n, r) => injectUnusedTypeExport(w, f, n, r, { skipFiles: opts.skipFiles })],
-    ['unlistedDependency', injectUnlistedDependency],
-  ];
+/**
+ * Candidate files for injection, ONLY from files the default scan actually
+ * scans. Ground truth is a real clean scan of `work` through the built unshit
+ * (`scannedSourceFiles`); `opts.scannedFiles` (e.g. `injectionScope().scannedFiles`)
+ * may only narrow that set. The base ts-like/non-test/non-config listing is
+ * intersected with the scanned set so nothing outside it can be chosen.
+ */
+async function injectableFiles(work, opts = {}) {
+  // Ground truth: a real clean scan of `work` through the built unshit.
+  const realScanned = new Set(await scannedSourceFiles(work, opts.repoRoot ?? DEFAULT_REPO_ROOT));
+  // A caller-supplied scanned set (e.g. injectionScope().scannedFiles) can only
+  // narrow the pool, never widen it past what the default scan actually scans.
+  let scanned = realScanned;
+  if (opts.scannedFiles instanceof Set) scanned = new Set([...opts.scannedFiles].filter((f) => realScanned.has(f)));
+  else if (Array.isArray(opts.scannedFiles)) scanned = new Set(opts.scannedFiles.filter((f) => realScanned.has(f)));
+  return listSourceFiles(work).filter((f) => scanned.has(f) && realScanned.has(f));
+}
+
+export { injectableFiles };
+
+function runInjectionPlan(work, files, counts, rand, plan, defaultN) {
   const out = [];
   for (const [key, fn, enabled = true] of plan) {
     if (!enabled) continue;
-    out.push(...fn(work, files, counts[key] ?? 15, rand));
+    out.push(...fn(work, files, counts[key] ?? defaultN, rand));
   }
   return out;
 }
 
-export function injectAllNegatives(work, seed, counts, opts = {}) {
+function complexityThreshold(opts) { return opts.complexityMax ?? 25; }
+
+function highComplexityInjector(fn, threshold) { return (w, f, n, r) => fn(w, f, n, r, threshold); }
+
+function unusedTypeInjector(fn, skipFiles) { return (w, f, n, r) => fn(w, f, n, r, { skipFiles }); }
+
+export async function injectAllPositives(work, seed, counts, opts = {}) {
+  const rand = mulberry32(seed);
+  const files = await injectableFiles(work, opts);
+  const threshold = complexityThreshold(opts);
+  const react = opts.includeReactGodFile !== false;
+  const plan = [
+    ['noDoubleCast', injectNoDoubleCast],
+    ['redundantCatch', injectRedundantCatch],
+    ['highComplexity', highComplexityInjector(injectHighComplexity, threshold)],
+    ['godFile', injectGodFile, react],
+    ['importCycle', injectImportCycle],
+    ['unusedTypeExport', unusedTypeInjector(injectUnusedTypeExport, opts.skipFiles)],
+    ['unlistedDependency', injectUnlistedDependency],
+  ];
+  return runInjectionPlan(work, files, counts, rand, plan, 15);
+}
+
+export async function injectAllNegatives(work, seed, counts, opts = {}) {
   const rand = mulberry32(seed + 17);
-  const files = listSourceFiles(work);
-  const threshold = opts.complexityMax ?? 25;
+  const files = await injectableFiles(work, opts);
+  const threshold = complexityThreshold(opts);
+  const react = opts.includeReactGodFile !== false;
   const plan = [
     ['noDoubleCast', injectNoDoubleCastNegatives],
     ['redundantCatch', injectRedundantCatchNegatives],
-    ['highComplexity', (w, f, n, r) => injectHighComplexityNegatives(w, f, n, r, threshold)],
-    ['godFile', injectGodFileNegatives, opts.includeReactGodFile !== false],
+    ['highComplexity', highComplexityInjector(injectHighComplexityNegatives, threshold)],
+    ['godFile', injectGodFileNegatives, react],
     ['importCycle', injectImportCycleNegatives],
-    ['unusedTypeExport', (w, f, n, r) => injectUnusedTypeExportNegatives(w, f, n, r, { skipFiles: opts.skipFiles })],
+    ['unusedTypeExport', unusedTypeInjector(injectUnusedTypeExportNegatives, opts.skipFiles)],
     ['unlistedDependency', injectUnlistedDependencyNegatives],
   ];
-  const out = [];
-  for (const [key, fn, enabled = true] of plan) {
-    if (!enabled) continue;
-    out.push(...fn(work, files, counts[key] ?? 10, rand));
-  }
-  return out;
+  return runInjectionPlan(work, files, counts, rand, plan, 10);
 }
 
